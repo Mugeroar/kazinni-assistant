@@ -1,804 +1,750 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>KazInni · Deliveries Dashboard</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>KazInni Workspaces | Fusion Foods Dashboard</title>
+  
+  <meta name="theme-color" content="#10b981">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  
+  <link rel="apple-touch-icon" href="https://i.postimg.cc/rFfXDj3L/kazinni-removebg-preview(1).png">
+  <link rel="icon" type="image/png" href="https://i.postimg.cc/rFfXDj3L/kazinni-removebg-preview(1).png">
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+  
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --green: #10b981;
+      --green-dark: #059669;
+      --green-light: #34d399;
+      --card-bg: #ffffff;
+      --text-primary: #1e293b;
+      --text-muted: #64748b;
+      --border-light: #a7f3d0;
+      --purple: #7c3aed;
+      --orange: #f59e0b;
+      --blue: #3b82f6;
+      --indigo: #6366f1;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: linear-gradient(145deg, #ecfdf5 0%, #ffffff 100%);
+      color: var(--text-primary);
+      line-height: 1.4;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .navbar {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(16px);
+      padding: 0.5rem 2%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px solid rgba(16, 185, 129, 0.3);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .logo { display: flex; align-items: center; gap: 10px; cursor: pointer; }
+    .logo-img { height: 34px; width: 34px; border-radius: 10px; object-fit: contain; background: white; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2); }
+    .logo-text {
+      font-weight: 800; font-size: 1.1rem;
+      background: linear-gradient(145deg, #34d399, #059669);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .logo-text span { font-weight: 600; font-size: 0.7rem; background: #10b981; -webkit-text-fill-color: #10b981; margin-left: 3px; }
+
+    .nav-right { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .nav-btn {
+      background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.2);
+      padding: 0.4rem 0.8rem; border-radius: 25px; color: var(--green-dark);
+      font-weight: 600; font-size: 0.7rem; cursor: pointer; display: inline-flex;
+      align-items: center; gap: 5px; text-decoration: none; transition: all 0.2s;
+    }
+    .nav-btn:hover { background: var(--green); color: white; }
+    .nav-btn.map-btn { background: rgba(59, 130, 246, 0.08); border-color: rgba(59, 130, 246, 0.2); color: #2563eb; }
+    .nav-btn.map-btn:hover { background: #3b82f6; color: white; }
+
+    .user-badge {
+      display: flex; align-items: center; gap: 6px; background: #f1f5f9;
+      padding: 0.2rem 0.7rem 0.2rem 0.5rem; border-radius: 30px; font-size: 0.7rem;
+      color: var(--text-muted); border: 1px solid #a7f3d0;
+    }
+    .user-avatar {
+      width: 30px; height: 30px; background: linear-gradient(145deg, #10b981, #059669);
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 0.7rem; color: white;
+    }
+
+    .container { padding: 1.2rem 2%; flex: 1; }
+
+    .page-header { margin-bottom: 1.2rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.8rem; }
+    .page-header h1 { font-size: 1.3rem; font-weight: 800; color: #0f172a; display: flex; align-items: center; gap: 10px; }
+    .page-header h1 i { color: var(--green-dark); background: white; padding: 8px; border-radius: 12px; box-shadow: 0 6px 14px rgba(16,185,129,0.08); font-size: 1rem; }
+    .page-header p { color: #64748b; font-size: 0.8rem; }
+    .last-updated { font-size: 0.65rem; color: #94a3b8; margin-left: 6px; }
+    .last-updated i { color: #10b981; font-size: 0.4rem; }
+
+    .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 1.2rem; }
+    .stat-card {
+      background: white; border-radius: 16px; padding: 1rem 1.2rem;
+      border: 1px solid #a7f3d0; box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .stat-left h4 { font-size: 0.65rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.3px; color: #64748b; margin-bottom: 0.2rem; }
+    .stat-number { font-size: 1.8rem; font-weight: 800; color: #0f172a; line-height: 1.1; }
+    .stat-trend { font-size: 0.6rem; margin-top: 2px; display: flex; align-items: center; gap: 3px; color: #64748b; }
+    .stat-icon { width: 42px; height: 42px; background: #ecfdf5; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #059669; font-size: 1.2rem; }
+
+    /* Skeleton Loading Styles */
+    @keyframes shimmer {
+      0% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
+    }
     
-    <meta name="theme-color" content="#0f172a">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="KazInni">
+    .skeleton {
+      background: linear-gradient(90deg, #e5e7eb 25%, #f3f4f6 50%, #e5e7eb 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s ease-in-out infinite;
+      border-radius: 4px;
+    }
     
-    <link rel="icon" type="image/png" href="https://i.postimg.cc/rFfXDj3L/kazinni-removebg-preview(1).png">
-    <link rel="apple-touch-icon" href="https://i.postimg.cc/rFfXDj3L/kazinni-removebg-preview(1).png">
-    <link rel="manifest" href="/manifest.json">
+    .skeleton-text {
+      height: 1rem;
+      margin-bottom: 0.5rem;
+    }
     
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    .skeleton-text-sm {
+      height: 0.7rem;
+      width: 60%;
+    }
     
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+    .skeleton-number {
+      height: 2rem;
+      width: 50%;
+      margin-bottom: 0.3rem;
+    }
+    
+    .skeleton-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+    }
+    
+    .skeleton-card {
+      background: white;
+      border-radius: 16px;
+      padding: 1rem 1.2rem;
+      border: 1px solid #e5e7eb;
+    }
+    
+    .skeleton-action-card {
+      background: white;
+      border-radius: 20px;
+      padding: 1.2rem;
+      border: 1px solid #e5e7eb;
+    }
+    
+    .skeleton-action-icon {
+      width: 46px;
+      height: 46px;
+      border-radius: 14px;
+      margin-bottom: 0.8rem;
+    }
+    
+    .skeleton-recent-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0.7rem 1rem;
+      border-bottom: 1px solid #f3f4f6;
+    }
+    
+    .skeleton-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 10px;
+      flex-shrink: 0;
+    }
+    
+    .skeleton-badge {
+      width: 60px;
+      height: 20px;
+      border-radius: 12px;
+      margin-left: auto;
+    }
 
-        :root {
-            --bg-primary: #f8fafc; --bg-secondary: #f1f5f9; --bg-card: #ffffff;
-            --text-primary: #1e293b; --text-secondary: #475569; --text-muted: #94a3b8;
-            --border: #e2e8f0;
-            --gold: #f59e0b; --gold-dark: #b45309; --purple: #8b5cf6;
-            --green: #22c55e; --red: #ef4444; --warning: #f59e0b; --info: #3b82f6; --orange: #f97316;
-            --pink: #ec4899; --emerald: #10b981; --indigo: #6366f1;
-            --shadow-sm: 0 1px 2px rgba(0,0,0,0.05); --shadow: 0 4px 6px -1px rgba(0,0,0,0.07);
-            --shadow-md: 0 10px 15px -3px rgba(0,0,0,0.1);
-            --safe-bottom: env(safe-area-inset-bottom, 20px); --safe-top: env(safe-area-inset-top, 0px);
-        }
+    .action-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 1.2rem; }
+    .action-card {
+      background: white; border-radius: 20px; padding: 1.2rem;
+      border: 1px solid #a7f3d0; box-shadow: 0 8px 20px -6px rgba(5,150,105,0.04);
+      transition: all 0.25s; text-decoration: none; color: inherit; display: block; cursor: pointer;
+    }
+    .action-card:hover { transform: translateY(-4px); box-shadow: 0 20px 35px -10px rgba(5,150,105,0.12); border-color: #34d399; }
+    .action-icon {
+      width: 46px; height: 46px; background: linear-gradient(145deg, #ecfdf5, #ffffff);
+      border-radius: 14px; display: flex; align-items: center; justify-content: center;
+      margin-bottom: 0.8rem; color: #059669; font-size: 1.4rem;
+      border: 1px solid rgba(5,150,105,0.15);
+    }
+    .action-card h2 { font-size: 1rem; font-weight: 800; margin-bottom: 0.3rem; }
+    .action-card p { color: #64748b; font-size: 0.7rem; margin-bottom: 0.8rem; line-height: 1.4; }
+    .action-link { display: inline-flex; align-items: center; gap: 5px; font-weight: 700; color: #059669; font-size: 0.7rem; }
 
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: var(--bg-primary); color: var(--text-primary);
-            min-height: 100dvh; overflow-x: hidden; -webkit-tap-highlight-color: transparent;
-            -webkit-font-smoothing: antialiased; display: flex; flex-direction: column;
-            font-size: 0.8rem; line-height: 1.4;
-        }
+    .map-card .action-icon { color: #3b82f6; border-color: rgba(59,130,246,0.2); background: linear-gradient(145deg, #eff6ff, #ffffff); }
+    .map-card .action-link { color: #2563eb; }
+    .store-card .action-icon { color: #7c3aed; border-color: rgba(124,58,237,0.2); background: linear-gradient(145deg, #f5f0ff, #ffffff); }
+    .store-card .action-link { color: #7c3aed; }
+    .inventory-card .action-icon { color: #f59e0b; border-color: rgba(245,158,11,0.2); background: linear-gradient(145deg, #fffbeb, #ffffff); }
+    .inventory-card .action-link { color: #d97706; }
+    .dispatch-card .action-icon { color: #8b5cf6; border-color: rgba(139,92,246,0.2); background: linear-gradient(145deg, #f5f0ff, #ffffff); }
+    .dispatch-card .action-link { color: #7c3aed; }
+    .products-card .action-icon { color: #0d9488; border-color: rgba(13,148,136,0.2); background: linear-gradient(145deg, #f0fdfa, #ffffff); }
+    .products-card .action-link { color: #0f766e; }
+    .prices-card .action-icon { color: #db2777; border-color: rgba(219,39,119,0.2); background: linear-gradient(145deg, #fdf2f8, #ffffff); }
+    .prices-card .action-link { color: #be185d; }
+    .supplier-card .action-icon { color: #6366f1; border-color: rgba(99,102,241,0.2); background: linear-gradient(145deg, #eef2ff, #ffffff); }
+    .supplier-card .action-link { color: #4f46e5; }
 
-        .app-container { position: relative; z-index: 1; min-height: 100dvh; display: flex; flex-direction: column; }
+    .quick-section {
+      background: white; border-radius: 18px; padding: 1rem 1.2rem;
+      border: 1px solid #a7f3d0; margin-bottom: 1.2rem;
+    }
+    .quick-header { display: flex; align-items: center; gap: 8px; margin-bottom: 0.8rem; font-weight: 700; font-size: 0.85rem; }
+    .quick-header i { color: #059669; background: #ecfdf5; padding: 6px; border-radius: 10px; font-size: 0.8rem; }
+    .quick-links { display: flex; flex-wrap: wrap; gap: 8px; }
+    .quick-btn {
+      background: #f8fafc; border: 1px solid #e2e8f0; padding: 0.45rem 0.9rem;
+      border-radius: 30px; color: #1e293b; font-weight: 500; font-size: 0.7rem;
+      text-decoration: none; display: inline-flex; align-items: center; gap: 6px; transition: all 0.2s;
+    }
+    .quick-btn i { color: #059669; font-size: 0.7rem; }
+    .quick-btn:hover { background: #059669; color: white; border-color: #059669; }
+    .quick-btn:hover i { color: white; }
 
-        .header {
-            position: sticky; top: 0; z-index: 1000;
-            background: rgba(255,255,255,0.92); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
-            border-bottom: 1px solid var(--border); padding: 0 0.8rem; padding-top: var(--safe-top);
-        }
-        .header-inner { display: flex; align-items: center; justify-content: space-between; height: 52px; gap: 8px; }
-        .brand { display: flex; align-items: center; gap: 8px; }
-        .brand-logo { width: 30px; height: 30px; border-radius: 8px; object-fit: contain; background: white; box-shadow: var(--shadow-sm); }
-        .brand-name { font-size: 0.85rem; font-weight: 800; background: linear-gradient(135deg, #8b5cf6, #f59e0b); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .header-right { display: flex; align-items: center; gap: 6px; }
-        .header-stat { display: flex; align-items: center; gap: 4px; font-size: 0.65rem; color: var(--text-secondary); background: var(--bg-secondary); border: 1px solid var(--border); padding: 0.25rem 0.55rem; border-radius: 12px; white-space: nowrap; }
-        .header-stat i { font-size: 0.4rem; }
-        .header-stat span { font-weight: 700; color: var(--gold-dark); }
-        .user-btn { display: flex; align-items: center; gap: 6px; background: var(--bg-secondary); border: 1px solid var(--border); padding: 0.2rem 0.6rem 0.2rem 0.3rem; border-radius: 20px; cursor: pointer; font-family: 'Inter', sans-serif; color: var(--text-primary); font-size: 0.7rem; position: relative; }
-        .user-avatar { width: 26px; height: 26px; border-radius: 50%; background: linear-gradient(135deg, #8b5cf6, #f59e0b); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.6rem; color: white; }
-        .user-dropdown { position: absolute; top: 110%; right: 0; background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; padding: 0.3rem; min-width: 140px; display: none; z-index: 10; box-shadow: var(--shadow-md); }
-        .user-btn:hover .user-dropdown { display: block; }
-        .dropdown-item { padding: 0.45rem 0.6rem; border-radius: 6px; cursor: pointer; display: flex; align-items: center; gap: 6px; font-size: 0.7rem; color: var(--text-secondary); transition: 0.2s; border: none; background: none; width: 100%; font-family: 'Inter', sans-serif; }
-        .dropdown-item:hover { background: rgba(245,158,11,0.08); color: var(--gold-dark); }
-        .dropdown-item.danger:hover { background: rgba(239,68,68,0.08); color: var(--red); }
+    .skeleton-quick-btn {
+      height: 32px;
+      width: 100px;
+      border-radius: 30px;
+    }
 
-        .tab-nav {
-            display: flex; gap: 0; background: var(--bg-primary); border-bottom: 1px solid var(--border);
-            padding: 0 0.5rem; overflow-x: auto; scrollbar-width: none;
-        }
-        .tab-nav::-webkit-scrollbar { display: none; }
-        .tab-btn {
-            padding: 0.5rem 0.7rem; border: none; background: transparent; color: var(--text-muted);
-            font-weight: 600; font-size: 0.65rem; cursor: pointer; white-space: nowrap;
-            font-family: 'Inter', sans-serif; border-bottom: 2px solid transparent; transition: all 0.2s;
-            display: flex; align-items: center; gap: 5px;
-        }
-        .tab-btn.active { color: var(--gold-dark); border-bottom-color: var(--gold); }
-        .tab-btn .tab-badge { font-size: 0.5rem; padding: 1px 6px; border-radius: 8px; font-weight: 700; }
-        .tab-btn.active .tab-badge { background: rgba(245,158,11,0.12); color: var(--gold-dark); }
-        .tab-btn:not(.active) .tab-badge { background: rgba(148,163,184,0.1); color: var(--text-muted); }
+    .recent-section { margin-top: 1.2rem; }
+    .recent-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.6rem; }
+    .recent-header h3 { font-size: 0.85rem; font-weight: 700; }
+    .recent-list { background: white; border-radius: 14px; border: 1px solid #a7f3d0; overflow: hidden; }
+    .recent-item {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0.7rem 1rem; border-bottom: 1px solid #f1f5f9; font-size: 0.75rem;
+    }
+    .status-tag {
+      padding: 0.15rem 0.5rem; border-radius: 12px; font-size: 0.6rem; font-weight: 700; white-space: nowrap;
+    }
+    .status-new { background: #fce7f3; color: #9d174d; }
+    .status-pending { background: #fef3c7; color: #b45309; }
+    .status-confirmed { background: #d1fae5; color: #065f46; }
+    .status-processing { background: #e0f2fe; color: #0369a1; }
+    .status-shipped { background: #ede9fe; color: #5b21b6; }
+    .status-delivered { background: #d1fae5; color: #065f46; }
+    .status-cancelled { background: #fee2e2; color: #991b1b; }
 
-        .main-content { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
-        .tab-content { display: none; flex: 1; flex-direction: column; overflow: hidden; }
-        .tab-content.active { display: flex; }
+    .empty-state { text-align: center; padding: 2rem; color: #94a3b8; font-size: 0.8rem; }
 
-        .delivery-list { flex: 1; overflow-y: auto; padding: 0.5rem 0.8rem 1rem; display: flex; flex-direction: column; gap: 0.5rem; -webkit-overflow-scrolling: touch; }
+    .footer { text-align: center; padding: 1rem; color: #94a3b8; font-size: 0.7rem; border-top: 1px solid #a7f3d0; }
 
-        .delivery-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 0.8rem; box-shadow: var(--shadow-sm); transition: all 0.2s; cursor: pointer; }
-        .delivery-card:active { transform: scale(0.98); }
-        .delivery-card.new-task { border-left: 3px solid var(--gold); }
-        .delivery-card.active-task { border-left: 3px solid var(--orange); }
-        .delivery-card.done-task { opacity: 0.6; }
+    .loading-overlay {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(255,255,255,0.5); backdrop-filter: blur(2px);
+      display: flex; justify-content: center; align-items: center; z-index: 999;
+    }
+    .loading-overlay.hide { display: none; }
 
-        .delivery-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.35rem; }
-        .delivery-id { font-size: 0.6rem; color: var(--text-muted); font-weight: 600; display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
-        .new-badge { font-size: 0.5rem; padding: 1px 5px; border-radius: 5px; background: var(--gold); color: white; font-weight: 700; }
-
-        .delivery-status { font-size: 0.55rem; padding: 2px 7px; border-radius: 7px; font-weight: 700; text-transform: capitalize; white-space: nowrap; }
-        .status-new { background: rgba(245,158,11,0.1); color: #92400e; }
-        .status-active { background: rgba(249,115,22,0.1); color: #c2410c; }
-        .status-done { background: rgba(34,197,94,0.1); color: #166534; }
-
-        .delivery-client { font-weight: 700; font-size: 0.78rem; margin-bottom: 0.1rem; }
-        .delivery-phone { font-size: 0.68rem; color: var(--text-secondary); margin-bottom: 0.25rem; }
-        .delivery-route { font-size: 0.68rem; color: var(--text-secondary); margin-bottom: 0.35rem; line-height: 1.4; }
-        .delivery-route i { color: var(--gold); margin: 0 3px; font-size: 0.45rem; }
-        .delivery-amount { font-size: 0.7rem; font-weight: 700; margin-bottom: 0.35rem; color: var(--gold-dark); }
-
-        /* Pickup info badge */
-        .pickup-info-badge {
-            background: rgba(99,102,241,0.06); border: 1px solid rgba(99,102,241,0.15);
-            border-radius: 8px; padding: 0.4rem 0.6rem; margin-bottom: 0.35rem;
-            font-size: 0.65rem; color: var(--indigo); display: flex; align-items: center; gap: 6px;
-        }
-        .pickup-info-badge i { color: #6366f1; font-size: 0.7rem; }
-        .pickup-info-badge strong { color: #4f46e5; }
-
-        .delivery-actions { display: flex; gap: 5px; flex-wrap: wrap; }
-        .action-btn { padding: 0.35rem 0.65rem; border-radius: 8px; border: none; font-size: 0.62rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 3px; transition: all 0.2s; font-family: 'Inter', sans-serif; min-height: 30px; }
-        .btn-start { background: rgba(249,115,22,0.1); color: #c2410c; }
-        .btn-start:hover { background: var(--orange); color: white; }
-        .btn-done { background: rgba(34,197,94,0.1); color: #166534; }
-        .btn-done:hover { background: var(--green); color: white; }
-        .btn-nav { background: rgba(59,130,246,0.1); color: #1d4ed8; }
-        .btn-nav:hover { background: var(--info); color: white; }
-        .btn-cancel { background: rgba(148,163,184,0.1); color: var(--text-secondary); }
-        .btn-cancel:hover { background: var(--text-muted); color: white; }
-
-        .empty-list { text-align: center; padding: 2.5rem 1rem; color: var(--text-muted); font-size: 0.72rem; }
-        .empty-list i { font-size: 1.5rem; margin-bottom: 0.5rem; opacity: 0.4; display: block; }
-
-        .state-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 2rem 1.5rem; text-align: center; margin: 1rem; box-shadow: var(--shadow-sm); }
-        .state-card i { font-size: 2rem; margin-bottom: 0.8rem; display: block; }
-        .state-card h2 { font-size: 1rem; font-weight: 700; margin-bottom: 0.3rem; }
-        .state-card p { font-size: 0.72rem; color: var(--text-muted); }
-        .state-pending i { color: var(--warning); } .state-pending h2 { color: var(--gold-dark); }
-        .state-rejected i { color: var(--red); } .state-rejected h2 { color: var(--red); }
-
-        .notification-banner { position: fixed; top: 60px; left: 8px; right: 8px; background: var(--bg-card); border: 1px solid var(--gold); border-radius: 12px; padding: 0.7rem 0.9rem; z-index: 3000; display: flex; align-items: center; gap: 8px; font-size: 0.68rem; color: var(--text-primary); box-shadow: var(--shadow-md); }
-        .notification-banner i { color: var(--gold); font-size: 1rem; }
-        .notification-banner button { margin-left: auto; padding: 0.35rem 0.7rem; border-radius: 8px; border: none; background: var(--gold); color: white; font-weight: 700; font-size: 0.6rem; cursor: pointer; font-family: 'Inter', sans-serif; }
-        .notification-banner .close-banner { background: transparent; color: var(--text-muted); font-size: 0.7rem; padding: 0.2rem; }
-
-        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.4); z-index: 4000; display: none; align-items: flex-end; justify-content: center; }
-        .modal-overlay.show { display: flex; }
-        .modal { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px 16px 0 0; padding: 1.2rem; width: 100%; max-width: 420px; max-height: 80vh; overflow-y: auto; box-shadow: 0 -10px 40px rgba(0,0,0,0.15); animation: slideUp 0.25s ease; }
-        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
-        .modal-header { display: flex; align-items: center; gap: 8px; margin-bottom: 1rem; padding-bottom: 0.7rem; border-bottom: 1px solid var(--border); }
-        .modal-header i { font-size: 1.1rem; color: var(--gold); }
-        .modal-header h3 { font-size: 0.9rem; font-weight: 700; }
-        .modal-close { margin-left: auto; background: none; border: none; color: var(--text-muted); font-size: 1rem; cursor: pointer; padding: 4px; }
-        .modal p { font-size: 0.72rem; color: var(--text-secondary); margin-bottom: 0.8rem; }
-        .modal .form-group { margin-bottom: 0.7rem; }
-        .modal label { display: block; font-size: 0.6rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; margin-bottom: 0.2rem; }
-        .modal input, .modal textarea { width: 100%; padding: 0.5rem 0.7rem; border-radius: 10px; border: 1.5px solid var(--border); background: var(--bg-secondary); color: var(--text-primary); font-size: 0.75rem; font-family: 'Inter', sans-serif; }
-        .modal .btn-row { display: flex; gap: 6px; justify-content: flex-end; margin-top: 1rem; flex-wrap: wrap; }
-        .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 0.5rem; }
-        .detail-item { background: var(--bg-secondary); padding: 0.5rem; border-radius: 8px; }
-        .detail-item strong { display: block; font-size: 0.55rem; color: var(--text-muted); text-transform: uppercase; margin-bottom: 0.1rem; }
-        .detail-item span { font-size: 0.72rem; color: var(--text-primary); }
-        .detail-item.full { grid-column: 1 / -1; }
-        .detail-item.pickup-highlight { background: rgba(99,102,241,0.06); border: 1px solid rgba(99,102,241,0.15); }
-
-        .contents-section { margin-top: 0.5rem; background: rgba(245,158,11,0.05); border: 1px dashed var(--gold); border-radius: 10px; padding: 0.7rem; }
-        .contents-section h4 { font-size: 0.65rem; font-weight: 700; color: var(--gold-dark); margin-bottom: 0.4rem; display: flex; align-items: center; gap: 5px; }
-        .contents-list { list-style: none; padding: 0; }
-        .contents-list li { font-size: 0.68rem; color: var(--text-secondary); padding: 0.35rem 0; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
-        .contents-list li:last-child { border-bottom: none; }
-        .contents-list .item-name { font-weight: 500; color: var(--text-primary); }
-        .contents-list .item-details { text-align: right; }
-        .contents-list .item-qty { color: var(--gold-dark); font-weight: 600; margin-right: 8px; }
-        .contents-list .item-price { color: var(--text-muted); font-size: 0.6rem; }
-
-        .toast-container { position: fixed; top: calc(60px + var(--safe-top)); right: 8px; left: 8px; z-index: 5000; display: flex; flex-direction: column; align-items: flex-end; pointer-events: none; }
-        .toast { background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; padding: 0.6rem 0.9rem; margin-bottom: 0.3rem; box-shadow: var(--shadow-md); display: flex; align-items: center; gap: 6px; font-size: 0.7rem; animation: toastIn 0.3s ease; pointer-events: auto; }
-        .toast.success { border-left: 3px solid var(--green); } .toast.success i { color: var(--green); }
-        .toast.error { border-left: 3px solid var(--red); } .toast.error i { color: var(--red); }
-        .toast.warning { border-left: 3px solid var(--warning); } .toast.warning i { color: var(--warning); }
-        .toast.info { border-left: 3px solid var(--info); } .toast.info i { color: var(--info); }
-        @keyframes toastIn { from { opacity: 0; transform: translateX(40px); } to { opacity: 1; transform: translateX(0); } }
-
-        .loading-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.7); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; z-index: 6000; }
-        .loading-overlay.hidden { display: none; }
-        .spinner { width: 35px; height: 35px; border-radius: 50%; border: 3px solid var(--border); border-top-color: var(--gold); animation: spin 0.7s linear infinite; }
-        @keyframes spin { to { transform: rotate(360deg); } }
-
-        .hidden { display: none !important; }
-        .footer { text-align: center; padding: 0.5rem 1rem calc(0.5rem + var(--safe-bottom)); color: var(--text-muted); font-size: 0.55rem; border-top: 1px solid var(--border); }
-        .footer span { color: var(--gold-dark); font-weight: 600; }
-
-        .tab-icon-pickup { color: var(--orange); }
-        .tab-icon-dsog { color: var(--pink); }
-        .tab-icon-fusion { color: var(--emerald); }
-        .tab-icon-brandinn { color: var(--purple); }
-        .tab-icon-heritage { color: #d946ef; }
-    </style>
+    @media (max-width: 1100px) { .action-grid { grid-template-columns: repeat(4, 1fr); } }
+    @media (max-width: 768px) {
+      .stats-grid { grid-template-columns: 1fr 1fr; }
+      .action-grid { grid-template-columns: 1fr 1fr; }
+      .container { padding: 0.8rem; }
+      .page-header h1 { font-size: 1.1rem; }
+    }
+    @media (max-width: 500px) {
+      .action-grid { grid-template-columns: 1fr; }
+    }
+  </style>
 </head>
 <body>
-    <div class="loading-overlay hidden" id="loadingOverlay"><div class="spinner"></div></div>
-    <div class="toast-container" id="toastContainer"></div>
+  <nav class="navbar">
+    <div class="logo" id="logoClick">
+      <img src="https://i.postimg.cc/rFfXDj3L/kazinni-removebg-preview(1).png" alt="Fusion Foods Logo" class="logo-img" id="logoIcon">
+      <span class="logo-text" id="businessName">Fusion Foods</span>
+    </div>
+    <div class="nav-right">
+      <a href="/workspaces/fusion-foods/map.html" class="nav-btn map-btn"><i class="fas fa-map-location-dot"></i> Add to Map</a>
+      <a href="index.html" class="nav-btn"><i class="fas fa-arrow-left"></i> Workspaces</a>
+      <div class="user-badge">
+        <div class="user-avatar skeleton" id="userAvatar" style="width:30px;height:30px;border-radius:50%;">FF</div>
+        <span id="userName">Supplier</span>
+      </div>
+    </div>
+  </nav>
 
-    <div class="notification-banner hidden" id="notificationBanner">
-        <i class="fas fa-bell"></i> <span>Get alerts even when screen is off</span>
-        <button onclick="enableNotifications()">Enable</button>
-        <button class="close-banner" onclick="$('notificationBanner').classList.add('hidden')"><i class="fas fa-times"></i></button>
+  <div class="container">
+    <div class="page-header">
+      <h1>
+        <i class="fas fa-utensils"></i>
+        Fusion Foods Dashboard
+        <span class="last-updated" id="lastUpdated"><i class="fas fa-circle"></i> Live</span>
+      </h1>
+      <p>Receive orders, manage products, suppliers, inventory & dispatch shipments.</p>
     </div>
 
-    <!-- Pickup Modal -->
-    <div class="modal-overlay" id="pickupModal"><div class="modal">
-        <div class="modal-header"><i class="fas fa-box"></i><h3>Start Delivery</h3><button class="modal-close" onclick="closePickupModal()"><i class="fas fa-times"></i></button></div>
-        <p>Confirm you have the package and are starting the delivery.</p>
-        <div class="form-group"><label>Notes</label><textarea id="pickupNotes" rows="2" placeholder="Any notes..."></textarea></div>
-        <div class="btn-row"><button class="action-btn btn-cancel" onclick="closePickupModal()">Cancel</button><button class="action-btn btn-start" onclick="confirmPickup()"><i class="fas fa-check"></i> Start Delivery</button></div>
-    </div></div>
-
-    <!-- Complete Modal -->
-    <div class="modal-overlay" id="completeModal"><div class="modal">
-        <div class="modal-header"><i class="fas fa-check-circle"></i><h3>Complete Delivery</h3><button class="modal-close" onclick="closeCompleteModal()"><i class="fas fa-times"></i></button></div>
-        <div class="form-group"><label>Receiver Name *</label><input type="text" id="proofName" placeholder="Who received it?"></div>
-        <div class="form-group"><label>Notes</label><textarea id="proofNotes" rows="2" placeholder="Any notes..."></textarea></div>
-        <div class="btn-row"><button class="action-btn btn-cancel" onclick="closeCompleteModal()">Cancel</button><button class="action-btn btn-done" onclick="completeDelivery()"><i class="fas fa-flag-checkered"></i> Mark Delivered</button></div>
-    </div></div>
-
-    <!-- Details Modal -->
-    <div class="modal-overlay" id="detailsModal"><div class="modal">
-        <div class="modal-header"><i class="fas fa-info-circle"></i><h3 id="detailsTitle">Details</h3><button class="modal-close" onclick="closeDetailsModal()"><i class="fas fa-times"></i></button></div>
-        <div id="detailsBody"></div>
-        <div class="btn-row"><button class="action-btn btn-nav" onclick="navigateFromModal()" id="navFromModalBtn" style="display:none;"><i class="fas fa-map-marked-alt"></i> Navigate</button><button class="action-btn btn-cancel" onclick="closeDetailsModal()">Close</button></div>
-    </div></div>
-
-    <div class="app-container">
-        <header class="header">
-            <div class="header-inner">
-                <div class="brand"><img src="https://i.postimg.cc/rFfXDj3L/kazinni-removebg-preview(1).png" alt="KazInni" class="brand-logo"><span class="brand-name">KazInni</span></div>
-                <div class="header-right">
-                    <div class="header-stat"><i class="fas fa-circle" style="color:var(--green);font-size:0.4rem;"></i><span id="headerActiveCount">0</span> active</div>
-                    <div class="user-btn"><div class="user-avatar" id="userAvatar">KA</div><span id="userName">Asst</span>
-                        <div class="user-dropdown">
-                            <button class="dropdown-item" onclick="refreshAll()"><i class="fas fa-sync-alt"></i> Refresh</button>
-                            <button class="dropdown-item" onclick="testNotification()"><i class="fas fa-bell"></i> Test Alert</button>
-                            <button class="dropdown-item danger" onclick="handleLogout()"><i class="fas fa-sign-out-alt"></i> Sign Out</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </header>
-
-        <nav class="tab-nav" id="tabNav"></nav>
-
-        <div class="main-content">
-            <div id="pendingState" class="hidden" style="padding:1rem;"><div class="state-card state-pending"><i class="fas fa-clock"></i><h2>Verification Pending</h2><p>Your application is under review.</p></div></div>
-            <div id="rejectedState" class="hidden" style="padding:1rem;"><div class="state-card state-rejected"><i class="fas fa-times-circle"></i><h2>Not Approved</h2><p id="rejectionMsg">Contact support.</p></div></div>
-            <div id="tabContents"></div>
+    <!-- Stats Grid with Skeleton Support -->
+    <div class="stats-grid" id="statsGrid">
+      <div class="stat-card skeleton-card">
+        <div class="stat-left">
+          <div class="skeleton skeleton-text-sm" style="width:80px;"></div>
+          <div class="skeleton skeleton-number" style="width:40px;"></div>
+          <div class="skeleton skeleton-text-sm" style="width:100px;"></div>
         </div>
-
-        <footer class="footer">&copy; 2026 <span>KazInni</span> · Deliveries</footer>
+        <div class="skeleton skeleton-icon"></div>
+      </div>
+      <div class="stat-card skeleton-card">
+        <div class="stat-left">
+          <div class="skeleton skeleton-text-sm" style="width:80px;"></div>
+          <div class="skeleton skeleton-number" style="width:40px;"></div>
+          <div class="skeleton skeleton-text-sm" style="width:100px;"></div>
+        </div>
+        <div class="skeleton skeleton-icon"></div>
+      </div>
+      <div class="stat-card skeleton-card">
+        <div class="stat-left">
+          <div class="skeleton skeleton-text-sm" style="width:80px;"></div>
+          <div class="skeleton skeleton-number" style="width:40px;"></div>
+          <div class="skeleton skeleton-text-sm" style="width:100px;"></div>
+        </div>
+        <div class="skeleton skeleton-icon"></div>
+      </div>
+      <div class="stat-card skeleton-card">
+        <div class="stat-left">
+          <div class="skeleton skeleton-text-sm" style="width:80px;"></div>
+          <div class="skeleton skeleton-number" style="width:40px;"></div>
+          <div class="skeleton skeleton-text-sm" style="width:100px;"></div>
+        </div>
+        <div class="skeleton skeleton-icon"></div>
+      </div>
     </div>
 
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+    <!-- Action Grid with Skeleton Support -->
+    <div class="action-grid" id="actionGrid">
+      <div class="skeleton-action-card">
+        <div class="skeleton skeleton-action-icon"></div>
+        <div class="skeleton skeleton-text" style="width:80%;"></div>
+        <div class="skeleton skeleton-text-sm" style="width:100%;"></div>
+        <div class="skeleton skeleton-text-sm" style="width:60%;"></div>
+      </div>
+      <div class="skeleton-action-card">
+        <div class="skeleton skeleton-action-icon"></div>
+        <div class="skeleton skeleton-text" style="width:80%;"></div>
+        <div class="skeleton skeleton-text-sm" style="width:100%;"></div>
+        <div class="skeleton skeleton-text-sm" style="width:60%;"></div>
+      </div>
+      <div class="skeleton-action-card">
+        <div class="skeleton skeleton-action-icon"></div>
+        <div class="skeleton skeleton-text" style="width:80%;"></div>
+        <div class="skeleton skeleton-text-sm" style="width:100%;"></div>
+        <div class="skeleton skeleton-text-sm" style="width:60%;"></div>
+      </div>
+      <div class="skeleton-action-card">
+        <div class="skeleton skeleton-action-icon"></div>
+        <div class="skeleton skeleton-text" style="width:80%;"></div>
+        <div class="skeleton skeleton-text-sm" style="width:100%;"></div>
+        <div class="skeleton skeleton-text-sm" style="width:60%;"></div>
+      </div>
+      <div class="skeleton-action-card">
+        <div class="skeleton skeleton-action-icon"></div>
+        <div class="skeleton skeleton-text" style="width:80%;"></div>
+        <div class="skeleton skeleton-text-sm" style="width:100%;"></div>
+        <div class="skeleton skeleton-text-sm" style="width:60%;"></div>
+      </div>
+      <div class="skeleton-action-card">
+        <div class="skeleton skeleton-action-icon"></div>
+        <div class="skeleton skeleton-text" style="width:80%;"></div>
+        <div class="skeleton skeleton-text-sm" style="width:100%;"></div>
+        <div class="skeleton skeleton-text-sm" style="width:60%;"></div>
+      </div>
+      <div class="skeleton-action-card">
+        <div class="skeleton skeleton-action-icon"></div>
+        <div class="skeleton skeleton-text" style="width:80%;"></div>
+        <div class="skeleton skeleton-text-sm" style="width:100%;"></div>
+        <div class="skeleton skeleton-text-sm" style="width:60%;"></div>
+      </div>
+      <div class="skeleton-action-card">
+        <div class="skeleton skeleton-action-icon"></div>
+        <div class="skeleton skeleton-text" style="width:80%;"></div>
+        <div class="skeleton skeleton-text-sm" style="width:100%;"></div>
+        <div class="skeleton skeleton-text-sm" style="width:60%;"></div>
+      </div>
+    </div>
 
-    <script>
-        // ========== SERVICE WORKER ==========
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/service-worker.js')
-                    .then(reg => console.log('SW registered:', reg.scope))
-                    .catch(err => console.log('SW registration failed:', err));
-            });
-        }
+    <!-- Quick Actions with Skeleton -->
+    <div class="quick-section" id="quickSection">
+      <div class="quick-header"><i class="fas fa-bolt"></i> Quick Actions</div>
+      <div class="quick-links" id="quickLinks">
+        <div class="skeleton skeleton-quick-btn"></div>
+        <div class="skeleton skeleton-quick-btn"></div>
+        <div class="skeleton skeleton-quick-btn" style="width:80px;"></div>
+        <div class="skeleton skeleton-quick-btn"></div>
+        <div class="skeleton skeleton-quick-btn" style="width:90px;"></div>
+        <div class="skeleton skeleton-quick-btn"></div>
+        <div class="skeleton skeleton-quick-btn" style="width:85px;"></div>
+        <div class="skeleton skeleton-quick-btn"></div>
+        <div class="skeleton skeleton-quick-btn" style="width:95px;"></div>
+      </div>
+    </div>
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyC7kppUyHUaPzeLBV62NEZWuHiuz1Kz0mA",
-            authDomain: "mugera-e51cc.firebaseapp.com",
-            databaseURL: "https://mugera-e51cc-default-rtdb.europe-west1.firebasedatabase.app",
-            projectId: "mugera-e51cc",
-            storageBucket: "mugera-e51cc.firebasestorage.app",
-            messagingSenderId: "1024868637509",
-            appId: "1:1024868637509:web:321faecddce8f11d9cfc2c"
-        };
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.database();
-        const auth = firebase.auth();
+    <!-- Recent Orders with Skeleton -->
+    <div class="recent-section" id="recentSection">
+      <div class="recent-header">
+        <h3><i class="fas fa-clock-rotate-left" style="color:#059669;"></i> Recent Orders</h3>
+        <a href="/workspaces/fusion-foods/orders.html" style="color:#059669;font-weight:600;font-size:0.75rem;">View all</a>
+      </div>
+      <div class="recent-list" id="recentList">
+        <div class="skeleton-recent-item">
+          <div class="skeleton skeleton-avatar"></div>
+          <div style="flex:1;">
+            <div class="skeleton skeleton-text" style="width:50%;"></div>
+            <div class="skeleton skeleton-text-sm" style="width:80%;"></div>
+          </div>
+          <div class="skeleton skeleton-badge"></div>
+        </div>
+        <div class="skeleton-recent-item">
+          <div class="skeleton skeleton-avatar"></div>
+          <div style="flex:1;">
+            <div class="skeleton skeleton-text" style="width:60%;"></div>
+            <div class="skeleton skeleton-text-sm" style="width:70%;"></div>
+          </div>
+          <div class="skeleton skeleton-badge"></div>
+        </div>
+        <div class="skeleton-recent-item">
+          <div class="skeleton skeleton-avatar"></div>
+          <div style="flex:1;">
+            <div class="skeleton skeleton-text" style="width:45%;"></div>
+            <div class="skeleton skeleton-text-sm" style="width:75%;"></div>
+          </div>
+          <div class="skeleton skeleton-badge"></div>
+        </div>
+        <div class="skeleton-recent-item">
+          <div class="skeleton skeleton-avatar"></div>
+          <div style="flex:1;">
+            <div class="skeleton skeleton-text" style="width:55%;"></div>
+            <div class="skeleton skeleton-text-sm" style="width:65%;"></div>
+          </div>
+          <div class="skeleton skeleton-badge"></div>
+        </div>
+        <div class="skeleton-recent-item">
+          <div class="skeleton skeleton-avatar"></div>
+          <div style="flex:1;">
+            <div class="skeleton skeleton-text" style="width:50%;"></div>
+            <div class="skeleton skeleton-text-sm" style="width:85%;"></div>
+          </div>
+          <div class="skeleton skeleton-badge"></div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-        const $ = id => document.getElementById(id);
-        let currentUser = null, activeTab = 'all';
-        let currentActionId = null, currentActionSource = null, currentNavAddress = null;
-        let allDeliveries = [];
-        let allSuppliers = {}; // NEW: Store suppliers data
-        let notificationPermission = 'default', notificationsEnabled = false;
-        let seenIds = new Set();
-        let audioCtx = null;
+  <div class="footer">
+    <i class="far fa-copyright"></i> 2026 Fusion Foods • Food & Grocery Supply • <span id="footerStats">Loading...</span>
+  </div>
 
-        // ========== LOAD SUPPLIERS ==========
-        async function loadSuppliers() {
-            try {
-                const snap = await db.ref('fusion_foods_suppliers').once('value');
-                allSuppliers = snap.val() || {};
-            } catch(e) {
-                console.warn('Could not load suppliers:', e);
-            }
-        }
+  <script type="importmap">
+    {
+      "imports": {
+        "firebase/app": "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js",
+        "firebase/auth": "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js",
+        "firebase/database": "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js"
+      }
+    }
+  </script>
 
-        function getSupplierInfo(supplierId) {
-            if (!supplierId) return null;
-            const supplier = allSuppliers[supplierId];
-            return supplier || null;
-        }
+  <script type="module">
+    import { initializeApp } from "firebase/app";
+    import { getAuth, onAuthStateChanged } from "firebase/auth";
+    import { getDatabase, ref, get, onValue } from "firebase/database";
 
-        function getSupplierName(supplierId) {
-            const supplier = getSupplierInfo(supplierId);
-            return supplier ? supplier.name : null;
-        }
+    const firebaseConfig = {
+      apiKey: "AIzaSyC7kppUyHUaPzeLBV62NEZWuHiuz1Kz0mA",
+      authDomain: "mugera-e51cc.firebaseapp.com",
+      databaseURL: "https://mugera-e51cc-default-rtdb.europe-west1.firebasedatabase.app",
+      projectId: "mugera-e51cc",
+      storageBucket: "mugera-e51cc.firebasestorage.app",
+      messagingSenderId: "1024868637509",
+      appId: "1:1024868637509:web:321faecddce8f11d9cfc2c"
+    };
 
-        // ========== ENHANCED CONTENT EXTRACTION ==========
-        function extractDeliveryContents(rawItem, sourceKey) {
-            if (rawItem.products && Array.isArray(rawItem.products) && rawItem.products.length > 0) {
-                return rawItem.products.map(p => ({
-                    name: p.name || p.productName || 'Item',
-                    quantity: p.quantity || 1,
-                    price: p.price || p.unitPrice || 0,
-                    size: p.size || null,
-                    color: p.color || null,
-                    sku: p.sku || p.productId || null
-                }));
-            }
-            
-            if (rawItem.items && Array.isArray(rawItem.items) && rawItem.items.length > 0) {
-                return rawItem.items.map(i => ({
-                    name: i.name || i.title || 'Item',
-                    quantity: i.quantity || 1,
-                    price: i.price || 0,
-                    size: i.size || null
-                }));
-            }
-            
-            if (rawItem.cart && rawItem.cart.items && Array.isArray(rawItem.cart.items)) {
-                return rawItem.cart.items.map(i => ({
-                    name: i.name || 'Item',
-                    quantity: i.quantity || 1,
-                    price: i.price || 0
-                }));
-            }
-            
-            if (sourceKey === 'brandinn') {
-                const details = [];
-                if (rawItem.product) details.push({ name: 'Product', value: rawItem.product });
-                if (rawItem.type) details.push({ name: 'Type', value: rawItem.type });
-                if (rawItem.designText) details.push({ name: 'Design Text', value: rawItem.designText });
-                if (rawItem.size) details.push({ name: 'Size', value: rawItem.size });
-                if (rawItem.quantity) details.push({ name: 'Quantity', value: rawItem.quantity });
-                if (details.length > 0) return details;
-            }
-            
-            if (sourceKey === 'pickup') {
-                const details = [];
-                if (rawItem.package) {
-                    if (rawItem.package.type) details.push({ name: 'Package Type', value: rawItem.package.type });
-                    if (rawItem.package.weight) details.push({ name: 'Weight', value: rawItem.package.weight + (rawItem.package.weightUnit || 'kg') });
-                    if (rawItem.package.description) details.push({ name: 'Description', value: rawItem.package.description });
-                }
-                if (details.length > 0) return details;
-            }
-            
-            return null;
-        }
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getDatabase(app);
 
-        function formatContentsForDisplay(contents) {
-            if (!contents || !Array.isArray(contents) || contents.length === 0) return '';
-            
-            let html = '<div class="contents-section"><h4><i class="fas fa-box-open"></i> 📦 What You\'re Delivering</h4><ul class="contents-list">';
-            
-            for (const item of contents) {
-                if (item.name && item.value) {
-                    html += `<li><span class="item-name">${escapeHtml(item.name)}</span><span class="item-details"><strong>${escapeHtml(String(item.value))}</strong></span></li>`;
-                } else if (item.name) {
-                    html += `<li>
-                        <span class="item-name">${escapeHtml(item.name)}${item.size ? ' (' + escapeHtml(item.size) + ')' : ''}${item.color ? ' - ' + escapeHtml(item.color) : ''}</span>
-                        <span class="item-details">
-                            ${item.quantity ? `<span class="item-qty">×${item.quantity}</span>` : ''}
-                            ${item.price ? `<span class="item-price">KSh ${Number(item.price).toLocaleString()}</span>` : ''}
-                        </span>
-                    </li>`;
-                }
-            }
-            
-            html += '</ul></div>';
-            return html;
-        }
+    let allOrders = {};
+    let allInventory = {};
+    let allStores = {};
+    let allSuppliers = {};
 
-        // ========== SOURCES with pickup location fields ==========
-        const sources = [
-            { 
-                key: 'pickup', path: 'pickup_deliveries', label: 'Pick-Up', icon: 'fa-box', iconClass: 'tab-icon-pickup', 
-                assignedField: 'assignedTo', customerField: 'userName', phoneField: 'userPhone', emailField: 'userEmail', 
-                pickupField: 'pickup.address', deliveryField: 'delivery.address', amountField: 'fare.total', 
-                statusField: 'status', packageField: 'package.type', instructionsField: 'package.instructions',
-                pickupNameField: null, pickupLocationField: null, pickupPhoneField: null, pickupSupplierIdField: null,
-                newStatuses: ['assigned','pending'], activeStatuses: ['out-for-delivery','in_progress'], doneStatus: 'delivered' 
-            },
-            { 
-                key: 'dsog', path: 'dsog_fashion_orders', label: 'DSOG', icon: 'fa-tshirt', iconClass: 'tab-icon-dsog', 
-                assignedField: 'driverId', customerField: 'customerName', phoneField: 'customerPhone', emailField: 'customerEmail', 
-                pickupField: 'pickupLocation', deliveryField: 'location', amountField: 'total', statusField: 'status', 
-                packageField: 'packageType', instructionsField: 'notes',
-                pickupNameField: 'pickupName', pickupLocationField: 'pickupLocation', pickupPhoneField: 'pickupPhone', pickupSupplierIdField: 'pickupSupplierId',
-                newStatuses: ['ready','assigned'], activeStatuses: ['shipped','out-for-delivery'], doneStatus: 'delivered' 
-            },
-            { 
-                key: 'fusion', path: 'fusion_foods_orders', label: 'Fusion', icon: 'fa-utensils', iconClass: 'tab-icon-fusion', 
-                assignedField: 'driverId', customerField: 'restaurantName', phoneField: 'phone', emailField: 'email', 
-                pickupField: 'pickupLocation', deliveryField: 'location', amountField: 'total', statusField: 'status', 
-                packageField: 'packageType', instructionsField: 'notes',
-                pickupNameField: 'pickupName', pickupLocationField: 'pickupLocation', pickupPhoneField: 'pickupPhone', pickupSupplierIdField: 'pickupSupplierId',
-                newStatuses: ['ready','assigned'], activeStatuses: ['shipped','out-for-delivery'], doneStatus: 'delivered' 
-            },
-            { 
-                key: 'brandinn', path: 'brandinn_print_orders', label: 'Print', icon: 'fa-print', iconClass: 'tab-icon-brandinn', 
-                assignedField: 'driverId', customerField: 'customerName', phoneField: 'customerPhone', emailField: 'customerEmail', 
-                pickupField: 'pickupLocation', deliveryField: 'location', amountField: 'total', statusField: 'status', 
-                packageField: 'product', instructionsField: 'notes',
-                pickupNameField: 'pickupName', pickupLocationField: 'pickupLocation', pickupPhoneField: 'pickupPhone', pickupSupplierIdField: 'pickupSupplierId',
-                newStatuses: ['ready','completed','pending'], activeStatuses: ['in-progress','printing'], doneStatus: 'delivered' 
-            },
-            { 
-                key: 'heritage', path: 'heritage_listings', label: 'Heritage', icon: 'fa-landmark', iconClass: 'tab-icon-heritage', 
-                assignedField: 'driverId', customerField: 'partnerName', phoneField: '', emailField: '', 
-                pickupField: 'pickupLocation', deliveryField: 'location', amountField: 'price', statusField: 'status', 
-                packageField: 'adType', instructionsField: 'notes',
-                pickupNameField: 'pickupName', pickupLocationField: 'pickupLocation', pickupPhoneField: 'pickupPhone', pickupSupplierIdField: 'pickupSupplierId',
-                newStatuses: ['active'], activeStatuses: [], doneStatus: 'expired' 
-            }
-        ];
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str).replace(/[&<>]/g, m => m === '&' ? '&amp;' : m === '<' ? '&lt;' : m === '>' ? '&gt;' : m);
+    }
 
-        function getNested(obj, path) { 
-            if (!obj || !path) return null;
-            return path.split('.').reduce((o, k) => (o || {})[k], obj) || null; 
-        }
-        
-        // NEW: Extract pickup info from order
-        function extractPickupInfo(item, src) {
-            // Check for supplier pickup fields first (set during dispatch)
-            const pickupName = getNested(item, src.pickupNameField) || item.pickupName || '';
-            const pickupLocation = getNested(item, src.pickupLocationField) || item.pickupLocation || '';
-            const pickupPhone = getNested(item, src.pickupPhoneField) || item.pickupPhone || '';
-            const pickupSupplierId = getNested(item, src.pickupSupplierIdField) || item.pickupSupplierId || '';
-            
-            // If we have a supplier ID, try to get info from suppliers database
-            if (pickupSupplierId && allSuppliers[pickupSupplierId]) {
-                const supplier = allSuppliers[pickupSupplierId];
-                return {
-                    name: pickupName || supplier.name || '',
-                    location: pickupLocation || supplier.location || '',
-                    phone: pickupPhone || supplier.phone || '',
-                    supplierId: pickupSupplierId
-                };
-            }
-            
-            // Return what we have from the order
-            return {
-                name: pickupName,
-                location: pickupLocation,
-                phone: pickupPhone,
-                supplierId: pickupSupplierId
-            };
-        }
+    function getInitials(name) {
+      if (!name) return 'FF';
+      return name.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
+    }
 
-        // NEW: Format pickup info for display
-        function formatPickupDisplay(pickupInfo) {
-            if (!pickupInfo || (!pickupInfo.name && !pickupInfo.location)) return '';
-            
-            let html = '<div class="pickup-info-badge"><i class="fas fa-warehouse"></i> <strong>Pickup:</strong> ';
-            
-            if (pickupInfo.name) {
-                html += escapeHtml(pickupInfo.name);
-                if (pickupInfo.location) {
-                    html += ` — ${escapeHtml(pickupInfo.location)}`;
-                }
-            } else if (pickupInfo.location) {
-                html += escapeHtml(pickupInfo.location);
-            }
-            
-            if (pickupInfo.phone) {
-                html += ` · 📞 ${escapeHtml(pickupInfo.phone)}`;
-            }
-            
-            html += '</div>';
-            return html;
-        }
-        
-        function showLoading(s) { $('loadingOverlay').classList.toggle('hidden', !s); }
-        
-        function toast(msg, type = 'info') {
-            const icons = { success: 'fa-check-circle', error: 'fa-exclamation-circle', warning: 'fa-exclamation-triangle', info: 'fa-info-circle' };
-            const t = document.createElement('div'); t.className = `toast ${type}`; t.innerHTML = `<i class="fas ${icons[type]}"></i> ${msg}`;
-            $('toastContainer').appendChild(t); setTimeout(() => { t.style.opacity = '0'; t.style.transition = '0.3s'; setTimeout(() => t.remove(), 300); }, 3500);
-        }
-        
-        function getInitials(n) { return n ? String(n).split(' ').map(w => w[0]).join('').toUpperCase().substring(0,2) : 'KA'; }
-        function escapeHtml(s) { if (!s) return ''; const d = document.createElement('div'); d.textContent = String(s); return d.innerHTML; }
+    function formatTimeAgo(timestamp) {
+      if (!timestamp) return '';
+      const date = typeof timestamp === 'number' ? new Date(timestamp) : new Date(timestamp);
+      if (isNaN(date.getTime())) return '';
+      const diff = Date.now() - date.getTime();
+      const mins = Math.floor(diff / 60000);
+      const hours = Math.floor(mins / 60);
+      const days = Math.floor(hours / 24);
+      if (days > 30) return '';
+      if (days > 0) return `${days}d ago`;
+      if (hours > 0) return `${hours}h ago`;
+      if (mins > 0) return `${mins}m ago`;
+      return 'Just now';
+    }
 
-        // ========== NOTIFICATIONS ==========
-        function initAudio() { if (!audioCtx) { try { audioCtx = new (window.AudioContext||window.webkitAudioContext)(); } catch(e) {} } if (audioCtx?.state === 'suspended') audioCtx.resume(); }
-        function playNotificationSound() {
-            if (!audioCtx) return;
-            try { const now = audioCtx.currentTime; [{ freq: 880, start: 0, duration: 0.2, vol: 0.4 },{ freq: 1108.73, start: 0.2, duration: 0.25, vol: 0.5 },{ freq: 1318.51, start: 0.45, duration: 0.35, vol: 0.45 },{ freq: 1760, start: 0.8, duration: 0.3, vol: 0.35 }].forEach(n => { const o = audioCtx.createOscillator(); const g = audioCtx.createGain(); o.connect(g); g.connect(audioCtx.destination); o.type = 'sine'; o.frequency.setValueAtTime(n.freq, now + n.start); g.gain.setValueAtTime(0, now + n.start); g.gain.linearRampToValueAtTime(n.vol, now + n.start + 0.03); g.gain.exponentialRampToValueAtTime(0.01, now + n.start + n.duration); o.start(now + n.start); o.stop(now + n.start + n.duration); }); } catch(e) {}
-        }
-        function vibrateStrong() { if (navigator.vibrate) navigator.vibrate([300, 150, 300, 150, 500, 200, 300]); }
+    function getStatusClass(status) {
+      const s = (status || 'new').toLowerCase().replace(/\s+/g, '_');
+      const map = { new: 'status-new', pending: 'status-pending', confirmed: 'status-confirmed', processing: 'status-processing', shipped: 'status-shipped', delivered: 'status-delivered', cancelled: 'status-cancelled' };
+      return map[s] || 'status-new';
+    }
 
-        function enableNotifications() {
-            initAudio();
-            if ('Notification' in window) {
-                Notification.requestPermission().then(p => {
-                    notificationPermission = p; notificationsEnabled = p === 'granted';
-                    if (p === 'granted') { toast('Notifications enabled!', 'success'); $('notificationBanner').classList.add('hidden'); playNotificationSound(); vibrateStrong(); sendBrowserNotification('KazInni', 'You will receive alerts even when screen is off!'); }
-                    else { toast('Permission denied', 'warning'); }
-                });
-            }
-        }
+    function getStatusLabel(status) {
+      if (!status) return 'new';
+      return status.toLowerCase().replace(/_/g, ' ');
+    }
 
-        function sendBrowserNotification(title, body) {
-            if (!notificationsEnabled || notificationPermission !== 'granted') return;
-            try {
-                if ('serviceWorker' in navigator) {
-                    navigator.serviceWorker.ready.then(reg => reg.showNotification(title, { body, icon: 'https://i.postimg.cc/rFfXDj3L/kazinni-removebg-preview(1).png', badge: 'https://i.postimg.cc/rFfXDj3L/kazinni-removebg-preview(1).png', tag: 'kazinni', requireInteraction: true, vibrate: [300,150,300,150,500,200,300], renotify: true }));
-                } else {
-                    const n = new Notification(title, { body, icon: 'https://i.postimg.cc/rFfXDj3L/kazinni-removebg-preview(1).png', tag: 'kazinni', requireInteraction: true, vibrate: [300,150,300,150,500,200,300] });
-                    n.onclick = () => { window.focus(); n.close(); }; setTimeout(() => n.close(), 10000);
-                }
-            } catch(e) {}
-        }
+    function getCategoryIcon(category) {
+      const cat = (category || '').toLowerCase();
+      if (cat.includes('vegetable') || cat.includes('produce')) return '🥬';
+      if (cat.includes('meat') || cat.includes('protein')) return '🥩';
+      if (cat.includes('dairy') || cat.includes('milk')) return '🥛';
+      if (cat.includes('grain') || cat.includes('rice') || cat.includes('flour')) return '🌾';
+      if (cat.includes('spice')) return '🌶️';
+      if (cat.includes('beverage') || cat.includes('drink')) return '🥤';
+      if (cat.includes('oil')) return '🫒';
+      if (cat.includes('bakery') || cat.includes('bread')) return '🍞';
+      return '📦';
+    }
 
-        function notifyNewRequest(label, details) { initAudio(); playNotificationSound(); vibrateStrong(); sendBrowserNotification('KazInni · New Request', details); toast(`🔔 ${details}`, 'info'); }
-        function testNotification() { initAudio(); playNotificationSound(); vibrateStrong(); sendBrowserNotification('KazInni · Test', 'Notification test!'); toast('Test alert sent!', 'success'); }
+    function renderRecentList() {
+      const recentList = document.getElementById('recentList');
+      const orders = Object.entries(allOrders)
+        .filter(([_, o]) => o && (o.restaurantName || o.businessName || o.customerName))
+        .map(([id, data]) => ({ id, ...data }))
+        .sort((a, b) => (b.createdAt || b.timestamp || 0) - (a.createdAt || a.timestamp || 0))
+        .slice(0, 6);
 
-        // ========== AUTH ==========
-        auth.onAuthStateChanged(async user => {
-            if (!user) { 
-                window.location.href = './'; 
-                return; 
-            }
-            currentUser = user;
-            $('userAvatar').textContent = getInitials(user.displayName || user.email);
-            $('userName').textContent = (user.displayName || user.email?.split('@')[0] || 'Asst').substring(0,10);
-            showLoading(true);
-            
-            // Load suppliers first
-            await loadSuppliers();
-            
-            if ('Notification' in window) { notificationPermission = Notification.permission; notificationsEnabled = notificationPermission === 'granted'; if (notificationPermission === 'default') setTimeout(() => $('notificationBanner').classList.remove('hidden'), 1500); }
-            await checkRegistration();
-            showLoading(false);
-        });
+      if (!orders.length) {
+        recentList.innerHTML = '<div class="empty-state"><i class="fas fa-shopping-basket"></i><p>No orders yet</p></div>';
+        return;
+      }
 
-        async function checkRegistration() {
-            try {
-                const snap = await db.ref(`delivery_assistants/${currentUser.uid}`).once('value');
-                if (snap.exists() && snap.val().verified === true) {
-                    renderTabs();
-                    activeTab = 'all';
-                    switchTab('all');
-                    loadAllDeliveries();
-                    setupListeners();
-                } else if (snap.exists() && snap.val().status === 'rejected') {
-                    $('rejectedState').classList.remove('hidden');
-                    if (snap.val().rejectionReason) $('rejectionMsg').textContent = snap.val().rejectionReason;
-                } else {
-                    $('pendingState').classList.remove('hidden');
-                }
-            } catch(e) { $('pendingState').classList.remove('hidden'); }
-        }
+      recentList.innerHTML = orders.map(order => {
+        const status = order.status || 'new';
+        const timeAgo = formatTimeAgo(order.createdAt || order.timestamp);
+        const restaurant = order.restaurantName || order.businessName || order.customerName || 'Restaurant';
+        const products = order.products || [];
+        const itemCount = products.length;
+        const total = order.total || 0;
 
-        function renderTabs() {
-            let html = `<button class="tab-btn active" data-tab="all" onclick="switchTab('all')"><i class="fas fa-layer-group"></i> All <span class="tab-badge" id="badge-all">0</span></button>`;
-            sources.forEach(s => {
-                html += `<button class="tab-btn" data-tab="${s.key}" onclick="switchTab('${s.key}')"><i class="fas ${s.icon} ${s.iconClass}"></i> ${s.label} <span class="tab-badge" id="badge-${s.key}">0</span></button>`;
-            });
-            $('tabNav').innerHTML = html;
-            
-            let content = `<div class="tab-content active" id="tab-all"><div class="delivery-list" id="list-all"><div class="empty-list"><i class="fas fa-sync-alt fa-spin"></i><p>Loading...</p></div></div></div>`;
-            sources.forEach(s => {
-                content += `<div class="tab-content" id="tab-${s.key}"><div class="delivery-list" id="list-${s.key}"><div class="empty-list"><i class="fas fa-sync-alt fa-spin"></i><p>Loading...</p></div></div></div>`;
-            });
-            $('tabContents').innerHTML = content;
-        }
-
-        window.switchTab = function(key) {
-            activeTab = key;
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === key));
-            document.querySelectorAll('.tab-content').forEach(c => c.classList.toggle('active', c.id === `tab-${key}`));
-            renderCurrentList();
-        };
-
-        // ========== LOAD DELIVERIES ==========
-        async function loadAllDeliveries() {
-            if (!currentUser) return;
-            const all = [];
-            for (const src of sources) {
-                try {
-                    const snap = await db.ref(src.path).once('value');
-                    const data = snap.val() || {};
-                    for (const [id, item] of Object.entries(data)) {
-                        const compositeKey = `${src.key}_${id}`;
-                        const assigned = getNested(item, src.assignedField) || item.assignedTo || item.driverId || '';
-                        if (assigned === currentUser.uid) {
-                            const status = getNested(item, src.statusField) || item.status || 'pending';
-                            const contents = extractDeliveryContents(item, src.key);
-                            const pickupInfo = extractPickupInfo(item, src);
-                            
-                            // Determine pickup display
-                            let pickupDisplay = getNested(item, src.pickupField) || item.pickup?.address || '';
-                            if (pickupInfo.name || pickupInfo.location) {
-                                pickupDisplay = pickupInfo.name || pickupInfo.location;
-                            }
-                            
-                            all.push({
-                                compositeKey, id, sourceKey: src.key, sourceLabel: src.label,
-                                customer: getNested(item, src.customerField) || item.customerName || item.userName || 'Customer',
-                                phone: getNested(item, src.phoneField) || item.customerPhone || item.userPhone || item.phone || '',
-                                email: getNested(item, src.emailField) || item.customerEmail || item.userEmail || '',
-                                pickup: pickupDisplay,
-                                delivery: getNested(item, src.deliveryField) || item.delivery?.address || item.location || '—',
-                                amount: getNested(item, src.amountField) || item.total || item.amount || item.fare?.total || 0,
-                                packageInfo: getNested(item, src.packageField) || item.package?.type || item.packageType || item.product || '',
-                                instructions: getNested(item, src.instructionsField) || item.instructions || item.package?.instructions || item.notes || '',
-                                contents: contents,
-                                pickupInfo: pickupInfo,
-                                status, src, rawData: item,
-                                isNew: src.newStatuses.includes(status),
-                                isActive: src.activeStatuses.includes(status),
-                                isDone: status === src.doneStatus
-                            });
-                        }
-                    }
-                } catch(e) { console.warn(`Error loading ${src.path}:`, e); }
-            }
-            allDeliveries = all.filter((d, i, arr) => arr.findIndex(x => x.compositeKey === d.compositeKey) === i);
-            allDeliveries.sort((a, b) => {
-                if (a.isNew && !b.isNew) return -1; if (!a.isNew && b.isNew) return 1;
-                if (a.isActive && !b.isActive) return -1; if (!a.isActive && b.isActive) return 1;
-                return (b.rawData?.createdAt || b.rawData?.timestamp || 0) - (a.rawData?.createdAt || a.rawData?.timestamp || 0);
-            });
-            renderCurrentList();
-            updateBadges();
-        }
-
-        function renderCurrentList() {
-            if (activeTab === 'all') {
-                renderList('all', [...allDeliveries]);
-            } else {
-                const filtered = allDeliveries.filter(d => d.sourceKey === activeTab);
-                renderList(activeTab, filtered);
-            }
-        }
-
-        function renderList(tabKey, items) {
-            const list = $(`list-${tabKey}`); if (!list) return;
-            if (!items.length) { list.innerHTML = '<div class="empty-list"><i class="fas fa-check-circle"></i><p>No deliveries here</p></div>'; return; }
-            list.innerHTML = items.map(d => {
-                const cardClass = d.isNew ? 'new-task' : (d.isActive ? 'active-task' : 'done-task');
-                const statusClass = d.isNew ? 'status-new' : (d.isActive ? 'status-active' : 'status-done');
-                const itemCountBadge = d.contents && d.contents.length > 0 ? `<span style="font-size:0.5rem;background:rgba(245,158,11,0.15);padding:1px 6px;border-radius:8px;margin-left:4px;">📦 ${d.contents.length} item${d.contents.length !== 1 ? 's' : ''}</span>` : '';
-                const pickupHtml = formatPickupDisplay(d.pickupInfo);
-                
-                let actions = `<button class="action-btn btn-cancel" onclick="event.stopPropagation();viewDetails('${d.compositeKey}')">📋 Info</button>`;
-                if (d.isNew) actions += `<button class="action-btn btn-start" onclick="event.stopPropagation();startDelivery('${d.id}','${d.src.path}')"><i class="fas fa-truck"></i> Start</button>`;
-                if (d.isActive) { actions += `<button class="action-btn btn-nav" onclick="event.stopPropagation();navigate('${encodeURIComponent(d.pickupInfo?.location || d.delivery)}')"><i class="fas fa-map-marked-alt"></i> Nav</button>`; actions += `<button class="action-btn btn-done" onclick="event.stopPropagation();markDone('${d.id}','${d.src.path}','${d.src.doneStatus}')"><i class="fas fa-check"></i> Done</button>`; }
-                
-                return `<div class="delivery-card ${cardClass}" onclick="viewDetails('${d.compositeKey}')">
-                    <div class="delivery-top"><span class="delivery-id">#${d.id.slice(-6)}${d.isNew?' <span class="new-badge">NEW</span>':''}${itemCountBadge}</span><span class="delivery-status ${statusClass}">${d.status.replace(/-/g,' ')}</span></div>
-                    <div class="delivery-client">${escapeHtml(d.customer)}</div>
-                    ${d.phone ? `<div class="delivery-phone">📞 ${escapeHtml(d.phone)}</div>` : ''}
-                    ${pickupHtml}
-                    <div class="delivery-route">📍 ${escapeHtml(String(d.pickup).substring(0,35))} <i class="fas fa-arrow-right"></i> ${escapeHtml(String(d.delivery).substring(0,35))}</div>
-                    <div class="delivery-amount">${d.amount ? '💰 KSh '+Number(d.amount).toLocaleString() : ''}</div>
-                    <div class="delivery-actions" onclick="event.stopPropagation()">${actions}</div>
-                </div>`;
-            }).join('');
-        }
-
-        function setupListeners() {
-            for (const src of sources) {
-                db.ref(src.path).on('child_added', snap => {
-                    const compositeKey = `${src.key}_${snap.key}`;
-                    if (seenIds.has(compositeKey)) return;
-                    const item = snap.val();
-                    const assigned = getNested(item, src.assignedField) || item.assignedTo || item.driverId || '';
-                    if (assigned === currentUser?.uid) {
-                        seenIds.add(compositeKey);
-                        const customerName = getNested(item, src.customerField) || item.customerName || item.userName || 'Customer';
-                        notifyNewRequest(src.label, `New ${src.label} delivery for ${customerName}`);
-                        loadAllDeliveries();
-                    }
-                });
-                db.ref(src.path).on('child_changed', () => loadAllDeliveries());
-            }
-        }
-
-        function updateBadges() {
-            let total = 0;
-            for (const s of sources) {
-                const count = allDeliveries.filter(d => d.sourceKey === s.key && (d.isNew || d.isActive)).length;
-                const badge = $(`badge-${s.key}`); if (badge) badge.textContent = count;
-                total += count;
-            }
-            const allBadge = $('badge-all'); if (allBadge) allBadge.textContent = total;
-            $('headerActiveCount').textContent = total;
-        }
-
-        // ========== ACTIONS ==========
-        window.startDelivery = (id, sourcePath) => { currentActionId = id; currentActionSource = sourcePath; $('pickupModal').classList.add('show'); };
-        window.closePickupModal = () => $('pickupModal').classList.remove('show');
-        window.confirmPickup = async () => {
-            if (!currentActionId || !currentActionSource) return; showLoading(true);
-            try { 
-                const src = sources.find(s => s.path === currentActionSource); 
-                await db.ref(`${currentActionSource}/${currentActionId}`).update({ 
-                    status: src?.activeStatuses[0] || 'shipped', 
-                    startedAt: firebase.database.ServerValue.TIMESTAMP, 
-                    pickupNotes: $('pickupNotes').value.trim(), 
-                    updatedAt: firebase.database.ServerValue.TIMESTAMP 
-                }); 
-                toast('Delivery started!', 'success'); 
-                closePickupModal(); 
-                loadAllDeliveries(); 
-            } catch(e) { toast('Error starting delivery', 'error'); }
-            showLoading(false);
-        };
-
-        window.markDone = (id, sourcePath, doneStatus) => { currentActionId = id; currentActionSource = sourcePath; $('completeModal').classList.add('show'); };
-        window.closeCompleteModal = () => $('completeModal').classList.remove('show');
-        window.completeDelivery = async () => {
-            const name = $('proofName').value.trim(); 
-            if (!name) { toast('Enter receiver name', 'warning'); return; }
-            if (!currentActionId || !currentActionSource) return; showLoading(true);
-            try { 
-                const src = sources.find(s => s.path === currentActionSource); 
-                await db.ref(`${currentActionSource}/${currentActionId}`).update({ 
-                    status: src?.doneStatus || 'delivered', 
-                    deliveredAt: firebase.database.ServerValue.TIMESTAMP, 
-                    deliveryProof: { receiverName: name, notes: $('proofNotes').value.trim() }, 
-                    updatedAt: firebase.database.ServerValue.TIMESTAMP 
-                }); 
-                toast('Delivery completed!', 'success'); 
-                closeCompleteModal(); 
-                loadAllDeliveries(); 
-            } catch(e) { toast('Error completing delivery', 'error'); }
-            showLoading(false);
-        };
-
-        // Enhanced view details with pickup info
-        window.viewDetails = (compositeKey) => {
-            const d = allDeliveries.find(x => x.compositeKey === compositeKey); 
-            if (!d) return;
-            
-            // Use pickup location for navigation (prefer supplier location)
-            currentNavAddress = d.pickupInfo?.location || d.pickup;
-            $('detailsTitle').textContent = `${d.sourceLabel} · #${d.id.slice(-6)}`;
-            $('navFromModalBtn').style.display = (d.pickupInfo?.location || d.delivery) ? 'inline-flex' : 'none';
-            
-            let contentsHtml = '';
-            if (d.contents && d.contents.length > 0) {
-                contentsHtml = formatContentsForDisplay(d.contents);
-            } else if (d.packageInfo) {
-                contentsHtml = `<div class="contents-section"><h4><i class="fas fa-box"></i> Package Info</h4><ul class="contents-list"><li><span class="item-name">${escapeHtml(d.packageInfo)}</span></li></ul></div>`;
-            }
-            
-            // Build pickup info HTML for details modal
-            let pickupDetailHtml = '';
-            if (d.pickupInfo && (d.pickupInfo.name || d.pickupInfo.location)) {
-                pickupDetailHtml = `
-                    <div class="detail-item full pickup-highlight"><strong>🏭 Pickup Location (Supplier)</strong>
-                        <span>${escapeHtml(d.pickupInfo.name || '')}${d.pickupInfo.location ? ' — ' + escapeHtml(d.pickupInfo.location) : ''}</span>
-                        ${d.pickupInfo.phone ? `<br><span style="font-size:0.65rem;color:var(--indigo);">📞 ${escapeHtml(d.pickupInfo.phone)}</span>` : ''}
-                    </div>`;
-            }
-            
-            $('detailsBody').innerHTML = `<div class="detail-grid">
-                <div class="detail-item"><strong>Customer</strong><span>${escapeHtml(d.customer)}</span></div>
-                <div class="detail-item"><strong>Phone</strong><span style="color:var(--info);cursor:pointer;" onclick="window.open('tel:${escapeHtml(d.phone)}')">📞 ${escapeHtml(d.phone||'N/A')}</span></div>
-                ${d.email ? `<div class="detail-item full"><strong>Email</strong><span>${escapeHtml(d.email)}</span></div>` : ''}
-                <div class="detail-item"><strong>Status</strong><span class="delivery-status ${d.isNew?'status-new':d.isActive?'status-active':'status-done'}">${d.status.replace(/-/g,' ')}</span></div>
-                <div class="detail-item"><strong>Amount</strong><span>${d.amount?'KSh '+Number(d.amount).toLocaleString():'—'}</span></div>
-                ${pickupDetailHtml}
-                <div class="detail-item full"><strong>📍 Pickup Address</strong><span>${escapeHtml(d.pickup)}</span></div>
-                <div class="detail-item full"><strong>📍 Dropoff Location</strong><span>${escapeHtml(d.delivery)}</span></div>
-                ${d.instructions ? `<div class="detail-item full"><strong>📝 Special Instructions</strong><span>${escapeHtml(d.instructions)}</span></div>` : ''}
+        return `
+          <div class="recent-item">
+            <div style="display:flex;align-items:center;gap:10px;">
+              <div style="width:32px;height:32px;background:#ecfdf5;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1rem;">${getCategoryIcon(order.category)}</div>
+              <div>
+                <strong>${escapeHtml(restaurant)}</strong>
+                <p style="font-size:0.65rem;color:#64748b;">${itemCount} item${itemCount !== 1 ? 's' : ''} · KES ${Number(total).toLocaleString()} ${timeAgo ? '· ' + timeAgo : ''}</p>
+              </div>
             </div>
-            ${contentsHtml}`;
-            
-            $('detailsModal').classList.add('show');
-        };
-        
-        window.closeDetailsModal = () => $('detailsModal').classList.remove('show');
-        window.navigateFromModal = () => { if (currentNavAddress) window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(currentNavAddress)}`, '_blank'); };
-        window.navigate = (addr) => window.open(`https://www.google.com/maps/search/?api=1&query=${addr}`, '_blank');
-        window.handleLogout = async () => { if (confirm('Sign out?')) { await auth.signOut(); window.location.href = './'; } };
-        window.refreshAll = () => { loadAllDeliveries(); toast('Refreshed!', 'success'); };
-        window.enableNotifications = enableNotifications;
-        window.testNotification = testNotification;
-    </script>
+            <span class="status-tag ${getStatusClass(status)}">${getStatusLabel(status)}</span>
+          </div>`;
+      }).join('');
+    }
+
+    function updateStats() {
+      const orders = Object.values(allOrders).filter(o => o);
+      const newOrders = orders.filter(o => {
+        const s = (o.status || 'new').toLowerCase();
+        return s === 'new' || s === 'pending';
+      }).length;
+      const processing = orders.filter(o => {
+        const s = (o.status || '').toLowerCase();
+        return s === 'processing' || s === 'confirmed';
+      }).length;
+      const inStock = Object.values(allInventory).filter(p => p && (p.quantity || 0) > 0).length;
+      
+      const stores = new Set();
+      orders.forEach(o => { if (o.restaurantName) stores.add(o.restaurantName); });
+      Object.values(allStores).forEach(s => { if (s && (s.name || s.businessName)) stores.add(s.name || s.businessName); });
+
+      const suppliers = Object.values(allSuppliers).filter(s => s && s.name).length;
+
+      // Replace skeleton stats with real content
+      document.getElementById('statsGrid').innerHTML = `
+        <div class="stat-card">
+          <div class="stat-left"><h4>New Orders</h4><div class="stat-number">${newOrders}</div><div class="stat-trend"><i class="fas fa-inbox"></i> Awaiting action</div></div>
+          <div class="stat-icon"><i class="fas fa-inbox"></i></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-left"><h4>Processing</h4><div class="stat-number">${processing}</div><div class="stat-trend"><i class="fas fa-spinner"></i> Being prepared</div></div>
+          <div class="stat-icon"><i class="fas fa-spinner"></i></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-left"><h4>In Stock</h4><div class="stat-number">${inStock}</div><div class="stat-trend"><i class="fas fa-boxes"></i> Products available</div></div>
+          <div class="stat-icon"><i class="fas fa-boxes"></i></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-left"><h4>Suppliers</h4><div class="stat-number">${suppliers}</div><div class="stat-trend"><i class="fas fa-truck"></i> Active partners</div></div>
+          <div class="stat-icon"><i class="fas fa-truck"></i></div>
+        </div>
+      `;
+
+      // Replace skeleton action cards with real content
+      document.getElementById('actionGrid').innerHTML = `
+        <a href="/workspaces/fusion-foods/new-order.html" class="action-card">
+          <div class="action-icon"><i class="fas fa-cart-plus"></i></div>
+          <h2>Place Order</h2>
+          <p>Create a new food supply order for a restaurant.</p>
+          <span class="action-link">New Order <i class="fas fa-arrow-right"></i></span>
+        </a>
+        <a href="/workspaces/fusion-foods/orders.html" class="action-card">
+          <div class="action-icon"><i class="fas fa-inbox"></i></div>
+          <h2>Receive Orders</h2>
+          <p>View & process incoming food supply orders.</p>
+          <span class="action-link">View Orders <i class="fas fa-arrow-right"></i></span>
+        </a>
+        <a href="/workspaces/fusion-foods/inventory.html" class="action-card inventory-card">
+          <div class="action-icon"><i class="fas fa-boxes-stacked"></i></div>
+          <h2>Inventory</h2>
+          <p>Manage stock, update quantities & track supplies.</p>
+          <span class="action-link">Browse Stock <i class="fas fa-arrow-right"></i></span>
+        </a>
+        <a href="/workspaces/fusion-foods/dispatch.html" class="action-card dispatch-card">
+          <div class="action-icon"><i class="fas fa-truck-fast"></i></div>
+          <h2>Dispatch</h2>
+          <p>Ship orders, assign drivers & track deliveries.</p>
+          <span class="action-link">Dispatch <i class="fas fa-arrow-right"></i></span>
+        </a>
+        <a href="/workspaces/fusion-foods/stores.html" class="action-card store-card">
+          <div class="action-icon"><i class="fas fa-store-alt"></i></div>
+          <h2>Manage Stores</h2>
+          <p>View & manage restaurant clients & locations.</p>
+          <span class="action-link">Stores <i class="fas fa-arrow-right"></i></span>
+        </a>
+        <a href="/workspaces/fusion-foods/products.html" class="action-card products-card">
+          <div class="action-icon"><i class="fas fa-tags"></i></div>
+          <h2>Products</h2>
+          <p>Add, edit or remove your food product catalog.</p>
+          <span class="action-link">Manage Products <i class="fas fa-arrow-right"></i></span>
+        </a>
+        <a href="/workspaces/fusion-foods/weekly-prices.html" class="action-card prices-card">
+          <div class="action-icon"><i class="fas fa-calendar-check"></i></div>
+          <h2>Weekly Prices</h2>
+          <p>Update special weekly prices for products.</p>
+          <span class="action-link">Update Prices <i class="fas fa-arrow-right"></i></span>
+        </a>
+        <a href="/workspaces/fusion-foods/suppliers.html" class="action-card supplier-card">
+          <div class="action-icon"><i class="fas fa-people-carry"></i></div>
+          <h2>Suppliers</h2>
+          <p>Manage your food suppliers, contacts & orders.</p>
+          <span class="action-link">View Suppliers <i class="fas fa-arrow-right"></i></span>
+        </a>
+      `;
+
+      // Replace skeleton quick links with real content
+      document.getElementById('quickLinks').innerHTML = `
+        <a href="/workspaces/fusion-foods/new-order.html" class="quick-btn"><i class="fas fa-plus-circle"></i> Place Order</a>
+        <a href="/workspaces/fusion-foods/orders.html" class="quick-btn"><i class="fas fa-inbox"></i> Orders (${newOrders})</a>
+        <a href="/workspaces/fusion-foods/inventory.html" class="quick-btn"><i class="fas fa-box"></i> Inventory</a>
+        <a href="/workspaces/fusion-foods/dispatch.html" class="quick-btn"><i class="fas fa-truck"></i> Dispatch (${processing})</a>
+        <a href="/workspaces/fusion-foods/stores.html" class="quick-btn"><i class="fas fa-store"></i> My Stores</a>
+        <a href="/workspaces/fusion-foods/products.html" class="quick-btn"><i class="fas fa-tag"></i> Products</a>
+        <a href="/workspaces/fusion-foods/weekly-prices.html" class="quick-btn"><i class="fas fa-calendar-alt"></i> Weekly Prices</a>
+        <a href="/workspaces/fusion-foods/suppliers.html" class="quick-btn"><i class="fas fa-people-carry"></i> Suppliers (${suppliers})</a>
+        <a href="/workspaces/fusion-foods/map.html" class="quick-btn"><i class="fas fa-map-pin"></i> Add to Map</a>
+      `;
+      
+      document.getElementById('footerStats').textContent = `${orders.length} orders · ${inStock} products · ${stores.size} stores · ${suppliers} suppliers`;
+      document.getElementById('lastUpdated').innerHTML = `<i class="fas fa-circle" style="color:#10b981;"></i> Live`;
+      renderRecentList();
+    }
+
+    function setupRealtimeListeners() {
+      onValue(ref(db, 'fusion_foods_orders'), (snapshot) => {
+        allOrders = snapshot.val() || {};
+        updateStats();
+      }, () => {
+        onValue(ref(db, 'pickup_deliveries'), (snapshot) => {
+          const deliveries = snapshot.val() || {};
+          allOrders = {};
+          Object.entries(deliveries).forEach(([key, val]) => {
+            const pkg = (val.package?.type || val.package?.description || '').toLowerCase();
+            if (pkg.includes('food') || pkg.includes('grocery') || pkg.includes('produce') || val.source === 'fusion_foods') {
+              allOrders[key] = val;
+            }
+          });
+          updateStats();
+        });
+      });
+
+      onValue(ref(db, 'fusion_foods_inventory'), (snapshot) => {
+        allInventory = snapshot.val() || {};
+        updateStats();
+      });
+
+      onValue(ref(db, 'fusion_foods_stores'), (snapshot) => {
+        allStores = snapshot.val() || {};
+        updateStats();
+      });
+
+      onValue(ref(db, 'fusion_foods_suppliers'), (snapshot) => {
+        allSuppliers = snapshot.val() || {};
+        updateStats();
+      });
+    }
+
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        const userSnap = await get(ref(db, `brandinn_users/${user.uid}`));
+        let userName = user.email?.split('@')[0] || 'Supplier';
+        let businessName = 'Fusion Foods';
+        if (userSnap.exists()) {
+          userName = userSnap.val().name || userName;
+          businessName = userSnap.val().businessName || businessName;
+        }
+        document.getElementById('userName').textContent = userName;
+        document.getElementById('userAvatar').textContent = getInitials(userName);
+        document.getElementById('userAvatar').classList.remove('skeleton');
+        document.getElementById('businessName').innerHTML = `${escapeHtml(businessName)} <span>Foods</span>`;
+        setupRealtimeListeners();
+      } else {
+        window.location.href = '/';
+      }
+    });
+  </script>
 </body>
 </html>
