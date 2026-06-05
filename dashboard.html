@@ -26,7 +26,7 @@
             --border: #e2e8f0;
             --gold: #f59e0b; --gold-dark: #b45309; --purple: #8b5cf6;
             --green: #22c55e; --red: #ef4444; --warning: #f59e0b; --info: #3b82f6; --orange: #f97316;
-            --pink: #ec4899; --emerald: #10b981;
+            --pink: #ec4899; --emerald: #10b981; --indigo: #6366f1;
             --shadow-sm: 0 1px 2px rgba(0,0,0,0.05); --shadow: 0 4px 6px -1px rgba(0,0,0,0.07);
             --shadow-md: 0 10px 15px -3px rgba(0,0,0,0.1);
             --safe-bottom: env(safe-area-inset-bottom, 20px); --safe-top: env(safe-area-inset-top, 0px);
@@ -106,6 +106,15 @@
         .delivery-route i { color: var(--gold); margin: 0 3px; font-size: 0.45rem; }
         .delivery-amount { font-size: 0.7rem; font-weight: 700; margin-bottom: 0.35rem; color: var(--gold-dark); }
 
+        /* Pickup info badge */
+        .pickup-info-badge {
+            background: rgba(99,102,241,0.06); border: 1px solid rgba(99,102,241,0.15);
+            border-radius: 8px; padding: 0.4rem 0.6rem; margin-bottom: 0.35rem;
+            font-size: 0.65rem; color: var(--indigo); display: flex; align-items: center; gap: 6px;
+        }
+        .pickup-info-badge i { color: #6366f1; font-size: 0.7rem; }
+        .pickup-info-badge strong { color: #4f46e5; }
+
         .delivery-actions { display: flex; gap: 5px; flex-wrap: wrap; }
         .action-btn { padding: 0.35rem 0.65rem; border-radius: 8px; border: none; font-size: 0.62rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 3px; transition: all 0.2s; font-family: 'Inter', sans-serif; min-height: 30px; }
         .btn-start { background: rgba(249,115,22,0.1); color: #c2410c; }
@@ -150,8 +159,8 @@
         .detail-item strong { display: block; font-size: 0.55rem; color: var(--text-muted); text-transform: uppercase; margin-bottom: 0.1rem; }
         .detail-item span { font-size: 0.72rem; color: var(--text-primary); }
         .detail-item.full { grid-column: 1 / -1; }
+        .detail-item.pickup-highlight { background: rgba(99,102,241,0.06); border: 1px solid rgba(99,102,241,0.15); }
 
-        /* Enhanced contents section */
         .contents-section { margin-top: 0.5rem; background: rgba(245,158,11,0.05); border: 1px dashed var(--gold); border-radius: 10px; padding: 0.7rem; }
         .contents-section h4 { font-size: 0.65rem; font-weight: 700; color: var(--gold-dark); margin-bottom: 0.4rem; display: flex; align-items: center; gap: 5px; }
         .contents-list { list-style: none; padding: 0; }
@@ -278,14 +287,34 @@
         let currentUser = null, activeTab = 'all';
         let currentActionId = null, currentActionSource = null, currentNavAddress = null;
         let allDeliveries = [];
+        let allSuppliers = {}; // NEW: Store suppliers data
         let notificationPermission = 'default', notificationsEnabled = false;
         let seenIds = new Set();
         let audioCtx = null;
 
+        // ========== LOAD SUPPLIERS ==========
+        async function loadSuppliers() {
+            try {
+                const snap = await db.ref('fusion_foods_suppliers').once('value');
+                allSuppliers = snap.val() || {};
+            } catch(e) {
+                console.warn('Could not load suppliers:', e);
+            }
+        }
+
+        function getSupplierInfo(supplierId) {
+            if (!supplierId) return null;
+            const supplier = allSuppliers[supplierId];
+            return supplier || null;
+        }
+
+        function getSupplierName(supplierId) {
+            const supplier = getSupplierInfo(supplierId);
+            return supplier ? supplier.name : null;
+        }
+
         // ========== ENHANCED CONTENT EXTRACTION ==========
-        // Extract item contents from any order type
         function extractDeliveryContents(rawItem, sourceKey) {
-            // Check for products array (DSOG, Fusion, Orders)
             if (rawItem.products && Array.isArray(rawItem.products) && rawItem.products.length > 0) {
                 return rawItem.products.map(p => ({
                     name: p.name || p.productName || 'Item',
@@ -297,7 +326,6 @@
                 }));
             }
             
-            // Check for items array
             if (rawItem.items && Array.isArray(rawItem.items) && rawItem.items.length > 0) {
                 return rawItem.items.map(i => ({
                     name: i.name || i.title || 'Item',
@@ -307,7 +335,6 @@
                 }));
             }
             
-            // Check for cart items (from original order)
             if (rawItem.cart && rawItem.cart.items && Array.isArray(rawItem.cart.items)) {
                 return rawItem.cart.items.map(i => ({
                     name: i.name || 'Item',
@@ -316,23 +343,16 @@
                 }));
             }
             
-            // For Print orders - extract design details as contents
             if (sourceKey === 'brandinn') {
                 const details = [];
                 if (rawItem.product) details.push({ name: 'Product', value: rawItem.product });
                 if (rawItem.type) details.push({ name: 'Type', value: rawItem.type });
                 if (rawItem.designText) details.push({ name: 'Design Text', value: rawItem.designText });
-                if (rawItem.designText2) details.push({ name: 'Design Text 2', value: rawItem.designText2 });
-                if (rawItem.fabricColor) details.push({ name: 'Fabric Color', value: rawItem.fabricColor });
-                if (rawItem.textColor) details.push({ name: 'Text Color', value: rawItem.textColor });
                 if (rawItem.size) details.push({ name: 'Size', value: rawItem.size });
-                if (rawItem.font) details.push({ name: 'Font', value: rawItem.font });
-                if (rawItem.position) details.push({ name: 'Position', value: rawItem.position });
                 if (rawItem.quantity) details.push({ name: 'Quantity', value: rawItem.quantity });
                 if (details.length > 0) return details;
             }
             
-            // For Pick-Up - check package details and any additional info
             if (sourceKey === 'pickup') {
                 const details = [];
                 if (rawItem.package) {
@@ -340,39 +360,21 @@
                     if (rawItem.package.weight) details.push({ name: 'Weight', value: rawItem.package.weight + (rawItem.package.weightUnit || 'kg') });
                     if (rawItem.package.description) details.push({ name: 'Description', value: rawItem.package.description });
                 }
-                if (rawItem.pickup && rawItem.pickup.instructions) details.push({ name: 'Pickup Instructions', value: rawItem.pickup.instructions });
-                if (rawItem.delivery && rawItem.delivery.instructions) details.push({ name: 'Delivery Instructions', value: rawItem.delivery.instructions });
-                if (details.length > 0) return details;
-            }
-            
-            // For Heritage listings
-            if (sourceKey === 'heritage') {
-                const details = [];
-                if (rawItem.adType) details.push({ name: 'Ad Type', value: rawItem.adType });
-                if (rawItem.location) details.push({ name: 'Location', value: rawItem.location });
-                if (rawItem.size) details.push({ name: 'Size', value: rawItem.size });
-                if (rawItem.startDate) details.push({ name: 'Start Date', value: rawItem.startDate });
-                if (rawItem.endDate) details.push({ name: 'End Date', value: rawItem.endDate });
                 if (details.length > 0) return details;
             }
             
             return null;
         }
 
-        // Format contents for display
         function formatContentsForDisplay(contents) {
-            if (!contents) return '';
-            if (!Array.isArray(contents)) return '';
-            if (contents.length === 0) return '';
+            if (!contents || !Array.isArray(contents) || contents.length === 0) return '';
             
             let html = '<div class="contents-section"><h4><i class="fas fa-box-open"></i> 📦 What You\'re Delivering</h4><ul class="contents-list">';
             
             for (const item of contents) {
                 if (item.name && item.value) {
-                    // Key-value pair (for print orders, etc.)
                     html += `<li><span class="item-name">${escapeHtml(item.name)}</span><span class="item-details"><strong>${escapeHtml(String(item.value))}</strong></span></li>`;
                 } else if (item.name) {
-                    // Product with name, quantity, price
                     html += `<li>
                         <span class="item-name">${escapeHtml(item.name)}${item.size ? ' (' + escapeHtml(item.size) + ')' : ''}${item.color ? ' - ' + escapeHtml(item.color) : ''}</span>
                         <span class="item-details">
@@ -380,8 +382,6 @@
                             ${item.price ? `<span class="item-price">KSh ${Number(item.price).toLocaleString()}</span>` : ''}
                         </span>
                     </li>`;
-                } else if (typeof item === 'string') {
-                    html += `<li><span class="item-name">${escapeHtml(item)}</span></li>`;
                 }
             }
             
@@ -389,41 +389,46 @@
             return html;
         }
 
-        // ========== ENHANCED SOURCES with content extraction ==========
+        // ========== SOURCES with pickup location fields ==========
         const sources = [
             { 
                 key: 'pickup', path: 'pickup_deliveries', label: 'Pick-Up', icon: 'fa-box', iconClass: 'tab-icon-pickup', 
                 assignedField: 'assignedTo', customerField: 'userName', phoneField: 'userPhone', emailField: 'userEmail', 
                 pickupField: 'pickup.address', deliveryField: 'delivery.address', amountField: 'fare.total', 
                 statusField: 'status', packageField: 'package.type', instructionsField: 'package.instructions',
+                pickupNameField: null, pickupLocationField: null, pickupPhoneField: null, pickupSupplierIdField: null,
                 newStatuses: ['assigned','pending'], activeStatuses: ['out-for-delivery','in_progress'], doneStatus: 'delivered' 
             },
             { 
                 key: 'dsog', path: 'dsog_fashion_orders', label: 'DSOG', icon: 'fa-tshirt', iconClass: 'tab-icon-dsog', 
                 assignedField: 'driverId', customerField: 'customerName', phoneField: 'customerPhone', emailField: 'customerEmail', 
-                pickupField: 'location', deliveryField: 'location', amountField: 'total', statusField: 'status', 
+                pickupField: 'pickupLocation', deliveryField: 'location', amountField: 'total', statusField: 'status', 
                 packageField: 'packageType', instructionsField: 'notes',
+                pickupNameField: 'pickupName', pickupLocationField: 'pickupLocation', pickupPhoneField: 'pickupPhone', pickupSupplierIdField: 'pickupSupplierId',
                 newStatuses: ['ready','assigned'], activeStatuses: ['shipped','out-for-delivery'], doneStatus: 'delivered' 
             },
             { 
                 key: 'fusion', path: 'fusion_foods_orders', label: 'Fusion', icon: 'fa-utensils', iconClass: 'tab-icon-fusion', 
                 assignedField: 'driverId', customerField: 'restaurantName', phoneField: 'phone', emailField: 'email', 
-                pickupField: 'location', deliveryField: 'location', amountField: 'total', statusField: 'status', 
+                pickupField: 'pickupLocation', deliveryField: 'location', amountField: 'total', statusField: 'status', 
                 packageField: 'packageType', instructionsField: 'notes',
+                pickupNameField: 'pickupName', pickupLocationField: 'pickupLocation', pickupPhoneField: 'pickupPhone', pickupSupplierIdField: 'pickupSupplierId',
                 newStatuses: ['ready','assigned'], activeStatuses: ['shipped','out-for-delivery'], doneStatus: 'delivered' 
             },
             { 
                 key: 'brandinn', path: 'brandinn_print_orders', label: 'Print', icon: 'fa-print', iconClass: 'tab-icon-brandinn', 
                 assignedField: 'driverId', customerField: 'customerName', phoneField: 'customerPhone', emailField: 'customerEmail', 
-                pickupField: 'location', deliveryField: 'location', amountField: 'total', statusField: 'status', 
+                pickupField: 'pickupLocation', deliveryField: 'location', amountField: 'total', statusField: 'status', 
                 packageField: 'product', instructionsField: 'notes',
+                pickupNameField: 'pickupName', pickupLocationField: 'pickupLocation', pickupPhoneField: 'pickupPhone', pickupSupplierIdField: 'pickupSupplierId',
                 newStatuses: ['ready','completed','pending'], activeStatuses: ['in-progress','printing'], doneStatus: 'delivered' 
             },
             { 
                 key: 'heritage', path: 'heritage_listings', label: 'Heritage', icon: 'fa-landmark', iconClass: 'tab-icon-heritage', 
                 assignedField: 'driverId', customerField: 'partnerName', phoneField: '', emailField: '', 
-                pickupField: 'location', deliveryField: 'location', amountField: 'price', statusField: 'status', 
+                pickupField: 'pickupLocation', deliveryField: 'location', amountField: 'price', statusField: 'status', 
                 packageField: 'adType', instructionsField: 'notes',
+                pickupNameField: 'pickupName', pickupLocationField: 'pickupLocation', pickupPhoneField: 'pickupPhone', pickupSupplierIdField: 'pickupSupplierId',
                 newStatuses: ['active'], activeStatuses: [], doneStatus: 'expired' 
             }
         ];
@@ -431,6 +436,57 @@
         function getNested(obj, path) { 
             if (!obj || !path) return null;
             return path.split('.').reduce((o, k) => (o || {})[k], obj) || null; 
+        }
+        
+        // NEW: Extract pickup info from order
+        function extractPickupInfo(item, src) {
+            // Check for supplier pickup fields first (set during dispatch)
+            const pickupName = getNested(item, src.pickupNameField) || item.pickupName || '';
+            const pickupLocation = getNested(item, src.pickupLocationField) || item.pickupLocation || '';
+            const pickupPhone = getNested(item, src.pickupPhoneField) || item.pickupPhone || '';
+            const pickupSupplierId = getNested(item, src.pickupSupplierIdField) || item.pickupSupplierId || '';
+            
+            // If we have a supplier ID, try to get info from suppliers database
+            if (pickupSupplierId && allSuppliers[pickupSupplierId]) {
+                const supplier = allSuppliers[pickupSupplierId];
+                return {
+                    name: pickupName || supplier.name || '',
+                    location: pickupLocation || supplier.location || '',
+                    phone: pickupPhone || supplier.phone || '',
+                    supplierId: pickupSupplierId
+                };
+            }
+            
+            // Return what we have from the order
+            return {
+                name: pickupName,
+                location: pickupLocation,
+                phone: pickupPhone,
+                supplierId: pickupSupplierId
+            };
+        }
+
+        // NEW: Format pickup info for display
+        function formatPickupDisplay(pickupInfo) {
+            if (!pickupInfo || (!pickupInfo.name && !pickupInfo.location)) return '';
+            
+            let html = '<div class="pickup-info-badge"><i class="fas fa-warehouse"></i> <strong>Pickup:</strong> ';
+            
+            if (pickupInfo.name) {
+                html += escapeHtml(pickupInfo.name);
+                if (pickupInfo.location) {
+                    html += ` — ${escapeHtml(pickupInfo.location)}`;
+                }
+            } else if (pickupInfo.location) {
+                html += escapeHtml(pickupInfo.location);
+            }
+            
+            if (pickupInfo.phone) {
+                html += ` · 📞 ${escapeHtml(pickupInfo.phone)}`;
+            }
+            
+            html += '</div>';
+            return html;
         }
         
         function showLoading(s) { $('loadingOverlay').classList.toggle('hidden', !s); }
@@ -488,6 +544,10 @@
             $('userAvatar').textContent = getInitials(user.displayName || user.email);
             $('userName').textContent = (user.displayName || user.email?.split('@')[0] || 'Asst').substring(0,10);
             showLoading(true);
+            
+            // Load suppliers first
+            await loadSuppliers();
+            
             if ('Notification' in window) { notificationPermission = Notification.permission; notificationsEnabled = notificationPermission === 'granted'; if (notificationPermission === 'default') setTimeout(() => $('notificationBanner').classList.remove('hidden'), 1500); }
             await checkRegistration();
             showLoading(false);
@@ -545,20 +605,27 @@
                         const assigned = getNested(item, src.assignedField) || item.assignedTo || item.driverId || '';
                         if (assigned === currentUser.uid) {
                             const status = getNested(item, src.statusField) || item.status || 'pending';
-                            // Extract contents using the enhanced function
                             const contents = extractDeliveryContents(item, src.key);
+                            const pickupInfo = extractPickupInfo(item, src);
+                            
+                            // Determine pickup display
+                            let pickupDisplay = getNested(item, src.pickupField) || item.pickup?.address || '';
+                            if (pickupInfo.name || pickupInfo.location) {
+                                pickupDisplay = pickupInfo.name || pickupInfo.location;
+                            }
                             
                             all.push({
                                 compositeKey, id, sourceKey: src.key, sourceLabel: src.label,
                                 customer: getNested(item, src.customerField) || item.customerName || item.userName || 'Customer',
                                 phone: getNested(item, src.phoneField) || item.customerPhone || item.userPhone || item.phone || '',
                                 email: getNested(item, src.emailField) || item.customerEmail || item.userEmail || '',
-                                pickup: getNested(item, src.pickupField) || item.pickup?.address || item.location || '—',
+                                pickup: pickupDisplay,
                                 delivery: getNested(item, src.deliveryField) || item.delivery?.address || item.location || '—',
                                 amount: getNested(item, src.amountField) || item.total || item.amount || item.fare?.total || 0,
                                 packageInfo: getNested(item, src.packageField) || item.package?.type || item.packageType || item.product || '',
                                 instructions: getNested(item, src.instructionsField) || item.instructions || item.package?.instructions || item.notes || '',
                                 contents: contents,
+                                pickupInfo: pickupInfo,
                                 status, src, rawData: item,
                                 isNew: src.newStatuses.includes(status),
                                 isActive: src.activeStatuses.includes(status),
@@ -593,17 +660,18 @@
             list.innerHTML = items.map(d => {
                 const cardClass = d.isNew ? 'new-task' : (d.isActive ? 'active-task' : 'done-task');
                 const statusClass = d.isNew ? 'status-new' : (d.isActive ? 'status-active' : 'status-done');
-                // Show item count badge if contents exist
                 const itemCountBadge = d.contents && d.contents.length > 0 ? `<span style="font-size:0.5rem;background:rgba(245,158,11,0.15);padding:1px 6px;border-radius:8px;margin-left:4px;">📦 ${d.contents.length} item${d.contents.length !== 1 ? 's' : ''}</span>` : '';
+                const pickupHtml = formatPickupDisplay(d.pickupInfo);
                 
                 let actions = `<button class="action-btn btn-cancel" onclick="event.stopPropagation();viewDetails('${d.compositeKey}')">📋 Info</button>`;
                 if (d.isNew) actions += `<button class="action-btn btn-start" onclick="event.stopPropagation();startDelivery('${d.id}','${d.src.path}')"><i class="fas fa-truck"></i> Start</button>`;
-                if (d.isActive) { actions += `<button class="action-btn btn-nav" onclick="event.stopPropagation();navigate('${encodeURIComponent(d.delivery)}')"><i class="fas fa-map-marked-alt"></i> Nav</button>`; actions += `<button class="action-btn btn-done" onclick="event.stopPropagation();markDone('${d.id}','${d.src.path}','${d.src.doneStatus}')"><i class="fas fa-check"></i> Done</button>`; }
+                if (d.isActive) { actions += `<button class="action-btn btn-nav" onclick="event.stopPropagation();navigate('${encodeURIComponent(d.pickupInfo?.location || d.delivery)}')"><i class="fas fa-map-marked-alt"></i> Nav</button>`; actions += `<button class="action-btn btn-done" onclick="event.stopPropagation();markDone('${d.id}','${d.src.path}','${d.src.doneStatus}')"><i class="fas fa-check"></i> Done</button>`; }
                 
                 return `<div class="delivery-card ${cardClass}" onclick="viewDetails('${d.compositeKey}')">
                     <div class="delivery-top"><span class="delivery-id">#${d.id.slice(-6)}${d.isNew?' <span class="new-badge">NEW</span>':''}${itemCountBadge}</span><span class="delivery-status ${statusClass}">${d.status.replace(/-/g,' ')}</span></div>
                     <div class="delivery-client">${escapeHtml(d.customer)}</div>
                     ${d.phone ? `<div class="delivery-phone">📞 ${escapeHtml(d.phone)}</div>` : ''}
+                    ${pickupHtml}
                     <div class="delivery-route">📍 ${escapeHtml(String(d.pickup).substring(0,35))} <i class="fas fa-arrow-right"></i> ${escapeHtml(String(d.delivery).substring(0,35))}</div>
                     <div class="delivery-amount">${d.amount ? '💰 KSh '+Number(d.amount).toLocaleString() : ''}</div>
                     <div class="delivery-actions" onclick="event.stopPropagation()">${actions}</div>
@@ -681,15 +749,16 @@
             showLoading(false);
         };
 
-        // Enhanced view details with contents
+        // Enhanced view details with pickup info
         window.viewDetails = (compositeKey) => {
             const d = allDeliveries.find(x => x.compositeKey === compositeKey); 
             if (!d) return;
-            currentNavAddress = d.delivery;
-            $('detailsTitle').textContent = `${d.sourceLabel} · #${d.id.slice(-6)}`;
-            $('navFromModalBtn').style.display = d.delivery && d.delivery !== '—' ? 'inline-flex' : 'none';
             
-            // Build details HTML including contents
+            // Use pickup location for navigation (prefer supplier location)
+            currentNavAddress = d.pickupInfo?.location || d.pickup;
+            $('detailsTitle').textContent = `${d.sourceLabel} · #${d.id.slice(-6)}`;
+            $('navFromModalBtn').style.display = (d.pickupInfo?.location || d.delivery) ? 'inline-flex' : 'none';
+            
             let contentsHtml = '';
             if (d.contents && d.contents.length > 0) {
                 contentsHtml = formatContentsForDisplay(d.contents);
@@ -697,18 +766,24 @@
                 contentsHtml = `<div class="contents-section"><h4><i class="fas fa-box"></i> Package Info</h4><ul class="contents-list"><li><span class="item-name">${escapeHtml(d.packageInfo)}</span></li></ul></div>`;
             }
             
-            // Also show raw order reference for transparency
-            const orderRefHtml = d.rawData?.orderId || d.rawData?.bookingId ? 
-                `<div class="detail-item full"><strong>Order Reference</strong><span>${escapeHtml(d.rawData.orderId || d.rawData.bookingId)}</span></div>` : '';
+            // Build pickup info HTML for details modal
+            let pickupDetailHtml = '';
+            if (d.pickupInfo && (d.pickupInfo.name || d.pickupInfo.location)) {
+                pickupDetailHtml = `
+                    <div class="detail-item full pickup-highlight"><strong>🏭 Pickup Location (Supplier)</strong>
+                        <span>${escapeHtml(d.pickupInfo.name || '')}${d.pickupInfo.location ? ' — ' + escapeHtml(d.pickupInfo.location) : ''}</span>
+                        ${d.pickupInfo.phone ? `<br><span style="font-size:0.65rem;color:var(--indigo);">📞 ${escapeHtml(d.pickupInfo.phone)}</span>` : ''}
+                    </div>`;
+            }
             
             $('detailsBody').innerHTML = `<div class="detail-grid">
                 <div class="detail-item"><strong>Customer</strong><span>${escapeHtml(d.customer)}</span></div>
                 <div class="detail-item"><strong>Phone</strong><span style="color:var(--info);cursor:pointer;" onclick="window.open('tel:${escapeHtml(d.phone)}')">📞 ${escapeHtml(d.phone||'N/A')}</span></div>
                 ${d.email ? `<div class="detail-item full"><strong>Email</strong><span>${escapeHtml(d.email)}</span></div>` : ''}
-                ${orderRefHtml}
                 <div class="detail-item"><strong>Status</strong><span class="delivery-status ${d.isNew?'status-new':d.isActive?'status-active':'status-done'}">${d.status.replace(/-/g,' ')}</span></div>
                 <div class="detail-item"><strong>Amount</strong><span>${d.amount?'KSh '+Number(d.amount).toLocaleString():'—'}</span></div>
-                <div class="detail-item full"><strong>📍 Pickup Location</strong><span>${escapeHtml(d.pickup)}</span></div>
+                ${pickupDetailHtml}
+                <div class="detail-item full"><strong>📍 Pickup Address</strong><span>${escapeHtml(d.pickup)}</span></div>
                 <div class="detail-item full"><strong>📍 Dropoff Location</strong><span>${escapeHtml(d.delivery)}</span></div>
                 ${d.instructions ? `<div class="detail-item full"><strong>📝 Special Instructions</strong><span>${escapeHtml(d.instructions)}</span></div>` : ''}
             </div>
