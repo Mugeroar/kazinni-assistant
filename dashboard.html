@@ -63,7 +63,6 @@
         .dropdown-item:hover { background: rgba(245,158,11,0.08); color: var(--gold-dark); }
         .dropdown-item.danger:hover { background: rgba(239,68,68,0.08); color: var(--red); }
 
-        /* Tab Navigation */
         .tab-nav {
             display: flex; gap: 0; background: var(--bg-primary); border-bottom: 1px solid var(--border);
             padding: 0 0.5rem; overflow-x: auto; scrollbar-width: none;
@@ -152,12 +151,16 @@
         .detail-item span { font-size: 0.72rem; color: var(--text-primary); }
         .detail-item.full { grid-column: 1 / -1; }
 
-        /* Contents section in details */
+        /* Enhanced contents section */
         .contents-section { margin-top: 0.5rem; background: rgba(245,158,11,0.05); border: 1px dashed var(--gold); border-radius: 10px; padding: 0.7rem; }
         .contents-section h4 { font-size: 0.65rem; font-weight: 700; color: var(--gold-dark); margin-bottom: 0.4rem; display: flex; align-items: center; gap: 5px; }
         .contents-list { list-style: none; padding: 0; }
-        .contents-list li { font-size: 0.68rem; color: var(--text-secondary); padding: 0.25rem 0; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; }
+        .contents-list li { font-size: 0.68rem; color: var(--text-secondary); padding: 0.35rem 0; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
         .contents-list li:last-child { border-bottom: none; }
+        .contents-list .item-name { font-weight: 500; color: var(--text-primary); }
+        .contents-list .item-details { text-align: right; }
+        .contents-list .item-qty { color: var(--gold-dark); font-weight: 600; margin-right: 8px; }
+        .contents-list .item-price { color: var(--text-muted); font-size: 0.6rem; }
 
         .toast-container { position: fixed; top: calc(60px + var(--safe-top)); right: 8px; left: 8px; z-index: 5000; display: flex; flex-direction: column; align-items: flex-end; pointer-events: none; }
         .toast { background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; padding: 0.6rem 0.9rem; margin-bottom: 0.3rem; box-shadow: var(--shadow-md); display: flex; align-items: center; gap: 6px; font-size: 0.7rem; animation: toastIn 0.3s ease; pointer-events: auto; }
@@ -279,23 +282,167 @@
         let seenIds = new Set();
         let audioCtx = null;
 
+        // ========== ENHANCED CONTENT EXTRACTION ==========
+        // Extract item contents from any order type
+        function extractDeliveryContents(rawItem, sourceKey) {
+            // Check for products array (DSOG, Fusion, Orders)
+            if (rawItem.products && Array.isArray(rawItem.products) && rawItem.products.length > 0) {
+                return rawItem.products.map(p => ({
+                    name: p.name || p.productName || 'Item',
+                    quantity: p.quantity || 1,
+                    price: p.price || p.unitPrice || 0,
+                    size: p.size || null,
+                    color: p.color || null,
+                    sku: p.sku || p.productId || null
+                }));
+            }
+            
+            // Check for items array
+            if (rawItem.items && Array.isArray(rawItem.items) && rawItem.items.length > 0) {
+                return rawItem.items.map(i => ({
+                    name: i.name || i.title || 'Item',
+                    quantity: i.quantity || 1,
+                    price: i.price || 0,
+                    size: i.size || null
+                }));
+            }
+            
+            // Check for cart items (from original order)
+            if (rawItem.cart && rawItem.cart.items && Array.isArray(rawItem.cart.items)) {
+                return rawItem.cart.items.map(i => ({
+                    name: i.name || 'Item',
+                    quantity: i.quantity || 1,
+                    price: i.price || 0
+                }));
+            }
+            
+            // For Print orders - extract design details as contents
+            if (sourceKey === 'brandinn') {
+                const details = [];
+                if (rawItem.product) details.push({ name: 'Product', value: rawItem.product });
+                if (rawItem.type) details.push({ name: 'Type', value: rawItem.type });
+                if (rawItem.designText) details.push({ name: 'Design Text', value: rawItem.designText });
+                if (rawItem.designText2) details.push({ name: 'Design Text 2', value: rawItem.designText2 });
+                if (rawItem.fabricColor) details.push({ name: 'Fabric Color', value: rawItem.fabricColor });
+                if (rawItem.textColor) details.push({ name: 'Text Color', value: rawItem.textColor });
+                if (rawItem.size) details.push({ name: 'Size', value: rawItem.size });
+                if (rawItem.font) details.push({ name: 'Font', value: rawItem.font });
+                if (rawItem.position) details.push({ name: 'Position', value: rawItem.position });
+                if (rawItem.quantity) details.push({ name: 'Quantity', value: rawItem.quantity });
+                if (details.length > 0) return details;
+            }
+            
+            // For Pick-Up - check package details and any additional info
+            if (sourceKey === 'pickup') {
+                const details = [];
+                if (rawItem.package) {
+                    if (rawItem.package.type) details.push({ name: 'Package Type', value: rawItem.package.type });
+                    if (rawItem.package.weight) details.push({ name: 'Weight', value: rawItem.package.weight + (rawItem.package.weightUnit || 'kg') });
+                    if (rawItem.package.description) details.push({ name: 'Description', value: rawItem.package.description });
+                }
+                if (rawItem.pickup && rawItem.pickup.instructions) details.push({ name: 'Pickup Instructions', value: rawItem.pickup.instructions });
+                if (rawItem.delivery && rawItem.delivery.instructions) details.push({ name: 'Delivery Instructions', value: rawItem.delivery.instructions });
+                if (details.length > 0) return details;
+            }
+            
+            // For Heritage listings
+            if (sourceKey === 'heritage') {
+                const details = [];
+                if (rawItem.adType) details.push({ name: 'Ad Type', value: rawItem.adType });
+                if (rawItem.location) details.push({ name: 'Location', value: rawItem.location });
+                if (rawItem.size) details.push({ name: 'Size', value: rawItem.size });
+                if (rawItem.startDate) details.push({ name: 'Start Date', value: rawItem.startDate });
+                if (rawItem.endDate) details.push({ name: 'End Date', value: rawItem.endDate });
+                if (details.length > 0) return details;
+            }
+            
+            return null;
+        }
+
+        // Format contents for display
+        function formatContentsForDisplay(contents) {
+            if (!contents) return '';
+            if (!Array.isArray(contents)) return '';
+            if (contents.length === 0) return '';
+            
+            let html = '<div class="contents-section"><h4><i class="fas fa-box-open"></i> 📦 What You\'re Delivering</h4><ul class="contents-list">';
+            
+            for (const item of contents) {
+                if (item.name && item.value) {
+                    // Key-value pair (for print orders, etc.)
+                    html += `<li><span class="item-name">${escapeHtml(item.name)}</span><span class="item-details"><strong>${escapeHtml(String(item.value))}</strong></span></li>`;
+                } else if (item.name) {
+                    // Product with name, quantity, price
+                    html += `<li>
+                        <span class="item-name">${escapeHtml(item.name)}${item.size ? ' (' + escapeHtml(item.size) + ')' : ''}${item.color ? ' - ' + escapeHtml(item.color) : ''}</span>
+                        <span class="item-details">
+                            ${item.quantity ? `<span class="item-qty">×${item.quantity}</span>` : ''}
+                            ${item.price ? `<span class="item-price">KSh ${Number(item.price).toLocaleString()}</span>` : ''}
+                        </span>
+                    </li>`;
+                } else if (typeof item === 'string') {
+                    html += `<li><span class="item-name">${escapeHtml(item)}</span></li>`;
+                }
+            }
+            
+            html += '</ul></div>';
+            return html;
+        }
+
+        // ========== ENHANCED SOURCES with content extraction ==========
         const sources = [
-            { key: 'pickup', path: 'pickup_deliveries', label: 'Pick-Up', icon: 'fa-box', iconClass: 'tab-icon-pickup', assignedField: 'assignedTo', customerField: 'userName', phoneField: 'userPhone', emailField: '', pickupField: 'pickup.address', deliveryField: 'delivery.address', amountField: 'fare.total', statusField: 'status', packageField: 'package.type', instructionsField: 'package.instructions', contentsField: 'package.contents', newStatuses: ['assigned','pending'], activeStatuses: ['out-for-delivery','in_progress'], doneStatus: 'delivered' },
-            { key: 'dsog', path: 'dsog_fashion_orders', label: 'DSOG', icon: 'fa-tshirt', iconClass: 'tab-icon-dsog', assignedField: 'driverId', customerField: 'customerName', phoneField: 'customerPhone', emailField: 'customerEmail', pickupField: 'location', deliveryField: 'location', amountField: 'total', statusField: 'status', packageField: 'packageType', instructionsField: 'notes', contentsField: 'items', newStatuses: ['ready'], activeStatuses: ['shipped'], doneStatus: 'delivered' },
-            { key: 'fusion', path: 'fusion_foods_orders', label: 'Fusion', icon: 'fa-utensils', iconClass: 'tab-icon-fusion', assignedField: 'driverId', customerField: 'restaurantName', phoneField: 'phone', emailField: 'email', pickupField: 'location', deliveryField: 'location', amountField: 'total', statusField: 'status', packageField: 'packageType', instructionsField: 'notes', contentsField: 'items', newStatuses: ['ready'], activeStatuses: ['shipped'], doneStatus: 'delivered' },
-            { key: 'brandinn', path: 'brandinn_print_orders', label: 'Print', icon: 'fa-print', iconClass: 'tab-icon-brandinn', assignedField: 'driverId', customerField: 'customerName', phoneField: 'customerPhone', emailField: 'customerEmail', pickupField: 'location', deliveryField: 'location', amountField: 'total', statusField: 'status', packageField: 'product', instructionsField: 'notes', contentsField: 'items', newStatuses: ['ready','completed'], activeStatuses: [], doneStatus: 'delivered' },
-            { key: 'heritage', path: 'heritage_listings', label: 'Heritage', icon: 'fa-landmark', iconClass: 'tab-icon-heritage', assignedField: 'driverId', customerField: 'partnerName', phoneField: '', emailField: '', pickupField: 'location', deliveryField: 'location', amountField: 'price', statusField: 'status', packageField: 'adType', instructionsField: 'notes', contentsField: 'details', newStatuses: ['active'], activeStatuses: [], doneStatus: 'expired' }
+            { 
+                key: 'pickup', path: 'pickup_deliveries', label: 'Pick-Up', icon: 'fa-box', iconClass: 'tab-icon-pickup', 
+                assignedField: 'assignedTo', customerField: 'userName', phoneField: 'userPhone', emailField: 'userEmail', 
+                pickupField: 'pickup.address', deliveryField: 'delivery.address', amountField: 'fare.total', 
+                statusField: 'status', packageField: 'package.type', instructionsField: 'package.instructions',
+                newStatuses: ['assigned','pending'], activeStatuses: ['out-for-delivery','in_progress'], doneStatus: 'delivered' 
+            },
+            { 
+                key: 'dsog', path: 'dsog_fashion_orders', label: 'DSOG', icon: 'fa-tshirt', iconClass: 'tab-icon-dsog', 
+                assignedField: 'driverId', customerField: 'customerName', phoneField: 'customerPhone', emailField: 'customerEmail', 
+                pickupField: 'location', deliveryField: 'location', amountField: 'total', statusField: 'status', 
+                packageField: 'packageType', instructionsField: 'notes',
+                newStatuses: ['ready','assigned'], activeStatuses: ['shipped','out-for-delivery'], doneStatus: 'delivered' 
+            },
+            { 
+                key: 'fusion', path: 'fusion_foods_orders', label: 'Fusion', icon: 'fa-utensils', iconClass: 'tab-icon-fusion', 
+                assignedField: 'driverId', customerField: 'restaurantName', phoneField: 'phone', emailField: 'email', 
+                pickupField: 'location', deliveryField: 'location', amountField: 'total', statusField: 'status', 
+                packageField: 'packageType', instructionsField: 'notes',
+                newStatuses: ['ready','assigned'], activeStatuses: ['shipped','out-for-delivery'], doneStatus: 'delivered' 
+            },
+            { 
+                key: 'brandinn', path: 'brandinn_print_orders', label: 'Print', icon: 'fa-print', iconClass: 'tab-icon-brandinn', 
+                assignedField: 'driverId', customerField: 'customerName', phoneField: 'customerPhone', emailField: 'customerEmail', 
+                pickupField: 'location', deliveryField: 'location', amountField: 'total', statusField: 'status', 
+                packageField: 'product', instructionsField: 'notes',
+                newStatuses: ['ready','completed','pending'], activeStatuses: ['in-progress','printing'], doneStatus: 'delivered' 
+            },
+            { 
+                key: 'heritage', path: 'heritage_listings', label: 'Heritage', icon: 'fa-landmark', iconClass: 'tab-icon-heritage', 
+                assignedField: 'driverId', customerField: 'partnerName', phoneField: '', emailField: '', 
+                pickupField: 'location', deliveryField: 'location', amountField: 'price', statusField: 'status', 
+                packageField: 'adType', instructionsField: 'notes',
+                newStatuses: ['active'], activeStatuses: [], doneStatus: 'expired' 
+            }
         ];
 
-        function getNested(obj, path) { return path.split('.').reduce((o, k) => (o || {})[k], obj) || null; }
+        function getNested(obj, path) { 
+            if (!obj || !path) return null;
+            return path.split('.').reduce((o, k) => (o || {})[k], obj) || null; 
+        }
+        
         function showLoading(s) { $('loadingOverlay').classList.toggle('hidden', !s); }
+        
         function toast(msg, type = 'info') {
             const icons = { success: 'fa-check-circle', error: 'fa-exclamation-circle', warning: 'fa-exclamation-triangle', info: 'fa-info-circle' };
             const t = document.createElement('div'); t.className = `toast ${type}`; t.innerHTML = `<i class="fas ${icons[type]}"></i> ${msg}`;
             $('toastContainer').appendChild(t); setTimeout(() => { t.style.opacity = '0'; t.style.transition = '0.3s'; setTimeout(() => t.remove(), 300); }, 3500);
         }
+        
         function getInitials(n) { return n ? String(n).split(' ').map(w => w[0]).join('').toUpperCase().substring(0,2) : 'KA'; }
-        function escapeHtml(s) { if (!s) return ''; const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+        function escapeHtml(s) { if (!s) return ''; const d = document.createElement('div'); d.textContent = String(s); return d.innerHTML; }
 
         // ========== NOTIFICATIONS ==========
         function initAudio() { if (!audioCtx) { try { audioCtx = new (window.AudioContext||window.webkitAudioContext)(); } catch(e) {} } if (audioCtx?.state === 'suspended') audioCtx.resume(); }
@@ -392,36 +539,40 @@
             for (const src of sources) {
                 try {
                     const snap = await db.ref(src.path).once('value');
-                    Object.entries(snap.val()||{}).forEach(([id, item]) => {
+                    const data = snap.val() || {};
+                    for (const [id, item] of Object.entries(data)) {
                         const compositeKey = `${src.key}_${id}`;
                         const assigned = getNested(item, src.assignedField) || item.assignedTo || item.driverId || '';
                         if (assigned === currentUser.uid) {
                             const status = getNested(item, src.statusField) || item.status || 'pending';
+                            // Extract contents using the enhanced function
+                            const contents = extractDeliveryContents(item, src.key);
+                            
                             all.push({
                                 compositeKey, id, sourceKey: src.key, sourceLabel: src.label,
-                                customer: getNested(item, src.customerField) || 'Customer',
-                                phone: getNested(item, src.phoneField) || item.customerPhone || item.phone || '',
-                                email: getNested(item, src.emailField) || item.customerEmail || item.email || '',
-                                pickup: getNested(item, src.pickupField) || '—',
-                                delivery: getNested(item, src.deliveryField) || '—',
-                                amount: getNested(item, src.amountField) || 0,
-                                packageInfo: getNested(item, src.packageField) || item.package?.type || '',
-                                instructions: getNested(item, src.instructionsField) || item.instructions || item.package?.instructions || '',
-                                contents: getNested(item, src.contentsField) || item.package?.contents || item.items || item.details || null,
+                                customer: getNested(item, src.customerField) || item.customerName || item.userName || 'Customer',
+                                phone: getNested(item, src.phoneField) || item.customerPhone || item.userPhone || item.phone || '',
+                                email: getNested(item, src.emailField) || item.customerEmail || item.userEmail || '',
+                                pickup: getNested(item, src.pickupField) || item.pickup?.address || item.location || '—',
+                                delivery: getNested(item, src.deliveryField) || item.delivery?.address || item.location || '—',
+                                amount: getNested(item, src.amountField) || item.total || item.amount || item.fare?.total || 0,
+                                packageInfo: getNested(item, src.packageField) || item.package?.type || item.packageType || item.product || '',
+                                instructions: getNested(item, src.instructionsField) || item.instructions || item.package?.instructions || item.notes || '',
+                                contents: contents,
                                 status, src, rawData: item,
                                 isNew: src.newStatuses.includes(status),
                                 isActive: src.activeStatuses.includes(status),
                                 isDone: status === src.doneStatus
                             });
                         }
-                    });
-                } catch(e) {}
+                    }
+                } catch(e) { console.warn(`Error loading ${src.path}:`, e); }
             }
             allDeliveries = all.filter((d, i, arr) => arr.findIndex(x => x.compositeKey === d.compositeKey) === i);
             allDeliveries.sort((a, b) => {
                 if (a.isNew && !b.isNew) return -1; if (!a.isNew && b.isNew) return 1;
                 if (a.isActive && !b.isActive) return -1; if (!a.isActive && b.isActive) return 1;
-                return (b.rawData?.createdAt || 0) - (a.rawData?.createdAt || 0);
+                return (b.rawData?.createdAt || b.rawData?.timestamp || 0) - (a.rawData?.createdAt || a.rawData?.timestamp || 0);
             });
             renderCurrentList();
             updateBadges();
@@ -442,14 +593,18 @@
             list.innerHTML = items.map(d => {
                 const cardClass = d.isNew ? 'new-task' : (d.isActive ? 'active-task' : 'done-task');
                 const statusClass = d.isNew ? 'status-new' : (d.isActive ? 'status-active' : 'status-done');
+                // Show item count badge if contents exist
+                const itemCountBadge = d.contents && d.contents.length > 0 ? `<span style="font-size:0.5rem;background:rgba(245,158,11,0.15);padding:1px 6px;border-radius:8px;margin-left:4px;">📦 ${d.contents.length} item${d.contents.length !== 1 ? 's' : ''}</span>` : '';
+                
                 let actions = `<button class="action-btn btn-cancel" onclick="event.stopPropagation();viewDetails('${d.compositeKey}')">📋 Info</button>`;
                 if (d.isNew) actions += `<button class="action-btn btn-start" onclick="event.stopPropagation();startDelivery('${d.id}','${d.src.path}')"><i class="fas fa-truck"></i> Start</button>`;
                 if (d.isActive) { actions += `<button class="action-btn btn-nav" onclick="event.stopPropagation();navigate('${encodeURIComponent(d.delivery)}')"><i class="fas fa-map-marked-alt"></i> Nav</button>`; actions += `<button class="action-btn btn-done" onclick="event.stopPropagation();markDone('${d.id}','${d.src.path}','${d.src.doneStatus}')"><i class="fas fa-check"></i> Done</button>`; }
+                
                 return `<div class="delivery-card ${cardClass}" onclick="viewDetails('${d.compositeKey}')">
-                    <div class="delivery-top"><span class="delivery-id">#${d.id.slice(-6)}${d.isNew?' <span class="new-badge">NEW</span>':''}</span><span class="delivery-status ${statusClass}">${d.status.replace(/-/g,' ')}</span></div>
+                    <div class="delivery-top"><span class="delivery-id">#${d.id.slice(-6)}${d.isNew?' <span class="new-badge">NEW</span>':''}${itemCountBadge}</span><span class="delivery-status ${statusClass}">${d.status.replace(/-/g,' ')}</span></div>
                     <div class="delivery-client">${escapeHtml(d.customer)}</div>
                     ${d.phone ? `<div class="delivery-phone">📞 ${escapeHtml(d.phone)}</div>` : ''}
-                    <div class="delivery-route">📍 ${escapeHtml(String(d.pickup).substring(0,30))} <i class="fas fa-arrow-right"></i> ${escapeHtml(String(d.delivery).substring(0,30))}</div>
+                    <div class="delivery-route">📍 ${escapeHtml(String(d.pickup).substring(0,35))} <i class="fas fa-arrow-right"></i> ${escapeHtml(String(d.delivery).substring(0,35))}</div>
                     <div class="delivery-amount">${d.amount ? '💰 KSh '+Number(d.amount).toLocaleString() : ''}</div>
                     <div class="delivery-actions" onclick="event.stopPropagation()">${actions}</div>
                 </div>`;
@@ -457,28 +612,30 @@
         }
 
         function setupListeners() {
-            sources.forEach(src => {
+            for (const src of sources) {
                 db.ref(src.path).on('child_added', snap => {
                     const compositeKey = `${src.key}_${snap.key}`;
                     if (seenIds.has(compositeKey)) return;
                     const item = snap.val();
-                    if ((getNested(item, src.assignedField) || item.assignedTo || item.driverId || '') === currentUser?.uid) {
+                    const assigned = getNested(item, src.assignedField) || item.assignedTo || item.driverId || '';
+                    if (assigned === currentUser?.uid) {
                         seenIds.add(compositeKey);
-                        notifyNewRequest(src.label, `New ${src.label} delivery for ${getNested(item, src.customerField) || 'Customer'}`);
+                        const customerName = getNested(item, src.customerField) || item.customerName || item.userName || 'Customer';
+                        notifyNewRequest(src.label, `New ${src.label} delivery for ${customerName}`);
                         loadAllDeliveries();
                     }
                 });
                 db.ref(src.path).on('child_changed', () => loadAllDeliveries());
-            });
+            }
         }
 
         function updateBadges() {
             let total = 0;
-            sources.forEach(s => {
+            for (const s of sources) {
                 const count = allDeliveries.filter(d => d.sourceKey === s.key && (d.isNew || d.isActive)).length;
                 const badge = $(`badge-${s.key}`); if (badge) badge.textContent = count;
                 total += count;
-            });
+            }
             const allBadge = $('badge-all'); if (allBadge) allBadge.textContent = total;
             $('headerActiveCount').textContent = total;
         }
@@ -488,79 +645,82 @@
         window.closePickupModal = () => $('pickupModal').classList.remove('show');
         window.confirmPickup = async () => {
             if (!currentActionId || !currentActionSource) return; showLoading(true);
-            try { const src = sources.find(s => s.path === currentActionSource); await db.ref(`${currentActionSource}/${currentActionId}`).update({ status: src?.activeStatuses[0] || 'shipped', startedAt: firebase.database.ServerValue.TIMESTAMP, pickupNotes: $('pickupNotes').value.trim(), updatedAt: firebase.database.ServerValue.TIMESTAMP }); toast('Delivery started!', 'success'); closePickupModal(); loadAllDeliveries(); } catch(e) { toast('Error', 'error'); }
+            try { 
+                const src = sources.find(s => s.path === currentActionSource); 
+                await db.ref(`${currentActionSource}/${currentActionId}`).update({ 
+                    status: src?.activeStatuses[0] || 'shipped', 
+                    startedAt: firebase.database.ServerValue.TIMESTAMP, 
+                    pickupNotes: $('pickupNotes').value.trim(), 
+                    updatedAt: firebase.database.ServerValue.TIMESTAMP 
+                }); 
+                toast('Delivery started!', 'success'); 
+                closePickupModal(); 
+                loadAllDeliveries(); 
+            } catch(e) { toast('Error starting delivery', 'error'); }
             showLoading(false);
         };
 
         window.markDone = (id, sourcePath, doneStatus) => { currentActionId = id; currentActionSource = sourcePath; $('completeModal').classList.add('show'); };
         window.closeCompleteModal = () => $('completeModal').classList.remove('show');
         window.completeDelivery = async () => {
-            const name = $('proofName').value.trim(); if (!name) { toast('Enter receiver name', 'warning'); return; }
+            const name = $('proofName').value.trim(); 
+            if (!name) { toast('Enter receiver name', 'warning'); return; }
             if (!currentActionId || !currentActionSource) return; showLoading(true);
-            try { const src = sources.find(s => s.path === currentActionSource); await db.ref(`${currentActionSource}/${currentActionId}`).update({ status: src?.doneStatus || 'delivered', deliveredAt: firebase.database.ServerValue.TIMESTAMP, deliveryProof: { receiverName: name, notes: $('proofNotes').value.trim() }, updatedAt: firebase.database.ServerValue.TIMESTAMP }); toast('Completed!', 'success'); closeCompleteModal(); loadAllDeliveries(); } catch(e) { toast('Error', 'error'); }
+            try { 
+                const src = sources.find(s => s.path === currentActionSource); 
+                await db.ref(`${currentActionSource}/${currentActionId}`).update({ 
+                    status: src?.doneStatus || 'delivered', 
+                    deliveredAt: firebase.database.ServerValue.TIMESTAMP, 
+                    deliveryProof: { receiverName: name, notes: $('proofNotes').value.trim() }, 
+                    updatedAt: firebase.database.ServerValue.TIMESTAMP 
+                }); 
+                toast('Delivery completed!', 'success'); 
+                closeCompleteModal(); 
+                loadAllDeliveries(); 
+            } catch(e) { toast('Error completing delivery', 'error'); }
             showLoading(false);
         };
 
-        function renderContents(contents) {
-            if (!contents) return '';
-            if (Array.isArray(contents) && contents.length > 0) {
-                return `<div class="contents-section">
-                    <h4><i class="fas fa-box-open"></i> Delivery Contents</h4>
-                    <ul class="contents-list">
-                        ${contents.map(item => {
-                            if (typeof item === 'object') {
-                                return `<li><span>${escapeHtml(item.name || item.item || item.description || 'Item')}</span><span>${item.quantity ? 'x'+item.quantity : ''} ${item.price ? 'KSh '+Number(item.price).toLocaleString() : ''}</span></li>`;
-                            }
-                            return `<li><span>${escapeHtml(String(item))}</span></li>`;
-                        }).join('')}
-                    </ul>
-                </div>`;
-            }
-            if (typeof contents === 'object' && Object.keys(contents).length > 0) {
-                return `<div class="contents-section">
-                    <h4><i class="fas fa-box-open"></i> Delivery Contents</h4>
-                    <ul class="contents-list">
-                        ${Object.entries(contents).map(([key, value]) => `<li><span>${escapeHtml(String(key))}</span><span>${escapeHtml(String(value))}</span></li>`).join('')}
-                    </ul>
-                </div>`;
-            }
-            if (typeof contents === 'string' && contents.trim()) {
-                return `<div class="detail-item full"><strong>Contents</strong><span>${escapeHtml(contents)}</span></div>`;
-            }
-            return '';
-        }
-
+        // Enhanced view details with contents
         window.viewDetails = (compositeKey) => {
-            const d = allDeliveries.find(x => x.compositeKey === compositeKey); if (!d) return;
+            const d = allDeliveries.find(x => x.compositeKey === compositeKey); 
+            if (!d) return;
             currentNavAddress = d.delivery;
             $('detailsTitle').textContent = `${d.sourceLabel} · #${d.id.slice(-6)}`;
             $('navFromModalBtn').style.display = d.delivery && d.delivery !== '—' ? 'inline-flex' : 'none';
+            
+            // Build details HTML including contents
+            let contentsHtml = '';
+            if (d.contents && d.contents.length > 0) {
+                contentsHtml = formatContentsForDisplay(d.contents);
+            } else if (d.packageInfo) {
+                contentsHtml = `<div class="contents-section"><h4><i class="fas fa-box"></i> Package Info</h4><ul class="contents-list"><li><span class="item-name">${escapeHtml(d.packageInfo)}</span></li></ul></div>`;
+            }
+            
+            // Also show raw order reference for transparency
+            const orderRefHtml = d.rawData?.orderId || d.rawData?.bookingId ? 
+                `<div class="detail-item full"><strong>Order Reference</strong><span>${escapeHtml(d.rawData.orderId || d.rawData.bookingId)}</span></div>` : '';
+            
             $('detailsBody').innerHTML = `<div class="detail-grid">
                 <div class="detail-item"><strong>Customer</strong><span>${escapeHtml(d.customer)}</span></div>
                 <div class="detail-item"><strong>Phone</strong><span style="color:var(--info);cursor:pointer;" onclick="window.open('tel:${escapeHtml(d.phone)}')">📞 ${escapeHtml(d.phone||'N/A')}</span></div>
                 ${d.email ? `<div class="detail-item full"><strong>Email</strong><span>${escapeHtml(d.email)}</span></div>` : ''}
+                ${orderRefHtml}
                 <div class="detail-item"><strong>Status</strong><span class="delivery-status ${d.isNew?'status-new':d.isActive?'status-active':'status-done'}">${d.status.replace(/-/g,' ')}</span></div>
                 <div class="detail-item"><strong>Amount</strong><span>${d.amount?'KSh '+Number(d.amount).toLocaleString():'—'}</span></div>
-                <div class="detail-item full"><strong>Pickup</strong><span>${escapeHtml(d.pickup)}</span></div>
-                <div class="detail-item full"><strong>Delivery</strong><span>${escapeHtml(d.delivery)}</span></div>
-                ${d.packageInfo ? `<div class="detail-item full"><strong>Package</strong><span>${escapeHtml(d.packageInfo)}</span></div>` : ''}
-                ${d.instructions ? `<div class="detail-item full"><strong>Instructions</strong><span>${escapeHtml(d.instructions)}</span></div>` : ''}
+                <div class="detail-item full"><strong>📍 Pickup Location</strong><span>${escapeHtml(d.pickup)}</span></div>
+                <div class="detail-item full"><strong>📍 Dropoff Location</strong><span>${escapeHtml(d.delivery)}</span></div>
+                ${d.instructions ? `<div class="detail-item full"><strong>📝 Special Instructions</strong><span>${escapeHtml(d.instructions)}</span></div>` : ''}
             </div>
-            ${renderContents(d.contents)}`;
+            ${contentsHtml}`;
+            
             $('detailsModal').classList.add('show');
         };
+        
         window.closeDetailsModal = () => $('detailsModal').classList.remove('show');
         window.navigateFromModal = () => { if (currentNavAddress) window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(currentNavAddress)}`, '_blank'); };
-
         window.navigate = (addr) => window.open(`https://www.google.com/maps/search/?api=1&query=${addr}`, '_blank');
-        
-        window.handleLogout = async () => { 
-            if (confirm('Sign out?')) { 
-                await auth.signOut(); 
-                window.location.href = './'; 
-            } 
-        };
-        
+        window.handleLogout = async () => { if (confirm('Sign out?')) { await auth.signOut(); window.location.href = './'; } };
         window.refreshAll = () => { loadAllDeliveries(); toast('Refreshed!', 'success'); };
         window.enableNotifications = enableNotifications;
         window.testNotification = testNotification;
