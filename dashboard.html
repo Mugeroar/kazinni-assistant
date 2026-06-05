@@ -3,14 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>E-KAZI · Deliveries Dashboard</title>
+    <title>KazInni · Deliveries Dashboard</title>
     
-    <meta name="theme-color" content="#ffffff">
+    <meta name="theme-color" content="#0f172a">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="KazInni">
     
     <link rel="icon" type="image/png" href="https://i.postimg.cc/rFfXDj3L/kazinni-removebg-preview(1).png">
     <link rel="apple-touch-icon" href="https://i.postimg.cc/rFfXDj3L/kazinni-removebg-preview(1).png">
+    <link rel="manifest" href="/manifest.json">
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
@@ -103,7 +105,7 @@
         .delivery-phone { font-size: 0.68rem; color: var(--text-secondary); margin-bottom: 0.25rem; }
         .delivery-route { font-size: 0.68rem; color: var(--text-secondary); margin-bottom: 0.35rem; line-height: 1.4; }
         .delivery-route i { color: var(--gold); margin: 0 3px; font-size: 0.45rem; }
-        .delivery-fare { font-size: 0.7rem; font-weight: 700; margin-bottom: 0.35rem; color: var(--gold-dark); }
+        .delivery-amount { font-size: 0.7rem; font-weight: 700; margin-bottom: 0.35rem; color: var(--gold-dark); }
 
         .delivery-actions { display: flex; gap: 5px; flex-wrap: wrap; }
         .action-btn { padding: 0.35rem 0.65rem; border-radius: 8px; border: none; font-size: 0.62rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 3px; transition: all 0.2s; font-family: 'Inter', sans-serif; min-height: 30px; }
@@ -149,6 +151,13 @@
         .detail-item strong { display: block; font-size: 0.55rem; color: var(--text-muted); text-transform: uppercase; margin-bottom: 0.1rem; }
         .detail-item span { font-size: 0.72rem; color: var(--text-primary); }
         .detail-item.full { grid-column: 1 / -1; }
+
+        /* Contents section in details */
+        .contents-section { margin-top: 0.5rem; background: rgba(245,158,11,0.05); border: 1px dashed var(--gold); border-radius: 10px; padding: 0.7rem; }
+        .contents-section h4 { font-size: 0.65rem; font-weight: 700; color: var(--gold-dark); margin-bottom: 0.4rem; display: flex; align-items: center; gap: 5px; }
+        .contents-list { list-style: none; padding: 0; }
+        .contents-list li { font-size: 0.68rem; color: var(--text-secondary); padding: 0.25rem 0; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; }
+        .contents-list li:last-child { border-bottom: none; }
 
         .toast-container { position: fixed; top: calc(60px + var(--safe-top)); right: 8px; left: 8px; z-index: 5000; display: flex; flex-direction: column; align-items: flex-end; pointer-events: none; }
         .toast { background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; padding: 0.6rem 0.9rem; margin-bottom: 0.3rem; box-shadow: var(--shadow-md); display: flex; align-items: center; gap: 6px; font-size: 0.7rem; animation: toastIn 0.3s ease; pointer-events: auto; }
@@ -210,7 +219,7 @@
     <div class="app-container">
         <header class="header">
             <div class="header-inner">
-                <div class="brand"><img src="https://i.postimg.cc/rFfXDj3L/kazinni-removebg-preview(1).png" alt="E-KAZI" class="brand-logo"><span class="brand-name">E-KAZI</span></div>
+                <div class="brand"><img src="https://i.postimg.cc/rFfXDj3L/kazinni-removebg-preview(1).png" alt="KazInni" class="brand-logo"><span class="brand-name">KazInni</span></div>
                 <div class="header-right">
                     <div class="header-stat"><i class="fas fa-circle" style="color:var(--green);font-size:0.4rem;"></i><span id="headerActiveCount">0</span> active</div>
                     <div class="user-btn"><div class="user-avatar" id="userAvatar">KA</div><span id="userName">Asst</span>
@@ -232,7 +241,7 @@
             <div id="tabContents"></div>
         </div>
 
-        <footer class="footer">&copy; 2026 <span>E-KAZI</span> · Deliveries</footer>
+        <footer class="footer">&copy; 2026 <span>KazInni</span> · Deliveries</footer>
     </div>
 
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
@@ -240,6 +249,15 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 
     <script>
+        // ========== SERVICE WORKER ==========
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/service-worker.js')
+                    .then(reg => console.log('SW registered:', reg.scope))
+                    .catch(err => console.log('SW registration failed:', err));
+            });
+        }
+
         const firebaseConfig = {
             apiKey: "AIzaSyC7kppUyHUaPzeLBV62NEZWuHiuz1Kz0mA",
             authDomain: "mugera-e51cc.firebaseapp.com",
@@ -262,11 +280,11 @@
         let audioCtx = null;
 
         const sources = [
-            { key: 'pickup', path: 'pickup_deliveries', label: 'Pick-Up', icon: 'fa-box', iconClass: 'tab-icon-pickup', assignedField: 'assignedTo', customerField: 'userName', phoneField: 'userPhone', emailField: '', pickupField: 'pickup.address', deliveryField: 'delivery.address', fareField: 'fare.total', statusField: 'status', packageField: 'package.type', instructionsField: 'package.instructions', newStatuses: ['assigned','pending'], activeStatuses: ['out-for-delivery','in_progress'], doneStatus: 'delivered' },
-            { key: 'dsog', path: 'dsog_fashion_orders', label: 'DSOG', icon: 'fa-tshirt', iconClass: 'tab-icon-dsog', assignedField: 'driverId', customerField: 'customerName', phoneField: 'customerPhone', emailField: 'customerEmail', pickupField: 'location', deliveryField: 'location', fareField: 'total', statusField: 'status', packageField: 'packageType', instructionsField: 'notes', newStatuses: ['ready'], activeStatuses: ['shipped'], doneStatus: 'delivered' },
-            { key: 'fusion', path: 'fusion_foods_orders', label: 'Fusion', icon: 'fa-utensils', iconClass: 'tab-icon-fusion', assignedField: 'driverId', customerField: 'restaurantName', phoneField: 'phone', emailField: 'email', pickupField: 'location', deliveryField: 'location', fareField: 'total', statusField: 'status', packageField: 'packageType', instructionsField: 'notes', newStatuses: ['ready'], activeStatuses: ['shipped'], doneStatus: 'delivered' },
-            { key: 'brandinn', path: 'brandinn_print_orders', label: 'Print', icon: 'fa-print', iconClass: 'tab-icon-brandinn', assignedField: 'driverId', customerField: 'customerName', phoneField: 'customerPhone', emailField: 'customerEmail', pickupField: 'location', deliveryField: 'location', fareField: 'total', statusField: 'status', packageField: 'product', instructionsField: 'notes', newStatuses: ['ready','completed'], activeStatuses: [], doneStatus: 'delivered' },
-            { key: 'heritage', path: 'heritage_listings', label: 'Heritage', icon: 'fa-landmark', iconClass: 'tab-icon-heritage', assignedField: 'driverId', customerField: 'partnerName', phoneField: '', emailField: '', pickupField: 'location', deliveryField: 'location', fareField: 'price', statusField: 'status', packageField: 'adType', instructionsField: 'notes', newStatuses: ['active'], activeStatuses: [], doneStatus: 'expired' }
+            { key: 'pickup', path: 'pickup_deliveries', label: 'Pick-Up', icon: 'fa-box', iconClass: 'tab-icon-pickup', assignedField: 'assignedTo', customerField: 'userName', phoneField: 'userPhone', emailField: '', pickupField: 'pickup.address', deliveryField: 'delivery.address', amountField: 'fare.total', statusField: 'status', packageField: 'package.type', instructionsField: 'package.instructions', contentsField: 'package.contents', newStatuses: ['assigned','pending'], activeStatuses: ['out-for-delivery','in_progress'], doneStatus: 'delivered' },
+            { key: 'dsog', path: 'dsog_fashion_orders', label: 'DSOG', icon: 'fa-tshirt', iconClass: 'tab-icon-dsog', assignedField: 'driverId', customerField: 'customerName', phoneField: 'customerPhone', emailField: 'customerEmail', pickupField: 'location', deliveryField: 'location', amountField: 'total', statusField: 'status', packageField: 'packageType', instructionsField: 'notes', contentsField: 'items', newStatuses: ['ready'], activeStatuses: ['shipped'], doneStatus: 'delivered' },
+            { key: 'fusion', path: 'fusion_foods_orders', label: 'Fusion', icon: 'fa-utensils', iconClass: 'tab-icon-fusion', assignedField: 'driverId', customerField: 'restaurantName', phoneField: 'phone', emailField: 'email', pickupField: 'location', deliveryField: 'location', amountField: 'total', statusField: 'status', packageField: 'packageType', instructionsField: 'notes', contentsField: 'items', newStatuses: ['ready'], activeStatuses: ['shipped'], doneStatus: 'delivered' },
+            { key: 'brandinn', path: 'brandinn_print_orders', label: 'Print', icon: 'fa-print', iconClass: 'tab-icon-brandinn', assignedField: 'driverId', customerField: 'customerName', phoneField: 'customerPhone', emailField: 'customerEmail', pickupField: 'location', deliveryField: 'location', amountField: 'total', statusField: 'status', packageField: 'product', instructionsField: 'notes', contentsField: 'items', newStatuses: ['ready','completed'], activeStatuses: [], doneStatus: 'delivered' },
+            { key: 'heritage', path: 'heritage_listings', label: 'Heritage', icon: 'fa-landmark', iconClass: 'tab-icon-heritage', assignedField: 'driverId', customerField: 'partnerName', phoneField: '', emailField: '', pickupField: 'location', deliveryField: 'location', amountField: 'price', statusField: 'status', packageField: 'adType', instructionsField: 'notes', contentsField: 'details', newStatuses: ['active'], activeStatuses: [], doneStatus: 'expired' }
         ];
 
         function getNested(obj, path) { return path.split('.').reduce((o, k) => (o || {})[k], obj) || null; }
@@ -292,7 +310,7 @@
             if ('Notification' in window) {
                 Notification.requestPermission().then(p => {
                     notificationPermission = p; notificationsEnabled = p === 'granted';
-                    if (p === 'granted') { toast('Notifications enabled!', 'success'); $('notificationBanner').classList.add('hidden'); playNotificationSound(); vibrateStrong(); sendBrowserNotification('E-KAZI', 'You will receive alerts even when screen is off!'); }
+                    if (p === 'granted') { toast('Notifications enabled!', 'success'); $('notificationBanner').classList.add('hidden'); playNotificationSound(); vibrateStrong(); sendBrowserNotification('KazInni', 'You will receive alerts even when screen is off!'); }
                     else { toast('Permission denied', 'warning'); }
                 });
             }
@@ -302,21 +320,20 @@
             if (!notificationsEnabled || notificationPermission !== 'granted') return;
             try {
                 if ('serviceWorker' in navigator) {
-                    navigator.serviceWorker.ready.then(reg => reg.showNotification(title, { body, icon: 'https://i.postimg.cc/rFfXDj3L/kazinni-removebg-preview(1).png', badge: 'https://i.postimg.cc/rFfXDj3L/kazinni-removebg-preview(1).png', tag: 'ekazi', requireInteraction: true, vibrate: [300,150,300,150,500,200,300], renotify: true }));
+                    navigator.serviceWorker.ready.then(reg => reg.showNotification(title, { body, icon: 'https://i.postimg.cc/rFfXDj3L/kazinni-removebg-preview(1).png', badge: 'https://i.postimg.cc/rFfXDj3L/kazinni-removebg-preview(1).png', tag: 'kazinni', requireInteraction: true, vibrate: [300,150,300,150,500,200,300], renotify: true }));
                 } else {
-                    const n = new Notification(title, { body, icon: 'https://i.postimg.cc/rFfXDj3L/kazinni-removebg-preview(1).png', tag: 'ekazi', requireInteraction: true, vibrate: [300,150,300,150,500,200,300] });
+                    const n = new Notification(title, { body, icon: 'https://i.postimg.cc/rFfXDj3L/kazinni-removebg-preview(1).png', tag: 'kazinni', requireInteraction: true, vibrate: [300,150,300,150,500,200,300] });
                     n.onclick = () => { window.focus(); n.close(); }; setTimeout(() => n.close(), 10000);
                 }
             } catch(e) {}
         }
 
-        function notifyNewRequest(label, details) { initAudio(); playNotificationSound(); vibrateStrong(); sendBrowserNotification('E-KAZI · New Request', details); toast(`🔔 ${details}`, 'info'); }
-        function testNotification() { initAudio(); playNotificationSound(); vibrateStrong(); sendBrowserNotification('E-KAZI · Test', 'Notification test!'); toast('Test alert sent!', 'success'); }
+        function notifyNewRequest(label, details) { initAudio(); playNotificationSound(); vibrateStrong(); sendBrowserNotification('KazInni · New Request', details); toast(`🔔 ${details}`, 'info'); }
+        function testNotification() { initAudio(); playNotificationSound(); vibrateStrong(); sendBrowserNotification('KazInni · Test', 'Notification test!'); toast('Test alert sent!', 'success'); }
 
         // ========== AUTH ==========
         auth.onAuthStateChanged(async user => {
             if (!user) { 
-                // FIXED: Redirect to site root which will serve index.html
                 window.location.href = './'; 
                 return; 
             }
@@ -387,9 +404,10 @@
                                 email: getNested(item, src.emailField) || item.customerEmail || item.email || '',
                                 pickup: getNested(item, src.pickupField) || '—',
                                 delivery: getNested(item, src.deliveryField) || '—',
-                                fare: getNested(item, src.fareField) || 0,
+                                amount: getNested(item, src.amountField) || 0,
                                 packageInfo: getNested(item, src.packageField) || item.package?.type || '',
                                 instructions: getNested(item, src.instructionsField) || item.instructions || item.package?.instructions || '',
+                                contents: getNested(item, src.contentsField) || item.package?.contents || item.items || item.details || null,
                                 status, src, rawData: item,
                                 isNew: src.newStatuses.includes(status),
                                 isActive: src.activeStatuses.includes(status),
@@ -432,7 +450,7 @@
                     <div class="delivery-client">${escapeHtml(d.customer)}</div>
                     ${d.phone ? `<div class="delivery-phone">📞 ${escapeHtml(d.phone)}</div>` : ''}
                     <div class="delivery-route">📍 ${escapeHtml(String(d.pickup).substring(0,30))} <i class="fas fa-arrow-right"></i> ${escapeHtml(String(d.delivery).substring(0,30))}</div>
-                    <div class="delivery-fare">${d.fare ? '💰 KSh '+Number(d.fare).toLocaleString() : ''}</div>
+                    <div class="delivery-amount">${d.amount ? '💰 KSh '+Number(d.amount).toLocaleString() : ''}</div>
                     <div class="delivery-actions" onclick="event.stopPropagation()">${actions}</div>
                 </div>`;
             }).join('');
@@ -483,22 +501,52 @@
             showLoading(false);
         };
 
+        function renderContents(contents) {
+            if (!contents) return '';
+            if (Array.isArray(contents) && contents.length > 0) {
+                return `<div class="contents-section">
+                    <h4><i class="fas fa-box-open"></i> Delivery Contents</h4>
+                    <ul class="contents-list">
+                        ${contents.map(item => {
+                            if (typeof item === 'object') {
+                                return `<li><span>${escapeHtml(item.name || item.item || item.description || 'Item')}</span><span>${item.quantity ? 'x'+item.quantity : ''} ${item.price ? 'KSh '+Number(item.price).toLocaleString() : ''}</span></li>`;
+                            }
+                            return `<li><span>${escapeHtml(String(item))}</span></li>`;
+                        }).join('')}
+                    </ul>
+                </div>`;
+            }
+            if (typeof contents === 'object' && Object.keys(contents).length > 0) {
+                return `<div class="contents-section">
+                    <h4><i class="fas fa-box-open"></i> Delivery Contents</h4>
+                    <ul class="contents-list">
+                        ${Object.entries(contents).map(([key, value]) => `<li><span>${escapeHtml(String(key))}</span><span>${escapeHtml(String(value))}</span></li>`).join('')}
+                    </ul>
+                </div>`;
+            }
+            if (typeof contents === 'string' && contents.trim()) {
+                return `<div class="detail-item full"><strong>Contents</strong><span>${escapeHtml(contents)}</span></div>`;
+            }
+            return '';
+        }
+
         window.viewDetails = (compositeKey) => {
             const d = allDeliveries.find(x => x.compositeKey === compositeKey); if (!d) return;
             currentNavAddress = d.delivery;
             $('detailsTitle').textContent = `${d.sourceLabel} · #${d.id.slice(-6)}`;
-            $('navFromModalBtn').style.display = d.delivery ? 'inline-flex' : 'none';
+            $('navFromModalBtn').style.display = d.delivery && d.delivery !== '—' ? 'inline-flex' : 'none';
             $('detailsBody').innerHTML = `<div class="detail-grid">
                 <div class="detail-item"><strong>Customer</strong><span>${escapeHtml(d.customer)}</span></div>
                 <div class="detail-item"><strong>Phone</strong><span style="color:var(--info);cursor:pointer;" onclick="window.open('tel:${escapeHtml(d.phone)}')">📞 ${escapeHtml(d.phone||'N/A')}</span></div>
                 ${d.email ? `<div class="detail-item full"><strong>Email</strong><span>${escapeHtml(d.email)}</span></div>` : ''}
                 <div class="detail-item"><strong>Status</strong><span class="delivery-status ${d.isNew?'status-new':d.isActive?'status-active':'status-done'}">${d.status.replace(/-/g,' ')}</span></div>
-                <div class="detail-item"><strong>Fare</strong><span>${d.fare?'KSh '+Number(d.fare).toLocaleString():'—'}</span></div>
+                <div class="detail-item"><strong>Amount</strong><span>${d.amount?'KSh '+Number(d.amount).toLocaleString():'—'}</span></div>
                 <div class="detail-item full"><strong>Pickup</strong><span>${escapeHtml(d.pickup)}</span></div>
                 <div class="detail-item full"><strong>Delivery</strong><span>${escapeHtml(d.delivery)}</span></div>
                 ${d.packageInfo ? `<div class="detail-item full"><strong>Package</strong><span>${escapeHtml(d.packageInfo)}</span></div>` : ''}
                 ${d.instructions ? `<div class="detail-item full"><strong>Instructions</strong><span>${escapeHtml(d.instructions)}</span></div>` : ''}
-            </div>`;
+            </div>
+            ${renderContents(d.contents)}`;
             $('detailsModal').classList.add('show');
         };
         window.closeDetailsModal = () => $('detailsModal').classList.remove('show');
@@ -506,7 +554,6 @@
 
         window.navigate = (addr) => window.open(`https://www.google.com/maps/search/?api=1&query=${addr}`, '_blank');
         
-        // FIXED: Redirect to site root which will serve index.html
         window.handleLogout = async () => { 
             if (confirm('Sign out?')) { 
                 await auth.signOut(); 
