@@ -26,7 +26,7 @@
             --border: #e2e8f0;
             --gold: #f59e0b; --gold-dark: #b45309; --purple: #8b5cf6;
             --green: #22c55e; --red: #ef4444; --warning: #f59e0b; --info: #3b82f6; --orange: #f97316;
-            --pink: #ec4899; --emerald: #10b981; --indigo: #6366f1;
+            --pink: #ec4899; --emerald: #10b981; --indigo: #6366f1; --amber: #d97706;
             --shadow-sm: 0 1px 2px rgba(0,0,0,0.05); --shadow: 0 4px 6px -1px rgba(0,0,0,0.07);
             --shadow-md: 0 10px 15px -3px rgba(0,0,0,0.1);
             --safe-bottom: env(safe-area-inset-bottom, 20px); --safe-top: env(safe-area-inset-top, 0px);
@@ -40,6 +40,21 @@
             font-size: 0.8rem; line-height: 1.4;
         }
 
+        @keyframes shimmer {
+            0% { background-position: -200% 0; } 100% { background-position: 200% 0; }
+        }
+        .skeleton {
+            background: linear-gradient(90deg, #e5e7eb 25%, #f3f4f6 50%, #e5e7eb 75%);
+            background-size: 200% 100%; animation: shimmer 1.5s ease-in-out infinite;
+            border-radius: 6px;
+        }
+        .skeleton-text { height: 1rem; margin-bottom: 0.5rem; }
+        .skeleton-text-sm { height: 0.7rem; width: 60%; }
+        .skeleton-card {
+            background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: 12px; padding: 0.8rem;
+        }
+
         .app-container { position: relative; z-index: 1; min-height: 100dvh; display: flex; flex-direction: column; }
 
         .header {
@@ -48,7 +63,7 @@
             border-bottom: 1px solid var(--border); padding: 0 0.8rem; padding-top: var(--safe-top);
         }
         .header-inner { display: flex; align-items: center; justify-content: space-between; height: 52px; gap: 8px; }
-        .brand { display: flex; align-items: center; gap: 8px; }
+        .brand { display: flex; align-items: center; gap: 8px; text-decoration: none; }
         .brand-logo { width: 30px; height: 30px; border-radius: 8px; object-fit: contain; background: white; box-shadow: var(--shadow-sm); }
         .brand-name { font-size: 0.85rem; font-weight: 800; background: linear-gradient(135deg, #8b5cf6, #f59e0b); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .header-right { display: flex; align-items: center; gap: 6px; }
@@ -106,7 +121,6 @@
         .delivery-route i { color: var(--gold); margin: 0 3px; font-size: 0.45rem; }
         .delivery-amount { font-size: 0.7rem; font-weight: 700; margin-bottom: 0.35rem; color: var(--gold-dark); }
 
-        /* Pickup info badge */
         .pickup-info-badge {
             background: rgba(99,102,241,0.06); border: 1px solid rgba(99,102,241,0.15);
             border-radius: 8px; padding: 0.4rem 0.6rem; margin-bottom: 0.35rem;
@@ -175,14 +189,7 @@
         .toast { background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; padding: 0.6rem 0.9rem; margin-bottom: 0.3rem; box-shadow: var(--shadow-md); display: flex; align-items: center; gap: 6px; font-size: 0.7rem; animation: toastIn 0.3s ease; pointer-events: auto; }
         .toast.success { border-left: 3px solid var(--green); } .toast.success i { color: var(--green); }
         .toast.error { border-left: 3px solid var(--red); } .toast.error i { color: var(--red); }
-        .toast.warning { border-left: 3px solid var(--warning); } .toast.warning i { color: var(--warning); }
-        .toast.info { border-left: 3px solid var(--info); } .toast.info i { color: var(--info); }
         @keyframes toastIn { from { opacity: 0; transform: translateX(40px); } to { opacity: 1; transform: translateX(0); } }
-
-        .loading-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.7); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; z-index: 6000; }
-        .loading-overlay.hidden { display: none; }
-        .spinner { width: 35px; height: 35px; border-radius: 50%; border: 3px solid var(--border); border-top-color: var(--gold); animation: spin 0.7s linear infinite; }
-        @keyframes spin { to { transform: rotate(360deg); } }
 
         .hidden { display: none !important; }
         .footer { text-align: center; padding: 0.5rem 1rem calc(0.5rem + var(--safe-bottom)); color: var(--text-muted); font-size: 0.55rem; border-top: 1px solid var(--border); }
@@ -193,10 +200,10 @@
         .tab-icon-fusion { color: var(--emerald); }
         .tab-icon-brandinn { color: var(--purple); }
         .tab-icon-heritage { color: #d946ef; }
+        .tab-icon-heritagemkt { color: var(--amber); }
     </style>
 </head>
 <body>
-    <div class="loading-overlay hidden" id="loadingOverlay"><div class="spinner"></div></div>
     <div class="toast-container" id="toastContainer"></div>
 
     <div class="notification-banner hidden" id="notificationBanner">
@@ -231,13 +238,12 @@
     <div class="app-container">
         <header class="header">
             <div class="header-inner">
-                <div class="brand"><img src="https://i.postimg.cc/rFfXDj3L/kazinni-removebg-preview(1).png" alt="KazInni" class="brand-logo"><span class="brand-name">KazInni</span></div>
+                <a href="index.html" class="brand"><img src="https://i.postimg.cc/rFfXDj3L/kazinni-removebg-preview(1).png" alt="KazInni" class="brand-logo"><span class="brand-name">KazInni</span></a>
                 <div class="header-right">
                     <div class="header-stat"><i class="fas fa-circle" style="color:var(--green);font-size:0.4rem;"></i><span id="headerActiveCount">0</span> active</div>
                     <div class="user-btn"><div class="user-avatar" id="userAvatar">KA</div><span id="userName">Asst</span>
                         <div class="user-dropdown">
                             <button class="dropdown-item" onclick="refreshAll()"><i class="fas fa-sync-alt"></i> Refresh</button>
-                            <button class="dropdown-item" onclick="testNotification()"><i class="fas fa-bell"></i> Test Alert</button>
                             <button class="dropdown-item danger" onclick="handleLogout()"><i class="fas fa-sign-out-alt"></i> Sign Out</button>
                         </div>
                     </div>
@@ -250,7 +256,14 @@
         <div class="main-content">
             <div id="pendingState" class="hidden" style="padding:1rem;"><div class="state-card state-pending"><i class="fas fa-clock"></i><h2>Verification Pending</h2><p>Your application is under review.</p></div></div>
             <div id="rejectedState" class="hidden" style="padding:1rem;"><div class="state-card state-rejected"><i class="fas fa-times-circle"></i><h2>Not Approved</h2><p id="rejectionMsg">Contact support.</p></div></div>
-            <div id="tabContents"></div>
+            <div id="tabContents">
+                <!-- Skeleton loading -->
+                <div class="tab-content active" id="tab-all"><div class="delivery-list" id="list-all">
+                    <div class="skeleton-card"><div class="skeleton skeleton-text" style="width:60%;"></div><div class="skeleton skeleton-text-sm" style="width:80%;margin-top:0.5rem;"></div><div class="skeleton skeleton-text-sm" style="width:50%;"></div></div>
+                    <div class="skeleton-card"><div class="skeleton skeleton-text" style="width:50%;"></div><div class="skeleton skeleton-text-sm" style="width:70%;margin-top:0.5rem;"></div><div class="skeleton skeleton-text-sm" style="width:60%;"></div></div>
+                    <div class="skeleton-card"><div class="skeleton skeleton-text" style="width:65%;"></div><div class="skeleton skeleton-text-sm" style="width:75%;margin-top:0.5rem;"></div><div class="skeleton skeleton-text-sm" style="width:40%;"></div></div>
+                </div></div>
+            </div>
         </div>
 
         <footer class="footer">&copy; 2026 <span>KazInni</span> · Deliveries</footer>
@@ -261,7 +274,6 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 
     <script>
-        // ========== SERVICE WORKER ==========
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('/service-worker.js')
@@ -287,233 +299,106 @@
         let currentUser = null, activeTab = 'all';
         let currentActionId = null, currentActionSource = null, currentNavAddress = null;
         let allDeliveries = [];
-        let allSuppliers = {}; // NEW: Store suppliers data
+        let allSuppliers = {};
         let notificationPermission = 'default', notificationsEnabled = false;
         let seenIds = new Set();
         let audioCtx = null;
 
-        // ========== LOAD SUPPLIERS ==========
         async function loadSuppliers() {
             try {
                 const snap = await db.ref('fusion_foods_suppliers').once('value');
                 allSuppliers = snap.val() || {};
-            } catch(e) {
-                console.warn('Could not load suppliers:', e);
-            }
-        }
-
-        function getSupplierInfo(supplierId) {
-            if (!supplierId) return null;
-            const supplier = allSuppliers[supplierId];
-            return supplier || null;
+            } catch(e) { console.warn('Could not load suppliers:', e); }
         }
 
         function getSupplierName(supplierId) {
-            const supplier = getSupplierInfo(supplierId);
+            if (!supplierId) return null;
+            const supplier = allSuppliers[supplierId];
             return supplier ? supplier.name : null;
         }
 
-        // ========== ENHANCED CONTENT EXTRACTION ==========
         function extractDeliveryContents(rawItem, sourceKey) {
             if (rawItem.products && Array.isArray(rawItem.products) && rawItem.products.length > 0) {
-                return rawItem.products.map(p => ({
-                    name: p.name || p.productName || 'Item',
-                    quantity: p.quantity || 1,
-                    price: p.price || p.unitPrice || 0,
-                    size: p.size || null,
-                    color: p.color || null,
-                    sku: p.sku || p.productId || null
-                }));
+                return rawItem.products.map(p => ({ name: p.name || p.productName || 'Item', quantity: p.quantity || 1, price: p.price || p.unitPrice || 0 }));
             }
-            
             if (rawItem.items && Array.isArray(rawItem.items) && rawItem.items.length > 0) {
-                return rawItem.items.map(i => ({
-                    name: i.name || i.title || 'Item',
-                    quantity: i.quantity || 1,
-                    price: i.price || 0,
-                    size: i.size || null
-                }));
+                return rawItem.items.map(i => ({ name: i.name || i.title || 'Item', quantity: i.quantity || 1, price: i.price || 0 }));
             }
-            
-            if (rawItem.cart && rawItem.cart.items && Array.isArray(rawItem.cart.items)) {
-                return rawItem.cart.items.map(i => ({
-                    name: i.name || 'Item',
-                    quantity: i.quantity || 1,
-                    price: i.price || 0
-                }));
-            }
-            
-            if (sourceKey === 'brandinn') {
+            if (sourceKey === 'pickup' && rawItem.package) {
                 const details = [];
-                if (rawItem.product) details.push({ name: 'Product', value: rawItem.product });
-                if (rawItem.type) details.push({ name: 'Type', value: rawItem.type });
-                if (rawItem.designText) details.push({ name: 'Design Text', value: rawItem.designText });
-                if (rawItem.size) details.push({ name: 'Size', value: rawItem.size });
-                if (rawItem.quantity) details.push({ name: 'Quantity', value: rawItem.quantity });
+                if (rawItem.package.type) details.push({ name: 'Package Type', value: rawItem.package.type });
+                if (rawItem.package.description) details.push({ name: 'Description', value: rawItem.package.description });
                 if (details.length > 0) return details;
             }
-            
-            if (sourceKey === 'pickup') {
-                const details = [];
-                if (rawItem.package) {
-                    if (rawItem.package.type) details.push({ name: 'Package Type', value: rawItem.package.type });
-                    if (rawItem.package.weight) details.push({ name: 'Weight', value: rawItem.package.weight + (rawItem.package.weightUnit || 'kg') });
-                    if (rawItem.package.description) details.push({ name: 'Description', value: rawItem.package.description });
-                }
-                if (details.length > 0) return details;
-            }
-            
             return null;
         }
 
         function formatContentsForDisplay(contents) {
             if (!contents || !Array.isArray(contents) || contents.length === 0) return '';
-            
             let html = '<div class="contents-section"><h4><i class="fas fa-box-open"></i> 📦 What You\'re Delivering</h4><ul class="contents-list">';
-            
             for (const item of contents) {
                 if (item.name && item.value) {
                     html += `<li><span class="item-name">${escapeHtml(item.name)}</span><span class="item-details"><strong>${escapeHtml(String(item.value))}</strong></span></li>`;
                 } else if (item.name) {
-                    html += `<li>
-                        <span class="item-name">${escapeHtml(item.name)}${item.size ? ' (' + escapeHtml(item.size) + ')' : ''}${item.color ? ' - ' + escapeHtml(item.color) : ''}</span>
-                        <span class="item-details">
-                            ${item.quantity ? `<span class="item-qty">×${item.quantity}</span>` : ''}
-                            ${item.price ? `<span class="item-price">KSh ${Number(item.price).toLocaleString()}</span>` : ''}
-                        </span>
-                    </li>`;
+                    html += `<li><span class="item-name">${escapeHtml(item.name)}</span><span class="item-details">${item.quantity ? `<span class="item-qty">×${item.quantity}</span>` : ''}${item.price ? `<span class="item-price">KSh ${Number(item.price).toLocaleString()}</span>` : ''}</span></li>`;
                 }
             }
-            
             html += '</ul></div>';
             return html;
         }
 
-        // ========== SOURCES with pickup location fields ==========
         const sources = [
-            { 
-                key: 'pickup', path: 'pickup_deliveries', label: 'Pick-Up', icon: 'fa-box', iconClass: 'tab-icon-pickup', 
-                assignedField: 'assignedTo', customerField: 'userName', phoneField: 'userPhone', emailField: 'userEmail', 
-                pickupField: 'pickup.address', deliveryField: 'delivery.address', amountField: 'fare.total', 
-                statusField: 'status', packageField: 'package.type', instructionsField: 'package.instructions',
-                pickupNameField: null, pickupLocationField: null, pickupPhoneField: null, pickupSupplierIdField: null,
-                newStatuses: ['assigned','pending'], activeStatuses: ['out-for-delivery','in_progress'], doneStatus: 'delivered' 
-            },
-            { 
-                key: 'dsog', path: 'dsog_fashion_orders', label: 'DSOG', icon: 'fa-tshirt', iconClass: 'tab-icon-dsog', 
-                assignedField: 'driverId', customerField: 'customerName', phoneField: 'customerPhone', emailField: 'customerEmail', 
-                pickupField: 'pickupLocation', deliveryField: 'location', amountField: 'total', statusField: 'status', 
-                packageField: 'packageType', instructionsField: 'notes',
-                pickupNameField: 'pickupName', pickupLocationField: 'pickupLocation', pickupPhoneField: 'pickupPhone', pickupSupplierIdField: 'pickupSupplierId',
-                newStatuses: ['ready','assigned'], activeStatuses: ['shipped','out-for-delivery'], doneStatus: 'delivered' 
-            },
-            { 
-                key: 'fusion', path: 'fusion_foods_orders', label: 'Fusion', icon: 'fa-utensils', iconClass: 'tab-icon-fusion', 
-                assignedField: 'driverId', customerField: 'restaurantName', phoneField: 'phone', emailField: 'email', 
-                pickupField: 'pickupLocation', deliveryField: 'location', amountField: 'total', statusField: 'status', 
-                packageField: 'packageType', instructionsField: 'notes',
-                pickupNameField: 'pickupName', pickupLocationField: 'pickupLocation', pickupPhoneField: 'pickupPhone', pickupSupplierIdField: 'pickupSupplierId',
-                newStatuses: ['ready','assigned'], activeStatuses: ['shipped','out-for-delivery'], doneStatus: 'delivered' 
-            },
-            { 
-                key: 'brandinn', path: 'brandinn_print_orders', label: 'Print', icon: 'fa-print', iconClass: 'tab-icon-brandinn', 
-                assignedField: 'driverId', customerField: 'customerName', phoneField: 'customerPhone', emailField: 'customerEmail', 
-                pickupField: 'pickupLocation', deliveryField: 'location', amountField: 'total', statusField: 'status', 
-                packageField: 'product', instructionsField: 'notes',
-                pickupNameField: 'pickupName', pickupLocationField: 'pickupLocation', pickupPhoneField: 'pickupPhone', pickupSupplierIdField: 'pickupSupplierId',
-                newStatuses: ['ready','completed','pending'], activeStatuses: ['in-progress','printing'], doneStatus: 'delivered' 
-            },
-            { 
-                key: 'heritage', path: 'heritage_listings', label: 'Heritage', icon: 'fa-landmark', iconClass: 'tab-icon-heritage', 
-                assignedField: 'driverId', customerField: 'partnerName', phoneField: '', emailField: '', 
-                pickupField: 'pickupLocation', deliveryField: 'location', amountField: 'price', statusField: 'status', 
-                packageField: 'adType', instructionsField: 'notes',
-                pickupNameField: 'pickupName', pickupLocationField: 'pickupLocation', pickupPhoneField: 'pickupPhone', pickupSupplierIdField: 'pickupSupplierId',
-                newStatuses: ['active'], activeStatuses: [], doneStatus: 'expired' 
-            }
+            { key: 'pickup', path: 'pickup_deliveries', label: 'Pick-Up', icon: 'fa-box', iconClass: 'tab-icon-pickup', assignedField: 'assignedTo', customerField: 'userName', phoneField: 'userPhone', pickupField: 'pickup.address', deliveryField: 'delivery.address', amountField: 'fare.total', statusField: 'status', instructionsField: 'package.instructions', newStatuses: ['assigned','pending'], activeStatuses: ['out-for-delivery','in_progress'], doneStatus: 'delivered' },
+            { key: 'dsog', path: 'dsog_fashion_orders', label: 'DSOG', icon: 'fa-tshirt', iconClass: 'tab-icon-dsog', assignedField: 'driverId', customerField: 'customerName', phoneField: 'customerPhone', pickupField: 'pickupLocation', deliveryField: 'location', amountField: 'total', statusField: 'status', instructionsField: 'notes', newStatuses: ['ready','assigned'], activeStatuses: ['shipped','out-for-delivery'], doneStatus: 'delivered' },
+            { key: 'fusion', path: 'fusion_foods_orders', label: 'Fusion', icon: 'fa-utensils', iconClass: 'tab-icon-fusion', assignedField: 'driverId', customerField: 'restaurantName', phoneField: 'phone', pickupField: 'pickupLocation', deliveryField: 'location', amountField: 'total', statusField: 'status', instructionsField: 'notes', newStatuses: ['ready','assigned'], activeStatuses: ['shipped','out-for-delivery'], doneStatus: 'delivered' },
+            { key: 'brandinn', path: 'brandinn_print_orders', label: 'Print', icon: 'fa-print', iconClass: 'tab-icon-brandinn', assignedField: 'driverId', customerField: 'customerName', phoneField: 'customerPhone', pickupField: 'pickupLocation', deliveryField: 'location', amountField: 'total', statusField: 'status', instructionsField: 'notes', newStatuses: ['ready','pending'], activeStatuses: ['in-progress'], doneStatus: 'delivered' },
+            { key: 'heritage', path: 'heritage_listings', label: 'Heritage Ads', icon: 'fa-landmark', iconClass: 'tab-icon-heritage', assignedField: 'driverId', customerField: 'partnerName', phoneField: '', pickupField: 'pickupLocation', deliveryField: 'location', amountField: 'price', statusField: 'status', instructionsField: 'notes', newStatuses: ['active'], activeStatuses: [], doneStatus: 'expired' },
+            { key: 'heritagemkt', path: 'heritage_orders', label: 'Heritage Mkt', icon: 'fa-store', iconClass: 'tab-icon-heritagemkt', assignedField: 'driverId', customerField: 'customerName', phoneField: 'customerPhone', pickupField: 'location', deliveryField: 'location', amountField: 'total', statusField: 'status', instructionsField: 'notes', newStatuses: ['new','pending'], activeStatuses: ['linked','shipped'], doneStatus: 'completed' }
         ];
 
-        function getNested(obj, path) { 
-            if (!obj || !path) return null;
-            return path.split('.').reduce((o, k) => (o || {})[k], obj) || null; 
-        }
+        function getNested(obj, path) { if (!obj || !path) return null; return path.split('.').reduce((o, k) => (o || {})[k], obj) || null; }
         
-        // NEW: Extract pickup info from order
         function extractPickupInfo(item, src) {
-            // Check for supplier pickup fields first (set during dispatch)
-            const pickupName = getNested(item, src.pickupNameField) || item.pickupName || '';
-            const pickupLocation = getNested(item, src.pickupLocationField) || item.pickupLocation || '';
-            const pickupPhone = getNested(item, src.pickupPhoneField) || item.pickupPhone || '';
-            const pickupSupplierId = getNested(item, src.pickupSupplierIdField) || item.pickupSupplierId || '';
-            
-            // If we have a supplier ID, try to get info from suppliers database
+            const pickupName = item.pickupName || '';
+            const pickupLocation = item.pickupLocation || '';
+            const pickupPhone = item.pickupPhone || '';
+            const pickupSupplierId = item.pickupSupplierId || '';
             if (pickupSupplierId && allSuppliers[pickupSupplierId]) {
-                const supplier = allSuppliers[pickupSupplierId];
-                return {
-                    name: pickupName || supplier.name || '',
-                    location: pickupLocation || supplier.location || '',
-                    phone: pickupPhone || supplier.phone || '',
-                    supplierId: pickupSupplierId
-                };
+                const s = allSuppliers[pickupSupplierId];
+                return { name: pickupName || s.name || '', location: pickupLocation || s.location || '', phone: pickupPhone || s.phone || '', supplierId: pickupSupplierId };
             }
-            
-            // Return what we have from the order
-            return {
-                name: pickupName,
-                location: pickupLocation,
-                phone: pickupPhone,
-                supplierId: pickupSupplierId
-            };
+            return { name: pickupName, location: pickupLocation, phone: pickupPhone, supplierId: pickupSupplierId };
         }
 
-        // NEW: Format pickup info for display
-        function formatPickupDisplay(pickupInfo) {
-            if (!pickupInfo || (!pickupInfo.name && !pickupInfo.location)) return '';
-            
+        function formatPickupDisplay(info) {
+            if (!info || (!info.name && !info.location)) return '';
             let html = '<div class="pickup-info-badge"><i class="fas fa-warehouse"></i> <strong>Pickup:</strong> ';
-            
-            if (pickupInfo.name) {
-                html += escapeHtml(pickupInfo.name);
-                if (pickupInfo.location) {
-                    html += ` — ${escapeHtml(pickupInfo.location)}`;
-                }
-            } else if (pickupInfo.location) {
-                html += escapeHtml(pickupInfo.location);
-            }
-            
-            if (pickupInfo.phone) {
-                html += ` · 📞 ${escapeHtml(pickupInfo.phone)}`;
-            }
-            
+            if (info.name) { html += escapeHtml(info.name); if (info.location) html += ` — ${escapeHtml(info.location)}`; }
+            else if (info.location) html += escapeHtml(info.location);
+            if (info.phone) html += ` · 📞 ${escapeHtml(info.phone)}`;
             html += '</div>';
             return html;
         }
-        
-        function showLoading(s) { $('loadingOverlay').classList.toggle('hidden', !s); }
-        
+
         function toast(msg, type = 'info') {
-            const icons = { success: 'fa-check-circle', error: 'fa-exclamation-circle', warning: 'fa-exclamation-triangle', info: 'fa-info-circle' };
+            const icons = { success: 'fa-check-circle', error: 'fa-exclamation-circle' };
             const t = document.createElement('div'); t.className = `toast ${type}`; t.innerHTML = `<i class="fas ${icons[type]}"></i> ${msg}`;
             $('toastContainer').appendChild(t); setTimeout(() => { t.style.opacity = '0'; t.style.transition = '0.3s'; setTimeout(() => t.remove(), 300); }, 3500);
         }
-        
+
         function getInitials(n) { return n ? String(n).split(' ').map(w => w[0]).join('').toUpperCase().substring(0,2) : 'KA'; }
         function escapeHtml(s) { if (!s) return ''; const d = document.createElement('div'); d.textContent = String(s); return d.innerHTML; }
 
-        // ========== NOTIFICATIONS ==========
         function initAudio() { if (!audioCtx) { try { audioCtx = new (window.AudioContext||window.webkitAudioContext)(); } catch(e) {} } if (audioCtx?.state === 'suspended') audioCtx.resume(); }
-        function playNotificationSound() {
-            if (!audioCtx) return;
-            try { const now = audioCtx.currentTime; [{ freq: 880, start: 0, duration: 0.2, vol: 0.4 },{ freq: 1108.73, start: 0.2, duration: 0.25, vol: 0.5 },{ freq: 1318.51, start: 0.45, duration: 0.35, vol: 0.45 },{ freq: 1760, start: 0.8, duration: 0.3, vol: 0.35 }].forEach(n => { const o = audioCtx.createOscillator(); const g = audioCtx.createGain(); o.connect(g); g.connect(audioCtx.destination); o.type = 'sine'; o.frequency.setValueAtTime(n.freq, now + n.start); g.gain.setValueAtTime(0, now + n.start); g.gain.linearRampToValueAtTime(n.vol, now + n.start + 0.03); g.gain.exponentialRampToValueAtTime(0.01, now + n.start + n.duration); o.start(now + n.start); o.stop(now + n.start + n.duration); }); } catch(e) {}
-        }
-        function vibrateStrong() { if (navigator.vibrate) navigator.vibrate([300, 150, 300, 150, 500, 200, 300]); }
+        function playNotificationSound() { if (!audioCtx) return; try { const now = audioCtx.currentTime; [{ freq: 880, start: 0, duration: 0.2, vol: 0.4 },{ freq: 1108.73, start: 0.2, duration: 0.25, vol: 0.5 }].forEach(n => { const o = audioCtx.createOscillator(); const g = audioCtx.createGain(); o.connect(g); g.connect(audioCtx.destination); o.frequency.setValueAtTime(n.freq, now + n.start); g.gain.setValueAtTime(0, now + n.start); g.gain.linearRampToValueAtTime(n.vol, now + n.start + 0.03); g.gain.exponentialRampToValueAtTime(0.01, now + n.start + n.duration); o.start(now + n.start); o.stop(now + n.start + n.duration); }); } catch(e) {} }
+        function vibrateStrong() { if (navigator.vibrate) navigator.vibrate([300, 150, 300]); }
 
         function enableNotifications() {
             initAudio();
             if ('Notification' in window) {
                 Notification.requestPermission().then(p => {
                     notificationPermission = p; notificationsEnabled = p === 'granted';
-                    if (p === 'granted') { toast('Notifications enabled!', 'success'); $('notificationBanner').classList.add('hidden'); playNotificationSound(); vibrateStrong(); sendBrowserNotification('KazInni', 'You will receive alerts even when screen is off!'); }
+                    if (p === 'granted') { toast('Notifications enabled!', 'success'); $('notificationBanner').classList.add('hidden'); }
                     else { toast('Permission denied', 'warning'); }
                 });
             }
@@ -523,50 +408,53 @@
             if (!notificationsEnabled || notificationPermission !== 'granted') return;
             try {
                 if ('serviceWorker' in navigator) {
-                    navigator.serviceWorker.ready.then(reg => reg.showNotification(title, { body, icon: 'https://i.postimg.cc/rFfXDj3L/kazinni-removebg-preview(1).png', badge: 'https://i.postimg.cc/rFfXDj3L/kazinni-removebg-preview(1).png', tag: 'kazinni', requireInteraction: true, vibrate: [300,150,300,150,500,200,300], renotify: true }));
-                } else {
-                    const n = new Notification(title, { body, icon: 'https://i.postimg.cc/rFfXDj3L/kazinni-removebg-preview(1).png', tag: 'kazinni', requireInteraction: true, vibrate: [300,150,300,150,500,200,300] });
-                    n.onclick = () => { window.focus(); n.close(); }; setTimeout(() => n.close(), 10000);
+                    navigator.serviceWorker.ready.then(reg => reg.showNotification(title, { body, icon: 'https://i.postimg.cc/rFfXDj3L/kazinni-removebg-preview(1).png', badge: 'https://i.postimg.cc/rFfXDj3L/kazinni-removebg-preview(1).png', tag: 'kazinni', requireInteraction: true, vibrate: [300,150,300] }));
                 }
             } catch(e) {}
         }
 
         function notifyNewRequest(label, details) { initAudio(); playNotificationSound(); vibrateStrong(); sendBrowserNotification('KazInni · New Request', details); toast(`🔔 ${details}`, 'info'); }
-        function testNotification() { initAudio(); playNotificationSound(); vibrateStrong(); sendBrowserNotification('KazInni · Test', 'Notification test!'); toast('Test alert sent!', 'success'); }
 
         // ========== AUTH ==========
         auth.onAuthStateChanged(async user => {
             if (!user) { 
-                window.location.href = './'; 
+                // FIXED: Redirect to landing page (index.html) not './'
+                window.location.href = 'index.html'; 
                 return; 
             }
             currentUser = user;
             $('userAvatar').textContent = getInitials(user.displayName || user.email);
             $('userName').textContent = (user.displayName || user.email?.split('@')[0] || 'Asst').substring(0,10);
-            showLoading(true);
             
-            // Load suppliers first
             await loadSuppliers();
             
             if ('Notification' in window) { notificationPermission = Notification.permission; notificationsEnabled = notificationPermission === 'granted'; if (notificationPermission === 'default') setTimeout(() => $('notificationBanner').classList.remove('hidden'), 1500); }
             await checkRegistration();
-            showLoading(false);
         });
 
         async function checkRegistration() {
             try {
-                const snap = await db.ref(`delivery_assistants/${currentUser.uid}`).once('value');
-                if (snap.exists() && snap.val().verified === true) {
+                const nodes = ['delivery_assistants', 'pickme_drivers', 'taskers'];
+                let verified = false;
+                for (const node of nodes) {
+                    const snap = await db.ref(`${node}/${currentUser.uid}`).once('value');
+                    if (snap.exists() && snap.val().verified === true) { verified = true; break; }
+                }
+                if (verified) {
                     renderTabs();
                     activeTab = 'all';
                     switchTab('all');
                     loadAllDeliveries();
                     setupListeners();
-                } else if (snap.exists() && snap.val().status === 'rejected') {
-                    $('rejectedState').classList.remove('hidden');
-                    if (snap.val().rejectionReason) $('rejectionMsg').textContent = snap.val().rejectionReason;
                 } else {
-                    $('pendingState').classList.remove('hidden');
+                    // Check if rejected
+                    const snap = await db.ref(`delivery_assistants/${currentUser.uid}`).once('value');
+                    if (snap.exists() && snap.val().status === 'rejected') {
+                        $('rejectedState').classList.remove('hidden');
+                        if (snap.val().rejectionReason) $('rejectionMsg').textContent = snap.val().rejectionReason;
+                    } else {
+                        $('pendingState').classList.remove('hidden');
+                    }
                 }
             } catch(e) { $('pendingState').classList.remove('hidden'); }
         }
@@ -578,9 +466,9 @@
             });
             $('tabNav').innerHTML = html;
             
-            let content = `<div class="tab-content active" id="tab-all"><div class="delivery-list" id="list-all"><div class="empty-list"><i class="fas fa-sync-alt fa-spin"></i><p>Loading...</p></div></div></div>`;
-            sources.forEach(s => {
-                content += `<div class="tab-content" id="tab-${s.key}"><div class="delivery-list" id="list-${s.key}"><div class="empty-list"><i class="fas fa-sync-alt fa-spin"></i><p>Loading...</p></div></div></div>`;
+            let content = '';
+            ['all', ...sources.map(s => s.key)].forEach(key => {
+                content += `<div class="tab-content${key === 'all' ? ' active' : ''}" id="tab-${key}"><div class="delivery-list" id="list-${key}"><div class="empty-list"><i class="fas fa-sync-alt fa-spin"></i><p>Loading...</p></div></div></div>`;
             });
             $('tabContents').innerHTML = content;
         }
@@ -592,7 +480,6 @@
             renderCurrentList();
         };
 
-        // ========== LOAD DELIVERIES ==========
         async function loadAllDeliveries() {
             if (!currentUser) return;
             const all = [];
@@ -607,26 +494,17 @@
                             const status = getNested(item, src.statusField) || item.status || 'pending';
                             const contents = extractDeliveryContents(item, src.key);
                             const pickupInfo = extractPickupInfo(item, src);
-                            
-                            // Determine pickup display
                             let pickupDisplay = getNested(item, src.pickupField) || item.pickup?.address || '';
-                            if (pickupInfo.name || pickupInfo.location) {
-                                pickupDisplay = pickupInfo.name || pickupInfo.location;
-                            }
+                            if (pickupInfo.name || pickupInfo.location) pickupDisplay = pickupInfo.name || pickupInfo.location;
                             
                             all.push({
                                 compositeKey, id, sourceKey: src.key, sourceLabel: src.label,
                                 customer: getNested(item, src.customerField) || item.customerName || item.userName || 'Customer',
                                 phone: getNested(item, src.phoneField) || item.customerPhone || item.userPhone || item.phone || '',
-                                email: getNested(item, src.emailField) || item.customerEmail || item.userEmail || '',
                                 pickup: pickupDisplay,
                                 delivery: getNested(item, src.deliveryField) || item.delivery?.address || item.location || '—',
                                 amount: getNested(item, src.amountField) || item.total || item.amount || item.fare?.total || 0,
-                                packageInfo: getNested(item, src.packageField) || item.package?.type || item.packageType || item.product || '',
-                                instructions: getNested(item, src.instructionsField) || item.instructions || item.package?.instructions || item.notes || '',
-                                contents: contents,
-                                pickupInfo: pickupInfo,
-                                status, src, rawData: item,
+                                contents, pickupInfo, status, src, rawData: item,
                                 isNew: src.newStatuses.includes(status),
                                 isActive: src.activeStatuses.includes(status),
                                 isDone: status === src.doneStatus
@@ -638,7 +516,6 @@
             allDeliveries = all.filter((d, i, arr) => arr.findIndex(x => x.compositeKey === d.compositeKey) === i);
             allDeliveries.sort((a, b) => {
                 if (a.isNew && !b.isNew) return -1; if (!a.isNew && b.isNew) return 1;
-                if (a.isActive && !b.isActive) return -1; if (!a.isActive && b.isActive) return 1;
                 return (b.rawData?.createdAt || b.rawData?.timestamp || 0) - (a.rawData?.createdAt || a.rawData?.timestamp || 0);
             });
             renderCurrentList();
@@ -646,12 +523,8 @@
         }
 
         function renderCurrentList() {
-            if (activeTab === 'all') {
-                renderList('all', [...allDeliveries]);
-            } else {
-                const filtered = allDeliveries.filter(d => d.sourceKey === activeTab);
-                renderList(activeTab, filtered);
-            }
+            if (activeTab === 'all') renderList('all', [...allDeliveries]);
+            else renderList(activeTab, allDeliveries.filter(d => d.sourceKey === activeTab));
         }
 
         function renderList(tabKey, items) {
@@ -660,13 +533,11 @@
             list.innerHTML = items.map(d => {
                 const cardClass = d.isNew ? 'new-task' : (d.isActive ? 'active-task' : 'done-task');
                 const statusClass = d.isNew ? 'status-new' : (d.isActive ? 'status-active' : 'status-done');
-                const itemCountBadge = d.contents && d.contents.length > 0 ? `<span style="font-size:0.5rem;background:rgba(245,158,11,0.15);padding:1px 6px;border-radius:8px;margin-left:4px;">📦 ${d.contents.length} item${d.contents.length !== 1 ? 's' : ''}</span>` : '';
+                const itemCountBadge = d.contents && d.contents.length > 0 ? `<span style="font-size:0.5rem;background:rgba(245,158,11,0.15);padding:1px 6px;border-radius:8px;margin-left:4px;">📦 ${d.contents.length}</span>` : '';
                 const pickupHtml = formatPickupDisplay(d.pickupInfo);
-                
                 let actions = `<button class="action-btn btn-cancel" onclick="event.stopPropagation();viewDetails('${d.compositeKey}')">📋 Info</button>`;
                 if (d.isNew) actions += `<button class="action-btn btn-start" onclick="event.stopPropagation();startDelivery('${d.id}','${d.src.path}')"><i class="fas fa-truck"></i> Start</button>`;
                 if (d.isActive) { actions += `<button class="action-btn btn-nav" onclick="event.stopPropagation();navigate('${encodeURIComponent(d.pickupInfo?.location || d.delivery)}')"><i class="fas fa-map-marked-alt"></i> Nav</button>`; actions += `<button class="action-btn btn-done" onclick="event.stopPropagation();markDone('${d.id}','${d.src.path}','${d.src.doneStatus}')"><i class="fas fa-check"></i> Done</button>`; }
-                
                 return `<div class="delivery-card ${cardClass}" onclick="viewDetails('${d.compositeKey}')">
                     <div class="delivery-top"><span class="delivery-id">#${d.id.slice(-6)}${d.isNew?' <span class="new-badge">NEW</span>':''}${itemCountBadge}</span><span class="delivery-status ${statusClass}">${d.status.replace(/-/g,' ')}</span></div>
                     <div class="delivery-client">${escapeHtml(d.customer)}</div>
@@ -712,20 +583,12 @@
         window.startDelivery = (id, sourcePath) => { currentActionId = id; currentActionSource = sourcePath; $('pickupModal').classList.add('show'); };
         window.closePickupModal = () => $('pickupModal').classList.remove('show');
         window.confirmPickup = async () => {
-            if (!currentActionId || !currentActionSource) return; showLoading(true);
+            if (!currentActionId || !currentActionSource) return;
             try { 
                 const src = sources.find(s => s.path === currentActionSource); 
-                await db.ref(`${currentActionSource}/${currentActionId}`).update({ 
-                    status: src?.activeStatuses[0] || 'shipped', 
-                    startedAt: firebase.database.ServerValue.TIMESTAMP, 
-                    pickupNotes: $('pickupNotes').value.trim(), 
-                    updatedAt: firebase.database.ServerValue.TIMESTAMP 
-                }); 
-                toast('Delivery started!', 'success'); 
-                closePickupModal(); 
-                loadAllDeliveries(); 
+                await db.ref(`${currentActionSource}/${currentActionId}`).update({ status: src?.activeStatuses[0] || 'shipped', startedAt: firebase.database.ServerValue.TIMESTAMP, pickupNotes: $('pickupNotes').value.trim(), updatedAt: firebase.database.ServerValue.TIMESTAMP }); 
+                toast('Delivery started!', 'success'); closePickupModal(); loadAllDeliveries(); 
             } catch(e) { toast('Error starting delivery', 'error'); }
-            showLoading(false);
         };
 
         window.markDone = (id, sourcePath, doneStatus) => { currentActionId = id; currentActionSource = sourcePath; $('completeModal').classList.add('show'); };
@@ -733,72 +596,45 @@
         window.completeDelivery = async () => {
             const name = $('proofName').value.trim(); 
             if (!name) { toast('Enter receiver name', 'warning'); return; }
-            if (!currentActionId || !currentActionSource) return; showLoading(true);
+            if (!currentActionId || !currentActionSource) return;
             try { 
                 const src = sources.find(s => s.path === currentActionSource); 
-                await db.ref(`${currentActionSource}/${currentActionId}`).update({ 
-                    status: src?.doneStatus || 'delivered', 
-                    deliveredAt: firebase.database.ServerValue.TIMESTAMP, 
-                    deliveryProof: { receiverName: name, notes: $('proofNotes').value.trim() }, 
-                    updatedAt: firebase.database.ServerValue.TIMESTAMP 
-                }); 
-                toast('Delivery completed!', 'success'); 
-                closeCompleteModal(); 
-                loadAllDeliveries(); 
+                await db.ref(`${currentActionSource}/${currentActionId}`).update({ status: src?.doneStatus || 'delivered', deliveredAt: firebase.database.ServerValue.TIMESTAMP, deliveryProof: { receiverName: name, notes: $('proofNotes').value.trim() }, updatedAt: firebase.database.ServerValue.TIMESTAMP }); 
+                toast('Delivery completed!', 'success'); closeCompleteModal(); loadAllDeliveries(); 
             } catch(e) { toast('Error completing delivery', 'error'); }
-            showLoading(false);
         };
 
-        // Enhanced view details with pickup info
         window.viewDetails = (compositeKey) => {
-            const d = allDeliveries.find(x => x.compositeKey === compositeKey); 
-            if (!d) return;
-            
-            // Use pickup location for navigation (prefer supplier location)
+            const d = allDeliveries.find(x => x.compositeKey === compositeKey); if (!d) return;
             currentNavAddress = d.pickupInfo?.location || d.pickup;
             $('detailsTitle').textContent = `${d.sourceLabel} · #${d.id.slice(-6)}`;
             $('navFromModalBtn').style.display = (d.pickupInfo?.location || d.delivery) ? 'inline-flex' : 'none';
-            
             let contentsHtml = '';
-            if (d.contents && d.contents.length > 0) {
-                contentsHtml = formatContentsForDisplay(d.contents);
-            } else if (d.packageInfo) {
-                contentsHtml = `<div class="contents-section"><h4><i class="fas fa-box"></i> Package Info</h4><ul class="contents-list"><li><span class="item-name">${escapeHtml(d.packageInfo)}</span></li></ul></div>`;
-            }
-            
-            // Build pickup info HTML for details modal
+            if (d.contents && d.contents.length > 0) contentsHtml = formatContentsForDisplay(d.contents);
             let pickupDetailHtml = '';
             if (d.pickupInfo && (d.pickupInfo.name || d.pickupInfo.location)) {
-                pickupDetailHtml = `
-                    <div class="detail-item full pickup-highlight"><strong>🏭 Pickup Location (Supplier)</strong>
-                        <span>${escapeHtml(d.pickupInfo.name || '')}${d.pickupInfo.location ? ' — ' + escapeHtml(d.pickupInfo.location) : ''}</span>
-                        ${d.pickupInfo.phone ? `<br><span style="font-size:0.65rem;color:var(--indigo);">📞 ${escapeHtml(d.pickupInfo.phone)}</span>` : ''}
-                    </div>`;
+                pickupDetailHtml = `<div class="detail-item full pickup-highlight"><strong>🏭 Pickup Location (Supplier)</strong><span>${escapeHtml(d.pickupInfo.name||'')}${d.pickupInfo.location?' — '+escapeHtml(d.pickupInfo.location):''}</span>${d.pickupInfo.phone?`<br><span style="font-size:0.65rem;color:var(--indigo);">📞 ${escapeHtml(d.pickupInfo.phone)}</span>`:''}</div>`;
             }
-            
             $('detailsBody').innerHTML = `<div class="detail-grid">
                 <div class="detail-item"><strong>Customer</strong><span>${escapeHtml(d.customer)}</span></div>
                 <div class="detail-item"><strong>Phone</strong><span style="color:var(--info);cursor:pointer;" onclick="window.open('tel:${escapeHtml(d.phone)}')">📞 ${escapeHtml(d.phone||'N/A')}</span></div>
-                ${d.email ? `<div class="detail-item full"><strong>Email</strong><span>${escapeHtml(d.email)}</span></div>` : ''}
                 <div class="detail-item"><strong>Status</strong><span class="delivery-status ${d.isNew?'status-new':d.isActive?'status-active':'status-done'}">${d.status.replace(/-/g,' ')}</span></div>
                 <div class="detail-item"><strong>Amount</strong><span>${d.amount?'KSh '+Number(d.amount).toLocaleString():'—'}</span></div>
                 ${pickupDetailHtml}
                 <div class="detail-item full"><strong>📍 Pickup Address</strong><span>${escapeHtml(d.pickup)}</span></div>
                 <div class="detail-item full"><strong>📍 Dropoff Location</strong><span>${escapeHtml(d.delivery)}</span></div>
-                ${d.instructions ? `<div class="detail-item full"><strong>📝 Special Instructions</strong><span>${escapeHtml(d.instructions)}</span></div>` : ''}
-            </div>
-            ${contentsHtml}`;
-            
+                ${d.instructions ? `<div class="detail-item full"><strong>📝 Instructions</strong><span>${escapeHtml(d.instructions)}</span></div>` : ''}
+            </div>${contentsHtml}`;
             $('detailsModal').classList.add('show');
         };
         
         window.closeDetailsModal = () => $('detailsModal').classList.remove('show');
         window.navigateFromModal = () => { if (currentNavAddress) window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(currentNavAddress)}`, '_blank'); };
         window.navigate = (addr) => window.open(`https://www.google.com/maps/search/?api=1&query=${addr}`, '_blank');
-        window.handleLogout = async () => { if (confirm('Sign out?')) { await auth.signOut(); window.location.href = './'; } };
+        // FIXED: Logout redirects to index.html
+        window.handleLogout = async () => { if (confirm('Sign out?')) { await auth.signOut(); window.location.href = 'index.html'; } };
         window.refreshAll = () => { loadAllDeliveries(); toast('Refreshed!', 'success'); };
         window.enableNotifications = enableNotifications;
-        window.testNotification = testNotification;
     </script>
 </body>
 </html>
