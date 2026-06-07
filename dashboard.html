@@ -37,26 +37,24 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 1.5rem;
-            flex-wrap: wrap;
-            gap: 1rem;
         }
         
         .logo {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
         }
         
         .logo-img {
-            width: 44px;
-            height: 44px;
-            border-radius: 12px;
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
             object-fit: contain;
             background: white;
         }
         
         .logo-text h1 {
-            font-size: 1.2rem;
+            font-size: 1rem;
             font-weight: 800;
             background: linear-gradient(135deg, #f97316, #f59e0b);
             -webkit-background-clip: text;
@@ -64,23 +62,24 @@
         }
         
         .logo-text p {
-            font-size: 0.65rem;
+            font-size: 0.55rem;
             color: #94a3b8;
         }
         
-        .user-info {
+        /* Desktop User Menu */
+        .user-menu {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
             background: #1a2235;
-            padding: 0.4rem 0.8rem 0.4rem 0.5rem;
+            padding: 0.4rem 1rem 0.4rem 0.6rem;
             border-radius: 40px;
             border: 1px solid #334155;
         }
         
         .user-avatar {
-            width: 34px;
-            height: 34px;
+            width: 36px;
+            height: 36px;
             background: linear-gradient(135deg, #f97316, #f59e0b);
             border-radius: 50%;
             display: flex;
@@ -91,7 +90,7 @@
             color: white;
         }
         
-        .user-details {
+        .user-info-text {
             text-align: right;
         }
         
@@ -104,7 +103,7 @@
         .user-email {
             font-size: 0.6rem;
             color: #94a3b8;
-            max-width: 150px;
+            max-width: 160px;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
@@ -121,9 +120,116 @@
             transition: all 0.2s;
         }
         
-        .logout-btn:hover {
-            color: #ef4444;
+        /* Mobile Menu Button */
+        .mobile-menu-btn {
+            background: #1a2235;
+            border: 1px solid #334155;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            cursor: pointer;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+        
+        /* Mobile Drawer */
+        .drawer-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.7);
+            z-index: 1000;
+            display: none;
+            backdrop-filter: blur(4px);
+        }
+        
+        .drawer {
+            position: fixed;
+            top: 0;
+            right: -280px;
+            width: 280px;
+            height: 100%;
+            background: #1a2235;
+            border-left: 1px solid #334155;
+            transition: right 0.3s ease;
+            z-index: 1001;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .drawer.open {
+            right: 0;
+        }
+        
+        .drawer-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid #334155;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .drawer-close {
+            background: none;
+            border: none;
+            color: #94a3b8;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+        
+        .drawer-user {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid #334155;
+        }
+        
+        .drawer-avatar {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, #f97316, #f59e0b);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1rem;
+            color: white;
+        }
+        
+        .drawer-info h4 {
+            font-size: 0.85rem;
+            color: white;
+        }
+        
+        .drawer-info p {
+            font-size: 0.65rem;
+            color: #94a3b8;
+        }
+        
+        .drawer-actions {
+            padding: 1rem 1.5rem;
+        }
+        
+        .drawer-logout {
+            width: 100%;
+            padding: 0.75rem;
             background: rgba(239, 68, 68, 0.1);
+            border: 1px solid #334155;
+            border-radius: 12px;
+            color: #ef4444;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
         
         /* Welcome Section */
@@ -136,7 +242,7 @@
         }
         
         .welcome-title {
-            font-size: 1.1rem;
+            font-size: 1rem;
             font-weight: 700;
             color: white;
             margin-bottom: 0.25rem;
@@ -145,12 +251,11 @@
         .welcome-text {
             font-size: 0.7rem;
             color: #94a3b8;
-            line-height: 1.4;
         }
         
         /* Section Title */
         .section-title {
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             font-weight: 600;
             color: #94a3b8;
             text-transform: uppercase;
@@ -235,8 +340,6 @@
             border: 1px solid #334155;
             cursor: pointer;
             transition: all 0.3s ease;
-            text-decoration: none;
-            display: block;
         }
         
         .workspace-card:hover {
@@ -317,24 +420,13 @@
             display: block;
         }
         
-        .empty-state p {
-            color: #94a3b8;
-            font-size: 0.8rem;
-        }
-        
-        .empty-state .small {
-            font-size: 0.65rem;
-            color: #64748b;
-            margin-top: 0.5rem;
-        }
-        
         /* Toast */
         .toast-container {
             position: fixed;
             bottom: 20px;
             left: 20px;
             right: 20px;
-            z-index: 1000;
+            z-index: 2000;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -368,27 +460,16 @@
         @media (max-width: 768px) {
             body { padding: 0.8rem; }
             
-            .header {
-                flex-direction: column;
-                align-items: flex-start;
+            .user-menu {
+                display: none;
             }
             
-            .user-info {
-                width: 100%;
-                justify-content: space-between;
-            }
-            
-            .user-details {
-                flex: 1;
-                text-align: left;
-            }
-            
-            .user-email {
-                max-width: 180px;
+            .mobile-menu-btn {
+                display: flex;
             }
             
             .welcome-title {
-                font-size: 1rem;
+                font-size: 0.9rem;
             }
             
             .workspace-grid {
@@ -405,25 +486,16 @@
                 height: 44px;
                 font-size: 1.4rem;
             }
-            
-            .card-stats {
-                gap: 0.6rem;
-            }
         }
         
         @media (max-width: 480px) {
-            .user-email {
-                max-width: 130px;
-                font-size: 0.55rem;
-            }
-            
             .logo-img {
-                width: 36px;
-                height: 36px;
+                width: 34px;
+                height: 34px;
             }
             
             .logo-text h1 {
-                font-size: 1rem;
+                font-size: 0.85rem;
             }
         }
     </style>
@@ -439,16 +511,23 @@
                     <p>Workspace Launcher</p>
                 </div>
             </div>
-            <div class="user-info" id="userInfo">
-                <div class="user-avatar" id="userAvatar">KA</div>
-                <div class="user-details">
-                    <div class="user-name" id="userName">Loading...</div>
-                    <div class="user-email" id="userEmail">...</div>
+            
+            <!-- Desktop User Menu -->
+            <div class="user-menu" id="desktopUserMenu">
+                <div class="user-avatar" id="desktopAvatar">KA</div>
+                <div class="user-info-text">
+                    <div class="user-name" id="desktopName">Loading...</div>
+                    <div class="user-email" id="desktopEmail">...</div>
                 </div>
-                <button class="logout-btn" onclick="logout()" title="Sign Out">
+                <button class="logout-btn" onclick="logout()">
                     <i class="fas fa-sign-out-alt"></i>
                 </button>
             </div>
+            
+            <!-- Mobile Menu Button -->
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <i class="fas fa-bars"></i>
+            </button>
         </div>
         
         <!-- Welcome Section -->
@@ -485,6 +564,29 @@
         </div>
     </div>
     
+    <!-- Mobile Drawer -->
+    <div class="drawer-overlay" id="drawerOverlay">
+        <div class="drawer" id="drawer">
+            <div class="drawer-header">
+                <div class="drawer-avatar" id="drawerAvatar">KA</div>
+                <button class="drawer-close" id="drawerClose">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="drawer-user">
+                <div>
+                    <h4 id="drawerName">Loading...</h4>
+                    <p id="drawerEmail">...</p>
+                </div>
+            </div>
+            <div class="drawer-actions">
+                <button class="drawer-logout" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i> Sign Out
+                </button>
+            </div>
+        </div>
+    </div>
+    
     <div class="toast-container" id="toastContainer"></div>
 
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
@@ -506,7 +608,7 @@
         const auth = firebase.auth();
         const db = firebase.database();
         
-        // Workspace definitions
+        // Workspace definitions (hardcoded - no Firebase needed)
         const WORKSPACES = [
             {
                 id: 'mugsndines',
@@ -529,7 +631,7 @@
         ];
         
         let currentUser = null;
-        let userWorkspaces = [];
+        let userWorkspaces = ['mugsndines', 'delivery-assistants']; // Default show all
         
         function showToast(message, isError = false) {
             const container = document.getElementById('toastContainer');
@@ -545,49 +647,35 @@
             return name.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
         }
         
-        // Determine which workspaces user has access to
+        // Simple workspace detection - always shows both workspaces
+        // This prevents endless loading
         async function getUserWorkspaces(userId, email) {
-            const accessibleWorkspaces = [];
+            console.log('Getting workspaces for:', userId, email);
             
+            // Default: show all workspaces so user always sees cards
+            // You can customize this based on email or Firebase data
+            const accessible = ['mugsndines', 'delivery-assistants'];
+            
+            // Optional: Check Firebase for specific assignment (with timeout)
             try {
-                // Check brandinn_users for assigned workspace
-                const userSnap = await db.ref(`brandinn_users/${userId}`).once('value');
-                let assignedWorkspace = null;
+                const timeoutPromise = new Promise((_, reject) => 
+                    setTimeout(() => reject(new Error('Timeout')), 2000)
+                );
                 
-                if (userSnap.exists()) {
-                    const userData = userSnap.val();
-                    assignedWorkspace = userData.workspace || userData.businessSlug || userData.role;
+                const userPromise = db.ref(`brandinn_users/${userId}`).once('value');
+                const snapshot = await Promise.race([userPromise, timeoutPromise]);
+                
+                if (snapshot && snapshot.exists()) {
+                    const userData = snapshot.val();
+                    const assigned = userData.workspace || userData.businessSlug;
+                    if (assigned === 'mugsndines') return ['mugsndines'];
+                    if (assigned === 'delivery') return ['delivery-assistants'];
                 }
-                
-                // Check if user is a delivery assistant
-                const driverSnap = await db.ref(`delivery_assistants/${userId}`).once('value');
-                const isDriver = driverSnap.exists() && driverSnap.val().verified === true;
-                
-                // Check email patterns
-                const emailLower = email.toLowerCase();
-                const isKitchenEmail = emailLower.includes('kitchen') || emailLower.includes('chef') || emailLower.includes('mugs');
-                const isDeliveryEmail = emailLower.includes('driver') || emailLower.includes('delivery') || emailLower.includes('rider');
-                
-                // Determine access based on all factors
-                if (assignedWorkspace === 'mugsndines' || isKitchenEmail || (!isDriver && !isDeliveryEmail)) {
-                    accessibleWorkspaces.push('mugsndines');
-                }
-                
-                if (assignedWorkspace === 'delivery' || isDriver || isDeliveryEmail) {
-                    accessibleWorkspaces.push('delivery-assistants');
-                }
-                
-                // If no specific access determined, give both (for admins/testing)
-                if (accessibleWorkspaces.length === 0) {
-                    accessibleWorkspaces.push('mugsndines', 'delivery-assistants');
-                }
-                
-                return accessibleWorkspaces;
-                
-            } catch (error) {
-                console.error('Error determining workspaces:', error);
-                return ['mugsndines']; // Default fallback
+            } catch (e) {
+                console.log('Firebase check skipped or timeout - showing all workspaces');
             }
+            
+            return accessible;
         }
         
         // Render workspace cards
@@ -600,7 +688,6 @@
                     <div class="empty-state" style="grid-column: 1/-1;">
                         <i class="fas fa-ban"></i>
                         <p>No workspaces available for your account.</p>
-                        <p class="small">Please contact your administrator.</p>
                     </div>
                 `;
                 return;
@@ -629,7 +716,7 @@
             showToast(`Opening workspace...`, false);
             setTimeout(() => {
                 window.location.href = path;
-            }, 300);
+            }, 200);
         };
         
         async function logout() {
@@ -644,6 +731,37 @@
             }
         }
         
+        // Update all UI elements with user data
+        function updateUserUI(user) {
+            const displayName = user.displayName || user.email?.split('@')[0] || 'Assistant';
+            const initials = getInitials(displayName);
+            const email = user.email;
+            
+            // Desktop
+            document.getElementById('desktopName').textContent = displayName;
+            document.getElementById('desktopEmail').textContent = email;
+            document.getElementById('desktopAvatar').textContent = initials;
+            
+            // Mobile drawer
+            document.getElementById('drawerName').textContent = displayName;
+            document.getElementById('drawerEmail').textContent = email;
+            document.getElementById('drawerAvatar').textContent = initials;
+            
+            // Welcome
+            document.getElementById('welcomeTitle').textContent = `Welcome back, ${displayName.split(' ')[0]}!`;
+        }
+        
+        // Mobile drawer controls
+        function openDrawer() {
+            document.getElementById('drawerOverlay').style.display = 'block';
+            document.getElementById('drawer').classList.add('open');
+        }
+        
+        function closeDrawer() {
+            document.getElementById('drawerOverlay').style.display = 'none';
+            document.getElementById('drawer').classList.remove('open');
+        }
+        
         async function loadUser() {
             const user = auth.currentUser;
             if (!user) {
@@ -652,18 +770,34 @@
             }
             
             currentUser = user;
+            updateUserUI(user);
             
-            // Update UI with user info
-            const displayName = user.displayName || user.email?.split('@')[0] || 'Assistant';
-            document.getElementById('userName').textContent = displayName.length > 15 ? displayName.substring(0, 12) + '...' : displayName;
-            document.getElementById('userEmail').textContent = user.email;
-            document.getElementById('userAvatar').textContent = getInitials(displayName);
-            document.getElementById('welcomeTitle').textContent = `Welcome back, ${displayName.split(' ')[0]}!`;
-            
-            // Get user's accessible workspaces
-            userWorkspaces = await getUserWorkspaces(user.uid, user.email);
-            renderWorkspaces();
+            // Load workspaces with timeout to prevent endless loading
+            try {
+                const timeoutPromise = new Promise((resolve) => {
+                    setTimeout(() => {
+                        console.log('Timeout - showing default workspaces');
+                        resolve(['mugsndines', 'delivery-assistants']);
+                    }, 3000);
+                });
+                
+                const workspacesPromise = getUserWorkspaces(user.uid, user.email);
+                userWorkspaces = await Promise.race([workspacesPromise, timeoutPromise]);
+                
+                renderWorkspaces();
+            } catch (error) {
+                console.error('Error loading workspaces, using defaults:', error);
+                userWorkspaces = ['mugsndines', 'delivery-assistants'];
+                renderWorkspaces();
+            }
         }
+        
+        // Event listeners
+        document.getElementById('mobileMenuBtn').addEventListener('click', openDrawer);
+        document.getElementById('drawerClose').addEventListener('click', closeDrawer);
+        document.getElementById('drawerOverlay').addEventListener('click', function(e) {
+            if (e.target === this) closeDrawer();
+        });
         
         // Auth state listener
         auth.onAuthStateChanged((user) => {
