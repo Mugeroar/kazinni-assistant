@@ -33,8 +33,6 @@
             --info: #3b82f6;
             --purple: #8b5cf6;
             --emerald: #059669;
-            --safe-bottom: env(safe-area-inset-bottom, 20px);
-            --safe-top: env(safe-area-inset-top, 0px);
         }
 
         body {
@@ -100,6 +98,9 @@
             width: 40px;
             height: 40px;
             border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         /* Drawer Menu */
@@ -516,11 +517,6 @@
 
         .toast.error { background: var(--danger); }
 
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
         .footer {
             text-align: center;
             padding: 1rem;
@@ -652,67 +648,53 @@
 
         function escapeHtml(s) { if (!s) return ''; return String(s).replace(/[&<>]/g, m => m === '&' ? '&amp;' : m === '<' ? '&lt;' : '&gt;'); }
 
-        // Load kitchen assignment using multiple methods
+        // Load kitchen assignment - reads from mugs_n_dines_franchises (same as Kitchen Management page)
         async function loadKitchenAssignment() {
             const user = auth.currentUser;
             if (!user) return null;
 
             console.log('Looking up kitchen for user:', user.email);
 
-            // METHOD 1: Check mugs_n_dines_kitchen_staff by email
+            // First, load all kitchens from the same source Kitchen Management uses
+            const kitchensSnap = await db.ref('mugs_n_dines_franchises').once('value');
+            allKitchens = kitchensSnap.val() || {};
+            
+            // METHOD 1: Check if user's email matches a kitchen's email
+            for (const [kitchenId, kitchen] of Object.entries(allKitchens)) {
+                if (kitchen.email && kitchen.email.toLowerCase() === user.email.toLowerCase()) {
+                    currentKitchenId = kitchenId;
+                    currentKitchenName = kitchen.name;
+                    console.log('Found kitchen by email match:', currentKitchenName);
+                    document.getElementById('kitchenName').textContent = currentKitchenName || 'Kitchen';
+                    return true;
+                }
+            }
+
+            // METHOD 2: Check mugs_n_dines_kitchen_staff by email
             try {
                 const staffSnap = await db.ref('mugs_n_dines_kitchen_staff').orderByChild('email').equalTo(user.email).once('value');
                 if (staffSnap.exists()) {
                     const staffData = Object.values(staffSnap.val())[0];
                     currentKitchenId = staffData.kitchenId;
-                    currentKitchenName = staffData.kitchenName;
+                    // Get kitchen name from the kitchens object
+                    currentKitchenName = allKitchens[currentKitchenId]?.name || staffData.kitchenName;
                     console.log('Found kitchen via staff record:', currentKitchenName);
                     document.getElementById('kitchenName').textContent = currentKitchenName || 'Kitchen';
                     return true;
                 }
             } catch(e) { console.error('Staff lookup error:', e); }
 
-            // METHOD 2: Check users node for kitchenId
+            // METHOD 3: Check users node for kitchenId
             try {
                 const userSnap = await db.ref(`users/${user.uid}`).once('value');
                 if (userSnap.exists() && userSnap.val().kitchenId) {
                     currentKitchenId = userSnap.val().kitchenId;
-                    const kitchenSnap = await db.ref(`mugs_n_dines_franchises/${currentKitchenId}`).once('value');
-                    currentKitchenName = kitchenSnap.val()?.name || 'Kitchen';
+                    currentKitchenName = allKitchens[currentKitchenId]?.name || 'Kitchen';
                     console.log('Found kitchen via users node:', currentKitchenName);
                     document.getElementById('kitchenName').textContent = currentKitchenName;
                     return true;
                 }
             } catch(e) { console.error('Users node lookup error:', e); }
-
-            // METHOD 3: Check if user's email matches a kitchen's email
-            try {
-                const kitchensSnap = await db.ref('mugs_n_dines_franchises').orderByChild('email').equalTo(user.email).once('value');
-                if (kitchensSnap.exists()) {
-                    const kitchenEntry = Object.entries(kitchensSnap.val())[0];
-                    currentKitchenId = kitchenEntry[0];
-                    currentKitchenName = kitchenEntry[1].name;
-                    console.log('Found kitchen via email match:', currentKitchenName);
-                    document.getElementById('kitchenName').textContent = currentKitchenName;
-                    return true;
-                }
-            } catch(e) { console.error('Kitchen email lookup error:', e); }
-
-            // METHOD 4: Check email pattern (for testing)
-            const emailLower = user.email.toLowerCase();
-            if (emailLower.includes('kitchen') || emailLower.includes('chef')) {
-                // Try to get first active kitchen as fallback
-                const kitchensSnap = await db.ref('mugs_n_dines_franchises').once('value');
-                const kitchens = kitchensSnap.val() || {};
-                const firstKitchen = Object.entries(kitchens).find(([_, k]) => k.status !== 'inactive');
-                if (firstKitchen) {
-                    currentKitchenId = firstKitchen[0];
-                    currentKitchenName = firstKitchen[1].name;
-                    console.log('Fallback to first kitchen:', currentKitchenName);
-                    document.getElementById('kitchenName').textContent = currentKitchenName;
-                    return true;
-                }
-            }
 
             console.log('No kitchen assignment found');
             document.getElementById('kitchenName').textContent = 'No Kitchen';
@@ -722,6 +704,9 @@
 
         function showNoKitchenState() {
             const container = document.querySelector('.container');
+            const existing = document.querySelector('.no-kitchen-state');
+            if (existing) return;
+            
             const noKitchenHtml = `
                 <div class="no-kitchen-state">
                     <i class="fas fa-store-alt-slash"></i>
@@ -730,9 +715,8 @@
                     <p style="font-size:0.65rem; margin-top:0.5rem;">Please contact your administrator to assign you to a kitchen.</p>
                 </div>
             `;
-            // Insert after stats row
             const statsRow = document.querySelector('.stats-row');
-            if (statsRow && !document.querySelector('.no-kitchen-state')) {
+            if (statsRow) {
                 statsRow.insertAdjacentHTML('afterend', noKitchenHtml);
             }
         }
@@ -897,6 +881,7 @@
             const assigned = await loadKitchenAssignment();
             if (assigned) {
                 await loadOrders();
+                // Listen for real-time order updates
                 db.ref('mugs_n_dines_orders').on('value', () => loadOrders());
             }
         });
