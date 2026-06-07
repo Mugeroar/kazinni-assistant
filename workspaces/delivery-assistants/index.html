@@ -1,1 +1,1036 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>KazInni Assistant</title>
+    
+    <meta name="theme-color" content="#0f172a">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="KazInni">
+    <meta name="mobile-web-app-capable" content="yes">
+    
+    <link rel="icon" type="image/png" href="https://i.postimg.cc/rFfXDj3L/kazinni-removebg-preview(1).png">
+    <link rel="apple-touch-icon" href="https://i.postimg.cc/rFfXDj3L/kazinni-removebg-preview(1).png">
+    <link rel="manifest" href="/manifest.json">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
+        :root {
+            --bg-primary: #0a0f1e;
+            --bg-secondary: #111827;
+            --bg-card: #1a2235;
+            --text-primary: #f1f5f9;
+            --text-secondary: #cbd5e1;
+            --text-muted: #94a3b8;
+            --border: #263148;
+            --border-light: #334155;
+            --gold: #f59e0b;
+            --gold-dark: #b45309;
+            --purple: #8b5cf6;
+            --purple-light: #a78bfa;
+            --green: #22c55e;
+            --red: #ef4444;
+            --warning: #f59e0b;
+            --info: #3b82f6;
+            --safe-bottom: env(safe-area-inset-bottom, 20px);
+            --safe-top: env(safe-area-inset-top, 0px);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            min-height: 100dvh;
+            overflow-x: hidden;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .bg-gradient {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: 
+                radial-gradient(ellipse at 20% 20%, rgba(139, 92, 246, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 60%, rgba(245, 158, 11, 0.06) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 90%, rgba(34, 197, 94, 0.04) 0%, transparent 50%);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .page-container {
+            position: relative;
+            z-index: 1;
+            min-height: 100vh;
+            min-height: 100dvh;
+            display: flex;
+            flex-direction: column;
+            padding: 0 1rem;
+            padding-top: calc(1rem + var(--safe-top));
+            padding-bottom: calc(1.5rem + var(--safe-bottom));
+        }
+
+        /* Top Bar */
+        .top-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            margin-bottom: 1.2rem;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .brand-logo {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            object-fit: contain;
+            background: white;
+            box-shadow: 0 4px 16px rgba(139, 92, 246, 0.25);
+        }
+
+        .brand-name {
+            font-size: 1rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #c084fc, #fbbf24);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.3px;
+            line-height: 1.1;
+        }
+
+        .signin-btn {
+            padding: 0.45rem 1.1rem;
+            border-radius: 25px;
+            font-weight: 600;
+            font-size: 0.7rem;
+            cursor: pointer;
+            border: none;
+            background: linear-gradient(135deg, var(--gold-dark), var(--gold));
+            color: white;
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            white-space: nowrap;
+            transition: all 0.2s;
+        }
+
+        .signin-btn:active { transform: scale(0.96); }
+
+        /* Hero */
+        .hero-section {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            animation: fadeUp 0.6s ease;
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(16px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .hero-icon {
+            font-size: 2.2rem;
+            margin-bottom: 0.6rem;
+            display: block;
+        }
+
+        .hero-icon i {
+            background: linear-gradient(135deg, var(--purple-light), var(--gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-title {
+            font-size: 1.5rem;
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 0.4rem;
+            letter-spacing: -0.4px;
+        }
+
+        .hero-title .gradient-text {
+            background: linear-gradient(135deg, var(--purple-light), var(--gold), var(--purple-light));
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradient-shift 4s ease infinite;
+        }
+
+        @keyframes gradient-shift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .hero-subtitle {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+            margin-bottom: 1.2rem;
+        }
+
+        .btn {
+            padding: 0.6rem 1.4rem;
+            border-radius: 25px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            cursor: pointer;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            transition: all 0.2s;
+            font-family: 'Inter', sans-serif;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+
+        .btn-gold {
+            background: linear-gradient(135deg, var(--gold-dark), var(--gold));
+            color: white;
+            box-shadow: 0 6px 20px rgba(245, 158, 11, 0.18);
+        }
+
+        .btn-gold:active { transform: scale(0.96); }
+
+        /* Services Carousel */
+        .services-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .section-label {
+            text-align: center;
+            margin-bottom: 0.8rem;
+        }
+
+        .section-label span {
+            display: inline-block;
+            padding: 0.2rem 0.8rem;
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--gold);
+            border-radius: 15px;
+            font-size: 0.58rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+        }
+
+        .carousel-container {
+            position: relative;
+            border-radius: 20px;
+            overflow: hidden;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            aspect-ratio: 16/10;
+            max-height: 320px;
+            margin-bottom: 0.6rem;
+        }
+
+        .carousel-track {
+            display: flex;
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            height: 100%;
+        }
+
+        .carousel-slide {
+            min-width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        .carousel-slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .carousel-slide .slide-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0,0,0,0.8));
+            padding: 1.5rem 1rem 0.8rem;
+        }
+
+        .slide-tag {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 0.55rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.3rem;
+        }
+
+        .slide-tag.pickme { background: var(--purple); color: white; }
+        .slide-tag.pickup { background: var(--gold); color: #0a0f1e; }
+        .slide-tag.fusion { background: var(--red); color: white; }
+        .slide-tag.brandinn { background: var(--info); color: white; }
+
+        .slide-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 0.1rem;
+        }
+
+        .slide-desc {
+            font-size: 0.65rem;
+            color: rgba(255,255,255,0.8);
+            line-height: 1.4;
+        }
+
+        /* Carousel Navigation */
+        .carousel-dots {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 0.8rem;
+        }
+
+        .carousel-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--border);
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            padding: 0;
+        }
+
+        .carousel-dot.active {
+            background: var(--gold);
+            box-shadow: 0 0 8px rgba(245, 158, 11, 0.4);
+            width: 24px;
+            border-radius: 4px;
+        }
+
+        .carousel-nav {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .carousel-nav-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: 1px solid var(--border);
+            background: var(--bg-card);
+            color: var(--text-muted);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            transition: all 0.2s;
+        }
+
+        .carousel-nav-btn:active { background: var(--gold); color: #0a0f1e; border-color: var(--gold); }
+
+        /* Features */
+        .features-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .features-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .feature-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 0.8rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+        }
+
+        .feature-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            flex-shrink: 0;
+        }
+
+        .feature-icon.purple { background: rgba(139, 92, 246, 0.1); color: var(--purple-light); }
+        .feature-icon.gold { background: rgba(245, 158, 11, 0.1); color: var(--gold); }
+        .feature-icon.green { background: rgba(34, 197, 94, 0.1); color: var(--green); }
+
+        .feature-info h4 {
+            font-size: 0.75rem;
+            font-weight: 700;
+            margin-bottom: 0.1rem;
+        }
+
+        .feature-info p {
+            font-size: 0.62rem;
+            color: var(--text-muted);
+            line-height: 1.4;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: auto;
+            padding: 1rem 0 0;
+        }
+
+        .footer p {
+            font-size: 0.58rem;
+            color: var(--text-muted);
+        }
+
+        .footer span {
+            color: var(--gold);
+            font-weight: 600;
+        }
+
+        /* Login Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.8);
+            z-index: 4000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+        }
+
+        .modal-overlay.show { display: flex; }
+
+        .modal {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 22px;
+            padding: 1.6rem;
+            width: 100%;
+            max-width: 380px;
+            animation: modalIn 0.3s ease;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.5);
+        }
+
+        @keyframes modalIn {
+            from { opacity: 0; transform: scale(0.95) translateY(10px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        .modal h3 {
+            text-align: center;
+            font-size: 0.95rem;
+            font-weight: 700;
+            margin-bottom: 0.15rem;
+        }
+
+        .modal .modal-sub {
+            text-align: center;
+            font-size: 0.68rem;
+            color: var(--text-muted);
+            margin-bottom: 1.3rem;
+        }
+
+        .form-group {
+            margin-bottom: 0.8rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            font-size: 0.6rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.2rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.6rem 0.75rem;
+            border-radius: 12px;
+            border: 1.5px solid var(--border);
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            font-size: 0.8rem;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.2s;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--gold);
+            box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.06);
+        }
+
+        .form-input::placeholder {
+            color: var(--text-muted);
+            opacity: 0.5;
+        }
+
+        .modal-btn {
+            width: 100%;
+            padding: 0.65rem;
+            border-radius: 14px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            cursor: pointer;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.2s;
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, var(--gold-dark), var(--gold));
+            color: white;
+        }
+
+        .modal-btn:active { transform: scale(0.97); }
+        .modal-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+        .error-text {
+            color: var(--red);
+            font-size: 0.65rem;
+            margin-top: 0.25rem;
+            display: none;
+            text-align: center;
+        }
+
+        .user-info-bar {
+            display: none;
+            align-items: center;
+            gap: 8px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            padding: 0.6rem 1rem;
+            border-radius: 16px;
+            margin-bottom: 1.2rem;
+        }
+
+        .user-info-bar.show { display: flex; }
+
+        .user-info-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--purple), var(--gold));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.7rem;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .user-info-text {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .user-info-text strong {
+            font-size: 0.75rem;
+            display: block;
+        }
+
+        .user-info-text span {
+            font-size: 0.6rem;
+            color: var(--text-muted);
+        }
+
+        .user-info-btn {
+            padding: 0.35rem 0.8rem;
+            border-radius: 15px;
+            font-weight: 600;
+            font-size: 0.62rem;
+            cursor: pointer;
+            border: none;
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            background: var(--gold);
+            color: #0a0f1e;
+        }
+
+        .toast-container {
+            position: fixed;
+            top: calc(16px + var(--safe-top));
+            right: 12px;
+            left: 12px;
+            z-index: 5000;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            pointer-events: none;
+        }
+
+        .toast {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 0.65rem 0.9rem;
+            margin-bottom: 0.4rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.7rem;
+            animation: toastIn 0.35s ease;
+            pointer-events: auto;
+            max-width: 100%;
+            font-weight: 500;
+        }
+
+        .toast i { font-size: 0.8rem; }
+        .toast.success { border-left: 3px solid var(--green); }
+        .toast.success i { color: var(--green); }
+        .toast.error { border-left: 3px solid var(--red); }
+        .toast.error i { color: var(--red); }
+
+        @keyframes toastIn {
+            from { opacity: 0; transform: translateX(50px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .loading-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(10,15,30,0.85);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 6000;
+        }
+
+        .loading-overlay.hidden { display: none; }
+
+        .spinner {
+            width: 36px; height: 36px;
+            border-radius: 50%;
+            border: 3px solid var(--border);
+            border-top-color: var(--gold);
+            animation: spin 0.7s linear infinite;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+    <div class="bg-gradient"></div>
+
+    <div class="loading-overlay hidden" id="loadingOverlay">
+        <div class="spinner"></div>
+    </div>
+
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Login Modal -->
+    <div class="modal-overlay" id="modalOverlay" onclick="if(event.target===this)closeModal()">
+        <div class="modal">
+            <h3><i class="fas fa-lock" style="color:var(--gold);margin-right:6px;"></i> Sign In</h3>
+            <p class="modal-sub">Access your assistant dashboard</p>
+            <form id="loginForm" onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" class="form-input" id="loginEmail" placeholder="your@email.com" required autocomplete="email" inputmode="email">
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" class="form-input" id="loginPassword" placeholder="Your password" required autocomplete="current-password">
+                </div>
+                <p class="error-text" id="loginError"></p>
+                <button type="submit" class="modal-btn" id="loginBtn">
+                    <i class="fas fa-sign-in-alt"></i> Sign In
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <div class="page-container">
+        <!-- Top Bar -->
+        <div class="top-bar">
+            <div class="brand">
+                <img src="https://i.postimg.cc/rFfXDj3L/kazinni-removebg-preview(1).png" alt="KazInni" class="brand-logo">
+                <span class="brand-name">KazInni</span>
+            </div>
+            <button class="signin-btn" id="headerSignBtn" onclick="openModal()">
+                <i class="fas fa-sign-in-alt"></i> Sign In
+            </button>
+        </div>
+
+        <!-- Logged In User Bar -->
+        <div class="user-info-bar" id="userInfoBar">
+            <div class="user-info-avatar" id="userInfoAvatar">KA</div>
+            <div class="user-info-text">
+                <strong id="userInfoName">Assistant</strong>
+                <span>Verified Account</span>
+            </div>
+            <button class="user-info-btn" onclick="goToDashboard()">
+                <i class="fas fa-arrow-right"></i> Dashboard
+            </button>
+        </div>
+
+        <!-- Hero -->
+        <div class="hero-section">
+            <span class="hero-icon"><i class="fas fa-handshake"></i></span>
+            <h1 class="hero-title">
+                Your <span class="gradient-text">work</span> starts here
+            </h1>
+            <p class="hero-subtitle">
+                Sign in to access your verified assistant account and manage deliveries, rides, and tasks.
+            </p>
+            <button class="btn btn-gold" id="heroSignBtn" onclick="openModal()">
+                <i class="fas fa-sign-in-alt"></i> Sign In to Your Account
+            </button>
+        </div>
+
+        <!-- Services Carousel -->
+        <div class="services-section">
+            <div class="section-label">
+                <span>Our Services</span>
+            </div>
+            <div class="carousel-container">
+                <div class="carousel-track" id="carouselTrack">
+                    <!-- Pick Me -->
+                    <div class="carousel-slide">
+                        <img src="https://i.postimg.cc/dDPmwnLs/Untitled-design-4.webp" alt="Pick Me Rides" loading="lazy">
+                        <div class="slide-overlay">
+                            <span class="slide-tag pickme">Pick Me</span>
+                            <div class="slide-title">Ride Services</div>
+                            <div class="slide-desc">Accept ride requests, navigate to passengers, and complete trips across the city.</div>
+                        </div>
+                    </div>
+                    <!-- Pick-Up -->
+                    <div class="carousel-slide">
+                        <img src="https://i.postimg.cc/jSxH2nRT/20260412-1202-Image-Generation-simple-compose-01kp0eve31eaev725mtswjrr16.webp" alt="Pick-Up Deliveries" loading="lazy">
+                        <div class="slide-overlay">
+                            <span class="slide-tag pickup">Pick-Up</span>
+                            <div class="slide-title">Delivery Services</div>
+                            <div class="slide-desc">Pick up packages from businesses and deliver them safely to customers.</div>
+                        </div>
+                    </div>
+                    <!-- Fusion Foods -->
+                    <div class="carousel-slide">
+                        <img src="https://i.postimg.cc/Hs13q0mN/Gemini-Generated-Image-1e1lzk1e1lzk1e1l.webp" alt="Fusion Foods" loading="lazy">
+                        <div class="slide-overlay">
+                            <span class="slide-tag fusion">Fusion Foods</span>
+                            <div class="slide-title">Food Services</div>
+                            <div class="slide-desc">Deliver fresh meals and food orders from restaurants to hungry customers.</div>
+                        </div>
+                    </div>
+                    <!-- BrandInn -->
+                    <div class="carousel-slide">
+                        <img src="https://i.postimg.cc/ZKLtykxW/Untitled-design-1.webp" alt="BrandInn" loading="lazy">
+                        <div class="slide-overlay">
+                            <span class="slide-tag brandinn">BrandInn</span>
+                            <div class="slide-title">Brand Services</div>
+                            <div class="slide-desc">Support brand promotions, in-store activations, and marketing campaigns.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Dots -->
+            <div class="carousel-dots" id="carouselDots">
+                <button class="carousel-dot active" onclick="goToSlide(0)"></button>
+                <button class="carousel-dot" onclick="goToSlide(1)"></button>
+                <button class="carousel-dot" onclick="goToSlide(2)"></button>
+                <button class="carousel-dot" onclick="goToSlide(3)"></button>
+            </div>
+            <!-- Nav Buttons -->
+            <div class="carousel-nav">
+                <button class="carousel-nav-btn" onclick="prevSlide()"><i class="fas fa-chevron-left"></i></button>
+                <button class="carousel-nav-btn" onclick="nextSlide()"><i class="fas fa-chevron-right"></i></button>
+            </div>
+        </div>
+
+        <!-- Features -->
+        <div class="features-section">
+            <div class="section-label">
+                <span>Why KazInni</span>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon purple"><i class="fas fa-shield-alt"></i></div>
+                    <div class="feature-info">
+                        <h4>Verified Accounts</h4>
+                        <p>All assistants are pre-verified by administrators for secure access.</p>
+                    </div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon gold"><i class="fas fa-bolt"></i></div>
+                    <div class="feature-info">
+                        <h4>Instant Dashboard</h4>
+                        <p>See all active jobs, pending tasks, and completed work at a glance.</p>
+                    </div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon green"><i class="fas fa-mobile-alt"></i></div>
+                    <div class="feature-info">
+                        <h4>Mobile Ready</h4>
+                        <p>Accept jobs, update statuses, and navigate — all from your phone.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p>&copy; 2026 <span>KazInni</span> · Verified Assistants Only</p>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyC7kppUyHUaPzeLBV62NEZWuHiuz1Kz0mA",
+            authDomain: "mugera-e51cc.firebaseapp.com",
+            databaseURL: "https://mugera-e51cc-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "mugera-e51cc",
+            storageBucket: "mugera-e51cc.firebasestorage.app",
+            messagingSenderId: "1024868637509",
+            appId: "1:1024868637509:web:321faecddce8f11d9cfc2c"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+        const auth = firebase.auth();
+
+        const $ = id => document.getElementById(id);
+        let currentSlide = 0;
+        const totalSlides = 4;
+        let autoSlideInterval;
+        let currentUser = null;
+        let isVerified = false;
+
+        // ========== SERVICE WORKER ==========
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/service-worker.js')
+                    .then(reg => console.log('SW registered:', reg.scope))
+                    .catch(err => console.log('SW registration failed:', err));
+            });
+        }
+
+        // ========== CAROUSEL ==========
+        function updateCarousel() {
+            const track = $('carouselTrack');
+            track.style.transform = `translateX(-${currentSlide * 100}%)`;
+            
+            // Update dots
+            document.querySelectorAll('.carousel-dot').forEach((dot, i) => {
+                dot.classList.toggle('active', i === currentSlide);
+            });
+        }
+
+        window.goToSlide = function(index) {
+            currentSlide = index;
+            updateCarousel();
+            resetAutoSlide();
+        };
+
+        window.nextSlide = function() {
+            currentSlide = (currentSlide + 1) % totalSlides;
+            updateCarousel();
+            resetAutoSlide();
+        };
+
+        window.prevSlide = function() {
+            currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+            updateCarousel();
+            resetAutoSlide();
+        };
+
+        function resetAutoSlide() {
+            clearInterval(autoSlideInterval);
+            autoSlideInterval = setInterval(nextSlide, 5000);
+        }
+
+        // Touch swipe
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        $('carouselTrack').addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+        });
+
+        $('carouselTrack').addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            const diff = touchStartX - touchEndX;
+            if (Math.abs(diff) > 50) {
+                if (diff > 0) nextSlide();
+                else prevSlide();
+            }
+        });
+
+        // Start auto-slide
+        autoSlideInterval = setInterval(nextSlide, 5000);
+
+        // ========== AUTH ==========
+        function showLoading(s) { $('loadingOverlay').classList.toggle('hidden', !s); }
+
+        function toast(msg, type = 'info') {
+            const icons = { success: 'fa-check-circle', error: 'fa-exclamation-circle', warning: 'fa-exclamation-triangle' };
+            const t = document.createElement('div');
+            t.className = `toast ${type}`;
+            t.innerHTML = `<i class="fas ${icons[type] || 'fa-info-circle'}"></i> ${msg}`;
+            $('toastContainer').appendChild(t);
+            setTimeout(() => { t.style.opacity = '0'; t.style.transform = 'translateX(50px)'; t.style.transition = '0.3s'; setTimeout(() => t.remove(), 300); }, 3500);
+        }
+
+        function getInitials(n) { return n ? String(n).split(' ').map(w => w[0]).join('').toUpperCase().substring(0,2) : 'KA'; }
+
+        // Check auth state - NO auto redirect
+        auth.onAuthStateChanged(async user => {
+            if (user) {
+                currentUser = user;
+                // Check if verified
+                const nodes = ['delivery_assistants', 'pickme_drivers', 'taskers'];
+                isVerified = false;
+                for (const node of nodes) {
+                    try {
+                        const snap = await db.ref(`${node}/${user.uid}`).once('value');
+                        if (snap.exists() && snap.val().verified === true) {
+                            isVerified = true;
+                            break;
+                        }
+                    } catch (e) {}
+                }
+
+                if (isVerified) {
+                    // Show user info bar
+                    $('userInfoBar').classList.add('show');
+                    $('userInfoAvatar').textContent = getInitials(user.displayName || user.email);
+                    $('userInfoName').textContent = user.displayName || user.email?.split('@')[0] || 'Assistant';
+                    // Hide sign-in buttons
+                    $('headerSignBtn').classList.add('hidden');
+                    $('heroSignBtn').classList.add('hidden');
+                } else {
+                    // User logged in but not verified
+                    $('userInfoBar').classList.remove('show');
+                    $('headerSignBtn').classList.remove('hidden');
+                    $('heroSignBtn').classList.remove('hidden');
+                }
+            } else {
+                currentUser = null;
+                isVerified = false;
+                $('userInfoBar').classList.remove('show');
+                $('headerSignBtn').classList.remove('hidden');
+                $('heroSignBtn').classList.remove('hidden');
+            }
+        });
+
+        window.goToDashboard = function() {
+            if (isVerified) {
+                window.location.href = '/dashboard.html';
+            } else {
+                toast('Your account is not yet verified.', 'error');
+            }
+        };
+
+        window.openModal = () => {
+            $('modalOverlay').classList.add('show');
+            $('loginError').style.display = 'none';
+            setTimeout(() => $('loginEmail').focus(), 300);
+        };
+
+        window.closeModal = () => {
+            $('modalOverlay').classList.remove('show');
+            $('loginError').style.display = 'none';
+        };
+
+        window.handleLogin = async (e) => {
+            e.preventDefault();
+            const email = $('loginEmail').value.trim();
+            const password = $('loginPassword').value;
+
+            if (!email || !password) {
+                $('loginError').style.display = 'block';
+                $('loginError').textContent = 'Please enter your email and password';
+                return;
+            }
+
+            $('loginBtn').disabled = true;
+            $('loginBtn').innerHTML = '<i class="fas fa-spinner fa-spin"></i> Signing in...';
+            showLoading(true);
+
+            try {
+                $('loginError').style.display = 'none';
+                await auth.signInWithEmailAndPassword(email, password);
+                closeModal();
+                
+                // Check verification after login
+                const nodes = ['delivery_assistants', 'pickme_drivers', 'taskers'];
+                let verified = false;
+                for (const node of nodes) {
+                    try {
+                        const snap = await db.ref(`${node}/${auth.currentUser.uid}`).once('value');
+                        if (snap.exists() && snap.val().verified === true) {
+                            verified = true;
+                            break;
+                        }
+                    } catch (e) {}
+                }
+
+                if (verified) {
+                    toast('Welcome back! You can now access your dashboard.', 'success');
+                    isVerified = true;
+                    $('userInfoBar').classList.add('show');
+                    $('userInfoAvatar').textContent = getInitials(auth.currentUser.displayName || auth.currentUser.email);
+                    $('userInfoName').textContent = auth.currentUser.displayName || auth.currentUser.email?.split('@')[0] || 'Assistant';
+                    $('headerSignBtn').classList.add('hidden');
+                    $('heroSignBtn').classList.add('hidden');
+                } else {
+                    toast('Account not verified. Contact your administrator.', 'error');
+                    await auth.signOut();
+                }
+            } catch (err) {
+                $('loginError').style.display = 'block';
+                const msg = err.message.replace('Firebase: ', '').replace(/\(auth\/.*\)/, '').trim();
+                if (msg.includes('invalid-credential') || msg.includes('user-not-found') || msg.includes('wrong-password')) {
+                    $('loginError').textContent = 'Invalid email or password.';
+                } else if (msg.includes('too-many-requests')) {
+                    $('loginError').textContent = 'Too many attempts. Wait and try again.';
+                } else if (msg.includes('network-request-failed')) {
+                    $('loginError').textContent = 'Network error. Check connection.';
+                } else {
+                    $('loginError').textContent = 'Login failed. Try again.';
+                }
+            } finally {
+                $('loginBtn').disabled = false;
+                $('loginBtn').innerHTML = '<i class="fas fa-sign-in-alt"></i> Sign In';
+                showLoading(false);
+            }
+        };
+    </script>
+</body>
+</html>
