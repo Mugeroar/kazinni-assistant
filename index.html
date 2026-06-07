@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>KazInni Assistant</title>
+    
+    <meta name="theme-color" content="#f97316">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="KazInni">
+    
+    <link rel="manifest" href="/manifest.json">
+    <link rel="icon" type="image/png" href="https://i.postimg.cc/rFfXDj3L/kazinni-removebg-preview(1).png">
+    <link rel="apple-touch-icon" href="https://i.postimg.cc/rFfXDj3L/kazinni-removebg-preview(1).png">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(145deg, #0a0f1e 0%, #111827 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+        
+        .auth-container {
+            background: #1a2235;
+            border-radius: 32px;
+            padding: 2rem;
+            max-width: 400px;
+            width: 100%;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+            text-align: center;
+            border: 1px solid #334155;
+        }
+        
+        .logo-img { width: 70px; margin-bottom: 1rem; }
+        
+        h1 { 
+            font-size: 1.3rem; 
+            margin-bottom: 0.5rem; 
+            background: linear-gradient(135deg, #f97316, #f59e0b); 
+            -webkit-background-clip: text; 
+            -webkit-text-fill-color: transparent; 
+        }
+        
+        .subtitle {
+            color: #94a3b8;
+            font-size: 0.8rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .input-group { margin-bottom: 1rem; text-align: left; }
+        
+        label { 
+            font-size: 0.7rem; 
+            font-weight: 600; 
+            color: #94a3b8; 
+            display: block; 
+            margin-bottom: 0.3rem; 
+        }
+        
+        input { 
+            width: 100%; 
+            padding: 0.75rem; 
+            border: 1.5px solid #334155; 
+            border-radius: 12px; 
+            background: #0f172a; 
+            color: white; 
+            font-size: 0.9rem;
+            font-family: 'Inter', sans-serif;
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: #f97316;
+        }
+        
+        button { 
+            width: 100%; 
+            padding: 0.75rem; 
+            background: linear-gradient(135deg, #f97316, #ea580c); 
+            color: white; 
+            border: none; 
+            border-radius: 12px; 
+            font-weight: 700; 
+            cursor: pointer; 
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+            transition: transform 0.2s;
+        }
+        
+        button:active { transform: scale(0.98); }
+        button:disabled { opacity: 0.6; cursor: not-allowed; }
+        
+        .error { 
+            color: #ef4444; 
+            font-size: 0.75rem; 
+            margin-top: 0.75rem; 
+            display: none; 
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: white;
+        }
+        
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid #334155;
+            border-top-color: #f97316;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto 1rem;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+    <!-- Login Form -->
+    <div class="auth-container" id="authContainer">
+        <img src="https://i.postimg.cc/rFfXDj3L/kazinni-removebg-preview(1).png" alt="KazInni" class="logo-img">
+        <h1>KazInni Assistant</h1>
+        <p class="subtitle">Sign in to access your workspace</p>
+        
+        <div class="input-group">
+            <label>Email</label>
+            <input type="email" id="email" placeholder="your@email.com" autocomplete="email">
+        </div>
+        <div class="input-group">
+            <label>Password</label>
+            <input type="password" id="password" placeholder="••••••••" autocomplete="current-password">
+        </div>
+        <button id="loginBtn" onclick="handleLogin()">Sign In</button>
+        <div class="error" id="errorMsg"></div>
+    </div>
+    
+    <!-- Loading State -->
+    <div class="auth-container hidden" id="loadingContainer">
+        <div class="spinner"></div>
+        <p style="color: #94a3b8;">Redirecting to your workspace...</p>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+
+    <script>
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyC7kppUyHUaPzeLBV62NEZWuHiuz1Kz0mA",
+            authDomain: "mugera-e51cc.firebaseapp.com",
+            databaseURL: "https://mugera-e51cc-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "mugera-e51cc",
+            storageBucket: "mugera-e51cc.firebasestorage.app",
+            messagingSenderId: "1024868637509",
+            appId: "1:1024868637509:web:321faecddce8f11d9cfc2c"
+        };
+        
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.database();
+        
+        // DOM Elements
+        const authContainer = document.getElementById('authContainer');
+        const loadingContainer = document.getElementById('loadingContainer');
+        const emailInput = document.getElementById('email');
+        const passwordInput = document.getElementById('password');
+        const loginBtn = document.getElementById('loginBtn');
+        const errorMsg = document.getElementById('errorMsg');
+        
+        // WORKSPACE ROUTES - Map to your actual folder structure
+        const WORKSPACE_ROUTES = {
+            'mugsndines': '/workspaces/mugsndines/index.html',
+            'mugs': '/workspaces/mugsndines/index.html',
+            'kitchen': '/workspaces/mugsndines/index.html',
+            'delivery': '/workspaces/delivery-assistants/index.html',
+            'driver': '/workspaces/delivery-assistants/index.html',
+            'default': '/dashboard.html'
+        };
+        
+        function showLoading(show) {
+            if (show) {
+                authContainer.classList.add('hidden');
+                loadingContainer.classList.remove('hidden');
+            } else {
+                authContainer.classList.remove('hidden');
+                loadingContainer.classList.add('hidden');
+            }
+        }
+        
+        function showError(message) {
+            errorMsg.textContent = message;
+            errorMsg.style.display = 'block';
+            setTimeout(() => {
+                errorMsg.style.display = 'none';
+            }, 4000);
+        }
+        
+        // Determine user's workspace based on their data
+        async function getUserWorkspace(userId, email) {
+            try {
+                // METHOD 1: Check brandinn_users for assigned workspace
+                const userSnap = await db.ref(`brandinn_users/${userId}`).once('value');
+                if (userSnap.exists()) {
+                    const userData = userSnap.val();
+                    const workspace = userData.workspace || userData.businessSlug || userData.role;
+                    
+                    if (workspace && WORKSPACE_ROUTES[workspace.toLowerCase()]) {
+                        console.log(`Workspace from database: ${workspace}`);
+                        return WORKSPACE_ROUTES[workspace.toLowerCase()];
+                    }
+                }
+                
+                // METHOD 2: Check delivery_assistants collection
+                const driverSnap = await db.ref(`delivery_assistants/${userId}`).once('value');
+                if (driverSnap.exists() && driverSnap.val().verified === true) {
+                    console.log('User is a delivery assistant');
+                    return WORKSPACE_ROUTES['delivery'];
+                }
+                
+                // METHOD 3: Check email pattern
+                const emailLower = email.toLowerCase();
+                
+                if (emailLower.includes('kitchen') || emailLower.includes('chef') || emailLower.includes('mugs')) {
+                    console.log('Workspace by email: Mugs N Dines');
+                    return WORKSPACE_ROUTES['mugsndines'];
+                }
+                
+                if (emailLower.includes('driver') || emailLower.includes('delivery') || emailLower.includes('rider')) {
+                    console.log('Workspace by email: Delivery Assistant');
+                    return WORKSPACE_ROUTES['delivery'];
+                }
+                
+                // Default fallback - go to Mugs N Dines
+                console.log('No workspace detected, defaulting to Mugs N Dines');
+                return WORKSPACE_ROUTES['mugsndines'];
+                
+            } catch (error) {
+                console.error('Error detecting workspace:', error);
+                return WORKSPACE_ROUTES['mugsndines'];
+            }
+        }
+        
+        // Check if user is already logged in
+        async function checkExistingSession() {
+            const user = auth.currentUser;
+            if (user) {
+                console.log('Existing session found for:', user.email);
+                showLoading(true);
+                const redirectUrl = await getUserWorkspace(user.uid, user.email);
+                window.location.href = redirectUrl;
+            }
+        }
+        
+        // Handle login
+        window.handleLogin = async function() {
+            const email = emailInput.value.trim();
+            const password = passwordInput.value;
+            
+            if (!email) {
+                showError('Please enter your email');
+                return;
+            }
+            if (!password) {
+                showError('Please enter your password');
+                return;
+            }
+            
+            loginBtn.disabled = true;
+            loginBtn.textContent = 'Signing in...';
+            showLoading(true);
+            
+            try {
+                const userCredential = await auth.signInWithEmailAndPassword(email, password);
+                const user = userCredential.user;
+                
+                console.log('Login successful for:', user.email);
+                
+                const redirectUrl = await getUserWorkspace(user.uid, user.email);
+                
+                console.log('Redirecting to:', redirectUrl);
+                
+                setTimeout(() => {
+                    window.location.href = redirectUrl;
+                }, 500);
+                
+            } catch (error) {
+                console.error('Login error:', error);
+                
+                let message = 'Login failed. ';
+                switch (error.code) {
+                    case 'auth/user-not-found':
+                        message = 'No account found with this email.';
+                        break;
+                    case 'auth/wrong-password':
+                        message = 'Incorrect password. Please try again.';
+                        break;
+                    case 'auth/invalid-email':
+                        message = 'Invalid email format.';
+                        break;
+                    case 'auth/too-many-requests':
+                        message = 'Too many failed attempts. Try again later.';
+                        break;
+                    default:
+                        message = error.message || 'Please check your credentials.';
+                }
+                
+                showError(message);
+                loginBtn.disabled = false;
+                loginBtn.textContent = 'Sign In';
+                showLoading(false);
+            }
+        };
+        
+        // Enter key support
+        emailInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') handleLogin();
+        });
+        passwordInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') handleLogin();
+        });
+        
+        // Check for existing session
+        auth.onAuthStateChanged((user) => {
+            if (user) {
+                checkExistingSession();
+            }
+        });
+    </script>
+</body>
+</html>
