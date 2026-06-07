@@ -332,6 +332,12 @@
             padding: 1rem;
             border: 1px solid var(--border-light);
             transition: all 0.2s;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .order-card.new { border-left: 3px solid var(--orange); }
@@ -436,6 +442,32 @@
             color: #94a3b8;
         }
 
+        /* Notification Banner */
+        .notification-banner {
+            position: fixed;
+            top: 70px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--orange);
+            color: white;
+            padding: 0.6rem 1.2rem;
+            border-radius: 40px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            z-index: 1500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            animation: slideDown 0.3s ease;
+            white-space: nowrap;
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateX(-50%) translateY(-20px); }
+            to { opacity: 1; transform: translateX(-50%) translateY(0); }
+        }
+
         /* Modal */
         .modal-overlay {
             position: fixed;
@@ -530,6 +562,7 @@
             .stats-row { grid-template-columns: repeat(3, 1fr); }
             .order-actions { flex-direction: column; }
             .action-btn { justify-content: center; }
+            .notification-banner { font-size: 0.6rem; padding: 0.5rem 1rem; white-space: nowrap; }
         }
     </style>
 </head>
@@ -637,6 +670,128 @@
         let currentTab = 'new';
         let currentKitchenId = null;
         let currentKitchenName = null;
+        let previousNewOrderCount = 0;
+        let audioContext = null;
+        let notificationSoundEnabled = true;
+
+        // Initialize Audio for notifications
+        function initAudio() {
+            if (!audioContext) {
+                try {
+                    audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                } catch(e) {
+                    console.log('Web Audio API not supported');
+                }
+            }
+            // Resume if suspended (browsers require user interaction)
+            if (audioContext && audioContext.state === 'suspended') {
+                audioContext.resume();
+            }
+        }
+
+        // Play notification sound
+        function playNotificationSound() {
+            if (!audioContext) {
+                initAudio();
+            }
+            if (audioContext && audioContext.state !== 'running') {
+                // Try to resume
+                audioContext.resume().then(() => {
+                    playBeep();
+                }).catch(() => {});
+            } else {
+                playBeep();
+            }
+        }
+
+        function playBeep() {
+            if (!audioContext) return;
+            try {
+                const now = audioContext.currentTime;
+                // Two beep pattern
+                const frequencies = [880, 1108.73];
+                frequencies.forEach((freq, i) => {
+                    const osc = audioContext.createOscillator();
+                    const gain = audioContext.createGain();
+                    osc.connect(gain);
+                    gain.connect(audioContext.destination);
+                    osc.frequency.value = freq;
+                    gain.gain.setValueAtTime(0, now + i * 0.15);
+                    gain.gain.linearRampToValueAtTime(0.3, now + i * 0.15 + 0.03);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.15 + 0.4);
+                    osc.start(now + i * 0.15);
+                    osc.stop(now + i * 0.15 + 0.4);
+                });
+            } catch(e) { console.log('Audio play failed:', e); }
+        }
+
+        // Vibrate device
+        function vibrate() {
+            if (navigator.vibrate) {
+                navigator.vibrate([300, 150, 300]);
+            }
+        }
+
+        // Show notification banner
+        let notificationTimeout = null;
+        function showNotificationBanner(message) {
+            // Remove existing banner
+            const existing = document.querySelector('.notification-banner');
+            if (existing) existing.remove();
+            if (notificationTimeout) clearTimeout(notificationTimeout);
+            
+            const banner = document.createElement('div');
+            banner.className = 'notification-banner';
+            banner.innerHTML = `<i class="fas fa-bell"></i> ${message}`;
+            document.body.appendChild(banner);
+            
+            notificationTimeout = setTimeout(() => {
+                if (banner) banner.remove();
+            }, 4000);
+        }
+
+        // Play sound, vibrate, and show banner for new order
+        function notifyNewOrder(order) {
+            const customerName = order.customerName || 'Customer';
+            const message = `🔔 New order from ${customerName}!`;
+            
+            // Play sound
+            playNotificationSound();
+            
+            // Vibrate
+            vibrate();
+            
+            // Show banner
+            showNotificationBanner(message);
+            
+            // Try browser notification if permitted
+            if ('Notification' in window && Notification.permission === 'granted') {
+                new Notification('Mugs N Dines - New Order', {
+                    body: `${customerName} placed a new order. Total: KES ${(order.total || 0).toLocaleString()}`,
+                    icon: 'https://i.postimg.cc/rFfXDj3L/kazinni-removebg-preview(1).png',
+                    tag: 'new-order',
+                    vibrate: [300, 150, 300]
+                });
+            }
+        }
+
+        // Request notification permission
+        function requestNotificationPermission() {
+            if ('Notification' in window && Notification.permission === 'default') {
+                Notification.requestPermission();
+            }
+        }
+
+        // Enable audio on first user interaction
+        function enableAudioOnInteraction() {
+            initAudio();
+            document.body.addEventListener('click', function enableAudio() {
+                if (audioContext && audioContext.state === 'suspended') {
+                    audioContext.resume();
+                }
+                document.body.removeEventListener('click', enableAudio);
+            }, { once: true });
+        }
 
         function showToast(msg, isError = false) {
             const toast = document.getElementById('toast');
@@ -648,14 +803,13 @@
 
         function escapeHtml(s) { if (!s) return ''; return String(s).replace(/[&<>]/g, m => m === '&' ? '&amp;' : m === '<' ? '&lt;' : '&gt;'); }
 
-        // Load kitchen assignment - reads from mugs_n_dines_franchises (same as Kitchen Management page)
+        // Load kitchen assignment
         async function loadKitchenAssignment() {
             const user = auth.currentUser;
             if (!user) return null;
 
             console.log('Looking up kitchen for user:', user.email);
 
-            // First, load all kitchens from the same source Kitchen Management uses
             const kitchensSnap = await db.ref('mugs_n_dines_franchises').once('value');
             allKitchens = kitchensSnap.val() || {};
             
@@ -676,7 +830,6 @@
                 if (staffSnap.exists()) {
                     const staffData = Object.values(staffSnap.val())[0];
                     currentKitchenId = staffData.kitchenId;
-                    // Get kitchen name from the kitchens object
                     currentKitchenName = allKitchens[currentKitchenId]?.name || staffData.kitchenName;
                     console.log('Found kitchen via staff record:', currentKitchenName);
                     document.getElementById('kitchenName').textContent = currentKitchenName || 'Kitchen';
@@ -796,7 +949,6 @@
                 
                 await db.ref(`mugs_n_dines_orders/${orderId}`).update(updates);
                 showToast(newStatus === 'preparing' ? '✅ Started preparing order' : '✅ Order marked ready');
-                loadOrders();
                 closeModal();
             } catch(e) { showToast('Failed to update', true); }
         };
@@ -805,6 +957,26 @@
             if (!currentKitchenId) return;
             const snap = await db.ref('mugs_n_dines_orders').once('value');
             const orders = snap.val() || {};
+            
+            // Calculate new order count before updating
+            const newOrdersCount = Object.values(orders)
+                .filter(o => o && o.kitchenId === currentKitchenId && o.status === 'new').length;
+            
+            // Check if new order arrived (count increased)
+            if (previousNewOrderCount > 0 && newOrdersCount > previousNewOrderCount) {
+                // Find the newly added order
+                const newOrdersList = Object.entries(orders)
+                    .filter(([_, o]) => o && o.kitchenId === currentKitchenId && o.status === 'new');
+                
+                // Get the latest order (assuming it's the new one)
+                const latestOrder = newOrdersList.sort((a, b) => (b[1].createdAt || 0) - (a[1].createdAt || 0))[0];
+                if (latestOrder && latestOrder[1]) {
+                    notifyNewOrder(latestOrder[1]);
+                }
+            }
+            
+            previousNewOrderCount = newOrdersCount;
+            
             allOrders = Object.entries(orders)
                 .map(([id, data]) => ({ id, ...data }))
                 .filter(o => o.kitchenId === currentKitchenId && o.status !== 'cancelled' && o.status !== 'delivered')
@@ -872,6 +1044,10 @@
             }
         });
 
+        // Initialize audio on first user interaction
+        enableAudioOnInteraction();
+        requestNotificationPermission();
+
         auth.onAuthStateChanged(async (user) => {
             if (!user) { window.location.href = '/index.html'; return; }
             document.getElementById('drawerName').textContent = user.displayName || user.email?.split('@')[0] || 'Staff';
@@ -880,8 +1056,9 @@
             
             const assigned = await loadKitchenAssignment();
             if (assigned) {
+                // Initial load
                 await loadOrders();
-                // Listen for real-time order updates
+                // Set up real-time listener for order changes
                 db.ref('mugs_n_dines_orders').on('value', () => loadOrders());
             }
         });
