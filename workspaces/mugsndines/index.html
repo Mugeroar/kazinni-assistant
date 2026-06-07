@@ -1,1 +1,808 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Mugs N Dines | Kitchen Management</title>
+    
+    <meta name="theme-color" content="#f97316">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    
+    <link rel="manifest" href="/manifest.json">
+    <link rel="icon" type="image/png" href="https://i.postimg.cc/rFfXDj3L/kazinni-removebg-preview(1).png">
+    <link rel="apple-touch-icon" href="https://i.postimg.cc/rFfXDj3L/kazinni-removebg-preview(1).png">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
+        :root {
+            --orange: #f97316;
+            --orange-dark: #c2410c;
+            --orange-light: #fb923c;
+            --card-bg: #ffffff;
+            --text-primary: #1e293b;
+            --text-muted: #64748b;
+            --border-light: #fed7aa;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --info: #3b82f6;
+            --purple: #8b5cf6;
+            --emerald: #059669;
+            --safe-bottom: env(safe-area-inset-bottom, 20px);
+            --safe-top: env(safe-area-inset-top, 0px);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(145deg, #fff7ed 0%, #ffffff 100%);
+            color: var(--text-primary);
+            min-height: 100vh;
+        }
+
+        /* Navbar */
+        .navbar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(16px);
+            padding: 0.5rem 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid rgba(249, 115, 22, 0.3);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+
+        .logo-img {
+            height: 36px;
+            width: 36px;
+            border-radius: 10px;
+            object-fit: contain;
+            background: white;
+            box-shadow: 0 4px 12px rgba(249, 115, 22, 0.2);
+        }
+
+        .logo-text {
+            font-weight: 800;
+            font-size: 1rem;
+            background: linear-gradient(145deg, #fb923c, #c2410c);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Menu Button (Hamburger) */
+        .menu-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--orange-dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            transition: background 0.2s;
+        }
+
+        .menu-btn:hover {
+            background: rgba(249, 115, 22, 0.1);
+        }
+
+        /* Side Drawer Menu */
+        .drawer-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            display: none;
+            backdrop-filter: blur(4px);
+        }
+
+        .drawer {
+            position: fixed;
+            top: 0;
+            left: -280px;
+            width: 280px;
+            height: 100%;
+            background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%);
+            transition: left 0.3s ease;
+            z-index: 1001;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 2px 0 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .drawer.open {
+            left: 0;
+        }
+
+        .drawer-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .drawer-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .drawer-logo-img {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            object-fit: contain;
+            background: white;
+        }
+
+        .drawer-logo-text {
+            font-weight: 800;
+            font-size: 0.9rem;
+            background: linear-gradient(135deg, #f97316, #fb923c);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .drawer-close {
+            background: none;
+            border: none;
+            color: #94a3b8;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+
+        .drawer-user {
+            padding: 1.2rem 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .drawer-avatar {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, #f97316, #c2410c);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1rem;
+            color: white;
+        }
+
+        .drawer-user-info h4 {
+            font-size: 0.85rem;
+            color: white;
+            margin-bottom: 0.2rem;
+        }
+
+        .drawer-user-info p {
+            font-size: 0.65rem;
+            color: #94a3b8;
+        }
+
+        .drawer-nav {
+            flex: 1;
+            padding: 1rem 0;
+        }
+
+        .drawer-nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 0.75rem 1.5rem;
+            color: #cbd5e1;
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .drawer-nav-item:hover {
+            background: rgba(249, 115, 22, 0.15);
+            color: var(--orange-light);
+        }
+
+        .drawer-nav-item i {
+            width: 20px;
+            font-size: 1rem;
+        }
+
+        .drawer-nav-divider {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+            margin: 0.5rem 1.5rem;
+        }
+
+        .drawer-nav-label {
+            font-size: 0.6rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #64748b;
+            padding: 0.5rem 1.5rem;
+        }
+
+        .drawer-footer {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .drawer-logout {
+            width: 100%;
+            padding: 0.7rem;
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            border-radius: 12px;
+            color: #ef4444;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+
+        .drawer-logout:hover {
+            background: rgba(239, 68, 68, 0.2);
+        }
+
+        /* Main Content */
+        .container {
+            padding: 1rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .page-header {
+            margin-bottom: 1.2rem;
+        }
+
+        .page-header h1 {
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: #0f172a;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .page-header h1 i {
+            color: var(--orange-dark);
+            background: white;
+            padding: 8px;
+            border-radius: 12px;
+            box-shadow: 0 6px 14px rgba(249, 115, 22, 0.08);
+        }
+
+        .page-header p {
+            color: #64748b;
+            font-size: 0.8rem;
+            margin-top: 0.3rem;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 12px;
+            margin-bottom: 1.5rem;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 16px;
+            padding: 1rem;
+            border: 1px solid var(--border-light);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .stat-left h4 {
+            font-size: 0.6rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: #64748b;
+            margin-bottom: 0.2rem;
+        }
+
+        .stat-number {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: #0f172a;
+            line-height: 1.1;
+        }
+
+        .stat-icon {
+            width: 42px;
+            height: 42px;
+            background: #fff7ed;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #c2410c;
+            font-size: 1.2rem;
+        }
+
+        /* Action Grid */
+        .action-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 14px;
+            margin-bottom: 1.5rem;
+        }
+
+        .action-card {
+            background: white;
+            border-radius: 20px;
+            padding: 1.2rem;
+            border: 1px solid var(--border-light);
+            transition: all 0.25s;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+            cursor: pointer;
+        }
+
+        .action-card:hover {
+            transform: translateY(-3px);
+            border-color: #fb923c;
+            box-shadow: 0 16px 30px -8px rgba(194, 65, 12, 0.12);
+        }
+
+        .action-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(145deg, #fff7ed, #ffffff);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 0.8rem;
+            color: #c2410c;
+            font-size: 1.4rem;
+            border: 1px solid rgba(194, 65, 12, 0.15);
+        }
+
+        .action-card h2 {
+            font-size: 0.9rem;
+            font-weight: 800;
+            margin-bottom: 0.3rem;
+        }
+
+        .action-card p {
+            color: #64748b;
+            font-size: 0.7rem;
+            margin-bottom: 0.8rem;
+            line-height: 1.4;
+        }
+
+        .action-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-weight: 700;
+            color: #c2410c;
+            font-size: 0.7rem;
+        }
+
+        /* Quick Links */
+        .quick-section {
+            background: white;
+            border-radius: 18px;
+            padding: 1rem;
+            border: 1px solid var(--border-light);
+            margin-bottom: 1.5rem;
+        }
+
+        .quick-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 0.8rem;
+            font-weight: 700;
+            font-size: 0.85rem;
+        }
+
+        .quick-header i {
+            color: #c2410c;
+            background: #fff7ed;
+            padding: 6px;
+            border-radius: 10px;
+        }
+
+        .quick-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .quick-btn {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            padding: 0.4rem 0.9rem;
+            border-radius: 30px;
+            color: #1e293b;
+            font-weight: 500;
+            font-size: 0.7rem;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+        }
+
+        .quick-btn i {
+            color: #c2410c;
+        }
+
+        .quick-btn:hover {
+            background: #c2410c;
+            color: white;
+        }
+
+        .quick-btn:hover i {
+            color: white;
+        }
+
+        /* Recent Orders */
+        .recent-section {
+            margin-top: 1rem;
+        }
+
+        .recent-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.6rem;
+        }
+
+        .recent-header h3 {
+            font-size: 0.85rem;
+            font-weight: 700;
+        }
+
+        .recent-list {
+            background: white;
+            border-radius: 14px;
+            border: 1px solid var(--border-light);
+            overflow: hidden;
+        }
+
+        .recent-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.7rem 1rem;
+            border-bottom: 1px solid #fff7ed;
+            font-size: 0.75rem;
+        }
+
+        .status-tag {
+            padding: 0.15rem 0.5rem;
+            border-radius: 12px;
+            font-size: 0.6rem;
+            font-weight: 700;
+        }
+
+        .status-new { background: #fef3c7; color: #92400e; }
+        .status-confirmed { background: #d1fae5; color: #065f46; }
+        .status-preparing { background: #e0f2fe; color: #0369a1; }
+        .status-ready { background: #fed7aa; color: #9a3412; }
+
+        .empty-state {
+            text-align: center;
+            padding: 2rem;
+            color: #94a3b8;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 1rem;
+            color: #94a3b8;
+            font-size: 0.7rem;
+            border-top: 1px solid var(--border-light);
+            margin-top: 2rem;
+        }
+
+        /* Mobile */
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .action-grid {
+                grid-template-columns: 1fr;
+            }
+            .page-header h1 {
+                font-size: 1.1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="logo">
+            <img src="https://i.postimg.cc/rFfXDj3L/kazinni-removebg-preview(1).png" alt="Mugs N Dines" class="logo-img">
+            <span class="logo-text">Mugs N Dines</span>
+        </div>
+        <button class="menu-btn" id="menuBtn">
+            <i class="fas fa-bars"></i>
+        </button>
+    </nav>
+
+    <!-- Side Drawer Menu -->
+    <div class="drawer-overlay" id="drawerOverlay">
+        <div class="drawer" id="drawer">
+            <div class="drawer-header">
+                <div class="drawer-logo">
+                    <img src="https://i.postimg.cc/rFfXDj3L/kazinni-removebg-preview(1).png" alt="Mugs N Dines" class="drawer-logo-img">
+                    <span class="drawer-logo-text">Mugs N Dines</span>
+                </div>
+                <button class="drawer-close" id="drawerClose">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="drawer-user" id="drawerUser">
+                <div class="drawer-avatar" id="drawerAvatar">MD</div>
+                <div class="drawer-user-info">
+                    <h4 id="drawerName">Loading...</h4>
+                    <p id="drawerEmail">...</p>
+                </div>
+            </div>
+            
+            <div class="drawer-nav">
+                <div class="drawer-nav-label">MAIN</div>
+                <a href="/workspaces/mugsndines/index.html" class="drawer-nav-item">
+                    <i class="fas fa-chart-pie"></i> Dashboard
+                </a>
+                <a href="/workspaces/mugsndines/orders.html" class="drawer-nav-item">
+                    <i class="fas fa-shopping-cart"></i> Orders
+                </a>
+                <a href="/workspaces/mugsndines/menu.html" class="drawer-nav-item">
+                    <i class="fas fa-utensils"></i> Menu
+                </a>
+                <a href="/workspaces/mugsndines/recipes.html" class="drawer-nav-item">
+                    <i class="fas fa-book-open"></i> Recipes
+                </a>
+                
+                <div class="drawer-nav-divider"></div>
+                
+                <div class="drawer-nav-label">OPERATIONS</div>
+                <a href="/workspaces/mugsndines/kitchens.html" class="drawer-nav-item">
+                    <i class="fas fa-store-alt"></i> Kitchens
+                </a>
+                <a href="/workspaces/mugsndines/catering.html" class="drawer-nav-item">
+                    <i class="fas fa-calendar-check"></i> Catering
+                </a>
+                <a href="/workspaces/mugsndines/dispatch.html" class="drawer-nav-item">
+                    <i class="fas fa-truck-fast"></i> Dispatch
+                </a>
+                
+                <div class="drawer-nav-divider"></div>
+                
+                <div class="drawer-nav-label">OTHER</div>
+                <a href="/workspaces/mugsndines/map.html" class="drawer-nav-item">
+                    <i class="fas fa-map-marked-alt"></i> Location Map
+                </a>
+            </div>
+            
+            <div class="drawer-footer">
+                <button class="drawer-logout" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i> Sign Out
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="page-header">
+            <h1>
+                <i class="fas fa-utensils"></i>
+                Mugs N Dines Dashboard
+            </h1>
+            <p>Manage food orders, recipes, catering events, kitchens & dispatch.</p>
+        </div>
+
+        <!-- Stats Grid -->
+        <div class="stats-grid" id="statsGrid">
+            <div class="stat-card"><div class="stat-left"><h4>New Orders</h4><div class="stat-number" id="statNewOrders">0</div></div><div class="stat-icon"><i class="fas fa-inbox"></i></div></div>
+            <div class="stat-card"><div class="stat-left"><h4>Active Orders</h4><div class="stat-number" id="statActiveOrders">0</div></div><div class="stat-icon"><i class="fas fa-fire"></i></div></div>
+            <div class="stat-card"><div class="stat-left"><h4>Menu Items</h4><div class="stat-number" id="statMenuItems">0</div></div><div class="stat-icon"><i class="fas fa-utensils"></i></div></div>
+            <div class="stat-card"><div class="stat-left"><h4>Recipes</h4><div class="stat-number" id="statRecipes">0</div></div><div class="stat-icon"><i class="fas fa-book-open"></i></div></div>
+            <div class="stat-card"><div class="stat-left"><h4>Kitchens</h4><div class="stat-number" id="statKitchens">0</div></div><div class="stat-icon"><i class="fas fa-store-alt"></i></div></div>
+            <div class="stat-card"><div class="stat-left"><h4>Catering</h4><div class="stat-number" id="statCatering">0</div></div><div class="stat-icon"><i class="fas fa-calendar"></i></div></div>
+        </div>
+
+        <!-- Action Grid -->
+        <div class="action-grid">
+            <a href="/workspaces/mugsndines/orders.html" class="action-card"><div class="action-icon"><i class="fas fa-inbox"></i></div><h2>Orders</h2><p>View & manage all food orders</p><span class="action-link">Manage Orders →</span></a>
+            <a href="/workspaces/mugsndines/menu.html" class="action-card"><div class="action-icon"><i class="fas fa-utensils"></i></div><h2>Menu</h2><p>Manage your restaurant menu items</p><span class="action-link">Manage Menu →</span></a>
+            <a href="/workspaces/mugsndines/recipes.html" class="action-card"><div class="action-icon"><i class="fas fa-book-open"></i></div><h2>Recipes</h2><p>Create & manage recipes</p><span class="action-link">View Recipes →</span></a>
+            <a href="/workspaces/mugsndines/kitchens.html" class="action-card"><div class="action-icon"><i class="fas fa-store-alt"></i></div><h2>Kitchens</h2><p>Manage kitchen locations</p><span class="action-link">Manage Kitchens →</span></a>
+            <a href="/workspaces/mugsndines/catering.html" class="action-card"><div class="action-icon"><i class="fas fa-calendar-check"></i></div><h2>Catering</h2><p>Manage catering events</p><span class="action-link">Manage Events →</span></a>
+            <a href="/workspaces/mugsndines/dispatch.html" class="action-card"><div class="action-icon"><i class="fas fa-truck-fast"></i></div><h2>Dispatch</h2><p>Assign drivers & track deliveries</p><span class="action-link">Dispatch →</span></a>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="quick-section">
+            <div class="quick-header"><i class="fas fa-bolt"></i> Quick Actions</div>
+            <div class="quick-links">
+                <a href="/workspaces/mugsndines/orders.html" class="quick-btn"><i class="fas fa-clock"></i> Pending Orders</a>
+                <a href="/workspaces/mugsndines/menu.html" class="quick-btn"><i class="fas fa-plus"></i> Add Menu Item</a>
+                <a href="/workspaces/mugsndines/recipes.html" class="quick-btn"><i class="fas fa-plus"></i> New Recipe</a>
+                <a href="/workspaces/mugsndines/kitchens.html" class="quick-btn"><i class="fas fa-store"></i> Manage Kitchens</a>
+                <a href="/workspaces/mugsndines/catering.html" class="quick-btn"><i class="fas fa-calendar"></i> Create Event</a>
+                <a href="/workspaces/mugsndines/dispatch.html" class="quick-btn"><i class="fas fa-truck"></i> Dispatch Orders</a>
+            </div>
+        </div>
+
+        <!-- Recent Orders -->
+        <div class="recent-section">
+            <div class="recent-header"><h3><i class="fas fa-clock-rotate-left"></i> Recent Orders</h3><a href="/workspaces/mugsndines/orders.html" style="color:#c2410c;font-size:0.7rem;">View all</a></div>
+            <div class="recent-list" id="recentOrders"><div class="empty-state">No orders yet</div></div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <i class="far fa-copyright"></i> 2026 Mugs N Dines · Kitchen Management
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyC7kppUyHUaPzeLBV62NEZWuHiuz1Kz0mA",
+            authDomain: "mugera-e51cc.firebaseapp.com",
+            databaseURL: "https://mugera-e51cc-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "mugera-e51cc"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.database();
+
+        let allOrders = {};
+        let allMenu = {};
+        let allRecipes = {};
+        let allKitchens = {};
+        let allCatering = {};
+
+        function getInitials(name) {
+            if (!name) return 'MD';
+            return name.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
+        }
+
+        async function loadUserData() {
+            const user = auth.currentUser;
+            if (!user) {
+                window.location.href = '/index.html';
+                return;
+            }
+            
+            const displayName = user.displayName || user.email?.split('@')[0] || 'Manager';
+            document.getElementById('drawerName').textContent = displayName;
+            document.getElementById('drawerEmail').textContent = user.email;
+            document.getElementById('drawerAvatar').textContent = getInitials(displayName);
+        }
+
+        async function loadStats() {
+            try {
+                const [ordersSnap, menuSnap, recipesSnap, kitchensSnap, cateringSnap] = await Promise.all([
+                    db.ref('mugs_n_dines_orders').once('value'),
+                    db.ref('mugs_n_dines_menu').once('value'),
+                    db.ref('mugs_n_dines_recipes').once('value'),
+                    db.ref('mugs_n_dines_franchises').once('value'),
+                    db.ref('mugs_n_dines_catering_events').once('value')
+                ]);
+                
+                allOrders = ordersSnap.val() || {};
+                allMenu = menuSnap.val() || {};
+                allRecipes = recipesSnap.val() || {};
+                allKitchens = kitchensSnap.val() || {};
+                allCatering = cateringSnap.val() || {};
+                
+                const orders = Object.values(allOrders);
+                const newOrders = orders.filter(o => o.status === 'new').length;
+                const activeOrders = orders.filter(o => o.status === 'confirmed' || o.status === 'preparing').length;
+                
+                document.getElementById('statNewOrders').textContent = newOrders;
+                document.getElementById('statActiveOrders').textContent = activeOrders;
+                document.getElementById('statMenuItems').textContent = Object.keys(allMenu).length;
+                document.getElementById('statRecipes').textContent = Object.keys(allRecipes).length;
+                document.getElementById('statKitchens').textContent = Object.keys(allKitchens).length;
+                document.getElementById('statCatering').textContent = Object.keys(allCatering).length;
+                
+                renderRecentOrders();
+            } catch (e) {
+                console.error('Error loading stats:', e);
+            }
+        }
+
+        function renderRecentOrders() {
+            const container = document.getElementById('recentOrders');
+            const orders = Object.entries(allOrders)
+                .map(([id, data]) => ({ id, ...data }))
+                .sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0))
+                .slice(0, 5);
+            
+            if (!orders.length) {
+                container.innerHTML = '<div class="empty-state">No orders yet</div>';
+                return;
+            }
+            
+            container.innerHTML = orders.map(order => `
+                <div class="recent-item">
+                    <div><strong>${order.customerName || 'Customer'}</strong><br><span style="font-size:0.65rem;">${(order.items || []).length} items · KES ${(order.total || 0).toLocaleString()}</span></div>
+                    <span class="status-tag status-${order.status || 'new'}">${order.status || 'new'}</span>
+                </div>
+            `).join('');
+        }
+
+        // Drawer controls
+        function openDrawer() {
+            document.getElementById('drawerOverlay').style.display = 'block';
+            document.getElementById('drawer').classList.add('open');
+        }
+        
+        function closeDrawer() {
+            document.getElementById('drawerOverlay').style.display = 'none';
+            document.getElementById('drawer').classList.remove('open');
+        }
+        
+        window.logout = async function() {
+            await auth.signOut();
+            window.location.href = '/index.html';
+        };
+        
+        document.getElementById('menuBtn').addEventListener('click', openDrawer);
+        document.getElementById('drawerClose').addEventListener('click', closeDrawer);
+        document.getElementById('drawerOverlay').addEventListener('click', function(e) {
+            if (e.target === this) closeDrawer();
+        });
+
+        auth.onAuthStateChanged(async (user) => {
+            if (user) {
+                await loadUserData();
+                await loadStats();
+                
+                // Set up real-time listeners
+                db.ref('mugs_n_dines_orders').on('value', () => loadStats());
+                db.ref('mugs_n_dines_menu').on('value', () => loadStats());
+                db.ref('mugs_n_dines_recipes').on('value', () => loadStats());
+                db.ref('mugs_n_dines_franchises').on('value', () => loadStats());
+                db.ref('mugs_n_dines_catering_events').on('value', () => loadStats());
+            } else {
+                window.location.href = '/index.html';
+            }
+        });
+    </script>
+</body>
+</html>
