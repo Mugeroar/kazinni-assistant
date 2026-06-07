@@ -23,7 +23,7 @@
             font-family: 'Inter', sans-serif;
             background: linear-gradient(145deg, #0a0f1e 0%, #111827 100%);
             min-height: 100vh;
-            padding: 1.5rem;
+            padding: 1rem;
         }
         
         .container {
@@ -36,7 +36,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 2rem;
+            margin-bottom: 1.5rem;
             flex-wrap: wrap;
             gap: 1rem;
         }
@@ -48,15 +48,15 @@
         }
         
         .logo-img {
-            width: 48px;
-            height: 48px;
+            width: 44px;
+            height: 44px;
             border-radius: 12px;
             object-fit: contain;
             background: white;
         }
         
         .logo-text h1 {
-            font-size: 1.3rem;
+            font-size: 1.2rem;
             font-weight: 800;
             background: linear-gradient(135deg, #f97316, #f59e0b);
             -webkit-background-clip: text;
@@ -64,29 +64,30 @@
         }
         
         .logo-text p {
-            font-size: 0.7rem;
+            font-size: 0.65rem;
             color: #94a3b8;
         }
         
         .user-info {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
             background: #1a2235;
-            padding: 0.5rem 1rem;
+            padding: 0.4rem 0.8rem 0.4rem 0.5rem;
             border-radius: 40px;
             border: 1px solid #334155;
         }
         
         .user-avatar {
-            width: 36px;
-            height: 36px;
+            width: 34px;
+            height: 34px;
             background: linear-gradient(135deg, #f97316, #f59e0b);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: 700;
+            font-size: 0.8rem;
             color: white;
         }
         
@@ -95,14 +96,18 @@
         }
         
         .user-name {
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             font-weight: 600;
             color: white;
         }
         
         .user-email {
-            font-size: 0.65rem;
+            font-size: 0.6rem;
             color: #94a3b8;
+            max-width: 150px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
         
         .logout-btn {
@@ -124,41 +129,105 @@
         /* Welcome Section */
         .welcome-section {
             background: linear-gradient(135deg, #1e293b, #0f172a);
-            border-radius: 24px;
-            padding: 1.5rem;
-            margin-bottom: 2rem;
+            border-radius: 20px;
+            padding: 1.2rem;
+            margin-bottom: 1.5rem;
             border: 1px solid #334155;
         }
         
         .welcome-title {
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             font-weight: 700;
             color: white;
-            margin-bottom: 0.3rem;
+            margin-bottom: 0.25rem;
         }
         
         .welcome-text {
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             color: #94a3b8;
+            line-height: 1.4;
         }
         
-        /* Workspace Grid */
+        /* Section Title */
         .section-title {
-            font-size: 0.9rem;
+            font-size: 0.8rem;
             font-weight: 600;
             color: #94a3b8;
             text-transform: uppercase;
             letter-spacing: 1px;
             margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
         
+        /* Workspace Grid */
         .workspace-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 1.2rem;
-            margin-bottom: 2rem;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1rem;
         }
         
+        /* Skeleton Loader */
+        .skeleton-card {
+            background: #1a2235;
+            border-radius: 20px;
+            padding: 1.2rem;
+            border: 1px solid #334155;
+        }
+        
+        .skeleton-icon {
+            width: 52px;
+            height: 52px;
+            border-radius: 14px;
+            background: linear-gradient(90deg, #2d3748 25%, #374151 50%, #2d3748 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s ease-in-out infinite;
+            margin-bottom: 1rem;
+        }
+        
+        .skeleton-title {
+            height: 20px;
+            width: 60%;
+            border-radius: 8px;
+            background: linear-gradient(90deg, #2d3748 25%, #374151 50%, #2d3748 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s ease-in-out infinite;
+            margin-bottom: 0.5rem;
+        }
+        
+        .skeleton-desc {
+            height: 40px;
+            width: 100%;
+            border-radius: 8px;
+            background: linear-gradient(90deg, #2d3748 25%, #374151 50%, #2d3748 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s ease-in-out infinite;
+            margin-bottom: 1rem;
+        }
+        
+        .skeleton-stats {
+            display: flex;
+            gap: 1rem;
+            padding-top: 0.8rem;
+            border-top: 1px solid #334155;
+        }
+        
+        .skeleton-stat {
+            height: 16px;
+            width: 80px;
+            border-radius: 6px;
+            background: linear-gradient(90deg, #2d3748 25%, #374151 50%, #2d3748 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s ease-in-out infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+        
+        /* Workspace Card */
         .workspace-card {
             background: #1a2235;
             border-radius: 20px;
@@ -171,19 +240,19 @@
         }
         
         .workspace-card:hover {
-            transform: translateY(-4px);
+            transform: translateY(-3px);
             border-color: #f97316;
-            box-shadow: 0 20px 35px -10px rgba(249, 115, 22, 0.2);
+            box-shadow: 0 15px 30px -10px rgba(249, 115, 22, 0.2);
         }
         
         .card-icon {
-            width: 56px;
-            height: 56px;
-            border-radius: 16px;
+            width: 52px;
+            height: 52px;
+            border-radius: 14px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.8rem;
+            font-size: 1.6rem;
             margin-bottom: 1rem;
         }
         
@@ -213,7 +282,8 @@
         
         .card-stats {
             display: flex;
-            gap: 1rem;
+            gap: 0.8rem;
+            flex-wrap: wrap;
             padding-top: 0.8rem;
             border-top: 1px solid #334155;
         }
@@ -222,73 +292,139 @@
             display: flex;
             align-items: center;
             gap: 5px;
-            font-size: 0.65rem;
+            font-size: 0.6rem;
             color: #64748b;
         }
         
         .stat i {
-            font-size: 0.55rem;
-        }
-        
-        .stat.active {
+            font-size: 0.5rem;
             color: #10b981;
         }
         
-        /* Loading State */
-        .loading {
+        /* Empty State */
+        .empty-state {
             text-align: center;
             padding: 3rem;
+            background: #1a2235;
+            border-radius: 20px;
+            border: 1px solid #334155;
         }
         
-        .spinner {
-            width: 40px;
-            height: 40px;
-            border: 3px solid #334155;
-            border-top-color: #f97316;
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-            margin: 0 auto 1rem;
+        .empty-state i {
+            font-size: 3rem;
+            color: #64748b;
+            margin-bottom: 1rem;
+            display: block;
         }
         
-        @keyframes spin {
-            to { transform: rotate(360deg); }
+        .empty-state p {
+            color: #94a3b8;
+            font-size: 0.8rem;
+        }
+        
+        .empty-state .small {
+            font-size: 0.65rem;
+            color: #64748b;
+            margin-top: 0.5rem;
         }
         
         /* Toast */
         .toast-container {
             position: fixed;
             bottom: 20px;
+            left: 20px;
             right: 20px;
             z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            pointer-events: none;
         }
         
         .toast {
             background: #1a2235;
             border-left: 3px solid #10b981;
-            padding: 0.75rem 1rem;
+            padding: 0.7rem 1rem;
             border-radius: 12px;
             margin-top: 0.5rem;
             font-size: 0.75rem;
             color: white;
             box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-            animation: slideIn 0.3s ease;
+            animation: slideUp 0.3s ease;
+            max-width: 90%;
+            pointer-events: auto;
         }
         
         .toast.error {
             border-left-color: #ef4444;
         }
         
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateX(100%); }
-            to { opacity: 1; transform: translateX(0); }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         
-        /* Responsive */
+        /* Mobile Responsive */
         @media (max-width: 768px) {
-            body { padding: 1rem; }
-            .workspace-grid { grid-template-columns: 1fr; }
-            .header { flex-direction: column; text-align: center; }
-            .user-info { width: 100%; justify-content: space-between; }
+            body { padding: 0.8rem; }
+            
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .user-info {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .user-details {
+                flex: 1;
+                text-align: left;
+            }
+            
+            .user-email {
+                max-width: 180px;
+            }
+            
+            .welcome-title {
+                font-size: 1rem;
+            }
+            
+            .workspace-grid {
+                grid-template-columns: 1fr;
+                gap: 0.8rem;
+            }
+            
+            .workspace-card {
+                padding: 1rem;
+            }
+            
+            .card-icon {
+                width: 44px;
+                height: 44px;
+                font-size: 1.4rem;
+            }
+            
+            .card-stats {
+                gap: 0.6rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .user-email {
+                max-width: 130px;
+                font-size: 0.55rem;
+            }
+            
+            .logo-img {
+                width: 36px;
+                height: 36px;
+            }
+            
+            .logo-text h1 {
+                font-size: 1rem;
+            }
         }
     </style>
 </head>
@@ -318,7 +454,7 @@
         <!-- Welcome Section -->
         <div class="welcome-section">
             <div class="welcome-title" id="welcomeTitle">Welcome back!</div>
-            <div class="welcome-text">Select a workspace below to access your dashboard. You have access to the following workspaces based on your account.</div>
+            <div class="welcome-text">Select a workspace below to access your dashboard.</div>
         </div>
         
         <!-- Workspaces Section -->
@@ -327,9 +463,24 @@
         </div>
         
         <div class="workspace-grid" id="workspaceGrid">
-            <div class="loading">
-                <div class="spinner"></div>
-                <p style="color:#94a3b8;">Loading your workspaces...</p>
+            <!-- Skeleton Loaders -->
+            <div class="skeleton-card">
+                <div class="skeleton-icon"></div>
+                <div class="skeleton-title"></div>
+                <div class="skeleton-desc"></div>
+                <div class="skeleton-stats">
+                    <div class="skeleton-stat"></div>
+                    <div class="skeleton-stat"></div>
+                </div>
+            </div>
+            <div class="skeleton-card">
+                <div class="skeleton-icon"></div>
+                <div class="skeleton-title"></div>
+                <div class="skeleton-desc"></div>
+                <div class="skeleton-stats">
+                    <div class="skeleton-stat"></div>
+                    <div class="skeleton-stat"></div>
+                </div>
             </div>
         </div>
     </div>
@@ -364,7 +515,7 @@
                 icon: 'fa-utensils',
                 iconColor: 'mugs',
                 path: '/workspaces/mugsndines/index.html',
-                features: ['Order Management', 'Menu & Recipes', 'Catering Events', 'Kitchen Staff']
+                features: ['Order Management', 'Menu & Recipes', 'Catering Events']
             },
             {
                 id: 'delivery-assistants',
@@ -373,7 +524,7 @@
                 icon: 'fa-truck-fast',
                 iconColor: 'delivery',
                 path: '/workspaces/delivery-assistants/index.html',
-                features: ['Accept Deliveries', 'Track Shipments', 'Navigation', 'Delivery Proof']
+                features: ['Accept Deliveries', 'Track Shipments', 'Navigation']
             }
         ];
         
@@ -446,10 +597,10 @@
             
             if (availableWorkspaces.length === 0) {
                 grid.innerHTML = `
-                    <div style="text-align: center; padding: 3rem; background: #1a2235; border-radius: 20px;">
-                        <i class="fas fa-ban" style="font-size: 3rem; color: #64748b; margin-bottom: 1rem; display: block;"></i>
-                        <p style="color: #94a3b8;">No workspaces available for your account.</p>
-                        <p style="font-size: 0.7rem; color: #64748b; margin-top: 0.5rem;">Please contact your administrator.</p>
+                    <div class="empty-state" style="grid-column: 1/-1;">
+                        <i class="fas fa-ban"></i>
+                        <p>No workspaces available for your account.</p>
+                        <p class="small">Please contact your administrator.</p>
                     </div>
                 `;
                 return;
@@ -465,7 +616,7 @@
                         <div class="card-title">${workspace.name}</div>
                         <div class="card-desc">${workspace.description}</div>
                         <div class="card-stats">
-                            ${workspace.features.slice(0, 2).map(f => `
+                            ${workspace.features.map(f => `
                                 <div class="stat"><i class="fas fa-check-circle"></i> ${f}</div>
                             `).join('')}
                         </div>
@@ -504,7 +655,7 @@
             
             // Update UI with user info
             const displayName = user.displayName || user.email?.split('@')[0] || 'Assistant';
-            document.getElementById('userName').textContent = displayName;
+            document.getElementById('userName').textContent = displayName.length > 15 ? displayName.substring(0, 12) + '...' : displayName;
             document.getElementById('userEmail').textContent = user.email;
             document.getElementById('userAvatar').textContent = getInitials(displayName);
             document.getElementById('welcomeTitle').textContent = `Welcome back, ${displayName.split(' ')[0]}!`;
