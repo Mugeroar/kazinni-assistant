@@ -37,6 +37,8 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
         }
         
         .logo {
@@ -66,7 +68,7 @@
             color: #94a3b8;
         }
         
-        /* Desktop User Menu */
+        /* User Menu */
         .user-menu {
             display: flex;
             align-items: center;
@@ -120,116 +122,8 @@
             transition: all 0.2s;
         }
         
-        /* Mobile Menu Button */
-        .mobile-menu-btn {
-            background: #1a2235;
-            border: 1px solid #334155;
-            color: white;
-            width: 40px;
-            height: 40px;
-            border-radius: 12px;
-            cursor: pointer;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.2rem;
-        }
-        
-        /* Mobile Drawer */
-        .drawer-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0,0,0,0.7);
-            z-index: 1000;
-            display: none;
-            backdrop-filter: blur(4px);
-        }
-        
-        .drawer {
-            position: fixed;
-            top: 0;
-            right: -280px;
-            width: 280px;
-            height: 100%;
-            background: #1a2235;
-            border-left: 1px solid #334155;
-            transition: right 0.3s ease;
-            z-index: 1001;
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .drawer.open {
-            right: 0;
-        }
-        
-        .drawer-header {
-            padding: 1.5rem;
-            border-bottom: 1px solid #334155;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-        
-        .drawer-close {
-            background: none;
-            border: none;
-            color: #94a3b8;
-            font-size: 1.2rem;
-            cursor: pointer;
-        }
-        
-        .drawer-user {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 1rem 1.5rem;
-            border-bottom: 1px solid #334155;
-        }
-        
-        .drawer-avatar {
-            width: 48px;
-            height: 48px;
-            background: linear-gradient(135deg, #f97316, #f59e0b);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            font-size: 1rem;
-            color: white;
-        }
-        
-        .drawer-info h4 {
-            font-size: 0.85rem;
-            color: white;
-        }
-        
-        .drawer-info p {
-            font-size: 0.65rem;
-            color: #94a3b8;
-        }
-        
-        .drawer-actions {
-            padding: 1rem 1.5rem;
-        }
-        
-        .drawer-logout {
-            width: 100%;
-            padding: 0.75rem;
-            background: rgba(239, 68, 68, 0.1);
-            border: 1px solid #334155;
-            border-radius: 12px;
+        .logout-btn:hover {
             color: #ef4444;
-            font-weight: 600;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
         }
         
         /* Welcome Section */
@@ -271,65 +165,6 @@
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             gap: 1rem;
-        }
-        
-        /* Skeleton Loader */
-        .skeleton-card {
-            background: #1a2235;
-            border-radius: 20px;
-            padding: 1.2rem;
-            border: 1px solid #334155;
-        }
-        
-        .skeleton-icon {
-            width: 52px;
-            height: 52px;
-            border-radius: 14px;
-            background: linear-gradient(90deg, #2d3748 25%, #374151 50%, #2d3748 75%);
-            background-size: 200% 100%;
-            animation: shimmer 1.5s ease-in-out infinite;
-            margin-bottom: 1rem;
-        }
-        
-        .skeleton-title {
-            height: 20px;
-            width: 60%;
-            border-radius: 8px;
-            background: linear-gradient(90deg, #2d3748 25%, #374151 50%, #2d3748 75%);
-            background-size: 200% 100%;
-            animation: shimmer 1.5s ease-in-out infinite;
-            margin-bottom: 0.5rem;
-        }
-        
-        .skeleton-desc {
-            height: 40px;
-            width: 100%;
-            border-radius: 8px;
-            background: linear-gradient(90deg, #2d3748 25%, #374151 50%, #2d3748 75%);
-            background-size: 200% 100%;
-            animation: shimmer 1.5s ease-in-out infinite;
-            margin-bottom: 1rem;
-        }
-        
-        .skeleton-stats {
-            display: flex;
-            gap: 1rem;
-            padding-top: 0.8rem;
-            border-top: 1px solid #334155;
-        }
-        
-        .skeleton-stat {
-            height: 16px;
-            width: 80px;
-            border-radius: 6px;
-            background: linear-gradient(90deg, #2d3748 25%, #374151 50%, #2d3748 75%);
-            background-size: 200% 100%;
-            animation: shimmer 1.5s ease-in-out infinite;
-        }
-        
-        @keyframes shimmer {
-            0% { background-position: -200% 0; }
-            100% { background-position: 200% 0; }
         }
         
         /* Workspace Card */
@@ -404,22 +239,6 @@
             color: #10b981;
         }
         
-        /* Empty State */
-        .empty-state {
-            text-align: center;
-            padding: 3rem;
-            background: #1a2235;
-            border-radius: 20px;
-            border: 1px solid #334155;
-        }
-        
-        .empty-state i {
-            font-size: 3rem;
-            color: #64748b;
-            margin-bottom: 1rem;
-            display: block;
-        }
-        
         /* Toast */
         .toast-container {
             position: fixed;
@@ -456,47 +275,12 @@
             to { opacity: 1; transform: translateY(0); }
         }
         
-        /* Mobile Responsive */
+        /* Mobile */
         @media (max-width: 768px) {
             body { padding: 0.8rem; }
-            
-            .user-menu {
-                display: none;
-            }
-            
-            .mobile-menu-btn {
-                display: flex;
-            }
-            
-            .welcome-title {
-                font-size: 0.9rem;
-            }
-            
-            .workspace-grid {
-                grid-template-columns: 1fr;
-                gap: 0.8rem;
-            }
-            
-            .workspace-card {
-                padding: 1rem;
-            }
-            
-            .card-icon {
-                width: 44px;
-                height: 44px;
-                font-size: 1.4rem;
-            }
-        }
-        
-        @media (max-width: 480px) {
-            .logo-img {
-                width: 34px;
-                height: 34px;
-            }
-            
-            .logo-text h1 {
-                font-size: 0.85rem;
-            }
+            .workspace-grid { grid-template-columns: 1fr; }
+            .workspace-card { padding: 1rem; }
+            .card-icon { width: 44px; height: 44px; font-size: 1.4rem; }
         }
     </style>
 </head>
@@ -512,22 +296,16 @@
                 </div>
             </div>
             
-            <!-- Desktop User Menu -->
-            <div class="user-menu" id="desktopUserMenu">
-                <div class="user-avatar" id="desktopAvatar">KA</div>
+            <div class="user-menu" id="userMenu">
+                <div class="user-avatar" id="userAvatar">KA</div>
                 <div class="user-info-text">
-                    <div class="user-name" id="desktopName">Loading...</div>
-                    <div class="user-email" id="desktopEmail">...</div>
+                    <div class="user-name" id="userName">Loading...</div>
+                    <div class="user-email" id="userEmail">...</div>
                 </div>
                 <button class="logout-btn" onclick="logout()">
                     <i class="fas fa-sign-out-alt"></i>
                 </button>
             </div>
-            
-            <!-- Mobile Menu Button -->
-            <button class="mobile-menu-btn" id="mobileMenuBtn">
-                <i class="fas fa-bars"></i>
-            </button>
         </div>
         
         <!-- Welcome Section -->
@@ -542,48 +320,7 @@
         </div>
         
         <div class="workspace-grid" id="workspaceGrid">
-            <!-- Skeleton Loaders -->
-            <div class="skeleton-card">
-                <div class="skeleton-icon"></div>
-                <div class="skeleton-title"></div>
-                <div class="skeleton-desc"></div>
-                <div class="skeleton-stats">
-                    <div class="skeleton-stat"></div>
-                    <div class="skeleton-stat"></div>
-                </div>
-            </div>
-            <div class="skeleton-card">
-                <div class="skeleton-icon"></div>
-                <div class="skeleton-title"></div>
-                <div class="skeleton-desc"></div>
-                <div class="skeleton-stats">
-                    <div class="skeleton-stat"></div>
-                    <div class="skeleton-stat"></div>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Mobile Drawer -->
-    <div class="drawer-overlay" id="drawerOverlay">
-        <div class="drawer" id="drawer">
-            <div class="drawer-header">
-                <div class="drawer-avatar" id="drawerAvatar">KA</div>
-                <button class="drawer-close" id="drawerClose">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            <div class="drawer-user">
-                <div>
-                    <h4 id="drawerName">Loading...</h4>
-                    <p id="drawerEmail">...</p>
-                </div>
-            </div>
-            <div class="drawer-actions">
-                <button class="drawer-logout" onclick="logout()">
-                    <i class="fas fa-sign-out-alt"></i> Sign Out
-                </button>
-            </div>
+            <!-- Cards will be inserted here -->
         </div>
     </div>
     
@@ -598,17 +335,13 @@
             apiKey: "AIzaSyC7kppUyHUaPzeLBV62NEZWuHiuz1Kz0mA",
             authDomain: "mugera-e51cc.firebaseapp.com",
             databaseURL: "https://mugera-e51cc-default-rtdb.europe-west1.firebasedatabase.app",
-            projectId: "mugera-e51cc",
-            storageBucket: "mugera-e51cc.firebasestorage.app",
-            messagingSenderId: "1024868637509",
-            appId: "1:1024868637509:web:321faecddce8f11d9cfc2c"
+            projectId: "mugera-e51cc"
         };
         
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
-        const db = firebase.database();
         
-        // Workspace definitions (hardcoded - no Firebase needed)
+        // Workspace definitions - HARDCODED, no Firebase needed
         const WORKSPACES = [
             {
                 id: 'mugsndines',
@@ -630,9 +363,6 @@
             }
         ];
         
-        let currentUser = null;
-        let userWorkspaces = ['mugsndines', 'delivery-assistants']; // Default show all
-        
         function showToast(message, isError = false) {
             const container = document.getElementById('toastContainer');
             const toast = document.createElement('div');
@@ -647,69 +377,22 @@
             return name.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
         }
         
-        // Simple workspace detection - always shows both workspaces
-        // This prevents endless loading
-        async function getUserWorkspaces(userId, email) {
-            console.log('Getting workspaces for:', userId, email);
-            
-            // Default: show all workspaces so user always sees cards
-            // You can customize this based on email or Firebase data
-            const accessible = ['mugsndines', 'delivery-assistants'];
-            
-            // Optional: Check Firebase for specific assignment (with timeout)
-            try {
-                const timeoutPromise = new Promise((_, reject) => 
-                    setTimeout(() => reject(new Error('Timeout')), 2000)
-                );
-                
-                const userPromise = db.ref(`brandinn_users/${userId}`).once('value');
-                const snapshot = await Promise.race([userPromise, timeoutPromise]);
-                
-                if (snapshot && snapshot.exists()) {
-                    const userData = snapshot.val();
-                    const assigned = userData.workspace || userData.businessSlug;
-                    if (assigned === 'mugsndines') return ['mugsndines'];
-                    if (assigned === 'delivery') return ['delivery-assistants'];
-                }
-            } catch (e) {
-                console.log('Firebase check skipped or timeout - showing all workspaces');
-            }
-            
-            return accessible;
-        }
-        
-        // Render workspace cards
+        // Render workspace cards - happens immediately
         function renderWorkspaces() {
             const grid = document.getElementById('workspaceGrid');
-            const availableWorkspaces = WORKSPACES.filter(w => userWorkspaces.includes(w.id));
             
-            if (availableWorkspaces.length === 0) {
-                grid.innerHTML = `
-                    <div class="empty-state" style="grid-column: 1/-1;">
-                        <i class="fas fa-ban"></i>
-                        <p>No workspaces available for your account.</p>
+            grid.innerHTML = WORKSPACES.map(ws => `
+                <div class="workspace-card" onclick="navigateToWorkspace('${ws.path}')">
+                    <div class="card-icon ${ws.iconColor}">
+                        <i class="fas ${ws.icon}"></i>
                     </div>
-                `;
-                return;
-            }
-            
-            grid.innerHTML = availableWorkspaces.map(ws => {
-                const workspace = WORKSPACES.find(w => w.id === ws);
-                return `
-                    <div class="workspace-card" onclick="navigateToWorkspace('${workspace.path}')">
-                        <div class="card-icon ${workspace.iconColor}">
-                            <i class="fas ${workspace.icon}"></i>
-                        </div>
-                        <div class="card-title">${workspace.name}</div>
-                        <div class="card-desc">${workspace.description}</div>
-                        <div class="card-stats">
-                            ${workspace.features.map(f => `
-                                <div class="stat"><i class="fas fa-check-circle"></i> ${f}</div>
-                            `).join('')}
-                        </div>
+                    <div class="card-title">${ws.name}</div>
+                    <div class="card-desc">${ws.description}</div>
+                    <div class="card-stats">
+                        ${ws.features.map(f => `<div class="stat"><i class="fas fa-check-circle"></i> ${f}</div>`).join('')}
                     </div>
-                `;
-            }).join('');
+                </div>
+            `).join('');
         }
         
         window.navigateToWorkspace = function(path) {
@@ -731,37 +414,19 @@
             }
         }
         
-        // Update all UI elements with user data
+        // Update UI with user info
         function updateUserUI(user) {
             const displayName = user.displayName || user.email?.split('@')[0] || 'Assistant';
             const initials = getInitials(displayName);
             const email = user.email;
             
-            // Desktop
-            document.getElementById('desktopName').textContent = displayName;
-            document.getElementById('desktopEmail').textContent = email;
-            document.getElementById('desktopAvatar').textContent = initials;
-            
-            // Mobile drawer
-            document.getElementById('drawerName').textContent = displayName;
-            document.getElementById('drawerEmail').textContent = email;
-            document.getElementById('drawerAvatar').textContent = initials;
-            
-            // Welcome
+            document.getElementById('userName').textContent = displayName;
+            document.getElementById('userEmail').textContent = email;
+            document.getElementById('userAvatar').textContent = initials;
             document.getElementById('welcomeTitle').textContent = `Welcome back, ${displayName.split(' ')[0]}!`;
         }
         
-        // Mobile drawer controls
-        function openDrawer() {
-            document.getElementById('drawerOverlay').style.display = 'block';
-            document.getElementById('drawer').classList.add('open');
-        }
-        
-        function closeDrawer() {
-            document.getElementById('drawerOverlay').style.display = 'none';
-            document.getElementById('drawer').classList.remove('open');
-        }
-        
+        // Main load function
         async function loadUser() {
             const user = auth.currentUser;
             if (!user) {
@@ -769,35 +434,12 @@
                 return;
             }
             
-            currentUser = user;
+            // Update UI with user info
             updateUserUI(user);
             
-            // Load workspaces with timeout to prevent endless loading
-            try {
-                const timeoutPromise = new Promise((resolve) => {
-                    setTimeout(() => {
-                        console.log('Timeout - showing default workspaces');
-                        resolve(['mugsndines', 'delivery-assistants']);
-                    }, 3000);
-                });
-                
-                const workspacesPromise = getUserWorkspaces(user.uid, user.email);
-                userWorkspaces = await Promise.race([workspacesPromise, timeoutPromise]);
-                
-                renderWorkspaces();
-            } catch (error) {
-                console.error('Error loading workspaces, using defaults:', error);
-                userWorkspaces = ['mugsndines', 'delivery-assistants'];
-                renderWorkspaces();
-            }
+            // Render workspaces IMMEDIATELY - no Firebase calls
+            renderWorkspaces();
         }
-        
-        // Event listeners
-        document.getElementById('mobileMenuBtn').addEventListener('click', openDrawer);
-        document.getElementById('drawerClose').addEventListener('click', closeDrawer);
-        document.getElementById('drawerOverlay').addEventListener('click', function(e) {
-            if (e.target === this) closeDrawer();
-        });
         
         // Auth state listener
         auth.onAuthStateChanged((user) => {
@@ -807,6 +449,12 @@
                 window.location.href = '/index.html';
             }
         });
+        
+        // Render immediately if already logged in (before auth completes)
+        if (auth.currentUser) {
+            updateUserUI(auth.currentUser);
+            renderWorkspaces();
+        }
     </script>
 </body>
 </html>
