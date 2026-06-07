@@ -152,7 +152,7 @@
     <!-- Loading State -->
     <div class="auth-container hidden" id="loadingContainer">
         <div class="spinner"></div>
-        <p style="color: #94a3b8;">Redirecting to your workspace...</p>
+        <p style="color: #94a3b8;">Redirecting to your dashboard...</p>
     </div>
 
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
@@ -183,16 +183,6 @@
         const loginBtn = document.getElementById('loginBtn');
         const errorMsg = document.getElementById('errorMsg');
         
-        // WORKSPACE ROUTES - Map to your actual folder structure
-        const WORKSPACE_ROUTES = {
-            'mugsndines': '/workspaces/mugsndines/index.html',
-            'mugs': '/workspaces/mugsndines/index.html',
-            'kitchen': '/workspaces/mugsndines/index.html',
-            'delivery': '/workspaces/delivery-assistants/index.html',
-            'driver': '/workspaces/delivery-assistants/index.html',
-            'default': '/dashboard.html'
-        };
-        
         function showLoading(show) {
             if (show) {
                 authContainer.classList.add('hidden');
@@ -211,63 +201,7 @@
             }, 4000);
         }
         
-        // Determine user's workspace based on their data
-        async function getUserWorkspace(userId, email) {
-            try {
-                // METHOD 1: Check brandinn_users for assigned workspace
-                const userSnap = await db.ref(`brandinn_users/${userId}`).once('value');
-                if (userSnap.exists()) {
-                    const userData = userSnap.val();
-                    const workspace = userData.workspace || userData.businessSlug || userData.role;
-                    
-                    if (workspace && WORKSPACE_ROUTES[workspace.toLowerCase()]) {
-                        console.log(`Workspace from database: ${workspace}`);
-                        return WORKSPACE_ROUTES[workspace.toLowerCase()];
-                    }
-                }
-                
-                // METHOD 2: Check delivery_assistants collection
-                const driverSnap = await db.ref(`delivery_assistants/${userId}`).once('value');
-                if (driverSnap.exists() && driverSnap.val().verified === true) {
-                    console.log('User is a delivery assistant');
-                    return WORKSPACE_ROUTES['delivery'];
-                }
-                
-                // METHOD 3: Check email pattern
-                const emailLower = email.toLowerCase();
-                
-                if (emailLower.includes('kitchen') || emailLower.includes('chef') || emailLower.includes('mugs')) {
-                    console.log('Workspace by email: Mugs N Dines');
-                    return WORKSPACE_ROUTES['mugsndines'];
-                }
-                
-                if (emailLower.includes('driver') || emailLower.includes('delivery') || emailLower.includes('rider')) {
-                    console.log('Workspace by email: Delivery Assistant');
-                    return WORKSPACE_ROUTES['delivery'];
-                }
-                
-                // Default fallback - go to Mugs N Dines
-                console.log('No workspace detected, defaulting to Mugs N Dines');
-                return WORKSPACE_ROUTES['mugsndines'];
-                
-            } catch (error) {
-                console.error('Error detecting workspace:', error);
-                return WORKSPACE_ROUTES['mugsndines'];
-            }
-        }
-        
-        // Check if user is already logged in
-        async function checkExistingSession() {
-            const user = auth.currentUser;
-            if (user) {
-                console.log('Existing session found for:', user.email);
-                showLoading(true);
-                const redirectUrl = await getUserWorkspace(user.uid, user.email);
-                window.location.href = redirectUrl;
-            }
-        }
-        
-        // Handle login
+        // Handle login - redirects to workspace launcher dashboard
         window.handleLogin = async function() {
             const email = emailInput.value.trim();
             const password = passwordInput.value;
@@ -291,12 +225,10 @@
                 
                 console.log('Login successful for:', user.email);
                 
-                const redirectUrl = await getUserWorkspace(user.uid, user.email);
-                
-                console.log('Redirecting to:', redirectUrl);
-                
+                // Redirect to workspace launcher dashboard
+                // Users can choose which workspace to access from there
                 setTimeout(() => {
-                    window.location.href = redirectUrl;
+                    window.location.href = '/dashboard.html';
                 }, 500);
                 
             } catch (error) {
@@ -335,10 +267,12 @@
             if (e.key === 'Enter') handleLogin();
         });
         
-        // Check for existing session
+        // Check for existing session - redirect to dashboard if already logged in
         auth.onAuthStateChanged((user) => {
             if (user) {
-                checkExistingSession();
+                console.log('Existing session found for:', user.email);
+                // Already logged in, send to workspace launcher
+                window.location.href = '/dashboard.html';
             }
         });
     </script>
