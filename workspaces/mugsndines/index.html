@@ -128,9 +128,7 @@
             flex-direction: column;
         }
 
-        .drawer.open {
-            left: 0;
-        }
+        .drawer.open { left: 0; }
 
         .drawer-header {
             padding: 1.5rem;
@@ -220,9 +218,7 @@
             color: var(--orange-light);
         }
 
-        .drawer-nav-item i {
-            width: 20px;
-        }
+        .drawer-nav-item i { width: 20px; }
 
         .drawer-footer {
             padding: 1rem 1.5rem;
@@ -247,20 +243,9 @@
             margin: 0 auto;
         }
 
-        .page-header {
-            margin-bottom: 1rem;
-        }
-
-        .page-header h1 {
-            font-size: 1.2rem;
-            font-weight: 800;
-            color: #0f172a;
-        }
-
-        .page-header p {
-            font-size: 0.7rem;
-            color: var(--text-muted);
-        }
+        .page-header { margin-bottom: 1rem; }
+        .page-header h1 { font-size: 1.2rem; font-weight: 800; color: #0f172a; }
+        .page-header p { font-size: 0.7rem; color: var(--text-muted); }
 
         /* Stats Row */
         .stats-row {
@@ -278,17 +263,22 @@
             border: 1px solid var(--border-light);
         }
 
-        .stat-number {
-            font-size: 1.6rem;
-            font-weight: 800;
-            color: var(--orange-dark);
+        .stat-number { font-size: 1.6rem; font-weight: 800; color: var(--orange-dark); }
+        .stat-label { font-size: 0.6rem; color: var(--text-muted); text-transform: uppercase; }
+
+        /* No Kitchen State */
+        .no-kitchen-state {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            text-align: center;
+            border: 1px solid var(--border-light);
+            margin: 1rem 0;
         }
 
-        .stat-label {
-            font-size: 0.6rem;
-            color: var(--text-muted);
-            text-transform: uppercase;
-        }
+        .no-kitchen-state i { font-size: 3rem; color: var(--orange); margin-bottom: 1rem; display: block; }
+        .no-kitchen-state h3 { font-size: 1rem; margin-bottom: 0.5rem; }
+        .no-kitchen-state p { font-size: 0.7rem; color: var(--text-muted); }
 
         /* Tab Navigation */
         .tab-nav {
@@ -326,9 +316,7 @@
             font-size: 0.55rem;
         }
 
-        .tab-btn.active .tab-badge {
-            background: rgba(255,255,255,0.2);
-        }
+        .tab-btn.active .tab-badge { background: rgba(255,255,255,0.2); }
 
         /* Order List */
         .order-list {
@@ -345,19 +333,9 @@
             transition: all 0.2s;
         }
 
-        .order-card.new {
-            border-left: 3px solid var(--orange);
-        }
-
-        .order-card.preparing {
-            border-left: 3px solid var(--info);
-            background: #f0f9ff;
-        }
-
-        .order-card.ready {
-            border-left: 3px solid var(--success);
-            background: #f0fdf4;
-        }
+        .order-card.new { border-left: 3px solid var(--orange); }
+        .order-card.preparing { border-left: 3px solid var(--info); background: #f0f9ff; }
+        .order-card.ready { border-left: 3px solid var(--success); background: #f0fdf4; }
 
         .order-header {
             display: flex;
@@ -564,7 +542,7 @@
         <div class="logo">
             <img src="https://i.postimg.cc/rFfXDj3L/kazinni-removebg-preview(1).png" alt="Mugs N Dines" class="logo-img">
             <span class="logo-text">Mugs N Dines</span>
-            <span class="kitchen-badge" id="kitchenName">Kitchen</span>
+            <span class="kitchen-badge" id="kitchenName">Loading...</span>
         </div>
         <button class="menu-btn" id="menuBtn">
             <i class="fas fa-bars"></i>
@@ -659,8 +637,10 @@
         const db = firebase.database();
 
         let allOrders = {};
+        let allKitchens = {};
         let currentTab = 'new';
         let currentKitchenId = null;
+        let currentKitchenName = null;
 
         function showToast(msg, isError = false) {
             const toast = document.getElementById('toast');
@@ -672,20 +652,89 @@
 
         function escapeHtml(s) { if (!s) return ''; return String(s).replace(/[&<>]/g, m => m === '&' ? '&amp;' : m === '<' ? '&lt;' : '&gt;'); }
 
+        // Load kitchen assignment using multiple methods
         async function loadKitchenAssignment() {
             const user = auth.currentUser;
-            if (!user) return;
+            if (!user) return null;
 
+            console.log('Looking up kitchen for user:', user.email);
+
+            // METHOD 1: Check mugs_n_dines_kitchen_staff by email
             try {
-                const staffSnap = await db.ref(`mugs_n_dines_kitchen_staff`).orderByChild('email').equalTo(user.email).once('value');
+                const staffSnap = await db.ref('mugs_n_dines_kitchen_staff').orderByChild('email').equalTo(user.email).once('value');
                 if (staffSnap.exists()) {
                     const staffData = Object.values(staffSnap.val())[0];
                     currentKitchenId = staffData.kitchenId;
-                    document.getElementById('kitchenName').textContent = staffData.kitchenName || 'Kitchen';
-                } else {
-                    document.getElementById('kitchenName').textContent = 'Staff';
+                    currentKitchenName = staffData.kitchenName;
+                    console.log('Found kitchen via staff record:', currentKitchenName);
+                    document.getElementById('kitchenName').textContent = currentKitchenName || 'Kitchen';
+                    return true;
                 }
-            } catch(e) { console.error(e); }
+            } catch(e) { console.error('Staff lookup error:', e); }
+
+            // METHOD 2: Check users node for kitchenId
+            try {
+                const userSnap = await db.ref(`users/${user.uid}`).once('value');
+                if (userSnap.exists() && userSnap.val().kitchenId) {
+                    currentKitchenId = userSnap.val().kitchenId;
+                    const kitchenSnap = await db.ref(`mugs_n_dines_franchises/${currentKitchenId}`).once('value');
+                    currentKitchenName = kitchenSnap.val()?.name || 'Kitchen';
+                    console.log('Found kitchen via users node:', currentKitchenName);
+                    document.getElementById('kitchenName').textContent = currentKitchenName;
+                    return true;
+                }
+            } catch(e) { console.error('Users node lookup error:', e); }
+
+            // METHOD 3: Check if user's email matches a kitchen's email
+            try {
+                const kitchensSnap = await db.ref('mugs_n_dines_franchises').orderByChild('email').equalTo(user.email).once('value');
+                if (kitchensSnap.exists()) {
+                    const kitchenEntry = Object.entries(kitchensSnap.val())[0];
+                    currentKitchenId = kitchenEntry[0];
+                    currentKitchenName = kitchenEntry[1].name;
+                    console.log('Found kitchen via email match:', currentKitchenName);
+                    document.getElementById('kitchenName').textContent = currentKitchenName;
+                    return true;
+                }
+            } catch(e) { console.error('Kitchen email lookup error:', e); }
+
+            // METHOD 4: Check email pattern (for testing)
+            const emailLower = user.email.toLowerCase();
+            if (emailLower.includes('kitchen') || emailLower.includes('chef')) {
+                // Try to get first active kitchen as fallback
+                const kitchensSnap = await db.ref('mugs_n_dines_franchises').once('value');
+                const kitchens = kitchensSnap.val() || {};
+                const firstKitchen = Object.entries(kitchens).find(([_, k]) => k.status !== 'inactive');
+                if (firstKitchen) {
+                    currentKitchenId = firstKitchen[0];
+                    currentKitchenName = firstKitchen[1].name;
+                    console.log('Fallback to first kitchen:', currentKitchenName);
+                    document.getElementById('kitchenName').textContent = currentKitchenName;
+                    return true;
+                }
+            }
+
+            console.log('No kitchen assignment found');
+            document.getElementById('kitchenName').textContent = 'No Kitchen';
+            showNoKitchenState();
+            return false;
+        }
+
+        function showNoKitchenState() {
+            const container = document.querySelector('.container');
+            const noKitchenHtml = `
+                <div class="no-kitchen-state">
+                    <i class="fas fa-store-alt-slash"></i>
+                    <h3>No Kitchen Assigned</h3>
+                    <p>Your account is not linked to any kitchen.</p>
+                    <p style="font-size:0.65rem; margin-top:0.5rem;">Please contact your administrator to assign you to a kitchen.</p>
+                </div>
+            `;
+            // Insert after stats row
+            const statsRow = document.querySelector('.stats-row');
+            if (statsRow && !document.querySelector('.no-kitchen-state')) {
+                statsRow.insertAdjacentHTML('afterend', noKitchenHtml);
+            }
         }
 
         function updateStats() {
@@ -703,6 +752,8 @@
         }
 
         function renderOrders() {
+            if (!currentKitchenId) return;
+            
             const orders = Object.values(allOrders).filter(o => o && o.kitchenId === currentKitchenId);
             
             const newOrders = orders.filter(o => o.status === 'new');
@@ -842,9 +893,12 @@
             document.getElementById('drawerName').textContent = user.displayName || user.email?.split('@')[0] || 'Staff';
             document.getElementById('drawerEmail').textContent = user.email;
             document.getElementById('drawerAvatar').textContent = (user.displayName || user.email?.[0] || 'S').substring(0,2).toUpperCase();
-            await loadKitchenAssignment();
-            await loadOrders();
-            db.ref('mugs_n_dines_orders').on('value', () => loadOrders());
+            
+            const assigned = await loadKitchenAssignment();
+            if (assigned) {
+                await loadOrders();
+                db.ref('mugs_n_dines_orders').on('value', () => loadOrders());
+            }
         });
     </script>
 </body>
