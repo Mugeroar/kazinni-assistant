@@ -3,285 +3,344 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>KazInni · Deliveries Dashboard</title>
+    <title>KazInni | Workspace Launcher</title>
     
-    <meta name="theme-color" content="#0f172a">
+    <meta name="theme-color" content="#f97316">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="KazInni">
     
+    <link rel="manifest" href="/manifest.json">
     <link rel="icon" type="image/png" href="https://i.postimg.cc/rFfXDj3L/kazinni-removebg-preview(1).png">
     <link rel="apple-touch-icon" href="https://i.postimg.cc/rFfXDj3L/kazinni-removebg-preview(1).png">
-    <link rel="manifest" href="/manifest.json">
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
     
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        :root {
-            --bg-primary: #f8fafc; --bg-secondary: #f1f5f9; --bg-card: #ffffff;
-            --text-primary: #1e293b; --text-secondary: #475569; --text-muted: #94a3b8;
-            --border: #e2e8f0;
-            --gold: #f59e0b; --gold-dark: #b45309; --purple: #8b5cf6;
-            --green: #22c55e; --red: #ef4444; --warning: #f59e0b; --info: #3b82f6; --orange: #f97316;
-            --pink: #ec4899; --emerald: #10b981; --indigo: #6366f1; --amber: #d97706;
-            --shadow-sm: 0 1px 2px rgba(0,0,0,0.05); --shadow: 0 4px 6px -1px rgba(0,0,0,0.07);
-            --shadow-md: 0 10px 15px -3px rgba(0,0,0,0.1);
-            --safe-bottom: env(safe-area-inset-bottom, 20px); --safe-top: env(safe-area-inset-top, 0px);
-        }
-
+        
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: var(--bg-primary); color: var(--text-primary);
-            min-height: 100dvh; overflow-x: hidden; -webkit-tap-highlight-color: transparent;
-            -webkit-font-smoothing: antialiased; display: flex; flex-direction: column;
-            font-size: 0.8rem; line-height: 1.4;
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(145deg, #0a0f1e 0%, #111827 100%);
+            min-height: 100vh;
+            padding: 1.5rem;
         }
-
-        @keyframes shimmer {
-            0% { background-position: -200% 0; } 100% { background-position: 200% 0; }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
         }
-        .skeleton {
-            background: linear-gradient(90deg, #e5e7eb 25%, #f3f4f6 50%, #e5e7eb 75%);
-            background-size: 200% 100%; animation: shimmer 1.5s ease-in-out infinite;
-            border-radius: 6px;
-        }
-        .skeleton-text { height: 1rem; margin-bottom: 0.5rem; }
-        .skeleton-text-sm { height: 0.7rem; width: 60%; }
-        .skeleton-card {
-            background: var(--bg-card); border: 1px solid var(--border);
-            border-radius: 12px; padding: 0.8rem;
-        }
-
-        .app-container { position: relative; z-index: 1; min-height: 100dvh; display: flex; flex-direction: column; }
-
+        
+        /* Header */
         .header {
-            position: sticky; top: 0; z-index: 1000;
-            background: rgba(255,255,255,0.92); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
-            border-bottom: 1px solid var(--border); padding: 0 0.8rem; padding-top: var(--safe-top);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
         }
-        .header-inner { display: flex; align-items: center; justify-content: space-between; height: 52px; gap: 8px; }
-        .brand { display: flex; align-items: center; gap: 8px; text-decoration: none; }
-        .brand-logo { width: 30px; height: 30px; border-radius: 8px; object-fit: contain; background: white; box-shadow: var(--shadow-sm); }
-        .brand-name { font-size: 0.85rem; font-weight: 800; background: linear-gradient(135deg, #8b5cf6, #f59e0b); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .header-right { display: flex; align-items: center; gap: 6px; }
-        .header-stat { display: flex; align-items: center; gap: 4px; font-size: 0.65rem; color: var(--text-secondary); background: var(--bg-secondary); border: 1px solid var(--border); padding: 0.25rem 0.55rem; border-radius: 12px; white-space: nowrap; }
-        .header-stat i { font-size: 0.4rem; }
-        .header-stat span { font-weight: 700; color: var(--gold-dark); }
-        .user-btn { display: flex; align-items: center; gap: 6px; background: var(--bg-secondary); border: 1px solid var(--border); padding: 0.2rem 0.6rem 0.2rem 0.3rem; border-radius: 20px; cursor: pointer; font-family: 'Inter', sans-serif; color: var(--text-primary); font-size: 0.7rem; position: relative; }
-        .user-avatar { width: 26px; height: 26px; border-radius: 50%; background: linear-gradient(135deg, #8b5cf6, #f59e0b); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.6rem; color: white; }
-        .user-dropdown { position: absolute; top: 110%; right: 0; background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; padding: 0.3rem; min-width: 140px; display: none; z-index: 10; box-shadow: var(--shadow-md); }
-        .user-btn:hover .user-dropdown { display: block; }
-        .dropdown-item { padding: 0.45rem 0.6rem; border-radius: 6px; cursor: pointer; display: flex; align-items: center; gap: 6px; font-size: 0.7rem; color: var(--text-secondary); transition: 0.2s; border: none; background: none; width: 100%; font-family: 'Inter', sans-serif; }
-        .dropdown-item:hover { background: rgba(245,158,11,0.08); color: var(--gold-dark); }
-        .dropdown-item.danger:hover { background: rgba(239,68,68,0.08); color: var(--red); }
-
-        .tab-nav {
-            display: flex; gap: 0; background: var(--bg-primary); border-bottom: 1px solid var(--border);
-            padding: 0 0.5rem; overflow-x: auto; scrollbar-width: none;
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
-        .tab-nav::-webkit-scrollbar { display: none; }
-        .tab-btn {
-            padding: 0.5rem 0.7rem; border: none; background: transparent; color: var(--text-muted);
-            font-weight: 600; font-size: 0.65rem; cursor: pointer; white-space: nowrap;
-            font-family: 'Inter', sans-serif; border-bottom: 2px solid transparent; transition: all 0.2s;
-            display: flex; align-items: center; gap: 5px;
+        
+        .logo-img {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            object-fit: contain;
+            background: white;
         }
-        .tab-btn.active { color: var(--gold-dark); border-bottom-color: var(--gold); }
-        .tab-btn .tab-badge { font-size: 0.5rem; padding: 1px 6px; border-radius: 8px; font-weight: 700; }
-        .tab-btn.active .tab-badge { background: rgba(245,158,11,0.12); color: var(--gold-dark); }
-        .tab-btn:not(.active) .tab-badge { background: rgba(148,163,184,0.1); color: var(--text-muted); }
-
-        .main-content { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
-        .tab-content { display: none; flex: 1; flex-direction: column; overflow: hidden; }
-        .tab-content.active { display: flex; }
-
-        .delivery-list { flex: 1; overflow-y: auto; padding: 0.5rem 0.8rem 1rem; display: flex; flex-direction: column; gap: 0.5rem; -webkit-overflow-scrolling: touch; }
-
-        .delivery-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 0.8rem; box-shadow: var(--shadow-sm); transition: all 0.2s; cursor: pointer; }
-        .delivery-card:active { transform: scale(0.98); }
-        .delivery-card.new-task { border-left: 3px solid var(--gold); }
-        .delivery-card.active-task { border-left: 3px solid var(--orange); }
-        .delivery-card.done-task { opacity: 0.6; }
-
-        .delivery-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.35rem; }
-        .delivery-id { font-size: 0.6rem; color: var(--text-muted); font-weight: 600; display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
-        .new-badge { font-size: 0.5rem; padding: 1px 5px; border-radius: 5px; background: var(--gold); color: white; font-weight: 700; }
-
-        .delivery-status { font-size: 0.55rem; padding: 2px 7px; border-radius: 7px; font-weight: 700; text-transform: capitalize; white-space: nowrap; }
-        .status-new { background: rgba(245,158,11,0.1); color: #92400e; }
-        .status-active { background: rgba(249,115,22,0.1); color: #c2410c; }
-        .status-done { background: rgba(34,197,94,0.1); color: #166534; }
-
-        .delivery-client { font-weight: 700; font-size: 0.78rem; margin-bottom: 0.1rem; }
-        .delivery-phone { font-size: 0.68rem; color: var(--text-secondary); margin-bottom: 0.25rem; }
-        .delivery-route { font-size: 0.68rem; color: var(--text-secondary); margin-bottom: 0.35rem; line-height: 1.4; }
-        .delivery-route i { color: var(--gold); margin: 0 3px; font-size: 0.45rem; }
-        .delivery-amount { font-size: 0.7rem; font-weight: 700; margin-bottom: 0.35rem; color: var(--gold-dark); }
-
-        .pickup-info-badge {
-            background: rgba(99,102,241,0.06); border: 1px solid rgba(99,102,241,0.15);
-            border-radius: 8px; padding: 0.4rem 0.6rem; margin-bottom: 0.35rem;
-            font-size: 0.65rem; color: var(--indigo); display: flex; align-items: center; gap: 6px;
+        
+        .logo-text h1 {
+            font-size: 1.3rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #f97316, #f59e0b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
-        .pickup-info-badge i { color: #6366f1; font-size: 0.7rem; }
-        .pickup-info-badge strong { color: #4f46e5; }
-
-        .delivery-actions { display: flex; gap: 5px; flex-wrap: wrap; }
-        .action-btn { padding: 0.35rem 0.65rem; border-radius: 8px; border: none; font-size: 0.62rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 3px; transition: all 0.2s; font-family: 'Inter', sans-serif; min-height: 30px; }
-        .btn-start { background: rgba(249,115,22,0.1); color: #c2410c; }
-        .btn-start:hover { background: var(--orange); color: white; }
-        .btn-done { background: rgba(34,197,94,0.1); color: #166534; }
-        .btn-done:hover { background: var(--green); color: white; }
-        .btn-nav { background: rgba(59,130,246,0.1); color: #1d4ed8; }
-        .btn-nav:hover { background: var(--info); color: white; }
-        .btn-cancel { background: rgba(148,163,184,0.1); color: var(--text-secondary); }
-        .btn-cancel:hover { background: var(--text-muted); color: white; }
-
-        .empty-list { text-align: center; padding: 2.5rem 1rem; color: var(--text-muted); font-size: 0.72rem; }
-        .empty-list i { font-size: 1.5rem; margin-bottom: 0.5rem; opacity: 0.4; display: block; }
-
-        .state-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 2rem 1.5rem; text-align: center; margin: 1rem; box-shadow: var(--shadow-sm); }
-        .state-card i { font-size: 2rem; margin-bottom: 0.8rem; display: block; }
-        .state-card h2 { font-size: 1rem; font-weight: 700; margin-bottom: 0.3rem; }
-        .state-card p { font-size: 0.72rem; color: var(--text-muted); }
-        .state-pending i { color: var(--warning); } .state-pending h2 { color: var(--gold-dark); }
-        .state-rejected i { color: var(--red); } .state-rejected h2 { color: var(--red); }
-
-        .notification-banner { position: fixed; top: 60px; left: 8px; right: 8px; background: var(--bg-card); border: 1px solid var(--gold); border-radius: 12px; padding: 0.7rem 0.9rem; z-index: 3000; display: flex; align-items: center; gap: 8px; font-size: 0.68rem; color: var(--text-primary); box-shadow: var(--shadow-md); }
-        .notification-banner i { color: var(--gold); font-size: 1rem; }
-        .notification-banner button { margin-left: auto; padding: 0.35rem 0.7rem; border-radius: 8px; border: none; background: var(--gold); color: white; font-weight: 700; font-size: 0.6rem; cursor: pointer; font-family: 'Inter', sans-serif; }
-        .notification-banner .close-banner { background: transparent; color: var(--text-muted); font-size: 0.7rem; padding: 0.2rem; }
-
-        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.4); z-index: 4000; display: none; align-items: flex-end; justify-content: center; }
-        .modal-overlay.show { display: flex; }
-        .modal { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px 16px 0 0; padding: 1.2rem; width: 100%; max-width: 420px; max-height: 80vh; overflow-y: auto; box-shadow: 0 -10px 40px rgba(0,0,0,0.15); animation: slideUp 0.25s ease; }
-        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
-        .modal-header { display: flex; align-items: center; gap: 8px; margin-bottom: 1rem; padding-bottom: 0.7rem; border-bottom: 1px solid var(--border); }
-        .modal-header i { font-size: 1.1rem; color: var(--gold); }
-        .modal-header h3 { font-size: 0.9rem; font-weight: 700; }
-        .modal-close { margin-left: auto; background: none; border: none; color: var(--text-muted); font-size: 1rem; cursor: pointer; padding: 4px; }
-        .modal p { font-size: 0.72rem; color: var(--text-secondary); margin-bottom: 0.8rem; }
-        .modal .form-group { margin-bottom: 0.7rem; }
-        .modal label { display: block; font-size: 0.6rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; margin-bottom: 0.2rem; }
-        .modal input, .modal textarea { width: 100%; padding: 0.5rem 0.7rem; border-radius: 10px; border: 1.5px solid var(--border); background: var(--bg-secondary); color: var(--text-primary); font-size: 0.75rem; font-family: 'Inter', sans-serif; }
-        .modal .btn-row { display: flex; gap: 6px; justify-content: flex-end; margin-top: 1rem; flex-wrap: wrap; }
-        .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 0.5rem; }
-        .detail-item { background: var(--bg-secondary); padding: 0.5rem; border-radius: 8px; }
-        .detail-item strong { display: block; font-size: 0.55rem; color: var(--text-muted); text-transform: uppercase; margin-bottom: 0.1rem; }
-        .detail-item span { font-size: 0.72rem; color: var(--text-primary); }
-        .detail-item.full { grid-column: 1 / -1; }
-        .detail-item.pickup-highlight { background: rgba(99,102,241,0.06); border: 1px solid rgba(99,102,241,0.15); }
-
-        .contents-section { margin-top: 0.5rem; background: rgba(245,158,11,0.05); border: 1px dashed var(--gold); border-radius: 10px; padding: 0.7rem; }
-        .contents-section h4 { font-size: 0.65rem; font-weight: 700; color: var(--gold-dark); margin-bottom: 0.4rem; display: flex; align-items: center; gap: 5px; }
-        .contents-list { list-style: none; padding: 0; }
-        .contents-list li { font-size: 0.68rem; color: var(--text-secondary); padding: 0.35rem 0; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
-        .contents-list li:last-child { border-bottom: none; }
-        .contents-list .item-name { font-weight: 500; color: var(--text-primary); }
-        .contents-list .item-details { text-align: right; }
-        .contents-list .item-qty { color: var(--gold-dark); font-weight: 600; margin-right: 8px; }
-        .contents-list .item-price { color: var(--text-muted); font-size: 0.6rem; }
-
-        .toast-container { position: fixed; top: calc(60px + var(--safe-top)); right: 8px; left: 8px; z-index: 5000; display: flex; flex-direction: column; align-items: flex-end; pointer-events: none; }
-        .toast { background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; padding: 0.6rem 0.9rem; margin-bottom: 0.3rem; box-shadow: var(--shadow-md); display: flex; align-items: center; gap: 6px; font-size: 0.7rem; animation: toastIn 0.3s ease; pointer-events: auto; }
-        .toast.success { border-left: 3px solid var(--green); } .toast.success i { color: var(--green); }
-        .toast.error { border-left: 3px solid var(--red); } .toast.error i { color: var(--red); }
-        @keyframes toastIn { from { opacity: 0; transform: translateX(40px); } to { opacity: 1; transform: translateX(0); } }
-
-        .hidden { display: none !important; }
-        .footer { text-align: center; padding: 0.5rem 1rem calc(0.5rem + var(--safe-bottom)); color: var(--text-muted); font-size: 0.55rem; border-top: 1px solid var(--border); }
-        .footer span { color: var(--gold-dark); font-weight: 600; }
-
-        .tab-icon-pickup { color: var(--orange); }
-        .tab-icon-dsog { color: var(--pink); }
-        .tab-icon-fusion { color: var(--emerald); }
-        .tab-icon-brandinn { color: var(--purple); }
-        .tab-icon-heritage { color: #d946ef; }
-        .tab-icon-heritagemkt { color: var(--amber); }
+        
+        .logo-text p {
+            font-size: 0.7rem;
+            color: #94a3b8;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: #1a2235;
+            padding: 0.5rem 1rem;
+            border-radius: 40px;
+            border: 1px solid #334155;
+        }
+        
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, #f97316, #f59e0b);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: white;
+        }
+        
+        .user-details {
+            text-align: right;
+        }
+        
+        .user-name {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: white;
+        }
+        
+        .user-email {
+            font-size: 0.65rem;
+            color: #94a3b8;
+        }
+        
+        .logout-btn {
+            background: none;
+            border: none;
+            color: #94a3b8;
+            cursor: pointer;
+            font-size: 0.9rem;
+            padding: 0.3rem;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+        
+        .logout-btn:hover {
+            color: #ef4444;
+            background: rgba(239, 68, 68, 0.1);
+        }
+        
+        /* Welcome Section */
+        .welcome-section {
+            background: linear-gradient(135deg, #1e293b, #0f172a);
+            border-radius: 24px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border: 1px solid #334155;
+        }
+        
+        .welcome-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 0.3rem;
+        }
+        
+        .welcome-text {
+            font-size: 0.75rem;
+            color: #94a3b8;
+        }
+        
+        /* Workspace Grid */
+        .section-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 1rem;
+        }
+        
+        .workspace-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1.2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .workspace-card {
+            background: #1a2235;
+            border-radius: 20px;
+            padding: 1.2rem;
+            border: 1px solid #334155;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: block;
+        }
+        
+        .workspace-card:hover {
+            transform: translateY(-4px);
+            border-color: #f97316;
+            box-shadow: 0 20px 35px -10px rgba(249, 115, 22, 0.2);
+        }
+        
+        .card-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+        }
+        
+        .card-icon.mugs {
+            background: linear-gradient(135deg, rgba(249, 115, 22, 0.2), rgba(245, 158, 11, 0.1));
+            color: #f97316;
+        }
+        
+        .card-icon.delivery {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(139, 92, 246, 0.1));
+            color: #a78bfa;
+        }
+        
+        .card-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 0.3rem;
+        }
+        
+        .card-desc {
+            font-size: 0.7rem;
+            color: #94a3b8;
+            margin-bottom: 1rem;
+            line-height: 1.4;
+        }
+        
+        .card-stats {
+            display: flex;
+            gap: 1rem;
+            padding-top: 0.8rem;
+            border-top: 1px solid #334155;
+        }
+        
+        .stat {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.65rem;
+            color: #64748b;
+        }
+        
+        .stat i {
+            font-size: 0.55rem;
+        }
+        
+        .stat.active {
+            color: #10b981;
+        }
+        
+        /* Loading State */
+        .loading {
+            text-align: center;
+            padding: 3rem;
+        }
+        
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid #334155;
+            border-top-color: #f97316;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto 1rem;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Toast */
+        .toast-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+        
+        .toast {
+            background: #1a2235;
+            border-left: 3px solid #10b981;
+            padding: 0.75rem 1rem;
+            border-radius: 12px;
+            margin-top: 0.5rem;
+            font-size: 0.75rem;
+            color: white;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            animation: slideIn 0.3s ease;
+        }
+        
+        .toast.error {
+            border-left-color: #ef4444;
+        }
+        
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(100%); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            body { padding: 1rem; }
+            .workspace-grid { grid-template-columns: 1fr; }
+            .header { flex-direction: column; text-align: center; }
+            .user-info { width: 100%; justify-content: space-between; }
+        }
     </style>
 </head>
 <body>
-    <div class="toast-container" id="toastContainer"></div>
-
-    <div class="notification-banner hidden" id="notificationBanner">
-        <i class="fas fa-bell"></i> <span>Get alerts even when screen is off</span>
-        <button onclick="enableNotifications()">Enable</button>
-        <button class="close-banner" onclick="$('notificationBanner').classList.add('hidden')"><i class="fas fa-times"></i></button>
-    </div>
-
-    <!-- Pickup Modal -->
-    <div class="modal-overlay" id="pickupModal"><div class="modal">
-        <div class="modal-header"><i class="fas fa-box"></i><h3>Start Delivery</h3><button class="modal-close" onclick="closePickupModal()"><i class="fas fa-times"></i></button></div>
-        <p>Confirm you have the package and are starting the delivery.</p>
-        <div class="form-group"><label>Notes</label><textarea id="pickupNotes" rows="2" placeholder="Any notes..."></textarea></div>
-        <div class="btn-row"><button class="action-btn btn-cancel" onclick="closePickupModal()">Cancel</button><button class="action-btn btn-start" onclick="confirmPickup()"><i class="fas fa-check"></i> Start Delivery</button></div>
-    </div></div>
-
-    <!-- Complete Modal -->
-    <div class="modal-overlay" id="completeModal"><div class="modal">
-        <div class="modal-header"><i class="fas fa-check-circle"></i><h3>Complete Delivery</h3><button class="modal-close" onclick="closeCompleteModal()"><i class="fas fa-times"></i></button></div>
-        <div class="form-group"><label>Receiver Name *</label><input type="text" id="proofName" placeholder="Who received it?"></div>
-        <div class="form-group"><label>Notes</label><textarea id="proofNotes" rows="2" placeholder="Any notes..."></textarea></div>
-        <div class="btn-row"><button class="action-btn btn-cancel" onclick="closeCompleteModal()">Cancel</button><button class="action-btn btn-done" onclick="completeDelivery()"><i class="fas fa-flag-checkered"></i> Mark Delivered</button></div>
-    </div></div>
-
-    <!-- Details Modal -->
-    <div class="modal-overlay" id="detailsModal"><div class="modal">
-        <div class="modal-header"><i class="fas fa-info-circle"></i><h3 id="detailsTitle">Details</h3><button class="modal-close" onclick="closeDetailsModal()"><i class="fas fa-times"></i></button></div>
-        <div id="detailsBody"></div>
-        <div class="btn-row"><button class="action-btn btn-nav" onclick="navigateFromModal()" id="navFromModalBtn" style="display:none;"><i class="fas fa-map-marked-alt"></i> Navigate</button><button class="action-btn btn-cancel" onclick="closeDetailsModal()">Close</button></div>
-    </div></div>
-
-    <div class="app-container">
-        <header class="header">
-            <div class="header-inner">
-                <a href="index.html" class="brand"><img src="https://i.postimg.cc/rFfXDj3L/kazinni-removebg-preview(1).png" alt="KazInni" class="brand-logo"><span class="brand-name">KazInni</span></a>
-                <div class="header-right">
-                    <div class="header-stat"><i class="fas fa-circle" style="color:var(--green);font-size:0.4rem;"></i><span id="headerActiveCount">0</span> active</div>
-                    <div class="user-btn"><div class="user-avatar" id="userAvatar">KA</div><span id="userName">Asst</span>
-                        <div class="user-dropdown">
-                            <button class="dropdown-item" onclick="refreshAll()"><i class="fas fa-sync-alt"></i> Refresh</button>
-                            <button class="dropdown-item danger" onclick="handleLogout()"><i class="fas fa-sign-out-alt"></i> Sign Out</button>
-                        </div>
-                    </div>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo">
+                <img src="https://i.postimg.cc/rFfXDj3L/kazinni-removebg-preview(1).png" alt="KazInni" class="logo-img">
+                <div class="logo-text">
+                    <h1>KazInni Assistant</h1>
+                    <p>Workspace Launcher</p>
                 </div>
             </div>
-        </header>
-
-        <nav class="tab-nav" id="tabNav"></nav>
-
-        <div class="main-content">
-            <div id="pendingState" class="hidden" style="padding:1rem;"><div class="state-card state-pending"><i class="fas fa-clock"></i><h2>Verification Pending</h2><p>Your application is under review.</p></div></div>
-            <div id="rejectedState" class="hidden" style="padding:1rem;"><div class="state-card state-rejected"><i class="fas fa-times-circle"></i><h2>Not Approved</h2><p id="rejectionMsg">Contact support.</p></div></div>
-            <div id="tabContents">
-                <!-- Skeleton loading -->
-                <div class="tab-content active" id="tab-all"><div class="delivery-list" id="list-all">
-                    <div class="skeleton-card"><div class="skeleton skeleton-text" style="width:60%;"></div><div class="skeleton skeleton-text-sm" style="width:80%;margin-top:0.5rem;"></div><div class="skeleton skeleton-text-sm" style="width:50%;"></div></div>
-                    <div class="skeleton-card"><div class="skeleton skeleton-text" style="width:50%;"></div><div class="skeleton skeleton-text-sm" style="width:70%;margin-top:0.5rem;"></div><div class="skeleton skeleton-text-sm" style="width:60%;"></div></div>
-                    <div class="skeleton-card"><div class="skeleton skeleton-text" style="width:65%;"></div><div class="skeleton skeleton-text-sm" style="width:75%;margin-top:0.5rem;"></div><div class="skeleton skeleton-text-sm" style="width:40%;"></div></div>
-                </div></div>
+            <div class="user-info" id="userInfo">
+                <div class="user-avatar" id="userAvatar">KA</div>
+                <div class="user-details">
+                    <div class="user-name" id="userName">Loading...</div>
+                    <div class="user-email" id="userEmail">...</div>
+                </div>
+                <button class="logout-btn" onclick="logout()" title="Sign Out">
+                    <i class="fas fa-sign-out-alt"></i>
+                </button>
             </div>
         </div>
-
-        <footer class="footer">&copy; 2026 <span>KazInni</span> · Deliveries</footer>
+        
+        <!-- Welcome Section -->
+        <div class="welcome-section">
+            <div class="welcome-title" id="welcomeTitle">Welcome back!</div>
+            <div class="welcome-text">Select a workspace below to access your dashboard. You have access to the following workspaces based on your account.</div>
+        </div>
+        
+        <!-- Workspaces Section -->
+        <div class="section-title">
+            <i class="fas fa-th-large"></i> Available Workspaces
+        </div>
+        
+        <div class="workspace-grid" id="workspaceGrid">
+            <div class="loading">
+                <div class="spinner"></div>
+                <p style="color:#94a3b8;">Loading your workspaces...</p>
+            </div>
+        </div>
     </div>
+    
+    <div class="toast-container" id="toastContainer"></div>
 
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 
     <script>
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/service-worker.js')
-                    .then(reg => console.log('SW registered:', reg.scope))
-                    .catch(err => console.log('SW registration failed:', err));
-            });
-        }
-
         const firebaseConfig = {
             apiKey: "AIzaSyC7kppUyHUaPzeLBV62NEZWuHiuz1Kz0mA",
             authDomain: "mugera-e51cc.firebaseapp.com",
@@ -291,350 +350,178 @@
             messagingSenderId: "1024868637509",
             appId: "1:1024868637509:web:321faecddce8f11d9cfc2c"
         };
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.database();
-        const auth = firebase.auth();
-
-        const $ = id => document.getElementById(id);
-        let currentUser = null, activeTab = 'all';
-        let currentActionId = null, currentActionSource = null, currentNavAddress = null;
-        let allDeliveries = [];
-        let allSuppliers = {};
-        let notificationPermission = 'default', notificationsEnabled = false;
-        let seenIds = new Set();
-        let audioCtx = null;
-
-        async function loadSuppliers() {
-            try {
-                const snap = await db.ref('fusion_foods_suppliers').once('value');
-                allSuppliers = snap.val() || {};
-            } catch(e) { console.warn('Could not load suppliers:', e); }
-        }
-
-        function getSupplierName(supplierId) {
-            if (!supplierId) return null;
-            const supplier = allSuppliers[supplierId];
-            return supplier ? supplier.name : null;
-        }
-
-        function extractDeliveryContents(rawItem, sourceKey) {
-            if (rawItem.products && Array.isArray(rawItem.products) && rawItem.products.length > 0) {
-                return rawItem.products.map(p => ({ name: p.name || p.productName || 'Item', quantity: p.quantity || 1, price: p.price || p.unitPrice || 0 }));
-            }
-            if (rawItem.items && Array.isArray(rawItem.items) && rawItem.items.length > 0) {
-                return rawItem.items.map(i => ({ name: i.name || i.title || 'Item', quantity: i.quantity || 1, price: i.price || 0 }));
-            }
-            if (sourceKey === 'pickup' && rawItem.package) {
-                const details = [];
-                if (rawItem.package.type) details.push({ name: 'Package Type', value: rawItem.package.type });
-                if (rawItem.package.description) details.push({ name: 'Description', value: rawItem.package.description });
-                if (details.length > 0) return details;
-            }
-            return null;
-        }
-
-        function formatContentsForDisplay(contents) {
-            if (!contents || !Array.isArray(contents) || contents.length === 0) return '';
-            let html = '<div class="contents-section"><h4><i class="fas fa-box-open"></i> 📦 What You\'re Delivering</h4><ul class="contents-list">';
-            for (const item of contents) {
-                if (item.name && item.value) {
-                    html += `<li><span class="item-name">${escapeHtml(item.name)}</span><span class="item-details"><strong>${escapeHtml(String(item.value))}</strong></span></li>`;
-                } else if (item.name) {
-                    html += `<li><span class="item-name">${escapeHtml(item.name)}</span><span class="item-details">${item.quantity ? `<span class="item-qty">×${item.quantity}</span>` : ''}${item.price ? `<span class="item-price">KSh ${Number(item.price).toLocaleString()}</span>` : ''}</span></li>`;
-                }
-            }
-            html += '</ul></div>';
-            return html;
-        }
-
-        const sources = [
-            { key: 'pickup', path: 'pickup_deliveries', label: 'Pick-Up', icon: 'fa-box', iconClass: 'tab-icon-pickup', assignedField: 'assignedTo', customerField: 'userName', phoneField: 'userPhone', pickupField: 'pickup.address', deliveryField: 'delivery.address', amountField: 'fare.total', statusField: 'status', instructionsField: 'package.instructions', newStatuses: ['assigned','pending'], activeStatuses: ['out-for-delivery','in_progress'], doneStatus: 'delivered' },
-            { key: 'dsog', path: 'dsog_fashion_orders', label: 'DSOG', icon: 'fa-tshirt', iconClass: 'tab-icon-dsog', assignedField: 'driverId', customerField: 'customerName', phoneField: 'customerPhone', pickupField: 'pickupLocation', deliveryField: 'location', amountField: 'total', statusField: 'status', instructionsField: 'notes', newStatuses: ['ready','assigned'], activeStatuses: ['shipped','out-for-delivery'], doneStatus: 'delivered' },
-            { key: 'fusion', path: 'fusion_foods_orders', label: 'Fusion', icon: 'fa-utensils', iconClass: 'tab-icon-fusion', assignedField: 'driverId', customerField: 'restaurantName', phoneField: 'phone', pickupField: 'pickupLocation', deliveryField: 'location', amountField: 'total', statusField: 'status', instructionsField: 'notes', newStatuses: ['ready','assigned'], activeStatuses: ['shipped','out-for-delivery'], doneStatus: 'delivered' },
-            { key: 'brandinn', path: 'brandinn_print_orders', label: 'Print', icon: 'fa-print', iconClass: 'tab-icon-brandinn', assignedField: 'driverId', customerField: 'customerName', phoneField: 'customerPhone', pickupField: 'pickupLocation', deliveryField: 'location', amountField: 'total', statusField: 'status', instructionsField: 'notes', newStatuses: ['ready','pending'], activeStatuses: ['in-progress'], doneStatus: 'delivered' },
-            { key: 'heritage', path: 'heritage_listings', label: 'Heritage Ads', icon: 'fa-landmark', iconClass: 'tab-icon-heritage', assignedField: 'driverId', customerField: 'partnerName', phoneField: '', pickupField: 'pickupLocation', deliveryField: 'location', amountField: 'price', statusField: 'status', instructionsField: 'notes', newStatuses: ['active'], activeStatuses: [], doneStatus: 'expired' },
-            { key: 'heritagemkt', path: 'heritage_orders', label: 'Heritage Mkt', icon: 'fa-store', iconClass: 'tab-icon-heritagemkt', assignedField: 'driverId', customerField: 'customerName', phoneField: 'customerPhone', pickupField: 'location', deliveryField: 'location', amountField: 'total', statusField: 'status', instructionsField: 'notes', newStatuses: ['new','pending'], activeStatuses: ['linked','shipped'], doneStatus: 'completed' }
-        ];
-
-        function getNested(obj, path) { if (!obj || !path) return null; return path.split('.').reduce((o, k) => (o || {})[k], obj) || null; }
         
-        function extractPickupInfo(item, src) {
-            const pickupName = item.pickupName || '';
-            const pickupLocation = item.pickupLocation || '';
-            const pickupPhone = item.pickupPhone || '';
-            const pickupSupplierId = item.pickupSupplierId || '';
-            if (pickupSupplierId && allSuppliers[pickupSupplierId]) {
-                const s = allSuppliers[pickupSupplierId];
-                return { name: pickupName || s.name || '', location: pickupLocation || s.location || '', phone: pickupPhone || s.phone || '', supplierId: pickupSupplierId };
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.database();
+        
+        // Workspace definitions
+        const WORKSPACES = [
+            {
+                id: 'mugsndines',
+                name: 'Mugs N Dines',
+                description: 'Restaurant & Kitchen Management - Manage orders, menu, recipes, and catering events.',
+                icon: 'fa-utensils',
+                iconColor: 'mugs',
+                path: '/workspaces/mugsndines/index.html',
+                features: ['Order Management', 'Menu & Recipes', 'Catering Events', 'Kitchen Staff']
+            },
+            {
+                id: 'delivery-assistants',
+                name: 'Delivery Assistants',
+                description: 'Delivery Management - Accept deliveries, track shipments, and manage routes.',
+                icon: 'fa-truck-fast',
+                iconColor: 'delivery',
+                path: '/workspaces/delivery-assistants/index.html',
+                features: ['Accept Deliveries', 'Track Shipments', 'Navigation', 'Delivery Proof']
             }
-            return { name: pickupName, location: pickupLocation, phone: pickupPhone, supplierId: pickupSupplierId };
+        ];
+        
+        let currentUser = null;
+        let userWorkspaces = [];
+        
+        function showToast(message, isError = false) {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `toast ${isError ? 'error' : ''}`;
+            toast.innerHTML = `<i class="fas fa-${isError ? 'exclamation-circle' : 'check-circle'}"></i> ${message}`;
+            container.appendChild(toast);
+            setTimeout(() => toast.remove(), 3500);
         }
-
-        function formatPickupDisplay(info) {
-            if (!info || (!info.name && !info.location)) return '';
-            let html = '<div class="pickup-info-badge"><i class="fas fa-warehouse"></i> <strong>Pickup:</strong> ';
-            if (info.name) { html += escapeHtml(info.name); if (info.location) html += ` — ${escapeHtml(info.location)}`; }
-            else if (info.location) html += escapeHtml(info.location);
-            if (info.phone) html += ` · 📞 ${escapeHtml(info.phone)}`;
-            html += '</div>';
-            return html;
+        
+        function getInitials(name) {
+            if (!name) return 'KA';
+            return name.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
         }
-
-        function toast(msg, type = 'info') {
-            const icons = { success: 'fa-check-circle', error: 'fa-exclamation-circle' };
-            const t = document.createElement('div'); t.className = `toast ${type}`; t.innerHTML = `<i class="fas ${icons[type]}"></i> ${msg}`;
-            $('toastContainer').appendChild(t); setTimeout(() => { t.style.opacity = '0'; t.style.transition = '0.3s'; setTimeout(() => t.remove(), 300); }, 3500);
-        }
-
-        function getInitials(n) { return n ? String(n).split(' ').map(w => w[0]).join('').toUpperCase().substring(0,2) : 'KA'; }
-        function escapeHtml(s) { if (!s) return ''; const d = document.createElement('div'); d.textContent = String(s); return d.innerHTML; }
-
-        function initAudio() { if (!audioCtx) { try { audioCtx = new (window.AudioContext||window.webkitAudioContext)(); } catch(e) {} } if (audioCtx?.state === 'suspended') audioCtx.resume(); }
-        function playNotificationSound() { if (!audioCtx) return; try { const now = audioCtx.currentTime; [{ freq: 880, start: 0, duration: 0.2, vol: 0.4 },{ freq: 1108.73, start: 0.2, duration: 0.25, vol: 0.5 }].forEach(n => { const o = audioCtx.createOscillator(); const g = audioCtx.createGain(); o.connect(g); g.connect(audioCtx.destination); o.frequency.setValueAtTime(n.freq, now + n.start); g.gain.setValueAtTime(0, now + n.start); g.gain.linearRampToValueAtTime(n.vol, now + n.start + 0.03); g.gain.exponentialRampToValueAtTime(0.01, now + n.start + n.duration); o.start(now + n.start); o.stop(now + n.start + n.duration); }); } catch(e) {} }
-        function vibrateStrong() { if (navigator.vibrate) navigator.vibrate([300, 150, 300]); }
-
-        function enableNotifications() {
-            initAudio();
-            if ('Notification' in window) {
-                Notification.requestPermission().then(p => {
-                    notificationPermission = p; notificationsEnabled = p === 'granted';
-                    if (p === 'granted') { toast('Notifications enabled!', 'success'); $('notificationBanner').classList.add('hidden'); }
-                    else { toast('Permission denied', 'warning'); }
-                });
-            }
-        }
-
-        function sendBrowserNotification(title, body) {
-            if (!notificationsEnabled || notificationPermission !== 'granted') return;
+        
+        // Determine which workspaces user has access to
+        async function getUserWorkspaces(userId, email) {
+            const accessibleWorkspaces = [];
+            
             try {
-                if ('serviceWorker' in navigator) {
-                    navigator.serviceWorker.ready.then(reg => reg.showNotification(title, { body, icon: 'https://i.postimg.cc/rFfXDj3L/kazinni-removebg-preview(1).png', badge: 'https://i.postimg.cc/rFfXDj3L/kazinni-removebg-preview(1).png', tag: 'kazinni', requireInteraction: true, vibrate: [300,150,300] }));
+                // Check brandinn_users for assigned workspace
+                const userSnap = await db.ref(`brandinn_users/${userId}`).once('value');
+                let assignedWorkspace = null;
+                
+                if (userSnap.exists()) {
+                    const userData = userSnap.val();
+                    assignedWorkspace = userData.workspace || userData.businessSlug || userData.role;
                 }
-            } catch(e) {}
-        }
-
-        function notifyNewRequest(label, details) { initAudio(); playNotificationSound(); vibrateStrong(); sendBrowserNotification('KazInni · New Request', details); toast(`🔔 ${details}`, 'info'); }
-
-        // ========== AUTH ==========
-        auth.onAuthStateChanged(async user => {
-            if (!user) { 
-                // FIXED: Redirect to landing page (index.html) not './'
-                window.location.href = 'index.html'; 
-                return; 
+                
+                // Check if user is a delivery assistant
+                const driverSnap = await db.ref(`delivery_assistants/${userId}`).once('value');
+                const isDriver = driverSnap.exists() && driverSnap.val().verified === true;
+                
+                // Check email patterns
+                const emailLower = email.toLowerCase();
+                const isKitchenEmail = emailLower.includes('kitchen') || emailLower.includes('chef') || emailLower.includes('mugs');
+                const isDeliveryEmail = emailLower.includes('driver') || emailLower.includes('delivery') || emailLower.includes('rider');
+                
+                // Determine access based on all factors
+                if (assignedWorkspace === 'mugsndines' || isKitchenEmail || (!isDriver && !isDeliveryEmail)) {
+                    accessibleWorkspaces.push('mugsndines');
+                }
+                
+                if (assignedWorkspace === 'delivery' || isDriver || isDeliveryEmail) {
+                    accessibleWorkspaces.push('delivery-assistants');
+                }
+                
+                // If no specific access determined, give both (for admins/testing)
+                if (accessibleWorkspaces.length === 0) {
+                    accessibleWorkspaces.push('mugsndines', 'delivery-assistants');
+                }
+                
+                return accessibleWorkspaces;
+                
+            } catch (error) {
+                console.error('Error determining workspaces:', error);
+                return ['mugsndines']; // Default fallback
             }
-            currentUser = user;
-            $('userAvatar').textContent = getInitials(user.displayName || user.email);
-            $('userName').textContent = (user.displayName || user.email?.split('@')[0] || 'Asst').substring(0,10);
-            
-            await loadSuppliers();
-            
-            if ('Notification' in window) { notificationPermission = Notification.permission; notificationsEnabled = notificationPermission === 'granted'; if (notificationPermission === 'default') setTimeout(() => $('notificationBanner').classList.remove('hidden'), 1500); }
-            await checkRegistration();
-        });
-
-        async function checkRegistration() {
-            try {
-                const nodes = ['delivery_assistants', 'pickme_drivers', 'taskers'];
-                let verified = false;
-                for (const node of nodes) {
-                    const snap = await db.ref(`${node}/${currentUser.uid}`).once('value');
-                    if (snap.exists() && snap.val().verified === true) { verified = true; break; }
-                }
-                if (verified) {
-                    renderTabs();
-                    activeTab = 'all';
-                    switchTab('all');
-                    loadAllDeliveries();
-                    setupListeners();
-                } else {
-                    // Check if rejected
-                    const snap = await db.ref(`delivery_assistants/${currentUser.uid}`).once('value');
-                    if (snap.exists() && snap.val().status === 'rejected') {
-                        $('rejectedState').classList.remove('hidden');
-                        if (snap.val().rejectionReason) $('rejectionMsg').textContent = snap.val().rejectionReason;
-                    } else {
-                        $('pendingState').classList.remove('hidden');
-                    }
-                }
-            } catch(e) { $('pendingState').classList.remove('hidden'); }
         }
-
-        function renderTabs() {
-            let html = `<button class="tab-btn active" data-tab="all" onclick="switchTab('all')"><i class="fas fa-layer-group"></i> All <span class="tab-badge" id="badge-all">0</span></button>`;
-            sources.forEach(s => {
-                html += `<button class="tab-btn" data-tab="${s.key}" onclick="switchTab('${s.key}')"><i class="fas ${s.icon} ${s.iconClass}"></i> ${s.label} <span class="tab-badge" id="badge-${s.key}">0</span></button>`;
-            });
-            $('tabNav').innerHTML = html;
+        
+        // Render workspace cards
+        function renderWorkspaces() {
+            const grid = document.getElementById('workspaceGrid');
+            const availableWorkspaces = WORKSPACES.filter(w => userWorkspaces.includes(w.id));
             
-            let content = '';
-            ['all', ...sources.map(s => s.key)].forEach(key => {
-                content += `<div class="tab-content${key === 'all' ? ' active' : ''}" id="tab-${key}"><div class="delivery-list" id="list-${key}"><div class="empty-list"><i class="fas fa-sync-alt fa-spin"></i><p>Loading...</p></div></div></div>`;
-            });
-            $('tabContents').innerHTML = content;
-        }
-
-        window.switchTab = function(key) {
-            activeTab = key;
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === key));
-            document.querySelectorAll('.tab-content').forEach(c => c.classList.toggle('active', c.id === `tab-${key}`));
-            renderCurrentList();
-        };
-
-        async function loadAllDeliveries() {
-            if (!currentUser) return;
-            const all = [];
-            for (const src of sources) {
-                try {
-                    const snap = await db.ref(src.path).once('value');
-                    const data = snap.val() || {};
-                    for (const [id, item] of Object.entries(data)) {
-                        const compositeKey = `${src.key}_${id}`;
-                        const assigned = getNested(item, src.assignedField) || item.assignedTo || item.driverId || '';
-                        if (assigned === currentUser.uid) {
-                            const status = getNested(item, src.statusField) || item.status || 'pending';
-                            const contents = extractDeliveryContents(item, src.key);
-                            const pickupInfo = extractPickupInfo(item, src);
-                            let pickupDisplay = getNested(item, src.pickupField) || item.pickup?.address || '';
-                            if (pickupInfo.name || pickupInfo.location) pickupDisplay = pickupInfo.name || pickupInfo.location;
-                            
-                            all.push({
-                                compositeKey, id, sourceKey: src.key, sourceLabel: src.label,
-                                customer: getNested(item, src.customerField) || item.customerName || item.userName || 'Customer',
-                                phone: getNested(item, src.phoneField) || item.customerPhone || item.userPhone || item.phone || '',
-                                pickup: pickupDisplay,
-                                delivery: getNested(item, src.deliveryField) || item.delivery?.address || item.location || '—',
-                                amount: getNested(item, src.amountField) || item.total || item.amount || item.fare?.total || 0,
-                                contents, pickupInfo, status, src, rawData: item,
-                                isNew: src.newStatuses.includes(status),
-                                isActive: src.activeStatuses.includes(status),
-                                isDone: status === src.doneStatus
-                            });
-                        }
-                    }
-                } catch(e) { console.warn(`Error loading ${src.path}:`, e); }
+            if (availableWorkspaces.length === 0) {
+                grid.innerHTML = `
+                    <div style="text-align: center; padding: 3rem; background: #1a2235; border-radius: 20px;">
+                        <i class="fas fa-ban" style="font-size: 3rem; color: #64748b; margin-bottom: 1rem; display: block;"></i>
+                        <p style="color: #94a3b8;">No workspaces available for your account.</p>
+                        <p style="font-size: 0.7rem; color: #64748b; margin-top: 0.5rem;">Please contact your administrator.</p>
+                    </div>
+                `;
+                return;
             }
-            allDeliveries = all.filter((d, i, arr) => arr.findIndex(x => x.compositeKey === d.compositeKey) === i);
-            allDeliveries.sort((a, b) => {
-                if (a.isNew && !b.isNew) return -1; if (!a.isNew && b.isNew) return 1;
-                return (b.rawData?.createdAt || b.rawData?.timestamp || 0) - (a.rawData?.createdAt || a.rawData?.timestamp || 0);
-            });
-            renderCurrentList();
-            updateBadges();
-        }
-
-        function renderCurrentList() {
-            if (activeTab === 'all') renderList('all', [...allDeliveries]);
-            else renderList(activeTab, allDeliveries.filter(d => d.sourceKey === activeTab));
-        }
-
-        function renderList(tabKey, items) {
-            const list = $(`list-${tabKey}`); if (!list) return;
-            if (!items.length) { list.innerHTML = '<div class="empty-list"><i class="fas fa-check-circle"></i><p>No deliveries here</p></div>'; return; }
-            list.innerHTML = items.map(d => {
-                const cardClass = d.isNew ? 'new-task' : (d.isActive ? 'active-task' : 'done-task');
-                const statusClass = d.isNew ? 'status-new' : (d.isActive ? 'status-active' : 'status-done');
-                const itemCountBadge = d.contents && d.contents.length > 0 ? `<span style="font-size:0.5rem;background:rgba(245,158,11,0.15);padding:1px 6px;border-radius:8px;margin-left:4px;">📦 ${d.contents.length}</span>` : '';
-                const pickupHtml = formatPickupDisplay(d.pickupInfo);
-                let actions = `<button class="action-btn btn-cancel" onclick="event.stopPropagation();viewDetails('${d.compositeKey}')">📋 Info</button>`;
-                if (d.isNew) actions += `<button class="action-btn btn-start" onclick="event.stopPropagation();startDelivery('${d.id}','${d.src.path}')"><i class="fas fa-truck"></i> Start</button>`;
-                if (d.isActive) { actions += `<button class="action-btn btn-nav" onclick="event.stopPropagation();navigate('${encodeURIComponent(d.pickupInfo?.location || d.delivery)}')"><i class="fas fa-map-marked-alt"></i> Nav</button>`; actions += `<button class="action-btn btn-done" onclick="event.stopPropagation();markDone('${d.id}','${d.src.path}','${d.src.doneStatus}')"><i class="fas fa-check"></i> Done</button>`; }
-                return `<div class="delivery-card ${cardClass}" onclick="viewDetails('${d.compositeKey}')">
-                    <div class="delivery-top"><span class="delivery-id">#${d.id.slice(-6)}${d.isNew?' <span class="new-badge">NEW</span>':''}${itemCountBadge}</span><span class="delivery-status ${statusClass}">${d.status.replace(/-/g,' ')}</span></div>
-                    <div class="delivery-client">${escapeHtml(d.customer)}</div>
-                    ${d.phone ? `<div class="delivery-phone">📞 ${escapeHtml(d.phone)}</div>` : ''}
-                    ${pickupHtml}
-                    <div class="delivery-route">📍 ${escapeHtml(String(d.pickup).substring(0,35))} <i class="fas fa-arrow-right"></i> ${escapeHtml(String(d.delivery).substring(0,35))}</div>
-                    <div class="delivery-amount">${d.amount ? '💰 KSh '+Number(d.amount).toLocaleString() : ''}</div>
-                    <div class="delivery-actions" onclick="event.stopPropagation()">${actions}</div>
-                </div>`;
+            
+            grid.innerHTML = availableWorkspaces.map(ws => {
+                const workspace = WORKSPACES.find(w => w.id === ws);
+                return `
+                    <div class="workspace-card" onclick="navigateToWorkspace('${workspace.path}')">
+                        <div class="card-icon ${workspace.iconColor}">
+                            <i class="fas ${workspace.icon}"></i>
+                        </div>
+                        <div class="card-title">${workspace.name}</div>
+                        <div class="card-desc">${workspace.description}</div>
+                        <div class="card-stats">
+                            ${workspace.features.slice(0, 2).map(f => `
+                                <div class="stat"><i class="fas fa-check-circle"></i> ${f}</div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
             }).join('');
         }
-
-        function setupListeners() {
-            for (const src of sources) {
-                db.ref(src.path).on('child_added', snap => {
-                    const compositeKey = `${src.key}_${snap.key}`;
-                    if (seenIds.has(compositeKey)) return;
-                    const item = snap.val();
-                    const assigned = getNested(item, src.assignedField) || item.assignedTo || item.driverId || '';
-                    if (assigned === currentUser?.uid) {
-                        seenIds.add(compositeKey);
-                        const customerName = getNested(item, src.customerField) || item.customerName || item.userName || 'Customer';
-                        notifyNewRequest(src.label, `New ${src.label} delivery for ${customerName}`);
-                        loadAllDeliveries();
-                    }
-                });
-                db.ref(src.path).on('child_changed', () => loadAllDeliveries());
-            }
-        }
-
-        function updateBadges() {
-            let total = 0;
-            for (const s of sources) {
-                const count = allDeliveries.filter(d => d.sourceKey === s.key && (d.isNew || d.isActive)).length;
-                const badge = $(`badge-${s.key}`); if (badge) badge.textContent = count;
-                total += count;
-            }
-            const allBadge = $('badge-all'); if (allBadge) allBadge.textContent = total;
-            $('headerActiveCount').textContent = total;
-        }
-
-        // ========== ACTIONS ==========
-        window.startDelivery = (id, sourcePath) => { currentActionId = id; currentActionSource = sourcePath; $('pickupModal').classList.add('show'); };
-        window.closePickupModal = () => $('pickupModal').classList.remove('show');
-        window.confirmPickup = async () => {
-            if (!currentActionId || !currentActionSource) return;
-            try { 
-                const src = sources.find(s => s.path === currentActionSource); 
-                await db.ref(`${currentActionSource}/${currentActionId}`).update({ status: src?.activeStatuses[0] || 'shipped', startedAt: firebase.database.ServerValue.TIMESTAMP, pickupNotes: $('pickupNotes').value.trim(), updatedAt: firebase.database.ServerValue.TIMESTAMP }); 
-                toast('Delivery started!', 'success'); closePickupModal(); loadAllDeliveries(); 
-            } catch(e) { toast('Error starting delivery', 'error'); }
-        };
-
-        window.markDone = (id, sourcePath, doneStatus) => { currentActionId = id; currentActionSource = sourcePath; $('completeModal').classList.add('show'); };
-        window.closeCompleteModal = () => $('completeModal').classList.remove('show');
-        window.completeDelivery = async () => {
-            const name = $('proofName').value.trim(); 
-            if (!name) { toast('Enter receiver name', 'warning'); return; }
-            if (!currentActionId || !currentActionSource) return;
-            try { 
-                const src = sources.find(s => s.path === currentActionSource); 
-                await db.ref(`${currentActionSource}/${currentActionId}`).update({ status: src?.doneStatus || 'delivered', deliveredAt: firebase.database.ServerValue.TIMESTAMP, deliveryProof: { receiverName: name, notes: $('proofNotes').value.trim() }, updatedAt: firebase.database.ServerValue.TIMESTAMP }); 
-                toast('Delivery completed!', 'success'); closeCompleteModal(); loadAllDeliveries(); 
-            } catch(e) { toast('Error completing delivery', 'error'); }
-        };
-
-        window.viewDetails = (compositeKey) => {
-            const d = allDeliveries.find(x => x.compositeKey === compositeKey); if (!d) return;
-            currentNavAddress = d.pickupInfo?.location || d.pickup;
-            $('detailsTitle').textContent = `${d.sourceLabel} · #${d.id.slice(-6)}`;
-            $('navFromModalBtn').style.display = (d.pickupInfo?.location || d.delivery) ? 'inline-flex' : 'none';
-            let contentsHtml = '';
-            if (d.contents && d.contents.length > 0) contentsHtml = formatContentsForDisplay(d.contents);
-            let pickupDetailHtml = '';
-            if (d.pickupInfo && (d.pickupInfo.name || d.pickupInfo.location)) {
-                pickupDetailHtml = `<div class="detail-item full pickup-highlight"><strong>🏭 Pickup Location (Supplier)</strong><span>${escapeHtml(d.pickupInfo.name||'')}${d.pickupInfo.location?' — '+escapeHtml(d.pickupInfo.location):''}</span>${d.pickupInfo.phone?`<br><span style="font-size:0.65rem;color:var(--indigo);">📞 ${escapeHtml(d.pickupInfo.phone)}</span>`:''}</div>`;
-            }
-            $('detailsBody').innerHTML = `<div class="detail-grid">
-                <div class="detail-item"><strong>Customer</strong><span>${escapeHtml(d.customer)}</span></div>
-                <div class="detail-item"><strong>Phone</strong><span style="color:var(--info);cursor:pointer;" onclick="window.open('tel:${escapeHtml(d.phone)}')">📞 ${escapeHtml(d.phone||'N/A')}</span></div>
-                <div class="detail-item"><strong>Status</strong><span class="delivery-status ${d.isNew?'status-new':d.isActive?'status-active':'status-done'}">${d.status.replace(/-/g,' ')}</span></div>
-                <div class="detail-item"><strong>Amount</strong><span>${d.amount?'KSh '+Number(d.amount).toLocaleString():'—'}</span></div>
-                ${pickupDetailHtml}
-                <div class="detail-item full"><strong>📍 Pickup Address</strong><span>${escapeHtml(d.pickup)}</span></div>
-                <div class="detail-item full"><strong>📍 Dropoff Location</strong><span>${escapeHtml(d.delivery)}</span></div>
-                ${d.instructions ? `<div class="detail-item full"><strong>📝 Instructions</strong><span>${escapeHtml(d.instructions)}</span></div>` : ''}
-            </div>${contentsHtml}`;
-            $('detailsModal').classList.add('show');
+        
+        window.navigateToWorkspace = function(path) {
+            showToast(`Opening workspace...`, false);
+            setTimeout(() => {
+                window.location.href = path;
+            }, 300);
         };
         
-        window.closeDetailsModal = () => $('detailsModal').classList.remove('show');
-        window.navigateFromModal = () => { if (currentNavAddress) window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(currentNavAddress)}`, '_blank'); };
-        window.navigate = (addr) => window.open(`https://www.google.com/maps/search/?api=1&query=${addr}`, '_blank');
-        // FIXED: Logout redirects to index.html
-        window.handleLogout = async () => { if (confirm('Sign out?')) { await auth.signOut(); window.location.href = 'index.html'; } };
-        window.refreshAll = () => { loadAllDeliveries(); toast('Refreshed!', 'success'); };
-        window.enableNotifications = enableNotifications;
+        async function logout() {
+            try {
+                await auth.signOut();
+                showToast('Signed out successfully', false);
+                setTimeout(() => {
+                    window.location.href = '/index.html';
+                }, 500);
+            } catch (error) {
+                showToast('Error signing out', true);
+            }
+        }
+        
+        async function loadUser() {
+            const user = auth.currentUser;
+            if (!user) {
+                window.location.href = '/index.html';
+                return;
+            }
+            
+            currentUser = user;
+            
+            // Update UI with user info
+            const displayName = user.displayName || user.email?.split('@')[0] || 'Assistant';
+            document.getElementById('userName').textContent = displayName;
+            document.getElementById('userEmail').textContent = user.email;
+            document.getElementById('userAvatar').textContent = getInitials(displayName);
+            document.getElementById('welcomeTitle').textContent = `Welcome back, ${displayName.split(' ')[0]}!`;
+            
+            // Get user's accessible workspaces
+            userWorkspaces = await getUserWorkspaces(user.uid, user.email);
+            renderWorkspaces();
+        }
+        
+        // Auth state listener
+        auth.onAuthStateChanged((user) => {
+            if (user) {
+                loadUser();
+            } else {
+                window.location.href = '/index.html';
+            }
+        });
     </script>
 </body>
 </html>
