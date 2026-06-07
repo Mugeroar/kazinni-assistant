@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Mugs N Dines | Kitchen Management</title>
+    <title>Kitchen Dashboard | Mugs N Dines</title>
     
     <meta name="theme-color" content="#f97316">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -82,27 +82,27 @@
             -webkit-text-fill-color: transparent;
         }
 
-        /* Menu Button (Hamburger) */
+        .kitchen-badge {
+            background: var(--orange);
+            color: white;
+            padding: 0.2rem 0.6rem;
+            border-radius: 12px;
+            font-size: 0.6rem;
+            font-weight: 700;
+        }
+
         .menu-btn {
             background: none;
             border: none;
-            font-size: 1.5rem;
+            font-size: 1.3rem;
             cursor: pointer;
             color: var(--orange-dark);
-            display: flex;
-            align-items: center;
-            justify-content: center;
             width: 40px;
             height: 40px;
             border-radius: 10px;
-            transition: background 0.2s;
         }
 
-        .menu-btn:hover {
-            background: rgba(249, 115, 22, 0.1);
-        }
-
-        /* Side Drawer Menu */
+        /* Drawer Menu */
         .drawer-overlay {
             position: fixed;
             top: 0;
@@ -126,7 +126,6 @@
             z-index: 1001;
             display: flex;
             flex-direction: column;
-            box-shadow: 2px 0 20px rgba(0, 0, 0, 0.3);
         }
 
         .drawer.open {
@@ -137,8 +136,8 @@
             padding: 1.5rem;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             display: flex;
-            align-items: center;
             justify-content: space-between;
+            align-items: center;
         }
 
         .drawer-logo {
@@ -148,16 +147,15 @@
         }
 
         .drawer-logo-img {
-            width: 36px;
-            height: 36px;
-            border-radius: 10px;
-            object-fit: contain;
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
             background: white;
         }
 
         .drawer-logo-text {
             font-weight: 800;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             background: linear-gradient(135deg, #f97316, #fb923c);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -180,26 +178,24 @@
         }
 
         .drawer-avatar {
-            width: 48px;
-            height: 48px;
+            width: 44px;
+            height: 44px;
             background: linear-gradient(135deg, #f97316, #c2410c);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: 700;
-            font-size: 1rem;
             color: white;
         }
 
         .drawer-user-info h4 {
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             color: white;
-            margin-bottom: 0.2rem;
         }
 
         .drawer-user-info p {
-            font-size: 0.65rem;
+            font-size: 0.6rem;
             color: #94a3b8;
         }
 
@@ -212,11 +208,10 @@
             display: flex;
             align-items: center;
             gap: 12px;
-            padding: 0.75rem 1.5rem;
+            padding: 0.7rem 1.5rem;
             color: #cbd5e1;
             text-decoration: none;
-            font-size: 0.85rem;
-            font-weight: 500;
+            font-size: 0.8rem;
             transition: all 0.2s;
         }
 
@@ -227,21 +222,6 @@
 
         .drawer-nav-item i {
             width: 20px;
-            font-size: 1rem;
-        }
-
-        .drawer-nav-divider {
-            height: 1px;
-            background: rgba(255, 255, 255, 0.1);
-            margin: 0.5rem 1.5rem;
-        }
-
-        .drawer-nav-label {
-            font-size: 0.6rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: #64748b;
-            padding: 0.5rem 1.5rem;
         }
 
         .drawer-footer {
@@ -258,261 +238,218 @@
             color: #ef4444;
             font-weight: 600;
             cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            transition: all 0.2s;
-        }
-
-        .drawer-logout:hover {
-            background: rgba(239, 68, 68, 0.2);
         }
 
         /* Main Content */
         .container {
             padding: 1rem;
-            max-width: 1400px;
+            max-width: 1200px;
             margin: 0 auto;
         }
 
         .page-header {
-            margin-bottom: 1.2rem;
+            margin-bottom: 1rem;
         }
 
         .page-header h1 {
-            font-size: 1.3rem;
+            font-size: 1.2rem;
             font-weight: 800;
             color: #0f172a;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .page-header h1 i {
-            color: var(--orange-dark);
-            background: white;
-            padding: 8px;
-            border-radius: 12px;
-            box-shadow: 0 6px 14px rgba(249, 115, 22, 0.08);
         }
 
         .page-header p {
-            color: #64748b;
-            font-size: 0.8rem;
-            margin-top: 0.3rem;
+            font-size: 0.7rem;
+            color: var(--text-muted);
         }
 
-        /* Stats Grid */
-        .stats-grid {
+        /* Stats Row */
+        .stats-row {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-            gap: 12px;
-            margin-bottom: 1.5rem;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 1rem;
         }
 
         .stat-card {
             background: white;
             border-radius: 16px;
-            padding: 1rem;
+            padding: 0.8rem;
+            text-align: center;
             border: 1px solid var(--border-light);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .stat-left h4 {
-            font-size: 0.6rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            color: #64748b;
-            margin-bottom: 0.2rem;
         }
 
         .stat-number {
             font-size: 1.6rem;
             font-weight: 800;
-            color: #0f172a;
-            line-height: 1.1;
+            color: var(--orange-dark);
         }
 
-        .stat-icon {
-            width: 42px;
-            height: 42px;
-            background: #fff7ed;
-            border-radius: 12px;
+        .stat-label {
+            font-size: 0.6rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+
+        /* Tab Navigation */
+        .tab-nav {
             display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #c2410c;
-            font-size: 1.2rem;
-        }
-
-        /* Action Grid */
-        .action-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 14px;
-            margin-bottom: 1.5rem;
-        }
-
-        .action-card {
-            background: white;
-            border-radius: 20px;
-            padding: 1.2rem;
-            border: 1px solid var(--border-light);
-            transition: all 0.25s;
-            text-decoration: none;
-            color: inherit;
-            display: block;
-            cursor: pointer;
-        }
-
-        .action-card:hover {
-            transform: translateY(-3px);
-            border-color: #fb923c;
-            box-shadow: 0 16px 30px -8px rgba(194, 65, 12, 0.12);
-        }
-
-        .action-icon {
-            width: 50px;
-            height: 50px;
-            background: linear-gradient(145deg, #fff7ed, #ffffff);
-            border-radius: 14px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 0.8rem;
-            color: #c2410c;
-            font-size: 1.4rem;
-            border: 1px solid rgba(194, 65, 12, 0.15);
-        }
-
-        .action-card h2 {
-            font-size: 0.9rem;
-            font-weight: 800;
-            margin-bottom: 0.3rem;
-        }
-
-        .action-card p {
-            color: #64748b;
-            font-size: 0.7rem;
-            margin-bottom: 0.8rem;
-            line-height: 1.4;
-        }
-
-        .action-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            font-weight: 700;
-            color: #c2410c;
-            font-size: 0.7rem;
-        }
-
-        /* Quick Links */
-        .quick-section {
-            background: white;
-            border-radius: 18px;
-            padding: 1rem;
-            border: 1px solid var(--border-light);
-            margin-bottom: 1.5rem;
-        }
-
-        .quick-header {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 0.8rem;
-            font-weight: 700;
-            font-size: 0.85rem;
-        }
-
-        .quick-header i {
-            color: #c2410c;
-            background: #fff7ed;
-            padding: 6px;
-            border-radius: 10px;
-        }
-
-        .quick-links {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-        }
-
-        .quick-btn {
+            gap: 4px;
             background: #f8fafc;
-            border: 1px solid #e2e8f0;
-            padding: 0.4rem 0.9rem;
             border-radius: 30px;
-            color: #1e293b;
-            font-weight: 500;
+            padding: 4px;
+            margin-bottom: 1rem;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 0.5rem;
+            border-radius: 26px;
+            border: none;
+            background: transparent;
+            font-weight: 600;
             font-size: 0.7rem;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
+            cursor: pointer;
             transition: all 0.2s;
         }
 
-        .quick-btn i {
-            color: #c2410c;
-        }
-
-        .quick-btn:hover {
-            background: #c2410c;
+        .tab-btn.active {
+            background: var(--orange);
             color: white;
+            box-shadow: 0 4px 12px rgba(249,115,22,0.2);
         }
 
-        .quick-btn:hover i {
-            color: white;
+        .tab-badge {
+            background: rgba(0,0,0,0.1);
+            padding: 1px 6px;
+            border-radius: 10px;
+            margin-left: 4px;
+            font-size: 0.55rem;
         }
 
-        /* Recent Orders */
-        .recent-section {
-            margin-top: 1rem;
+        .tab-btn.active .tab-badge {
+            background: rgba(255,255,255,0.2);
         }
 
-        .recent-header {
+        /* Order List */
+        .order-list {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 0.6rem;
+            flex-direction: column;
+            gap: 12px;
         }
 
-        .recent-header h3 {
-            font-size: 0.85rem;
-            font-weight: 700;
-        }
-
-        .recent-list {
+        .order-card {
             background: white;
-            border-radius: 14px;
+            border-radius: 16px;
+            padding: 1rem;
             border: 1px solid var(--border-light);
-            overflow: hidden;
+            transition: all 0.2s;
         }
 
-        .recent-item {
+        .order-card.new {
+            border-left: 3px solid var(--orange);
+        }
+
+        .order-card.preparing {
+            border-left: 3px solid var(--info);
+            background: #f0f9ff;
+        }
+
+        .order-card.ready {
+            border-left: 3px solid var(--success);
+            background: #f0fdf4;
+        }
+
+        .order-header {
             display: flex;
-            align-items: center;
             justify-content: space-between;
-            padding: 0.7rem 1rem;
-            border-bottom: 1px solid #fff7ed;
-            font-size: 0.75rem;
+            align-items: center;
+            margin-bottom: 0.5rem;
+            flex-wrap: wrap;
+            gap: 5px;
         }
 
-        .status-tag {
-            padding: 0.15rem 0.5rem;
-            border-radius: 12px;
+        .order-id {
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            background: #f8fafc;
+            padding: 2px 8px;
+            border-radius: 8px;
+        }
+
+        .order-status {
             font-size: 0.6rem;
+            padding: 3px 8px;
+            border-radius: 12px;
             font-weight: 700;
         }
 
         .status-new { background: #fef3c7; color: #92400e; }
-        .status-confirmed { background: #d1fae5; color: #065f46; }
         .status-preparing { background: #e0f2fe; color: #0369a1; }
-        .status-ready { background: #fed7aa; color: #9a3412; }
+        .status-ready { background: #d1fae5; color: #065f46; }
+
+        .order-customer {
+            font-weight: 800;
+            font-size: 0.85rem;
+            margin-bottom: 0.2rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .order-type {
+            font-size: 0.55rem;
+            padding: 2px 6px;
+            border-radius: 8px;
+            background: #f1f5f9;
+        }
+
+        .order-phone {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.3rem;
+        }
+
+        .order-items {
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            margin: 0.3rem 0;
+            padding: 0.3rem 0;
+            border-top: 1px solid var(--border-light);
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .order-total {
+            font-size: 0.75rem;
+            font-weight: 800;
+            color: var(--orange-dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .order-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 0.5rem;
+        }
+
+        .action-btn {
+            padding: 0.4rem 0.8rem;
+            border-radius: 10px;
+            border: none;
+            font-size: 0.65rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.2s;
+        }
+
+        .btn-prepare { background: #e0f2fe; color: #0369a1; }
+        .btn-prepare:hover { background: #0284c7; color: white; }
+        .btn-ready { background: #d1fae5; color: #065f46; }
+        .btn-ready:hover { background: #10b981; color: white; }
+        .btn-view { background: #f1f5f9; color: #475569; }
 
         .empty-state {
             text-align: center;
@@ -520,54 +457,130 @@
             color: #94a3b8;
         }
 
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 2000;
+            display: none;
+            align-items: flex-end;
+            justify-content: center;
+        }
+
+        .modal-overlay.show { display: flex; }
+
+        .modal {
+            background: white;
+            border-radius: 20px 20px 0 0;
+            padding: 1.2rem;
+            width: 100%;
+            max-width: 500px;
+            max-height: 80vh;
+            overflow-y: auto;
+            animation: slideUp 0.25s ease;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .modal-header i { color: var(--orange); }
+        .modal-header h3 { font-size: 0.9rem; font-weight: 800; }
+        .modal-close {
+            margin-left: auto;
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+
+        .detail-item {
+            background: #f8fafc;
+            padding: 0.6rem;
+            border-radius: 10px;
+            margin-bottom: 0.5rem;
+        }
+
+        .detail-item strong {
+            display: block;
+            font-size: 0.6rem;
+            color: var(--orange-dark);
+            margin-bottom: 0.2rem;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+            background: var(--success);
+            color: white;
+            padding: 0.7rem;
+            border-radius: 12px;
+            text-align: center;
+            z-index: 3000;
+            animation: slideUp 0.3s ease;
+        }
+
+        .toast.error { background: var(--danger); }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
         .footer {
             text-align: center;
             padding: 1rem;
-            color: #94a3b8;
-            font-size: 0.7rem;
+            font-size: 0.6rem;
+            color: var(--text-muted);
             border-top: 1px solid var(--border-light);
-            margin-top: 2rem;
+            margin-top: 1rem;
         }
 
-        /* Mobile */
-        @media (max-width: 768px) {
-            .stats-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            .action-grid {
-                grid-template-columns: 1fr;
-            }
-            .page-header h1 {
-                font-size: 1.1rem;
-            }
+        @media (max-width: 600px) {
+            .stats-row { grid-template-columns: repeat(3, 1fr); }
+            .order-actions { flex-direction: column; }
+            .action-btn { justify-content: center; }
         }
     </style>
 </head>
 <body>
-    <!-- Navbar -->
     <nav class="navbar">
         <div class="logo">
             <img src="https://i.postimg.cc/rFfXDj3L/kazinni-removebg-preview(1).png" alt="Mugs N Dines" class="logo-img">
             <span class="logo-text">Mugs N Dines</span>
+            <span class="kitchen-badge" id="kitchenName">Kitchen</span>
         </div>
         <button class="menu-btn" id="menuBtn">
             <i class="fas fa-bars"></i>
         </button>
     </nav>
 
-    <!-- Side Drawer Menu -->
+    <!-- Drawer Menu -->
     <div class="drawer-overlay" id="drawerOverlay">
         <div class="drawer" id="drawer">
             <div class="drawer-header">
                 <div class="drawer-logo">
-                    <img src="https://i.postimg.cc/rFfXDj3L/kazinni-removebg-preview(1).png" alt="Mugs N Dines" class="drawer-logo-img">
+                    <img src="https://i.postimg.cc/rFfXDj3L/kazinni-removebg-preview(1).png" class="drawer-logo-img">
                     <span class="drawer-logo-text">Mugs N Dines</span>
                 </div>
-                <button class="drawer-close" id="drawerClose">
-                    <i class="fas fa-times"></i>
-                </button>
+                <button class="drawer-close" id="drawerClose"><i class="fas fa-times"></i></button>
             </div>
-            
             <div class="drawer-user" id="drawerUser">
                 <div class="drawer-avatar" id="drawerAvatar">MD</div>
                 <div class="drawer-user-info">
@@ -575,104 +588,60 @@
                     <p id="drawerEmail">...</p>
                 </div>
             </div>
-            
             <div class="drawer-nav">
-                <div class="drawer-nav-label">MAIN</div>
-                <a href="/workspaces/mugsndines/index.html" class="drawer-nav-item">
-                    <i class="fas fa-chart-pie"></i> Dashboard
-                </a>
-                <a href="/workspaces/mugsndines/orders.html" class="drawer-nav-item">
-                    <i class="fas fa-shopping-cart"></i> Orders
-                </a>
-                <a href="/workspaces/mugsndines/menu.html" class="drawer-nav-item">
-                    <i class="fas fa-utensils"></i> Menu
-                </a>
-                <a href="/workspaces/mugsndines/recipes.html" class="drawer-nav-item">
-                    <i class="fas fa-book-open"></i> Recipes
-                </a>
-                
-                <div class="drawer-nav-divider"></div>
-                
-                <div class="drawer-nav-label">OPERATIONS</div>
-                <a href="/workspaces/mugsndines/kitchens.html" class="drawer-nav-item">
-                    <i class="fas fa-store-alt"></i> Kitchens
-                </a>
-                <a href="/workspaces/mugsndines/catering.html" class="drawer-nav-item">
-                    <i class="fas fa-calendar-check"></i> Catering
-                </a>
-                <a href="/workspaces/mugsndines/dispatch.html" class="drawer-nav-item">
-                    <i class="fas fa-truck-fast"></i> Dispatch
-                </a>
-                
-                <div class="drawer-nav-divider"></div>
-                
-                <div class="drawer-nav-label">OTHER</div>
-                <a href="/workspaces/mugsndines/map.html" class="drawer-nav-item">
-                    <i class="fas fa-map-marked-alt"></i> Location Map
-                </a>
+                <a href="/workspaces/mugsndines/kitchen-dashboard.html" class="drawer-nav-item"><i class="fas fa-fire"></i> Kitchen Orders</a>
+                <a href="/workspaces/mugsndines/recipes.html" class="drawer-nav-item"><i class="fas fa-book-open"></i> Recipes</a>
+                <a href="/workspaces/mugsndines/menu.html" class="drawer-nav-item"><i class="fas fa-utensils"></i> Menu</a>
             </div>
-            
             <div class="drawer-footer">
-                <button class="drawer-logout" onclick="logout()">
-                    <i class="fas fa-sign-out-alt"></i> Sign Out
-                </button>
+                <button class="drawer-logout" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Sign Out</button>
             </div>
         </div>
     </div>
 
-    <!-- Main Content -->
     <div class="container">
         <div class="page-header">
-            <h1>
-                <i class="fas fa-utensils"></i>
-                Mugs N Dines Dashboard
-            </h1>
-            <p>Manage food orders, recipes, catering events, kitchens & dispatch.</p>
+            <h1><i class="fas fa-fire"></i> Kitchen Dashboard</h1>
+            <p>Prepare orders and mark them ready for pickup/delivery</p>
         </div>
 
-        <!-- Stats Grid -->
-        <div class="stats-grid" id="statsGrid">
-            <div class="stat-card"><div class="stat-left"><h4>New Orders</h4><div class="stat-number" id="statNewOrders">0</div></div><div class="stat-icon"><i class="fas fa-inbox"></i></div></div>
-            <div class="stat-card"><div class="stat-left"><h4>Active Orders</h4><div class="stat-number" id="statActiveOrders">0</div></div><div class="stat-icon"><i class="fas fa-fire"></i></div></div>
-            <div class="stat-card"><div class="stat-left"><h4>Menu Items</h4><div class="stat-number" id="statMenuItems">0</div></div><div class="stat-icon"><i class="fas fa-utensils"></i></div></div>
-            <div class="stat-card"><div class="stat-left"><h4>Recipes</h4><div class="stat-number" id="statRecipes">0</div></div><div class="stat-icon"><i class="fas fa-book-open"></i></div></div>
-            <div class="stat-card"><div class="stat-left"><h4>Kitchens</h4><div class="stat-number" id="statKitchens">0</div></div><div class="stat-icon"><i class="fas fa-store-alt"></i></div></div>
-            <div class="stat-card"><div class="stat-left"><h4>Catering</h4><div class="stat-number" id="statCatering">0</div></div><div class="stat-icon"><i class="fas fa-calendar"></i></div></div>
+        <!-- Stats -->
+        <div class="stats-row">
+            <div class="stat-card"><div class="stat-number" id="statNew">0</div><div class="stat-label">New Orders</div></div>
+            <div class="stat-card"><div class="stat-number" id="statPreparing">0</div><div class="stat-label">Preparing</div></div>
+            <div class="stat-card"><div class="stat-number" id="statReady">0</div><div class="stat-label">Ready</div></div>
         </div>
 
-        <!-- Action Grid -->
-        <div class="action-grid">
-            <a href="/workspaces/mugsndines/orders.html" class="action-card"><div class="action-icon"><i class="fas fa-inbox"></i></div><h2>Orders</h2><p>View & manage all food orders</p><span class="action-link">Manage Orders →</span></a>
-            <a href="/workspaces/mugsndines/menu.html" class="action-card"><div class="action-icon"><i class="fas fa-utensils"></i></div><h2>Menu</h2><p>Manage your restaurant menu items</p><span class="action-link">Manage Menu →</span></a>
-            <a href="/workspaces/mugsndines/recipes.html" class="action-card"><div class="action-icon"><i class="fas fa-book-open"></i></div><h2>Recipes</h2><p>Create & manage recipes</p><span class="action-link">View Recipes →</span></a>
-            <a href="/workspaces/mugsndines/kitchens.html" class="action-card"><div class="action-icon"><i class="fas fa-store-alt"></i></div><h2>Kitchens</h2><p>Manage kitchen locations</p><span class="action-link">Manage Kitchens →</span></a>
-            <a href="/workspaces/mugsndines/catering.html" class="action-card"><div class="action-icon"><i class="fas fa-calendar-check"></i></div><h2>Catering</h2><p>Manage catering events</p><span class="action-link">Manage Events →</span></a>
-            <a href="/workspaces/mugsndines/dispatch.html" class="action-card"><div class="action-icon"><i class="fas fa-truck-fast"></i></div><h2>Dispatch</h2><p>Assign drivers & track deliveries</p><span class="action-link">Dispatch →</span></a>
+        <!-- Tabs -->
+        <div class="tab-nav">
+            <button class="tab-btn active" data-tab="new" onclick="switchTab('new')">New <span class="tab-badge" id="badgeNew">0</span></button>
+            <button class="tab-btn" data-tab="preparing" onclick="switchTab('preparing')">Preparing <span class="tab-badge" id="badgePreparing">0</span></button>
+            <button class="tab-btn" data-tab="ready" onclick="switchTab('ready')">Ready <span class="tab-badge" id="badgeReady">0</span></button>
         </div>
 
-        <!-- Quick Actions -->
-        <div class="quick-section">
-            <div class="quick-header"><i class="fas fa-bolt"></i> Quick Actions</div>
-            <div class="quick-links">
-                <a href="/workspaces/mugsndines/orders.html" class="quick-btn"><i class="fas fa-clock"></i> Pending Orders</a>
-                <a href="/workspaces/mugsndines/menu.html" class="quick-btn"><i class="fas fa-plus"></i> Add Menu Item</a>
-                <a href="/workspaces/mugsndines/recipes.html" class="quick-btn"><i class="fas fa-plus"></i> New Recipe</a>
-                <a href="/workspaces/mugsndines/kitchens.html" class="quick-btn"><i class="fas fa-store"></i> Manage Kitchens</a>
-                <a href="/workspaces/mugsndines/catering.html" class="quick-btn"><i class="fas fa-calendar"></i> Create Event</a>
-                <a href="/workspaces/mugsndines/dispatch.html" class="quick-btn"><i class="fas fa-truck"></i> Dispatch Orders</a>
-            </div>
-        </div>
-
-        <!-- Recent Orders -->
-        <div class="recent-section">
-            <div class="recent-header"><h3><i class="fas fa-clock-rotate-left"></i> Recent Orders</h3><a href="/workspaces/mugsndines/orders.html" style="color:#c2410c;font-size:0.7rem;">View all</a></div>
-            <div class="recent-list" id="recentOrders"><div class="empty-state">No orders yet</div></div>
-        </div>
+        <div id="newTab" class="tab-content active"><div class="order-list" id="newList"></div></div>
+        <div id="preparingTab" class="tab-content" style="display:none;"><div class="order-list" id="preparingList"></div></div>
+        <div id="readyTab" class="tab-content" style="display:none;"><div class="order-list" id="readyList"></div></div>
     </div>
 
     <div class="footer">
         <i class="far fa-copyright"></i> 2026 Mugs N Dines · Kitchen Management
     </div>
+
+    <!-- Order Details Modal -->
+    <div class="modal-overlay" id="orderModal">
+        <div class="modal">
+            <div class="modal-header">
+                <i class="fas fa-receipt"></i>
+                <h3 id="modalTitle">Order Details</h3>
+                <button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button>
+            </div>
+            <div id="modalBody"></div>
+            <div class="btn-row" id="modalActions" style="display: flex; gap: 8px; margin-top: 1rem; justify-content: flex-end;"></div>
+        </div>
+    </div>
+
+    <div id="toast"></div>
 
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
@@ -690,118 +659,192 @@
         const db = firebase.database();
 
         let allOrders = {};
-        let allMenu = {};
-        let allRecipes = {};
-        let allKitchens = {};
-        let allCatering = {};
+        let currentTab = 'new';
+        let currentKitchenId = null;
 
-        function getInitials(name) {
-            if (!name) return 'MD';
-            return name.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
+        function showToast(msg, isError = false) {
+            const toast = document.getElementById('toast');
+            toast.textContent = msg;
+            toast.className = isError ? 'toast error' : 'toast';
+            toast.style.display = 'block';
+            setTimeout(() => { toast.style.display = 'none'; }, 3000);
         }
 
-        async function loadUserData() {
+        function escapeHtml(s) { if (!s) return ''; return String(s).replace(/[&<>]/g, m => m === '&' ? '&amp;' : m === '<' ? '&lt;' : '&gt;'); }
+
+        async function loadKitchenAssignment() {
             const user = auth.currentUser;
-            if (!user) {
-                window.location.href = '/index.html';
-                return;
-            }
-            
-            const displayName = user.displayName || user.email?.split('@')[0] || 'Manager';
-            document.getElementById('drawerName').textContent = displayName;
-            document.getElementById('drawerEmail').textContent = user.email;
-            document.getElementById('drawerAvatar').textContent = getInitials(displayName);
-        }
+            if (!user) return;
 
-        async function loadStats() {
             try {
-                const [ordersSnap, menuSnap, recipesSnap, kitchensSnap, cateringSnap] = await Promise.all([
-                    db.ref('mugs_n_dines_orders').once('value'),
-                    db.ref('mugs_n_dines_menu').once('value'),
-                    db.ref('mugs_n_dines_recipes').once('value'),
-                    db.ref('mugs_n_dines_franchises').once('value'),
-                    db.ref('mugs_n_dines_catering_events').once('value')
-                ]);
-                
-                allOrders = ordersSnap.val() || {};
-                allMenu = menuSnap.val() || {};
-                allRecipes = recipesSnap.val() || {};
-                allKitchens = kitchensSnap.val() || {};
-                allCatering = cateringSnap.val() || {};
-                
-                const orders = Object.values(allOrders);
-                const newOrders = orders.filter(o => o.status === 'new').length;
-                const activeOrders = orders.filter(o => o.status === 'confirmed' || o.status === 'preparing').length;
-                
-                document.getElementById('statNewOrders').textContent = newOrders;
-                document.getElementById('statActiveOrders').textContent = activeOrders;
-                document.getElementById('statMenuItems').textContent = Object.keys(allMenu).length;
-                document.getElementById('statRecipes').textContent = Object.keys(allRecipes).length;
-                document.getElementById('statKitchens').textContent = Object.keys(allKitchens).length;
-                document.getElementById('statCatering').textContent = Object.keys(allCatering).length;
-                
-                renderRecentOrders();
-            } catch (e) {
-                console.error('Error loading stats:', e);
-            }
+                const staffSnap = await db.ref(`mugs_n_dines_kitchen_staff`).orderByChild('email').equalTo(user.email).once('value');
+                if (staffSnap.exists()) {
+                    const staffData = Object.values(staffSnap.val())[0];
+                    currentKitchenId = staffData.kitchenId;
+                    document.getElementById('kitchenName').textContent = staffData.kitchenName || 'Kitchen';
+                } else {
+                    document.getElementById('kitchenName').textContent = 'Staff';
+                }
+            } catch(e) { console.error(e); }
         }
 
-        function renderRecentOrders() {
-            const container = document.getElementById('recentOrders');
-            const orders = Object.entries(allOrders)
-                .map(([id, data]) => ({ id, ...data }))
-                .sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0))
-                .slice(0, 5);
+        function updateStats() {
+            const orders = Object.values(allOrders).filter(o => o && o.kitchenId === currentKitchenId);
+            const newCount = orders.filter(o => o.status === 'new').length;
+            const preparingCount = orders.filter(o => o.status === 'preparing').length;
+            const readyCount = orders.filter(o => o.status === 'ready').length;
+
+            document.getElementById('statNew').textContent = newCount;
+            document.getElementById('statPreparing').textContent = preparingCount;
+            document.getElementById('statReady').textContent = readyCount;
+            document.getElementById('badgeNew').textContent = newCount;
+            document.getElementById('badgePreparing').textContent = preparingCount;
+            document.getElementById('badgeReady').textContent = readyCount;
+        }
+
+        function renderOrders() {
+            const orders = Object.values(allOrders).filter(o => o && o.kitchenId === currentKitchenId);
             
+            const newOrders = orders.filter(o => o.status === 'new');
+            const preparingOrders = orders.filter(o => o.status === 'preparing');
+            const readyOrders = orders.filter(o => o.status === 'ready');
+
+            renderList('newList', newOrders, 'new');
+            renderList('preparingList', preparingOrders, 'preparing');
+            renderList('readyList', readyOrders, 'ready');
+            updateStats();
+        }
+
+        function renderList(containerId, orders, type) {
+            const container = document.getElementById(containerId);
             if (!orders.length) {
-                container.innerHTML = '<div class="empty-state">No orders yet</div>';
+                container.innerHTML = `<div class="empty-state"><i class="fas fa-check-circle"></i><p>No ${type} orders</p></div>`;
                 return;
             }
-            
-            container.innerHTML = orders.map(order => `
-                <div class="recent-item">
-                    <div><strong>${order.customerName || 'Customer'}</strong><br><span style="font-size:0.65rem;">${(order.items || []).length} items · KES ${(order.total || 0).toLocaleString()}</span></div>
-                    <span class="status-tag status-${order.status || 'new'}">${order.status || 'new'}</span>
-                </div>
-            `).join('');
+
+            container.innerHTML = orders.map(order => {
+                const itemCount = (order.items || []).reduce((sum, i) => sum + (i.quantity || 0), 0);
+                const orderTypeIcon = order.orderType === 'delivery' ? '🚚' : '📦';
+                let actionButtons = '';
+                
+                if (type === 'new') {
+                    actionButtons = `<button class="action-btn btn-prepare" onclick="updateOrderStatus('${order.id}', 'preparing')"><i class="fas fa-fire"></i> Start Preparing</button>`;
+                } else if (type === 'preparing') {
+                    actionButtons = `<button class="action-btn btn-ready" onclick="updateOrderStatus('${order.id}', 'ready')"><i class="fas fa-check-circle"></i> Mark Ready</button>`;
+                }
+                actionButtons += `<button class="action-btn btn-view" onclick="viewOrderDetails('${order.id}')"><i class="fas fa-eye"></i> View</button>`;
+
+                return `
+                    <div class="order-card ${type}" onclick="viewOrderDetails('${order.id}')">
+                        <div class="order-header">
+                            <span class="order-id">#${order.id.slice(-6)}</span>
+                            <span class="order-status status-${type}">${type}</span>
+                        </div>
+                        <div class="order-customer">
+                            ${escapeHtml(order.customerName || 'Customer')}
+                            <span class="order-type">${orderTypeIcon} ${order.orderType || 'takeaway'}</span>
+                        </div>
+                        ${order.customerPhone ? `<div class="order-phone">📞 ${escapeHtml(order.customerPhone)}</div>` : ''}
+                        <div class="order-items"><strong>${itemCount} item(s)</strong>: ${(order.items || []).slice(0,3).map(i => i.name).join(', ')}${(order.items || []).length > 3 ? '...' : ''}</div>
+                        <div class="order-total">💰 KES ${(order.total || 0).toLocaleString()}</div>
+                        <div class="order-actions" onclick="event.stopPropagation()">${actionButtons}</div>
+                    </div>
+                `;
+            }).join('');
         }
+
+        window.updateOrderStatus = async (orderId, newStatus) => {
+            try {
+                const updates = { status: newStatus, updatedAt: firebase.database.ServerValue.TIMESTAMP };
+                if (newStatus === 'preparing') updates.startedAt = firebase.database.ServerValue.TIMESTAMP;
+                if (newStatus === 'ready') updates.readyAt = firebase.database.ServerValue.TIMESTAMP;
+                
+                await db.ref(`mugs_n_dines_orders/${orderId}`).update(updates);
+                showToast(newStatus === 'preparing' ? '✅ Started preparing order' : '✅ Order marked ready');
+                loadOrders();
+                closeModal();
+            } catch(e) { showToast('Failed to update', true); }
+        };
+
+        async function loadOrders() {
+            if (!currentKitchenId) return;
+            const snap = await db.ref('mugs_n_dines_orders').once('value');
+            const orders = snap.val() || {};
+            allOrders = Object.entries(orders)
+                .map(([id, data]) => ({ id, ...data }))
+                .filter(o => o.kitchenId === currentKitchenId && o.status !== 'cancelled' && o.status !== 'delivered')
+                .reduce((obj, o) => ({ ...obj, [o.id]: o }), {});
+            renderOrders();
+        }
+
+        window.viewOrderDetails = (orderId) => {
+            const order = allOrders[orderId];
+            if (!order) return;
+            
+            const items = order.items || [];
+            const statusClass = `status-${order.status}`;
+            const orderTypeIcon = order.orderType === 'delivery' ? '🚚 Delivery' : '📦 Takeaway';
+            
+            let actionButtons = '';
+            if (order.status === 'new') {
+                actionButtons = `<button class="action-btn btn-prepare" onclick="updateOrderStatus('${orderId}', 'preparing')"><i class="fas fa-fire"></i> Start Preparing</button>`;
+            } else if (order.status === 'preparing') {
+                actionButtons = `<button class="action-btn btn-ready" onclick="updateOrderStatus('${orderId}', 'ready')"><i class="fas fa-check-circle"></i> Mark Ready</button>`;
+            }
+            actionButtons += `<button class="action-btn btn-view" onclick="closeModal()">Close</button>`;
+
+            document.getElementById('modalTitle').textContent = `Order #${orderId.slice(-6)}`;
+            document.getElementById('modalBody').innerHTML = `
+                <div class="detail-item"><strong>Customer</strong>${escapeHtml(order.customerName)}</div>
+                <div class="detail-item"><strong>Phone</strong>${order.customerPhone || '—'}</div>
+                <div class="detail-item"><strong>Type</strong>${orderTypeIcon}</div>
+                <div class="detail-item"><strong>Status</strong><span class="order-status ${statusClass}">${order.status}</span></div>
+                ${order.deliveryAddress ? `<div class="detail-item"><strong>Address</strong>${escapeHtml(order.deliveryAddress)}</div>` : ''}
+                <div class="detail-item"><strong>Items</strong>
+                    ${items.map(item => `<div style="font-size:0.7rem; padding:0.2rem 0;">${escapeHtml(item.name)} × ${item.quantity} = KES ${((item.price||0)*item.quantity).toLocaleString()}</div>`).join('')}
+                </div>
+                <div class="detail-item"><strong>Total</strong>KES ${(order.total || 0).toLocaleString()}</div>
+                ${order.specialInstructions ? `<div class="detail-item"><strong>Special Instructions</strong>${escapeHtml(order.specialInstructions)}</div>` : ''}
+            `;
+            document.getElementById('modalActions').innerHTML = actionButtons;
+            document.getElementById('orderModal').classList.add('show');
+        };
+
+        window.closeModal = () => document.getElementById('orderModal').classList.remove('show');
+        window.switchTab = (tab) => {
+            currentTab = tab;
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.tab === tab));
+            document.getElementById('newTab').style.display = tab === 'new' ? 'block' : 'none';
+            document.getElementById('preparingTab').style.display = tab === 'preparing' ? 'block' : 'none';
+            document.getElementById('readyTab').style.display = tab === 'ready' ? 'block' : 'none';
+        };
+
+        window.logout = async () => { await auth.signOut(); window.location.href = '/index.html'; };
 
         // Drawer controls
-        function openDrawer() {
+        document.getElementById('menuBtn').addEventListener('click', () => {
             document.getElementById('drawerOverlay').style.display = 'block';
             document.getElementById('drawer').classList.add('open');
-        }
-        
-        function closeDrawer() {
+        });
+        document.getElementById('drawerClose').addEventListener('click', () => {
             document.getElementById('drawerOverlay').style.display = 'none';
             document.getElementById('drawer').classList.remove('open');
-        }
-        
-        window.logout = async function() {
-            await auth.signOut();
-            window.location.href = '/index.html';
-        };
-        
-        document.getElementById('menuBtn').addEventListener('click', openDrawer);
-        document.getElementById('drawerClose').addEventListener('click', closeDrawer);
-        document.getElementById('drawerOverlay').addEventListener('click', function(e) {
-            if (e.target === this) closeDrawer();
+        });
+        document.getElementById('drawerOverlay').addEventListener('click', (e) => {
+            if (e.target === document.getElementById('drawerOverlay')) {
+                document.getElementById('drawerOverlay').style.display = 'none';
+                document.getElementById('drawer').classList.remove('open');
+            }
         });
 
         auth.onAuthStateChanged(async (user) => {
-            if (user) {
-                await loadUserData();
-                await loadStats();
-                
-                // Set up real-time listeners
-                db.ref('mugs_n_dines_orders').on('value', () => loadStats());
-                db.ref('mugs_n_dines_menu').on('value', () => loadStats());
-                db.ref('mugs_n_dines_recipes').on('value', () => loadStats());
-                db.ref('mugs_n_dines_franchises').on('value', () => loadStats());
-                db.ref('mugs_n_dines_catering_events').on('value', () => loadStats());
-            } else {
-                window.location.href = '/index.html';
-            }
+            if (!user) { window.location.href = '/index.html'; return; }
+            document.getElementById('drawerName').textContent = user.displayName || user.email?.split('@')[0] || 'Staff';
+            document.getElementById('drawerEmail').textContent = user.email;
+            document.getElementById('drawerAvatar').textContent = (user.displayName || user.email?.[0] || 'S').substring(0,2).toUpperCase();
+            await loadKitchenAssignment();
+            await loadOrders();
+            db.ref('mugs_n_dines_orders').on('value', () => loadOrders());
         });
     </script>
 </body>
