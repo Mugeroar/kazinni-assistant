@@ -12,345 +12,366 @@
     * { margin: 0; padding: 0; box-sizing: border-box; }
     :root {
       --orange: #f97316; --orange-dark: #c2410c; --orange-light: #fb923c;
-      --card-bg: #ffffff; --text-primary: #1e293b; --text-muted: #64748b;
-      --border-light: #fed7aa; --success: #10b981; --warning: #f59e0b; --danger: #ef4444; --info: #3b82f6;
+      --bg: #f8fafc; --surface: #ffffff; --text: #0f172a; --text-secondary: #64748b;
+      --border: #e2e8f0; --border-light: #f1f5f9;
+      --success: #10b981; --warning: #f59e0b; --danger: #ef4444; --info: #3b82f6;
+      --shadow-sm: 0 1px 2px rgba(0,0,0,0.05); --shadow: 0 1px 3px rgba(0,0,0,0.1);
+      --shadow-md: 0 4px 6px rgba(0,0,0,0.07); --shadow-lg: 0 10px 25px rgba(0,0,0,0.1);
+      --radius-sm: 8px; --radius: 12px; --radius-lg: 16px; --radius-xl: 20px;
     }
     body {
-      font-family: 'Inter', sans-serif;
-      background: linear-gradient(145deg, #fff7ed 0%, #ffffff 100%);
-      color: var(--text-primary); min-height: 100vh; padding-bottom: 80px;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg); color: var(--text); min-height: 100vh;
+      -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
     }
-    .navbar {
-      background: rgba(255,255,255,0.95); backdrop-filter: blur(16px);
-      padding: 0.5rem 1rem; display: flex; justify-content: space-between; align-items: center;
-      border-bottom: 2px solid rgba(249,115,22,0.3); position: sticky; top: 0; z-index: 100;
+
+    /* Top Bar */
+    .topbar {
+      background: rgba(255,255,255,0.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border-light); padding: 0 1.5rem; height: 56px;
+      display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100;
     }
-    .logo { display: flex; align-items: center; gap: 10px; }
-    .logo-img { height: 36px; width: 36px; border-radius: 10px; object-fit: contain; background: white; box-shadow: 0 4px 12px rgba(249,115,22,0.2); }
-    .logo-text { font-weight: 800; font-size: 1rem; background: linear-gradient(145deg, #fb923c, #c2410c); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    .trainer-badge { background: var(--orange); color: white; padding: 0.2rem 0.6rem; border-radius: 12px; font-size: 0.6rem; font-weight: 700; max-width: 120px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-    .menu-btn { background: none; border: none; font-size: 1.3rem; cursor: pointer; color: var(--orange-dark); width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; }
-    
-    /* Drawer */
-    .drawer-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000; display: none; backdrop-filter: blur(4px); }
-    .drawer { position: fixed; top: 0; left: -280px; width: 280px; height: 100%; background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%); transition: left 0.3s ease; z-index: 1001; display: flex; flex-direction: column; }
-    .drawer.open { left: 0; }
-    .drawer-header { padding: 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between; align-items: center; }
-    .drawer-close { background: none; border: none; color: #94a3b8; font-size: 1.2rem; cursor: pointer; }
-    .drawer-user { padding: 1.2rem 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 12px; }
-    .drawer-avatar { width: 44px; height: 44px; background: linear-gradient(135deg, #f97316, #c2410c); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; color: white; }
-    .drawer-nav { flex: 1; padding: 1rem 0; }
-    .drawer-nav-item { display: flex; align-items: center; gap: 12px; padding: 0.7rem 1.5rem; color: #cbd5e1; text-decoration: none; font-size: 0.8rem; transition: all 0.2s; cursor: pointer; }
-    .drawer-nav-item:hover { background: rgba(249,115,22,0.15); color: var(--orange-light); }
-    .drawer-nav-item i { width: 20px; }
-    .drawer-footer { padding: 1rem 1.5rem; border-top: 1px solid rgba(255,255,255,0.1); }
-    .drawer-logout { width: 100%; padding: 0.7rem; background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.2); border-radius: 12px; color: #ef4444; font-weight: 600; cursor: pointer; }
+    .topbar-left { display: flex; align-items: center; gap: 12px; }
+    .menu-btn { width: 36px; height: 36px; border-radius: var(--radius-sm); border: 1px solid var(--border); background: white; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1rem; color: var(--text-secondary); transition: all 0.2s; }
+    .menu-btn:hover { background: #f8fafc; }
+    .brand { display: flex; align-items: center; gap: 8px; }
+    .brand img { width: 30px; height: 30px; border-radius: 8px; }
+    .brand span { font-weight: 700; font-size: 0.9rem; color: var(--text); }
+    .club-tag { background: #fff7ed; color: var(--orange-dark); padding: 0.2rem 0.6rem; border-radius: 20px; font-size: 0.65rem; font-weight: 600; max-width: 120px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .topbar-right { display: flex; align-items: center; gap: 12px; }
+    .user-pill {
+      display: flex; align-items: center; gap: 8px; background: white; border: 1px solid var(--border);
+      padding: 0.3rem 0.8rem 0.3rem 0.4rem; border-radius: 30px; cursor: pointer; transition: all 0.2s;
+    }
+    .user-pill:hover { background: #f8fafc; }
+    .user-avatar { width: 28px; height: 28px; border-radius: 50%; background: linear-gradient(135deg, #f97316, #ea580c); display: flex; align-items: center; justify-content: center; font-size: 0.65rem; font-weight: 700; color: white; }
+    .user-name { font-size: 0.7rem; font-weight: 600; color: var(--text); }
 
-    .container { padding: 1rem; max-width: 1000px; margin: 0 auto; }
-    .page-header { margin-bottom: 1rem; }
-    .page-header h1 { font-size: 1.2rem; font-weight: 800; }
-    .page-header p { font-size: 0.7rem; color: var(--text-muted); }
+    /* Sidebar */
+    .sidebar-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.3); z-index: 200; opacity: 0; visibility: hidden; transition: all 0.3s; }
+    .sidebar-overlay.open { opacity: 1; visibility: visible; }
+    .sidebar {
+      position: fixed; top: 0; left: -280px; width: 280px; height: 100%; background: white;
+      z-index: 201; transition: left 0.3s cubic-bezier(0.4,0,0.2,1); display: flex; flex-direction: column;
+      box-shadow: 2px 0 20px rgba(0,0,0,0.05);
+    }
+    .sidebar.open { left: 0; }
+    .sidebar-header { padding: 1.2rem 1.5rem; border-bottom: 1px solid var(--border-light); display: flex; align-items: center; justify-content: space-between; }
+    .sidebar-header h3 { font-size: 0.85rem; font-weight: 700; }
+    .sidebar-close { width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--border); background: white; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+    .sidebar-user { padding: 1rem 1.5rem; border-bottom: 1px solid var(--border-light); display: flex; align-items: center; gap: 10px; }
+    .sidebar-avatar { width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, #f97316, #ea580c); display: flex; align-items: center; justify-content: center; font-weight: 700; color: white; font-size: 0.8rem; }
+    .sidebar-user-info h4 { font-size: 0.78rem; font-weight: 600; }
+    .sidebar-user-info p { font-size: 0.65rem; color: var(--text-secondary); }
+    .sidebar-nav { flex: 1; padding: 0.5rem 0; overflow-y: auto; }
+    .sidebar-nav-item {
+      display: flex; align-items: center; gap: 10px; padding: 0.65rem 1.5rem;
+      font-size: 0.78rem; font-weight: 500; color: var(--text-secondary); cursor: pointer;
+      transition: all 0.15s; border-left: 3px solid transparent;
+    }
+    .sidebar-nav-item:hover { background: #f8fafc; color: var(--text); }
+    .sidebar-nav-item.active { background: #fff7ed; color: var(--orange-dark); border-left-color: var(--orange); font-weight: 600; }
+    .sidebar-nav-item i { width: 20px; text-align: center; }
+    .sidebar-footer { padding: 1rem 1.5rem; border-top: 1px solid var(--border-light); }
+    .logout-btn { width: 100%; padding: 0.6rem; border-radius: var(--radius); border: 1px solid #fee2e2; background: #fef2f2; color: #ef4444; font-weight: 600; font-size: 0.75rem; cursor: pointer; transition: all 0.2s; }
+    .logout-btn:hover { background: #fee2e2; }
 
-    .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 1rem; }
-    .stat-card { background: white; border-radius: 14px; padding: 0.7rem; text-align: center; border: 1px solid var(--border-light); }
-    .stat-number { font-size: 1.3rem; font-weight: 800; color: var(--orange-dark); }
-    .stat-label { font-size: 0.55rem; color: var(--text-muted); text-transform: uppercase; }
+    /* Main Content */
+    .main { padding: 1.5rem; max-width: 900px; margin: 0 auto; }
+    .page-title { font-size: 1.3rem; font-weight: 800; margin-bottom: 0.2rem; }
+    .page-subtitle { font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 1.5rem; }
 
-    .tab-nav { display: flex; gap: 4px; background: #f8fafc; border-radius: 30px; padding: 4px; margin-bottom: 1rem; overflow-x: auto; }
-    .tab-btn { flex: 1; min-width: fit-content; padding: 0.5rem 0.8rem; border-radius: 26px; border: none; background: transparent; font-weight: 600; font-size: 0.65rem; cursor: pointer; transition: all 0.2s; white-space: nowrap; }
-    .tab-btn.active { background: var(--orange); color: white; box-shadow: 0 4px 12px rgba(249,115,22,0.2); }
+    /* Stats Cards */
+    .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 1.5rem; }
+    .stat-card {
+      background: var(--surface); border-radius: var(--radius-lg); padding: 1rem;
+      border: 1px solid var(--border-light); box-shadow: var(--shadow-sm);
+    }
+    .stat-card .stat-icon { width: 36px; height: 36px; border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; margin-bottom: 0.6rem; font-size: 0.9rem; }
+    .stat-card .stat-icon.members { background: #eff6ff; color: #3b82f6; }
+    .stat-card .stat-icon.inventory { background: #fef3c7; color: #d97706; }
+    .stat-card .stat-icon.sales { background: #ecfdf5; color: #059669; }
+    .stat-card .stat-icon.sessions { background: #faf5ff; color: #7c3aed; }
+    .stat-card .stat-value { font-size: 1.6rem; font-weight: 800; color: var(--text); line-height: 1; }
+    .stat-card .stat-label { font-size: 0.6rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; margin-top: 0.2rem; }
 
-    .section { background: white; border-radius: 16px; padding: 1rem; border: 1px solid var(--border-light); margin-bottom: 1rem; }
-    .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.8rem; }
+    /* Section */
+    .section { background: var(--surface); border-radius: var(--radius-xl); border: 1px solid var(--border-light); box-shadow: var(--shadow-sm); margin-bottom: 1.5rem; overflow: hidden; }
+    .section-header { padding: 1rem 1.2rem; border-bottom: 1px solid var(--border-light); display: flex; justify-content: space-between; align-items: center; }
     .section-header h3 { font-size: 0.85rem; font-weight: 700; display: flex; align-items: center; gap: 8px; }
-    .add-btn { background: var(--orange); color: white; border: none; padding: 0.4rem 0.8rem; border-radius: 20px; font-size: 0.65rem; font-weight: 600; cursor: pointer; transition: all 0.2s; }
-    .add-btn:hover { background: var(--orange-dark); }
-    .add-btn:disabled { opacity: 0.6; cursor: not-allowed; }
-    .list-item { display: flex; justify-content: space-between; align-items: center; padding: 0.6rem 0; border-bottom: 1px solid #f1f5f9; font-size: 0.75rem; }
+    .section-body { padding: 1rem 1.2rem; }
+    .section-body.no-padding { padding: 0; }
+
+    /* Buttons */
+    .btn {
+      padding: 0.45rem 0.9rem; border-radius: var(--radius-sm); font-weight: 600; font-size: 0.72rem;
+      cursor: pointer; border: 1px solid transparent; transition: all 0.2s; display: inline-flex; align-items: center; gap: 6px; white-space: nowrap;
+    }
+    .btn-primary { background: var(--orange); color: white; border-color: var(--orange); }
+    .btn-primary:hover { background: var(--orange-dark); }
+    .btn-outline { background: white; border-color: var(--border); color: var(--text-secondary); }
+    .btn-outline:hover { background: #f8fafc; }
+    .btn-sm { padding: 0.35rem 0.7rem; font-size: 0.68rem; }
+    .btn-xs { padding: 0.25rem 0.5rem; font-size: 0.62rem; border-radius: 6px; }
+
+    /* List Items */
+    .list-item {
+      display: flex; align-items: center; justify-content: space-between; padding: 0.75rem 1.2rem;
+      border-bottom: 1px solid var(--border-light); transition: background 0.15s;
+    }
     .list-item:last-child { border-bottom: none; }
-    .badge { padding: 0.15rem 0.5rem; border-radius: 12px; font-size: 0.6rem; font-weight: 600; }
-    .badge.active { background: #d1fae5; color: #065f46; }
-    .badge.inactive { background: #fee2e2; color: #991b1b; }
-    .badge.sale { background: #fef3c7; color: #92400e; }
-    .session-card { background: #fff7ed; border-radius: 12px; padding: 0.8rem; margin-bottom: 0.5rem; border-left: 3px solid var(--orange); }
-    .session-card.done { opacity: 0.6; border-left-color: var(--success); }
-    .session-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.3rem; }
-    .session-time { font-size: 0.6rem; color: var(--text-muted); }
-    .empty-state { text-align: center; padding: 1.5rem; color: #94a3b8; font-size: 0.75rem; }
+    .list-item:hover { background: #fafbfc; }
+    .list-item-left { display: flex; align-items: center; gap: 10px; min-width: 0; }
+    .list-item-icon {
+      width: 36px; height: 36px; border-radius: var(--radius-sm); display: flex; align-items: center;
+      justify-content: center; font-size: 0.9rem; flex-shrink: 0; background: #f8fafc;
+    }
+    .list-item-info { min-width: 0; }
+    .list-item-title { font-weight: 600; font-size: 0.8rem; color: var(--text); }
+    .list-item-subtitle { font-size: 0.65rem; color: var(--text-secondary); margin-top: 1px; }
+    .list-item-right { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
 
-    .modal-overlay { position: fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.5); z-index:2000; display:none; align-items:flex-end; justify-content:center; }
-    .modal-overlay.show { display:flex; }
-    .modal { background:white; border-radius:20px 20px 0 0; padding:1.2rem; width:100%; max-width:500px; max-height:85vh; overflow-y:auto; animation:slideUp 0.25s ease; }
-    @keyframes slideUp { from { transform:translateY(100%); } to { transform:translateY(0); } }
-    .modal-header { display:flex; align-items:center; gap:8px; margin-bottom:1rem; padding-bottom:0.5rem; border-bottom:1px solid var(--border-light); }
-    .modal-close { margin-left:auto; background:none; border:none; font-size:1.2rem; cursor:pointer; }
-    .form-group { display:flex; flex-direction:column; gap:0.3rem; margin-bottom:0.8rem; }
-    .form-group label { font-weight:600; font-size:0.7rem; color:#334155; }
-    .form-group input, .form-group select, .form-group textarea { padding:0.6rem; border:1px solid #e2e8f0; border-radius:10px; font-family:'Inter',sans-serif; font-size:0.8rem; background:#f8fafc; outline:none; }
-    .form-group input:focus, .form-group select:focus { border-color:var(--orange); }
-    .submit-btn { background:var(--orange); color:white; border:none; padding:0.7rem; border-radius:12px; font-weight:700; font-size:0.8rem; cursor:pointer; width:100%; }
-    .submit-btn:hover { background:var(--orange-dark); }
-    .submit-btn:disabled { opacity:0.6; cursor:not-allowed; }
-    .toast { position:fixed; bottom:20px; left:20px; right:20px; background:var(--success); color:white; padding:0.7rem; border-radius:12px; text-align:center; z-index:3000; display:none; font-size:0.8rem; }
-    .toast.error { background:var(--danger); }
-    .file-upload { border:2px dashed #e2e8f0; border-radius:12px; padding:1.5rem; text-align:center; cursor:pointer; margin-bottom:0.8rem; }
-    .file-upload i { font-size:2rem; color:var(--orange); display:block; margin-bottom:0.5rem; }
-    .file-item { display:flex; justify-content:space-between; align-items:center; padding:0.5rem; background:#f8fafc; border-radius:8px; margin-bottom:0.3rem; font-size:0.7rem; }
+    /* Badges */
+    .badge {
+      padding: 0.18rem 0.5rem; border-radius: 6px; font-size: 0.6rem; font-weight: 600; text-transform: capitalize;
+    }
+    .badge-success { background: #ecfdf5; color: #065f46; }
+    .badge-warning { background: #fffbeb; color: #92400e; }
+    .badge-danger { background: #fef2f2; color: #991b1b; }
+    .badge-info { background: #eff6ff; color: #1e40af; }
+    .badge-neutral { background: #f1f5f9; color: #475569; }
 
-    .loading-spinner { display: flex; justify-content: center; padding: 2rem; }
-    .spinner { width: 30px; height: 30px; border: 3px solid #fed7aa; border-top-color: #c2410c; border-radius: 50%; animation: spin 0.8s linear infinite; }
-    @keyframes spin { to { transform: rotate(360deg); } }
+    /* Session Card */
+    .session-item {
+      display: flex; align-items: center; gap: 12px; padding: 0.7rem 1.2rem;
+      border-bottom: 1px solid var(--border-light); transition: all 0.15s;
+    }
+    .session-item:last-child { border-bottom: none; }
+    .session-item:hover { background: #fafbfc; }
+    .session-item.completed { opacity: 0.5; }
+    .session-day {
+      width: 80px; flex-shrink: 0; font-size: 0.7rem; font-weight: 600; color: var(--orange-dark);
+    }
+    .session-info { flex: 1; min-width: 0; }
+    .session-name { font-weight: 600; font-size: 0.78rem; }
+    .session-meta { font-size: 0.62rem; color: var(--text-secondary); }
+    .session-actions { flex-shrink: 0; }
 
-    @media (max-width:600px) {
-      .stats-row { grid-template-columns: repeat(2, 1fr); }
-      .tab-btn { font-size: 0.6rem; padding: 0.4rem 0.6rem; }
+    /* Empty State */
+    .empty-state { text-align: center; padding: 2.5rem 1rem; }
+    .empty-state i { font-size: 2.5rem; color: #cbd5e1; display: block; margin-bottom: 0.8rem; }
+    .empty-state p { font-size: 0.78rem; color: var(--text-secondary); margin-bottom: 1rem; }
+
+    /* Modal */
+    .modal-overlay {
+      position: fixed; inset: 0; background: rgba(15,23,42,0.4); backdrop-filter: blur(4px);
+      display: flex; align-items: flex-end; justify-content: center; z-index: 300;
+      opacity: 0; visibility: hidden; transition: all 0.25s;
+    }
+    .modal-overlay.active { opacity: 1; visibility: visible; }
+    .modal {
+      background: white; border-radius: 20px 20px 0 0; padding: 1.5rem; width: 100%; max-width: 500px;
+      max-height: 85vh; overflow-y: auto; box-shadow: 0 -4px 30px rgba(0,0,0,0.1);
+    }
+    .modal-handle { width: 36px; height: 4px; background: #e2e8f0; border-radius: 2px; margin: 0 auto 1rem; }
+    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.2rem; }
+    .modal-header h3 { font-size: 1rem; font-weight: 700; }
+    .modal-close { width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--border); background: white; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; }
+    .form-group { margin-bottom: 0.8rem; }
+    .form-group label { display: block; font-weight: 600; font-size: 0.7rem; color: var(--text-secondary); margin-bottom: 0.3rem; }
+    .form-group input, .form-group select, .form-group textarea {
+      width: 100%; padding: 0.55rem 0.8rem; border: 1px solid var(--border); border-radius: var(--radius-sm);
+      font-family: 'Inter', sans-serif; font-size: 0.8rem; background: #f8fafc; outline: none; transition: all 0.2s;
+    }
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--orange); box-shadow: 0 0 0 3px rgba(249,115,22,0.06); background: white; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; }
+
+    /* Toast */
+    .toast {
+      position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); z-index: 400;
+      padding: 0.6rem 1.2rem; border-radius: 10px; font-size: 0.75rem; font-weight: 600;
+      box-shadow: var(--shadow-lg); animation: toastIn 0.3s ease; white-space: nowrap;
+      background: #0f172a; color: white;
+    }
+    .toast.error { background: #991b1b; }
+    @keyframes toastIn { from { opacity: 0; transform: translateX(-50%) translateY(15px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }
+
+    @media (max-width: 640px) {
+      .main { padding: 1rem; }
+      .stats-row { grid-template-columns: 1fr 1fr; }
+      .form-row { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 <body>
-  <nav class="navbar">
-    <div class="logo">
-      <img src="https://i.postimg.cc/rFfXDj3L/kazinni-removebg-preview(1).png" alt="Logo" class="logo-img">
-      <span class="logo-text">WorkFit</span>
-      <span class="trainer-badge" id="trainerClubName">Loading...</span>
+  <!-- Sidebar -->
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <h3>Trainer Hub</h3>
+      <button class="sidebar-close" id="sidebarClose"><i class="fas fa-times"></i></button>
     </div>
-    <button class="menu-btn" id="menuBtn"><i class="fas fa-bars"></i></button>
-  </nav>
+    <div class="sidebar-user">
+      <div class="sidebar-avatar" id="sidebarAvatar">TR</div>
+      <div class="sidebar-user-info">
+        <h4 id="sidebarName">Trainer</h4>
+        <p id="sidebarEmail">...</p>
+      </div>
+    </div>
+    <div class="sidebar-nav" id="sidebarNav">
+      <div class="sidebar-nav-item active" data-tab="members"><i class="fas fa-users"></i> Members</div>
+      <div class="sidebar-nav-item" data-tab="inventory"><i class="fas fa-box"></i> Inventory</div>
+      <div class="sidebar-nav-item" data-tab="sales"><i class="fas fa-chart-line"></i> Sales</div>
+      <div class="sidebar-nav-item" data-tab="sessions"><i class="fas fa-calendar-week"></i> Sessions</div>
+      <div class="sidebar-nav-item" data-tab="downloads"><i class="fas fa-download"></i> Resources</div>
+      <div class="sidebar-nav-item" data-tab="uploads"><i class="fas fa-cloud-upload-alt"></i> Uploads</div>
+    </div>
+    <div class="sidebar-footer">
+      <button class="logout-btn" onclick="handleLogout()"><i class="fas fa-sign-out-alt"></i> Sign Out</button>
+    </div>
+  </div>
 
-  <div class="drawer-overlay" id="drawerOverlay">
-    <div class="drawer" id="drawer">
-      <div class="drawer-header">
-        <span style="color:white;font-weight:700;">Trainer Hub</span>
-        <button class="drawer-close" id="drawerClose"><i class="fas fa-times"></i></button>
+  <!-- Top Bar -->
+  <div class="topbar">
+    <div class="topbar-left">
+      <button class="menu-btn" id="menuBtn"><i class="fas fa-bars"></i></button>
+      <div class="brand">
+        <img src="https://i.postimg.cc/rFfXDj3L/kazinni-removebg-preview(1).png" alt="Logo">
+        <span>WorkFit</span>
       </div>
-      <div class="drawer-user">
-        <div class="drawer-avatar" id="drawerAvatar">TR</div>
-        <div style="color:white;"><h4 style="font-size:0.8rem;" id="drawerName">Trainer</h4><p style="font-size:0.6rem;color:#94a3b8;" id="drawerEmail">...</p></div>
-      </div>
-      <div class="drawer-nav">
-        <a class="drawer-nav-item" onclick="switchTab('members')"><i class="fas fa-users"></i> Members</a>
-        <a class="drawer-nav-item" onclick="switchTab('inventory')"><i class="fas fa-boxes-stacked"></i> Inventory</a>
-        <a class="drawer-nav-item" onclick="switchTab('sales')"><i class="fas fa-cash-register"></i> Sales</a>
-        <a class="drawer-nav-item" onclick="switchTab('sessions')"><i class="fas fa-calendar-week"></i> Weekly Sessions</a>
-        <a class="drawer-nav-item" onclick="switchTab('downloads')"><i class="fas fa-download"></i> Downloads</a>
-        <a class="drawer-nav-item" onclick="switchTab('uploads')"><i class="fas fa-upload"></i> Uploads</a>
-      </div>
-      <div class="drawer-footer">
-        <button class="drawer-logout" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Sign Out</button>
+      <span class="club-tag" id="clubTag">Loading...</span>
+    </div>
+    <div class="topbar-right">
+      <div class="user-pill">
+        <div class="user-avatar" id="topAvatar">TR</div>
+        <span class="user-name" id="topName">Trainer</span>
       </div>
     </div>
   </div>
 
-  <div class="container">
-    <div class="page-header">
-      <h1><i class="fas fa-dumbbell"></i> Trainer Hub</h1>
-      <p id="clubInfo">Loading your club...</p>
-    </div>
+  <!-- Main Content -->
+  <div class="main">
+    <div id="mainContent"></div>
+  </div>
 
-    <div class="stats-row" id="statsRow">
-      <div class="stat-card"><div class="stat-number" id="statMembers">-</div><div class="stat-label">Members</div></div>
-      <div class="stat-card"><div class="stat-number" id="statInventory">-</div><div class="stat-label">Items</div></div>
-      <div class="stat-card"><div class="stat-number" id="statSales">-</div><div class="stat-label">Sales</div></div>
-      <div class="stat-card"><div class="stat-number" id="statSessions">-</div><div class="stat-label">Sessions</div></div>
-    </div>
-
-    <div class="tab-nav" id="tabNav">
-      <button class="tab-btn active" data-tab="members" onclick="switchTab('members')">👥 Members</button>
-      <button class="tab-btn" data-tab="inventory" onclick="switchTab('inventory')">📦 Inventory</button>
-      <button class="tab-btn" data-tab="sales" onclick="switchTab('sales')">💰 Sales</button>
-      <button class="tab-btn" data-tab="sessions" onclick="switchTab('sessions')">📅 Sessions</button>
-      <button class="tab-btn" data-tab="downloads" onclick="switchTab('downloads')">⬇️ Downloads</button>
-      <button class="tab-btn" data-tab="uploads" onclick="switchTab('uploads')">⬆️ Uploads</button>
-    </div>
-
-    <div id="tabContent">
-      <div class="loading-spinner"><div class="spinner"></div></div>
+  <!-- Modal -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal" id="modalContent">
+      <div class="modal-handle"></div>
     </div>
   </div>
 
-  <div class="modal-overlay" id="modalOverlay"><div class="modal" id="modalContent"></div></div>
-  <div id="toast" class="toast"></div>
+  <div id="toast" class="toast" style="display:none;"></div>
 
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 
   <script>
-    // Initialize Firebase
     firebase.initializeApp({
       apiKey: "AIzaSyC7kppUyHUaPzeLBV62NEZWuHiuz1Kz0mA",
       authDomain: "mugera-e51cc.firebaseapp.com",
       databaseURL: "https://mugera-e51cc-default-rtdb.europe-west1.firebasedatabase.app",
       projectId: "mugera-e51cc"
     });
-    
     const auth = firebase.auth();
     const db = firebase.database();
 
-    // State
     let currentClubId = null;
     let currentClubName = '';
+    let currentTab = 'members';
     let allMembers = {};
     let allInventory = {};
     let allSales = {};
     let allSessions = {};
-    let currentTab = 'members';
 
-    // Toast
-    function showToast(msg, isError) {
+    function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+    
+    function toast(msg, err) {
       const t = document.getElementById('toast');
-      t.textContent = msg;
-      t.className = isError ? 'toast error' : 'toast';
+      t.textContent = msg; t.className = 'toast' + (err ? ' error' : '');
       t.style.display = 'block';
-      setTimeout(function() { t.style.display = 'none'; }, 3000);
+      clearTimeout(t._timeout);
+      t._timeout = setTimeout(() => t.style.display = 'none', 2800);
     }
 
-    function esc(s) { 
-      if (!s) return '';
-      return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); 
-    }
-
-    // Modal
     function openModal(html) {
-      document.getElementById('modalContent').innerHTML = html;
-      document.getElementById('modalOverlay').classList.add('show');
+      document.getElementById('modalContent').innerHTML = '<div class="modal-handle"></div>' + html;
+      document.getElementById('modalOverlay').classList.add('active');
     }
-    function closeModal() {
-      document.getElementById('modalOverlay').classList.remove('show');
-    }
-    document.getElementById('modalOverlay').addEventListener('click', function(e) {
-      if (e.target === document.getElementById('modalOverlay')) closeModal();
+    function closeModal() { document.getElementById('modalOverlay').classList.remove('active'); }
+    document.getElementById('modalOverlay').addEventListener('click', function(e) { if (e.target === this) closeModal(); });
+
+    // Sidebar
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('sidebarOverlay');
+    document.getElementById('menuBtn').addEventListener('click', () => { sidebar.classList.add('open'); overlay.classList.add('open'); });
+    document.getElementById('sidebarClose').addEventListener('click', () => { sidebar.classList.remove('open'); overlay.classList.remove('open'); });
+    overlay.addEventListener('click', () => { sidebar.classList.remove('open'); overlay.classList.remove('open'); });
+
+    document.querySelectorAll('.sidebar-nav-item').forEach(item => {
+      item.addEventListener('click', function() {
+        document.querySelectorAll('.sidebar-nav-item').forEach(i => i.classList.remove('active'));
+        this.classList.add('active');
+        currentTab = this.dataset.tab;
+        sidebar.classList.remove('open');
+        overlay.classList.remove('open');
+        renderTab();
+      });
     });
 
     // Find trainer's club
-    async function findTrainerClub(user) {
-      console.log('🔍 Looking for trainer:', user.email);
-      
+    async function findClub(user) {
       try {
-        // Get ALL trainers (no index needed)
         const snap = await db.ref('workfit_trainers').once('value');
         const trainers = snap.val() || {};
-        
         for (const [id, t] of Object.entries(trainers)) {
           if (t.email && t.email.toLowerCase() === user.email.toLowerCase()) {
-            console.log('✅ Found trainer:', t.name, '→ club:', t.clubName);
             return { clubId: t.clubId || t.assignedClubId || '', clubName: t.clubName || t.assignedClub || '' };
           }
           if (t.uid === user.uid) {
-            console.log('✅ Found trainer by UID:', t.name);
             return { clubId: t.clubId || t.assignedClubId || '', clubName: t.clubName || t.assignedClub || '' };
           }
         }
-      } catch(e) {
-        console.error('Error reading trainers:', e);
-      }
-      
-      // Fallback: check users node
-      try {
-        const userSnap = await db.ref('users/' + user.uid).once('value');
-        if (userSnap.exists() && userSnap.val().clubId) {
-          console.log('✅ Found club in users node');
-          return { clubId: userSnap.val().clubId, clubName: userSnap.val().clubName || 'Club' };
-        }
       } catch(e) {}
-      
-      console.log('❌ No club found');
       return null;
     }
 
-    // Load all data - NO INDEXES NEEDED, filter in JS
     function loadData() {
       if (!currentClubId) return;
       
-      console.log('📊 Loading data for club:', currentClubId);
-      
-      // Members
-      db.ref('workfit_members').on('value', function(snap) {
-        const data = snap.val() || {};
-        allMembers = {};
-        Object.entries(data).forEach(function([id, m]) {
-          if (m && m.clubId === currentClubId) allMembers[id] = m;
-        });
-        console.log('👥 Members:', Object.keys(allMembers).length);
-        updateStats();
-        renderTab();
-      }, function(err) {
-        console.error('Members error:', err);
-        updateStats();
-        renderTab();
+      db.ref('workfit_members').on('value', snap => {
+        const data = snap.val() || {}; allMembers = {};
+        Object.entries(data).forEach(([id, m]) => { if (m && m.clubId === currentClubId) allMembers[id] = m; });
+        updateStats(); if (currentTab === 'members') renderTab();
       });
-
-      // Inventory
-      db.ref('workfit_equipment_inventory').on('value', function(snap) {
-        const data = snap.val() || {};
-        allInventory = {};
-        Object.entries(data).forEach(function([id, item]) {
-          if (item && item.clubId === currentClubId) allInventory[id] = item;
-        });
-        console.log('📦 Inventory:', Object.keys(allInventory).length);
-        updateStats();
-        renderTab();
-      }, function(err) {
-        console.error('Inventory error:', err);
-        updateStats();
-        renderTab();
+      db.ref('workfit_equipment_inventory').on('value', snap => {
+        const data = snap.val() || {}; allInventory = {};
+        Object.entries(data).forEach(([id, m]) => { if (m && m.clubId === currentClubId) allInventory[id] = m; });
+        updateStats(); if (currentTab === 'inventory') renderTab();
       });
-
-      // Sales
-      db.ref('workfit_revenue').on('value', function(snap) {
-        const data = snap.val() || {};
-        allSales = {};
-        Object.entries(data).forEach(function([id, s]) {
-          if (s && s.clubId === currentClubId) allSales[id] = s;
-        });
-        console.log('💰 Sales:', Object.keys(allSales).length);
-        updateStats();
-        renderTab();
-      }, function(err) {
-        console.error('Sales error:', err);
-        updateStats();
-        renderTab();
+      db.ref('workfit_revenue').on('value', snap => {
+        const data = snap.val() || {}; allSales = {};
+        Object.entries(data).forEach(([id, m]) => { if (m && m.clubId === currentClubId) allSales[id] = m; });
+        updateStats(); if (currentTab === 'sales') renderTab();
       });
-
-      // Sessions
-      db.ref('workfit_schedules').on('value', function(snap) {
-        const data = snap.val() || {};
-        allSessions = {};
-        Object.entries(data).forEach(function([id, s]) {
-          if (s && s.clubId === currentClubId) allSessions[id] = s;
-        });
-        console.log('📅 Sessions:', Object.keys(allSessions).length);
-        updateStats();
-        renderTab();
-      }, function(err) {
-        console.error('Sessions error:', err);
-        updateStats();
-        renderTab();
+      db.ref('workfit_schedules').on('value', snap => {
+        const data = snap.val() || {}; allSessions = {};
+        Object.entries(data).forEach(([id, m]) => { if (m && m.clubId === currentClubId) allSessions[id] = m; });
+        updateStats(); if (currentTab === 'sessions') renderTab();
       });
     }
 
     function updateStats() {
-      document.getElementById('statMembers').textContent = Object.keys(allMembers).length;
-      document.getElementById('statInventory').textContent = Object.keys(allInventory).length;
-      document.getElementById('statSales').textContent = Object.keys(allSales).length;
-      document.getElementById('statSessions').textContent = Object.keys(allSessions).length;
+      document.getElementById('statMembersVal') && (document.getElementById('statMembersVal').textContent = Object.keys(allMembers).length);
+      document.getElementById('statInventoryVal') && (document.getElementById('statInventoryVal').textContent = Object.keys(allInventory).length);
+      document.getElementById('statSalesVal') && (document.getElementById('statSalesVal').textContent = Object.keys(allSales).length);
+      document.getElementById('statSessionsVal') && (document.getElementById('statSessionsVal').textContent = Object.keys(allSessions).length);
     }
 
-    // Tab switching
-    window.switchTab = function(tab) {
-      currentTab = tab;
-      document.querySelectorAll('.tab-btn').forEach(function(b) {
-        b.classList.toggle('active', b.dataset.tab === tab);
-      });
-      document.getElementById('drawer').classList.remove('open');
-      document.getElementById('drawerOverlay').style.display = 'none';
-      renderTab();
-    };
-
     function renderTab() {
-      var c = document.getElementById('tabContent');
+      const c = document.getElementById('mainContent');
       if (!c) return;
-      
       switch(currentTab) {
         case 'members': renderMembers(c); break;
         case 'inventory': renderInventory(c); break;
@@ -361,316 +382,230 @@
       }
     }
 
-    // === MEMBERS ===
+    function renderStatsBar() {
+      return `
+        <div class="stats-row">
+          <div class="stat-card"><div class="stat-icon members"><i class="fas fa-users"></i></div><div class="stat-value" id="statMembersVal">${Object.keys(allMembers).length}</div><div class="stat-label">Members</div></div>
+          <div class="stat-card"><div class="stat-icon inventory"><i class="fas fa-box"></i></div><div class="stat-value" id="statInventoryVal">${Object.keys(allInventory).length}</div><div class="stat-label">Items</div></div>
+          <div class="stat-card"><div class="stat-icon sales"><i class="fas fa-chart-line"></i></div><div class="stat-value" id="statSalesVal">${Object.keys(allSales).length}</div><div class="stat-label">Sales</div></div>
+          <div class="stat-card"><div class="stat-icon sessions"><i class="fas fa-calendar-check"></i></div><div class="stat-value" id="statSessionsVal">${Object.keys(allSessions).length}</div><div class="stat-label">Sessions</div></div>
+        </div>`;
+    }
+
+    // MEMBERS
     function renderMembers(c) {
-      var members = Object.entries(allMembers).map(function(e) { return { id: e[0], data: e[1] }; });
-      var html = '<div class="section"><div class="section-header"><h3><i class="fas fa-users"></i> Club Members (' + members.length + ')</h3><button class="add-btn" onclick="showAddMember()">+ Add</button></div>';
-      
-      if (members.length === 0) {
-        html += '<div class="empty-state">No members yet. Tap "+ Add" to add your first member!</div>';
+      const members = Object.entries(allMembers).map(([id, m]) => ({ id, ...m }));
+      let html = `<h1 class="page-title">👥 Members</h1><p class="page-subtitle">Manage your club members</p>${renderStatsBar()}<div class="section"><div class="section-header"><h3><i class="fas fa-users"></i> All Members (${members.length})</h3><button class="btn btn-primary btn-sm" onclick="showMemberForm()"><i class="fas fa-plus"></i> Add</button></div><div class="section-body no-padding">`;
+      if (!members.length) {
+        html += `<div class="empty-state"><i class="fas fa-user-plus"></i><p>No members yet</p><button class="btn btn-primary btn-sm" onclick="showMemberForm()"><i class="fas fa-plus"></i> Add First Member</button></div>`;
       } else {
-        members.forEach(function(m) {
-          html += '<div class="list-item"><div><strong>' + esc(m.data.name || m.data.fullName || 'Member') + '</strong><br><small>' + esc(m.data.membershipTier || 'Standard') + ' · ' + (m.data.phone || '—') + '</small></div>';
-          html += '<div><span class="badge ' + (m.data.status === 'active' ? 'active' : 'inactive') + '">' + (m.data.status || 'active') + '</span>';
-          html += '<button style="background:none;border:none;color:#ef4444;cursor:pointer;margin-left:8px;" onclick="removeMember(\'' + m.id + '\')"><i class="fas fa-trash"></i></button></div></div>';
+        members.forEach(m => {
+          html += `<div class="list-item"><div class="list-item-left"><div class="list-item-icon">👤</div><div class="list-item-info"><div class="list-item-title">${esc(m.name || m.fullName || 'Member')}</div><div class="list-item-subtitle">${esc(m.membershipTier || 'Standard')} · ${m.phone || 'No phone'}</div></div></div><div class="list-item-right"><span class="badge ${m.status==='active'?'badge-success':'badge-danger'}">${m.status||'active'}</span><button class="btn btn-outline btn-xs" onclick="showMemberForm('${m.id}')"><i class="fas fa-pen"></i></button><button class="btn btn-outline btn-xs" style="color:#ef4444;" onclick="if(confirm('Remove member?')) deleteItem('workfit_members','${m.id}')"><i class="fas fa-trash"></i></button></div></div>`;
         });
       }
-      html += '</div>';
+      html += `</div></div>`;
       c.innerHTML = html;
     }
 
-    window.showAddMember = function() {
-      openModal('<div class="modal-header"><h3><i class="fas fa-user-plus"></i> Add Member</h3><button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button></div>' +
-        '<div class="form-group"><label>Full Name *</label><input id="memName" placeholder="Member name"></div>' +
-        '<div class="form-group"><label>Phone</label><input id="memPhone" placeholder="+254..."></div>' +
-        '<div class="form-group"><label>Email</label><input id="memEmail" placeholder="email@..."></div>' +
-        '<div class="form-group"><label>Membership Tier</label><select id="memTier"><option>Basic</option><option>Standard</option><option>Premium</option></select></div>' +
-        '<button class="submit-btn" onclick="addMember()">Save Member</button>');
+    window.showMemberForm = function(id) {
+      const m = id ? allMembers[id] : null;
+      openModal(`
+        <div class="modal-header"><h3>${id ? 'Edit' : 'Add'} Member</h3><button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button></div>
+        <input type="hidden" id="editId" value="${id || ''}">
+        <div class="form-group"><label>Full Name *</label><input id="memName" value="${esc(m?.name || m?.fullName || '')}" placeholder="Member name"></div>
+        <div class="form-row"><div class="form-group"><label>Phone</label><input id="memPhone" value="${esc(m?.phone || '')}" placeholder="+254..."></div><div class="form-group"><label>Email</label><input id="memEmail" value="${esc(m?.email || '')}" placeholder="email@..."></div></div>
+        <div class="form-row"><div class="form-group"><label>Tier</label><select id="memTier"><option value="Basic" ${(m?.membershipTier)==='Basic'?'selected':''}>Basic</option><option value="Standard" ${(m?.membershipTier)==='Standard'?'selected':''}>Standard</option><option value="Premium" ${(m?.membershipTier)==='Premium'?'selected':''}>Premium</option></select></div><div class="form-group"><label>Status</label><select id="memStatus"><option value="active" ${(m?.status)==='active'?'selected':''}>Active</option><option value="inactive" ${(m?.status)==='inactive'?'selected':''}>Inactive</option></select></div></div>
+        <button class="btn btn-primary" style="width:100%;margin-top:0.5rem;" onclick="saveMember()">${id ? 'Update' : 'Save'} Member</button>
+      `);
     };
 
-    window.addMember = function() {
-      var name = document.getElementById('memName').value.trim();
-      if (!name) { showToast('Name is required', true); return; }
-      
-      db.ref('workfit_members').push({
-        name: name, fullName: name,
-        phone: document.getElementById('memPhone').value,
-        email: document.getElementById('memEmail').value,
-        membershipTier: document.getElementById('memTier').value,
-        clubId: currentClubId, clubName: currentClubName,
-        status: 'active',
-        createdAt: firebase.database.ServerValue.TIMESTAMP
-      }).then(function() {
-        closeModal();
-        showToast('Member added!');
-      }).catch(function(e) {
-        showToast('Error: ' + e.message, true);
-      });
+    window.saveMember = async function() {
+      const name = document.getElementById('memName').value.trim();
+      if (!name) return toast('Name required', true);
+      const data = { name, fullName: name, phone: document.getElementById('memPhone').value, email: document.getElementById('memEmail').value, membershipTier: document.getElementById('memTier').value, status: document.getElementById('memStatus').value, clubId: currentClubId, clubName: currentClubName, updatedAt: firebase.database.ServerValue.TIMESTAMP };
+      const editId = document.getElementById('editId').value;
+      try {
+        if (editId) { await db.ref('workfit_members/' + editId).update(data); } 
+        else { data.createdAt = firebase.database.ServerValue.TIMESTAMP; await db.ref('workfit_members').push(data); }
+        closeModal(); toast(editId ? 'Updated!' : 'Added!');
+      } catch(e) { toast('Error', true); }
     };
 
-    window.removeMember = function(id) {
-      if (!confirm('Remove this member?')) return;
-      db.ref('workfit_members/' + id).remove()
-        .then(function() { showToast('Member removed'); })
-        .catch(function(e) { showToast('Error: ' + e.message, true); });
-    };
-
-    // === INVENTORY ===
+    // INVENTORY
     function renderInventory(c) {
-      var items = Object.entries(allInventory).map(function(e) { return { id: e[0], data: e[1] }; });
-      var html = '<div class="section"><div class="section-header"><h3><i class="fas fa-boxes-stacked"></i> Equipment (' + items.length + ')</h3><button class="add-btn" onclick="showAddInventory()">+ Add</button></div>';
-      
-      if (items.length === 0) {
-        html += '<div class="empty-state">No equipment. Tap "+ Add" to add items.</div>';
+      const items = Object.entries(allInventory).map(([id, m]) => ({ id, ...m }));
+      let html = `<h1 class="page-title">📦 Inventory</h1><p class="page-subtitle">Equipment & supplies</p>${renderStatsBar()}<div class="section"><div class="section-header"><h3><i class="fas fa-box"></i> Equipment (${items.length})</h3><button class="btn btn-primary btn-sm" onclick="showInventoryForm()"><i class="fas fa-plus"></i> Add</button></div><div class="section-body no-padding">`;
+      if (!items.length) {
+        html += `<div class="empty-state"><i class="fas fa-box-open"></i><p>No equipment</p><button class="btn btn-primary btn-sm" onclick="showInventoryForm()">Add Equipment</button></div>`;
       } else {
-        items.forEach(function(i) {
-          html += '<div class="list-item"><div><strong>' + esc(i.data.name) + '</strong><br><small>' + esc(i.data.category || 'General') + ' · Qty: ' + (i.data.quantity || 1) + '</small></div>';
-          html += '<div><span class="badge ' + ((i.data.condition || 'good') === 'good' ? 'active' : 'inactive') + '">' + (i.data.condition || 'good') + '</span>';
-          html += '<button style="background:none;border:none;color:#ef4444;cursor:pointer;margin-left:8px;" onclick="removeInventory(\'' + i.id + '\')"><i class="fas fa-trash"></i></button></div></div>';
+        items.forEach(i => {
+          html += `<div class="list-item"><div class="list-item-left"><div class="list-item-icon">📦</div><div class="list-item-info"><div class="list-item-title">${esc(i.name)}</div><div class="list-item-subtitle">${esc(i.category||'General')} · Qty: ${i.quantity||1} · ${i.condition||'good'}</div></div></div><div class="list-item-right"><span class="badge ${(i.condition||'good')==='good'?'badge-success':(i.condition||'good')==='maintenance'?'badge-warning':'badge-danger'}">${i.condition||'good'}</span><button class="btn btn-outline btn-xs" onclick="showInventoryForm('${i.id}')"><i class="fas fa-pen"></i></button><button class="btn btn-outline btn-xs" style="color:#ef4444;" onclick="if(confirm('Remove?')) deleteItem('workfit_equipment_inventory','${i.id}')"><i class="fas fa-trash"></i></button></div></div>`;
         });
       }
-      html += '</div>';
-      c.innerHTML = html;
+      html += `</div></div>`; c.innerHTML = html;
     }
 
-    window.showAddInventory = function() {
-      openModal('<div class="modal-header"><h3><i class="fas fa-plus-circle"></i> Add Equipment</h3><button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button></div>' +
-        '<div class="form-group"><label>Name *</label><input id="invName" placeholder="Equipment name"></div>' +
-        '<div class="form-group"><label>Category</label><select id="invCat"><option>Cardio</option><option>Strength</option><option>Flexibility</option><option>Machines</option><option>Accessories</option></select></div>' +
-        '<div class="form-group"><label>Quantity</label><input id="invQty" type="number" value="1" min="1"></div>' +
-        '<div class="form-group"><label>Condition</label><select id="invCond"><option>good</option><option>maintenance</option><option>damaged</option></select></div>' +
-        '<button class="submit-btn" onclick="addInventory()">Save Equipment</button>');
+    window.showInventoryForm = function(id) {
+      const i = id ? allInventory[id] : null;
+      openModal(`
+        <div class="modal-header"><h3>${id ? 'Edit' : 'Add'} Equipment</h3><button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button></div>
+        <input type="hidden" id="editId" value="${id || ''}">
+        <div class="form-group"><label>Name *</label><input id="invName" value="${esc(i?.name || '')}" placeholder="Equipment name"></div>
+        <div class="form-row"><div class="form-group"><label>Category</label><select id="invCat">${['Cardio','Strength','Flexibility','Machines','Accessories'].map(c => `<option ${(i?.category)==c?'selected':''}>${c}</option>`).join('')}</select></div><div class="form-group"><label>Quantity</label><input id="invQty" type="number" value="${i?.quantity||1}" min="1"></div></div>
+        <div class="form-row"><div class="form-group"><label>Condition</label><select id="invCond"><option value="good" ${(i?.condition)=='good'?'selected':''}>Good</option><option value="maintenance" ${(i?.condition)=='maintenance'?'selected':''}>Maintenance</option><option value="damaged" ${(i?.condition)=='damaged'?'selected':''}>Damaged</option></select></div><div class="form-group"><label>Value (KES)</label><input id="invValue" type="number" value="${i?.value||''}" placeholder="5000"></div></div>
+        <button class="btn btn-primary" style="width:100%;" onclick="saveInventory()">${id ? 'Update' : 'Save'}</button>
+      `);
     };
 
-    window.addInventory = function() {
-      var name = document.getElementById('invName').value.trim();
-      if (!name) { showToast('Name is required', true); return; }
-      
-      db.ref('workfit_equipment_inventory').push({
-        name: name,
-        category: document.getElementById('invCat').value,
-        quantity: Number(document.getElementById('invQty').value) || 1,
-        condition: document.getElementById('invCond').value,
-        clubId: currentClubId, clubName: currentClubName,
-        createdAt: firebase.database.ServerValue.TIMESTAMP
-      }).then(function() {
-        closeModal();
-        showToast('Equipment added!');
-      }).catch(function(e) {
-        showToast('Error: ' + e.message, true);
-      });
+    window.saveInventory = async function() {
+      const name = document.getElementById('invName').value.trim();
+      if (!name) return toast('Name required', true);
+      const data = { name, category: document.getElementById('invCat').value, quantity: Number(document.getElementById('invQty').value)||1, condition: document.getElementById('invCond').value, value: Number(document.getElementById('invValue').value)||0, clubId: currentClubId, clubName: currentClubName, updatedAt: firebase.database.ServerValue.TIMESTAMP };
+      const editId = document.getElementById('editId').value;
+      try {
+        if (editId) { await db.ref('workfit_equipment_inventory/' + editId).update(data); } 
+        else { data.createdAt = firebase.database.ServerValue.TIMESTAMP; await db.ref('workfit_equipment_inventory').push(data); }
+        closeModal(); toast(editId ? 'Updated!' : 'Added!');
+      } catch(e) { toast('Error', true); }
     };
 
-    window.removeInventory = function(id) {
-      if (!confirm('Remove this item?')) return;
-      db.ref('workfit_equipment_inventory/' + id).remove()
-        .then(function() { showToast('Item removed'); })
-        .catch(function(e) { showToast('Error: ' + e.message, true); });
-    };
-
-    // === SALES ===
+    // SALES
     function renderSales(c) {
-      var sales = Object.entries(allSales).map(function(e) { return { id: e[0], data: e[1] }; });
-      var total = sales.reduce(function(sum, s) { return sum + (Number(s.data.amount) || 0); }, 0);
-      var html = '<div class="section"><div class="section-header"><h3><i class="fas fa-cash-register"></i> Sales · KES ' + total.toLocaleString() + '</h3><button class="add-btn" onclick="showAddSale()">+ Sale</button></div>';
-      
-      if (sales.length === 0) {
-        html += '<div class="empty-state">No sales recorded yet.</div>';
+      const sales = Object.entries(allSales).map(([id, m]) => ({ id, ...m }));
+      const total = sales.reduce((s, x) => s + (Number(x.amount)||0), 0);
+      let html = `<h1 class="page-title">💰 Sales</h1><p class="page-subtitle">Total: KES ${total.toLocaleString()}</p>${renderStatsBar()}<div class="section"><div class="section-header"><h3><i class="fas fa-chart-line"></i> Transactions (${sales.length})</h3><button class="btn btn-primary btn-sm" onclick="showSaleForm()"><i class="fas fa-plus"></i> Record</button></div><div class="section-body no-padding">`;
+      if (!sales.length) {
+        html += `<div class="empty-state"><i class="fas fa-receipt"></i><p>No sales yet</p><button class="btn btn-primary btn-sm" onclick="showSaleForm()">Record Sale</button></div>`;
       } else {
-        sales.forEach(function(s) {
-          html += '<div class="list-item"><div><strong>' + esc(s.data.description || s.data.type || 'Sale') + '</strong><br><small>' + (s.data.date || '') + ' · ' + (s.data.customerName || '') + '</small></div>';
-          html += '<div><span class="badge sale">KES ' + (s.data.amount || 0).toLocaleString() + '</span></div></div>';
+        sales.sort((a,b) => (b.timestamp||0) - (a.timestamp||0)).forEach(s => {
+          html += `<div class="list-item"><div class="list-item-left"><div class="list-item-icon">💵</div><div class="list-item-info"><div class="list-item-title">${esc(s.description || s.type || 'Sale')}</div><div class="list-item-subtitle">${s.date || ''} · ${esc(s.customerName || 'Walk-in')}</div></div></div><div class="list-item-right"><strong style="font-size:0.8rem;color:var(--text);">KES ${(s.amount||0).toLocaleString()}</strong><button class="btn btn-outline btn-xs" style="color:#ef4444;margin-left:8px;" onclick="if(confirm('Delete?')) deleteItem('workfit_revenue','${s.id}')"><i class="fas fa-trash"></i></button></div></div>`;
         });
       }
-      html += '</div>';
-      c.innerHTML = html;
+      html += `</div></div>`; c.innerHTML = html;
     }
 
-    window.showAddSale = function() {
-      openModal('<div class="modal-header"><h3><i class="fas fa-plus-circle"></i> Record Sale</h3><button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button></div>' +
-        '<div class="form-group"><label>Description *</label><input id="saleDesc" placeholder="e.g. Protein shake"></div>' +
-        '<div class="form-group"><label>Amount (KES) *</label><input id="saleAmt" type="number" placeholder="500"></div>' +
-        '<div class="form-group"><label>Customer Name</label><input id="saleCust" placeholder="Customer"></div>' +
-        '<div class="form-group"><label>Type</label><select id="saleType"><option>Product</option><option>Membership</option><option>Session</option><option>Other</option></select></div>' +
-        '<button class="submit-btn" onclick="addSale()">Record Sale</button>');
+    window.showSaleForm = function() {
+      openModal(`
+        <div class="modal-header"><h3>Record Sale</h3><button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button></div>
+        <div class="form-group"><label>Description *</label><input id="saleDesc" placeholder="e.g. Protein shake"></div>
+        <div class="form-row"><div class="form-group"><label>Amount (KES) *</label><input id="saleAmt" type="number" placeholder="500"></div><div class="form-group"><label>Type</label><select id="saleType"><option>Product</option><option>Membership</option><option>Session</option><option>Other</option></select></div></div>
+        <div class="form-group"><label>Customer</label><input id="saleCust" placeholder="Customer name (optional)"></div>
+        <button class="btn btn-primary" style="width:100%;" onclick="saveSale()">Record Sale</button>
+      `);
     };
 
-    window.addSale = function() {
-      var desc = document.getElementById('saleDesc').value.trim();
-      var amt = document.getElementById('saleAmt').value;
-      if (!desc || !amt) { showToast('Description and amount required', true); return; }
-      
-      db.ref('workfit_revenue').push({
-        description: desc,
-        type: document.getElementById('saleType').value,
-        amount: Number(amt),
-        customerName: document.getElementById('saleCust').value,
-        clubId: currentClubId, clubName: currentClubName,
-        date: new Date().toISOString().split('T')[0],
-        createdAt: firebase.database.ServerValue.TIMESTAMP
-      }).then(function() {
-        closeModal();
-        showToast('Sale recorded!');
-      }).catch(function(e) {
-        showToast('Error: ' + e.message, true);
-      });
+    window.saveSale = async function() {
+      const desc = document.getElementById('saleDesc').value.trim();
+      const amt = document.getElementById('saleAmt').value;
+      if (!desc || !amt) return toast('Description and amount required', true);
+      try {
+        await db.ref('workfit_revenue').push({ description: desc, amount: Number(amt), type: document.getElementById('saleType').value, customerName: document.getElementById('saleCust').value, clubId: currentClubId, clubName: currentClubName, date: new Date().toISOString().split('T')[0], createdAt: firebase.database.ServerValue.TIMESTAMP, timestamp: Date.now() });
+        closeModal(); toast('Sale recorded!');
+      } catch(e) { toast('Error', true); }
     };
 
-    // === SESSIONS ===
-    var weeklySessions = [
-      { day: 'Monday', time: '6:00 AM - 7:00 AM', name: 'Morning Cardio Blast', type: 'Cardio' },
-      { day: 'Monday', time: '5:00 PM - 6:00 PM', name: 'Strength Foundations', type: 'Strength' },
-      { day: 'Tuesday', time: '6:00 AM - 7:00 AM', name: 'HIIT Power Hour', type: 'HIIT' },
-      { day: 'Tuesday', time: '5:00 PM - 6:00 PM', name: 'Yoga Flow', type: 'Yoga' },
-      { day: 'Wednesday', time: '6:00 AM - 7:00 AM', name: 'Spin & Burn', type: 'Spin' },
-      { day: 'Wednesday', time: '5:00 PM - 6:00 PM', name: 'CrossFit Challenge', type: 'CrossFit' },
-      { day: 'Thursday', time: '6:00 AM - 7:00 AM', name: 'Pilates Core', type: 'Pilates' },
-      { day: 'Thursday', time: '5:00 PM - 6:00 PM', name: 'Zumba Party', type: 'Zumba' },
-      { day: 'Friday', time: '6:00 AM - 7:00 AM', name: 'Full Body Strength', type: 'Strength' },
-      { day: 'Friday', time: '5:00 PM - 6:00 PM', name: 'Cardio Kickboxing', type: 'Cardio' },
-      { day: 'Saturday', time: '8:00 AM - 9:30 AM', name: 'Weekend Warrior', type: 'HIIT' },
-      { day: 'Saturday', time: '10:00 AM - 11:00 AM', name: 'Family Fitness', type: 'Aerobics' }
+    // SESSIONS
+    const WEEKLY_SESSIONS = [
+      { day: 'Monday', time: '6:00 AM', name: 'Morning Cardio', type: 'Cardio' },
+      { day: 'Monday', time: '5:00 PM', name: 'Strength Foundations', type: 'Strength' },
+      { day: 'Tuesday', time: '6:00 AM', name: 'HIIT Power Hour', type: 'HIIT' },
+      { day: 'Tuesday', time: '5:00 PM', name: 'Yoga Flow', type: 'Yoga' },
+      { day: 'Wednesday', time: '6:00 AM', name: 'Spin & Burn', type: 'Spin' },
+      { day: 'Wednesday', time: '5:00 PM', name: 'CrossFit Challenge', type: 'CrossFit' },
+      { day: 'Thursday', time: '6:00 AM', name: 'Pilates Core', type: 'Pilates' },
+      { day: 'Thursday', time: '5:00 PM', name: 'Zumba Party', type: 'Zumba' },
+      { day: 'Friday', time: '6:00 AM', name: 'Full Body Strength', type: 'Strength' },
+      { day: 'Friday', time: '5:00 PM', name: 'Cardio Kickboxing', type: 'Cardio' },
+      { day: 'Saturday', time: '8:00 AM', name: 'Weekend Warrior', type: 'HIIT' },
+      { day: 'Saturday', time: '10:00 AM', name: 'Family Fitness', type: 'Aerobics' }
     ];
 
     function renderSessions(c) {
-      var sessions = Object.entries(allSessions).map(function(e) { return { id: e[0], data: e[1] }; });
-      sessions.sort(function(a, b) { return (a.data.day || '').localeCompare(b.data.day || ''); });
-      
-      var html = '<div class="section"><div class="section-header"><h3><i class="fas fa-calendar-week"></i> Weekly Sessions (' + sessions.length + ')</h3><button class="add-btn" onclick="initSessions()">🔄 Reset Week</button></div>';
-      
-      if (sessions.length === 0) {
-        html += '<div class="empty-state">No sessions. Tap "Reset Week" to create the standard schedule.</div>';
+      const sessions = Object.entries(allSessions).map(([id, m]) => ({ id, ...m }));
+      sessions.sort((a,b) => ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'].indexOf(a.day) - ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'].indexOf(b.day));
+      let html = `<h1 class="page-title">📅 Sessions</h1><p class="page-subtitle">Weekly training schedule</p>${renderStatsBar()}<div class="section"><div class="section-header"><h3><i class="fas fa-calendar-week"></i> This Week (${sessions.length})</h3><button class="btn btn-primary btn-sm" onclick="initSessions()"><i class="fas fa-sync"></i> Reset Week</button></div><div class="section-body no-padding">`;
+      if (!sessions.length) {
+        html += `<div class="empty-state"><i class="fas fa-calendar-plus"></i><p>No sessions scheduled</p><button class="btn btn-primary btn-sm" onclick="initSessions()">Initialize Weekly Schedule</button></div>`;
       } else {
-        sessions.forEach(function(s) {
-          var done = s.data.status === 'done';
-          html += '<div class="session-card' + (done ? ' done' : '') + '">';
-          html += '<div class="session-header"><strong>' + esc(s.data.name) + '</strong><span class="badge ' + (done ? 'active' : 'inactive') + '">' + (s.data.status || 'pending') + '</span></div>';
-          html += '<div class="session-time">📅 ' + s.data.day + ' · ⏰ ' + s.data.time + ' · 🏷️ ' + s.data.type + '</div>';
-          if (!done) {
-            html += '<button class="add-btn" style="margin-top:0.5rem;font-size:0.6rem;" onclick="markDone(\'' + s.id + '\')">✅ Mark Done</button>';
-          } else {
-            html += '<small style="color:#065f46;">✔ Completed</small>';
-          }
-          html += '</div>';
+        sessions.forEach(s => {
+          const done = s.status === 'done';
+          html += `<div class="session-item ${done ? 'completed' : ''}"><div class="session-day">${s.day}<br><small style="color:var(--text-secondary);">${s.time}</small></div><div class="session-info"><div class="session-name">${esc(s.name)}</div><div class="session-meta">${s.type} · ${done ? '✅ Completed' : '⏳ Pending'}</div></div><div class="session-actions">${!done ? `<button class="btn btn-primary btn-xs" onclick="markDone('${s.id}')">Done</button>` : ''}<button class="btn btn-outline btn-xs" style="color:#ef4444;margin-left:4px;" onclick="if(confirm('Delete?')) deleteItem('workfit_schedules','${s.id}')"><i class="fas fa-trash"></i></button></div></div>`;
         });
       }
-      html += '</div>';
-      c.innerHTML = html;
+      html += `</div></div>`; c.innerHTML = html;
     }
 
-    window.initSessions = function() {
-      if (!confirm('Reset weekly sessions? This creates the standard 12-session weekly schedule.')) return;
-      var promises = weeklySessions.map(function(s) {
-        return db.ref('workfit_schedules').push({
-          day: s.day, time: s.time, name: s.name, type: s.type,
-          clubId: currentClubId, clubName: currentClubName,
-          status: 'pending',
-          createdAt: firebase.database.ServerValue.TIMESTAMP
-        });
-      });
-      Promise.all(promises).then(function() {
-        showToast('Weekly sessions created!');
-      }).catch(function(e) {
-        showToast('Error: ' + e.message, true);
-      });
+    window.initSessions = async function() {
+      if (!confirm('Create the standard 12-session weekly schedule?')) return;
+      try {
+        for (const s of WEEKLY_SESSIONS) {
+          await db.ref('workfit_schedules').push({ ...s, clubId: currentClubId, clubName: currentClubName, status: 'pending', createdAt: firebase.database.ServerValue.TIMESTAMP });
+        }
+        toast('Schedule created!');
+      } catch(e) { toast('Error', true); }
     };
 
-    window.markDone = function(id) {
-      db.ref('workfit_schedules/' + id).update({
-        status: 'done',
-        completedAt: firebase.database.ServerValue.TIMESTAMP
-      }).then(function() {
-        showToast('Session marked complete!');
-      }).catch(function(e) {
-        showToast('Error: ' + e.message, true);
-      });
+    window.markDone = async function(id) {
+      try { await db.ref('workfit_schedules/' + id).update({ status: 'done', completedAt: firebase.database.ServerValue.TIMESTAMP }); toast('Marked done!'); } catch(e) { toast('Error', true); }
     };
 
-    // === DOWNLOADS ===
+    // DOWNLOADS
     function renderDownloads(c) {
-      var files = [
-        { name: 'WorkFit Trainer Manual.pdf', icon: 'fa-file-pdf' },
-        { name: 'Session Planning Template.xlsx', icon: 'fa-file-excel' },
-        { name: 'Member Registration Form.pdf', icon: 'fa-file-pdf' },
-        { name: 'Equipment Maintenance Log.docx', icon: 'fa-file-word' },
-        { name: 'Weekly Schedule Template.pdf', icon: 'fa-file-pdf' }
+      const files = [
+        { name: 'WorkFit Trainer Manual', icon: 'fa-file-pdf', color: '#ef4444' },
+        { name: 'Session Planning Template', icon: 'fa-file-excel', color: '#10b981' },
+        { name: 'Member Registration Form', icon: 'fa-file-pdf', color: '#ef4444' },
+        { name: 'Equipment Maintenance Log', icon: 'fa-file-word', color: '#3b82f6' },
+        { name: 'Weekly Schedule Template', icon: 'fa-file-pdf', color: '#ef4444' }
       ];
-      var html = '<div class="section"><div class="section-header"><h3><i class="fas fa-download"></i> Downloads</h3></div>';
-      files.forEach(function(f) {
-        html += '<div class="file-item"><div><i class="fas ' + f.icon + '" style="color:var(--orange);margin-right:8px;"></i> ' + f.name + '</div><button class="add-btn" style="font-size:0.6rem;" onclick="showToast(\'Download started (demo)\')"><i class="fas fa-download"></i></button></div>';
-      });
-      html += '</div>';
-      c.innerHTML = html;
+      c.innerHTML = `<h1 class="page-title">📥 Resources</h1><p class="page-subtitle">Download important documents</p><div class="section"><div class="section-header"><h3><i class="fas fa-folder"></i> Available Files</h3></div><div class="section-body no-padding">${files.map(f => `<div class="list-item"><div class="list-item-left"><div class="list-item-icon" style="color:${f.color};"><i class="fas ${f.icon}"></i></div><div class="list-item-info"><div class="list-item-title">${f.name}</div></div></div><button class="btn btn-outline btn-sm" onclick="toast('Download starting...')"><i class="fas fa-download"></i></button></div>`).join('')}</div></div>`;
     }
 
-    // === UPLOADS ===
+    // UPLOADS
     function renderUploads(c) {
-      var html = '<div class="section"><div class="section-header"><h3><i class="fas fa-upload"></i> Upload Files</h3></div>';
-      html += '<div class="file-upload" onclick="document.getElementById(\'fileInput\').click()"><i class="fas fa-cloud-upload-alt"></i><p style="font-size:0.75rem;">Tap to upload session reports, photos, or documents</p><input type="file" id="fileInput" style="display:none;" onchange="handleUpload(this)" multiple></div>';
-      html += '<div id="uploadedFiles"><p style="font-size:0.65rem;color:var(--text-muted);">No files uploaded yet</p></div></div>';
-      c.innerHTML = html;
+      c.innerHTML = `<h1 class="page-title">📤 Uploads</h1><p class="page-subtitle">Submit session reports & documents</p><div class="section"><div class="section-body"><div style="border:2px dashed #e2e8f0;border-radius:16px;padding:2.5rem;text-align:center;cursor:pointer;" onclick="document.getElementById('fileInput').click()"><i class="fas fa-cloud-upload-alt" style="font-size:2.5rem;color:#cbd5e1;display:block;margin-bottom:0.8rem;"></i><p style="font-weight:600;font-size:0.85rem;">Tap to select files</p><p style="font-size:0.7rem;color:var(--text-secondary);">Session reports, photos, documents</p><input type="file" id="fileInput" style="display:none;" multiple onchange="handleUpload(this)"></div><div id="uploadedFiles" style="margin-top:1rem;"></div></div></div>`;
     }
 
     window.handleUpload = function(input) {
-      var files = input.files;
+      const files = input.files;
       if (!files.length) return;
-      var html = '';
-      for (var i = 0; i < files.length; i++) {
-        html += '<div class="file-item"><span>📄 ' + files[i].name + '</span><span style="font-size:0.6rem;color:var(--text-muted);">' + (files[i].size / 1024).toFixed(1) + ' KB</span></div>';
-      }
+      let html = '';
+      for (const f of files) { html += `<div class="list-item"><div class="list-item-left"><div class="list-item-icon">📄</div><div class="list-item-info"><div class="list-item-title">${f.name}</div><div class="list-item-subtitle">${(f.size/1024).toFixed(1)} KB</div></div></div><span class="badge badge-success">Selected</span></div>`; }
       document.getElementById('uploadedFiles').innerHTML = html;
-      showToast(files.length + ' file(s) selected (demo)');
+      toast(`${files.length} file(s) selected`);
+    };
+
+    // Delete helper
+    window.deleteItem = async function(path, id) {
+      try { await db.ref(path + '/' + id).remove(); toast('Deleted'); } catch(e) { toast('Error', true); }
     };
 
     // Logout
-    window.logout = function() {
-      auth.signOut().then(function() {
-        window.location.href = '/index.html';
-      });
+    window.handleLogout = async function() {
+      try { await auth.signOut(); window.location.href = '/'; } catch(e) { toast('Error signing out', true); }
     };
 
-    // Drawer
-    document.getElementById('menuBtn').addEventListener('click', function() {
-      document.getElementById('drawerOverlay').style.display = 'block';
-      document.getElementById('drawer').classList.add('open');
-    });
-    document.getElementById('drawerClose').addEventListener('click', function() {
-      document.getElementById('drawerOverlay').style.display = 'none';
-      document.getElementById('drawer').classList.remove('open');
-    });
-    document.getElementById('drawerOverlay').addEventListener('click', function(e) {
-      if (e.target === document.getElementById('drawerOverlay')) {
-        document.getElementById('drawerOverlay').style.display = 'none';
-        document.getElementById('drawer').classList.remove('open');
-      }
-    });
-
     // Auth
-    auth.onAuthStateChanged(function(user) {
-      if (!user) {
-        window.location.href = '/index.html';
-        return;
-      }
+    auth.onAuthStateChanged(async user => {
+      if (!user) { window.location.href = '/'; return; }
       
-      document.getElementById('drawerName').textContent = user.displayName || user.email.split('@')[0] || 'Trainer';
-      document.getElementById('drawerEmail').textContent = user.email;
-      document.getElementById('drawerAvatar').textContent = (user.displayName || user.email[0] || 'T').substring(0, 2).toUpperCase();
+      document.getElementById('sidebarName').textContent = user.displayName || user.email?.split('@')[0] || 'Trainer';
+      document.getElementById('sidebarEmail').textContent = user.email;
+      document.getElementById('sidebarAvatar').textContent = (user.displayName || user.email?.[0] || 'T').substring(0,2).toUpperCase();
+      document.getElementById('topName').textContent = user.displayName?.split(' ')[0] || 'Trainer';
+      document.getElementById('topAvatar').textContent = (user.displayName || user.email?.[0] || 'T').substring(0,2).toUpperCase();
 
-      findTrainerClub(user).then(function(assignment) {
-        if (assignment && assignment.clubId) {
-          currentClubId = assignment.clubId;
-          currentClubName = assignment.clubName || 'Your Club';
-          document.getElementById('trainerClubName').textContent = currentClubName;
-          document.getElementById('clubInfo').textContent = 'Managing: ' + currentClubName;
-          loadData();
-        } else {
-          currentClubId = null;
-          document.getElementById('trainerClubName').textContent = 'No Club';
-          document.getElementById('clubInfo').textContent = '⚠️ No club assigned. Contact admin.';
-          document.getElementById('tabContent').innerHTML = '<div class="section"><div class="empty-state"><i class="fas fa-exclamation-triangle" style="font-size:2rem;color:var(--warning);display:block;margin-bottom:1rem;"></i><p><strong>No Club Assigned</strong></p><p style="margin-top:0.5rem;">Your account is not linked to any WorkFit club.</p><p style="margin-top:0.5rem;font-size:0.65rem;">Email: ' + user.email + '</p></div></div>';
-          updateStats();
-        }
-      });
+      const assignment = await findClub(user);
+      if (assignment && assignment.clubId) {
+        currentClubId = assignment.clubId;
+        currentClubName = assignment.clubName || 'Your Club';
+        document.getElementById('clubTag').textContent = currentClubName;
+        loadData();
+        renderTab();
+      } else {
+        document.getElementById('clubTag').textContent = 'No Club';
+        document.getElementById('mainContent').innerHTML = `<div class="section"><div class="section-body"><div class="empty-state"><i class="fas fa-exclamation-triangle" style="color:#f59e0b;"></i><p><strong>No Club Assigned</strong></p><p>Contact your administrator to assign you to a WorkFit club.</p></div></div></div>`;
+      }
     });
   </script>
 </body>
