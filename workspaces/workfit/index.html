@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Trainer Hub | WorkFit Club</title>
+  <meta name="theme-color" content="#f97316">
+  <link rel="icon" type="image/png" href="https://i.postimg.cc/rFfXDj3L/kazinni-removebg-preview(1).png">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --orange: #f97316; --orange-dark: #c2410c; --orange-light: #fb923c;
+      --card-bg: #ffffff; --text-primary: #1e293b; --text-muted: #64748b;
+      --border-light: #fed7aa; --success: #10b981; --warning: #f59e0b; --danger: #ef4444; --info: #3b82f6;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(145deg, #fff7ed 0%, #ffffff 100%);
+      color: var(--text-primary); min-height: 100vh; padding-bottom: 80px;
+    }
+    .navbar {
+      background: rgba(255,255,255,0.95); backdrop-filter: blur(16px);
+      padding: 0.5rem 1rem; display: flex; justify-content: space-between; align-items: center;
+      border-bottom: 2px solid rgba(249,115,22,0.3); position: sticky; top: 0; z-index: 100;
+    }
+    .logo { display: flex; align-items: center; gap: 10px; }
+    .logo-img { height: 36px; width: 36px; border-radius: 10px; object-fit: contain; background: white; box-shadow: 0 4px 12px rgba(249,115,22,0.2); }
+    .logo-text { font-weight: 800; font-size: 1rem; background: linear-gradient(145deg, #fb923c, #c2410c); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .trainer-badge { background: var(--orange); color: white; padding: 0.2rem 0.6rem; border-radius: 12px; font-size: 0.6rem; font-weight: 700; }
+    .menu-btn { background: none; border: none; font-size: 1.3rem; cursor: pointer; color: var(--orange-dark); width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; }
+    .drawer-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000; display: none; backdrop-filter: blur(4px); }
+    .drawer { position: fixed; top: 0; left: -280px; width: 280px; height: 100%; background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%); transition: left 0.3s ease; z-index: 1001; display: flex; flex-direction: column; }
+    .drawer.open { left: 0; }
+    .drawer-header { padding: 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between; align-items: center; }
+    .drawer-close { background: none; border: none; color: #94a3b8; font-size: 1.2rem; cursor: pointer; }
+    .drawer-user { padding: 1.2rem 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 12px; }
+    .drawer-avatar { width: 44px; height: 44px; background: linear-gradient(135deg, #f97316, #c2410c); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; color: white; }
+    .drawer-nav { flex: 1; padding: 1rem 0; }
+    .drawer-nav-item { display: flex; align-items: center; gap: 12px; padding: 0.7rem 1.5rem; color: #cbd5e1; text-decoration: none; font-size: 0.8rem; transition: all 0.2s; }
+    .drawer-nav-item:hover { background: rgba(249,115,22,0.15); color: var(--orange-light); }
+    .drawer-nav-item i { width: 20px; }
+    .drawer-footer { padding: 1rem 1.5rem; border-top: 1px solid rgba(255,255,255,0.1); }
+    .drawer-logout { width: 100%; padding: 0.7rem; background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.2); border-radius: 12px; color: #ef4444; font-weight: 600; cursor: pointer; }
+
+    .container { padding: 1rem; max-width: 1000px; margin: 0 auto; }
+    .page-header { margin-bottom: 1rem; }
+    .page-header h1 { font-size: 1.2rem; font-weight: 800; }
+    .page-header p { font-size: 0.7rem; color: var(--text-muted); }
+
+    .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 1rem; }
+    .stat-card { background: white; border-radius: 14px; padding: 0.7rem; text-align: center; border: 1px solid var(--border-light); }
+    .stat-number { font-size: 1.3rem; font-weight: 800; color: var(--orange-dark); }
+    .stat-label { font-size: 0.55rem; color: var(--text-muted); text-transform: uppercase; }
+
+    .tab-nav { display: flex; gap: 4px; background: #f8fafc; border-radius: 30px; padding: 4px; margin-bottom: 1rem; overflow-x: auto; }
+    .tab-btn { flex: 1; min-width: fit-content; padding: 0.5rem 0.8rem; border-radius: 26px; border: none; background: transparent; font-weight: 600; font-size: 0.65rem; cursor: pointer; transition: all 0.2s; white-space: nowrap; }
+    .tab-btn.active { background: var(--orange); color: white; box-shadow: 0 4px 12px rgba(249,115,22,0.2); }
+
+    .section { background: white; border-radius: 16px; padding: 1rem; border: 1px solid var(--border-light); margin-bottom: 1rem; }
+    .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.8rem; }
+    .section-header h3 { font-size: 0.85rem; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+    .add-btn { background: var(--orange); color: white; border: none; padding: 0.4rem 0.8rem; border-radius: 20px; font-size: 0.65rem; font-weight: 600; cursor: pointer; }
+    .list-item { display: flex; justify-content: space-between; align-items: center; padding: 0.6rem 0; border-bottom: 1px solid #f1f5f9; font-size: 0.75rem; }
+    .list-item:last-child { border-bottom: none; }
+    .badge { padding: 0.15rem 0.5rem; border-radius: 12px; font-size: 0.6rem; font-weight: 600; }
+    .badge.active { background: #d1fae5; color: #065f46; }
+    .badge.inactive { background: #fee2e2; color: #991b1b; }
+    .badge.sale { background: #fef3c7; color: #92400e; }
+    .session-card { background: #fff7ed; border-radius: 12px; padding: 0.8rem; margin-bottom: 0.5rem; border-left: 3px solid var(--orange); }
+    .session-card.done { opacity: 0.6; border-left-color: var(--success); }
+    .session-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.3rem; }
+    .session-time { font-size: 0.6rem; color: var(--text-muted); }
+    .empty-state { text-align: center; padding: 1.5rem; color: #94a3b8; font-size: 0.75rem; }
+
+    .modal-overlay { position: fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.5); z-index:2000; display:none; align-items:flex-end; justify-content:center; }
+    .modal-overlay.show { display:flex; }
+    .modal { background:white; border-radius:20px 20px 0 0; padding:1.2rem; width:100%; max-width:500px; max-height:85vh; overflow-y:auto; animation:slideUp 0.25s ease; }
+    @keyframes slideUp { from { transform:translateY(100%); } to { transform:translateY(0); } }
+    .modal-header { display:flex; align-items:center; gap:8px; margin-bottom:1rem; padding-bottom:0.5rem; border-bottom:1px solid var(--border-light); }
+    .modal-close { margin-left:auto; background:none; border:none; font-size:1.2rem; cursor:pointer; }
+    .form-group { display:flex; flex-direction:column; gap:0.3rem; margin-bottom:0.8rem; }
+    .form-group label { font-weight:600; font-size:0.7rem; color:#334155; }
+    .form-group input, .form-group select, .form-group textarea { padding:0.6rem; border:1px solid #e2e8f0; border-radius:10px; font-family:'Inter',sans-serif; font-size:0.8rem; background:#f8fafc; outline:none; }
+    .form-group input:focus, .form-group select:focus { border-color:var(--orange); }
+    .submit-btn { background:var(--orange); color:white; border:none; padding:0.7rem; border-radius:12px; font-weight:700; font-size:0.8rem; cursor:pointer; width:100%; }
+    .toast { position:fixed; bottom:20px; left:20px; right:20px; background:var(--success); color:white; padding:0.7rem; border-radius:12px; text-align:center; z-index:3000; display:none; }
+    .toast.error { background:var(--danger); }
+    .file-upload { border:2px dashed #e2e8f0; border-radius:12px; padding:1.5rem; text-align:center; cursor:pointer; margin-bottom:0.8rem; }
+    .file-upload i { font-size:2rem; color:var(--orange); display:block; margin-bottom:0.5rem; }
+    .file-item { display:flex; justify-content:space-between; align-items:center; padding:0.5rem; background:#f8fafc; border-radius:8px; margin-bottom:0.3rem; font-size:0.7rem; }
+
+    @media (max-width:600px) {
+      .stats-row { grid-template-columns: repeat(2, 1fr); }
+      .tab-btn { font-size: 0.6rem; padding: 0.4rem 0.6rem; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="logo">
+      <img src="https://i.postimg.cc/rFfXDj3L/kazinni-removebg-preview(1).png" alt="Logo" class="logo-img">
+      <span class="logo-text">WorkFit</span>
+      <span class="trainer-badge" id="trainerClubName">Loading...</span>
+    </div>
+    <button class="menu-btn" id="menuBtn"><i class="fas fa-bars"></i></button>
+  </nav>
+
+  <div class="drawer-overlay" id="drawerOverlay">
+    <div class="drawer" id="drawer">
+      <div class="drawer-header">
+        <span style="color:white;font-weight:700;">Trainer Hub</span>
+        <button class="drawer-close" id="drawerClose"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="drawer-user">
+        <div class="drawer-avatar" id="drawerAvatar">TR</div>
+        <div style="color:white;"><h4 style="font-size:0.8rem;" id="drawerName">Trainer</h4><p style="font-size:0.6rem;color:#94a3b8;" id="drawerEmail">...</p></div>
+      </div>
+      <div class="drawer-nav">
+        <a href="#" onclick="switchTab('members')" class="drawer-nav-item"><i class="fas fa-users"></i> Members</a>
+        <a href="#" onclick="switchTab('inventory')" class="drawer-nav-item"><i class="fas fa-boxes-stacked"></i> Inventory</a>
+        <a href="#" onclick="switchTab('sales')" class="drawer-nav-item"><i class="fas fa-cash-register"></i> Sales</a>
+        <a href="#" onclick="switchTab('sessions')" class="drawer-nav-item"><i class="fas fa-calendar-week"></i> Weekly Sessions</a>
+        <a href="#" onclick="switchTab('downloads')" class="drawer-nav-item"><i class="fas fa-download"></i> Downloads</a>
+        <a href="#" onclick="switchTab('uploads')" class="drawer-nav-item"><i class="fas fa-upload"></i> Uploads</a>
+      </div>
+      <div class="drawer-footer">
+        <button class="drawer-logout" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Sign Out</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="page-header">
+      <h1><i class="fas fa-dumbbell"></i> Trainer Hub</h1>
+      <p id="clubInfo">Manage your club operations</p>
+    </div>
+
+    <div class="stats-row" id="statsRow">
+      <div class="stat-card"><div class="stat-number" id="statMembers">0</div><div class="stat-label">Members</div></div>
+      <div class="stat-card"><div class="stat-number" id="statInventory">0</div><div class="stat-label">Items</div></div>
+      <div class="stat-card"><div class="stat-number" id="statSales">0</div><div class="stat-label">Sales</div></div>
+      <div class="stat-card"><div class="stat-number" id="statSessions">0</div><div class="stat-label">Sessions</div></div>
+    </div>
+
+    <div class="tab-nav" id="tabNav">
+      <button class="tab-btn active" data-tab="members" onclick="switchTab('members')">👥 Members</button>
+      <button class="tab-btn" data-tab="inventory" onclick="switchTab('inventory')">📦 Inventory</button>
+      <button class="tab-btn" data-tab="sales" onclick="switchTab('sales')">💰 Sales</button>
+      <button class="tab-btn" data-tab="sessions" onclick="switchTab('sessions')">📅 Sessions</button>
+      <button class="tab-btn" data-tab="downloads" onclick="switchTab('downloads')">⬇️ Downloads</button>
+      <button class="tab-btn" data-tab="uploads" onclick="switchTab('uploads')">⬆️ Uploads</button>
+    </div>
+
+    <div id="tabContent"></div>
+  </div>
+
+  <div class="modal-overlay" id="modalOverlay"><div class="modal" id="modalContent"></div></div>
+  <div id="toast" class="toast"></div>
+
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyC7kppUyHUaPzeLBV62NEZWuHiuz1Kz0mA",
+      authDomain: "mugera-e51cc.firebaseapp.com",
+      databaseURL: "https://mugera-e51cc-default-rtdb.europe-west1.firebasedatabase.app",
+      projectId: "mugera-e51cc"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.database();
+
+    let currentTrainer = null;
+    let currentClubId = null;
+    let currentClubName = '';
+    let allMembers = {};
+    let allInventory = {};
+    let allSales = {};
+    let allSessions = {};
+
+    function showToast(msg, isError = false) {
+      const t = document.getElementById('toast');
+      t.textContent = msg; t.className = isError ? 'toast error' : 'toast';
+      t.style.display = 'block';
+      setTimeout(() => t.style.display = 'none', 3000);
+    }
+
+    function escapeHtml(s) { return String(s||'').replace(/[&<>]/g, m => m==='&'?'&amp;':m==='<'?'&lt;':'>':'&gt;'); }
+
+    function openModal(html) {
+      document.getElementById('modalContent').innerHTML = html;
+      document.getElementById('modalOverlay').classList.add('show');
+    }
+    function closeModal() { document.getElementById('modalOverlay').classList.remove('show'); }
+    document.getElementById('modalOverlay').addEventListener('click', (e) => {
+      if (e.target === document.getElementById('modalOverlay')) closeModal();
+    });
+
+    async function loadTrainerData() {
+      const user = auth.currentUser;
+      if (!user) return;
+      currentTrainer = user;
+      document.getElementById('drawerName').textContent = user.displayName || user.email?.split('@')[0] || 'Trainer';
+      document.getElementById('drawerEmail').textContent = user.email;
+      document.getElementById('drawerAvatar').textContent = (user.displayName || user.email?.[0] || 'T').substring(0,2).toUpperCase();
+
+      // Find trainer's club assignment
+      const trainersSnap = await db.ref('workfit_trainers').once('value');
+      const trainers = trainersSnap.val() || {};
+      let found = false;
+      for (const [id, t] of Object.entries(trainers)) {
+        if (t.email && t.email.toLowerCase() === user.email.toLowerCase()) {
+          currentClubId = t.clubId || t.assignedClubId || '';
+          currentClubName = t.clubName || t.assignedClub || '';
+          found = true;
+          break;
+        }
+      }
+      if (!found) {
+        // Check staff node
+        const staffSnap = await db.ref('workfit_trainers').orderByChild('email').equalTo(user.email).once('value');
+        if (staffSnap.exists()) {
+          const d = Object.values(staffSnap.val())[0];
+          currentClubId = d.clubId || d.assignedClubId || '';
+          currentClubName = d.clubName || d.assignedClub || '';
+        }
+      }
+      document.getElementById('trainerClubName').textContent = currentClubName || 'Trainer';
+      document.getElementById('clubInfo').textContent = currentClubName ? `Managing: ${currentClubName}` : 'No club assigned';
+      if (currentClubId) loadAllData();
+    }
+
+    function loadAllData() {
+      db.ref('workfit_members').orderByChild('clubId').equalTo(currentClubId).on('value', s => {
+        allMembers = s.val() || {}; updateStats(); renderCurrentTab();
+      });
+      db.ref('workfit_equipment_inventory').orderByChild('clubId').equalTo(currentClubId).on('value', s => {
+        allInventory = s.val() || {}; updateStats(); renderCurrentTab();
+      });
+      db.ref('workfit_revenue').orderByChild('clubId').equalTo(currentClubId).on('value', s => {
+        allSales = s.val() || {}; updateStats(); renderCurrentTab();
+      });
+      db.ref('workfit_schedules').orderByChild('clubId').equalTo(currentClubId).on('value', s => {
+        allSessions = s.val() || {}; updateStats(); renderCurrentTab();
+      });
+    }
+
+    function updateStats() {
+      document.getElementById('statMembers').textContent = Object.keys(allMembers).length;
+      document.getElementById('statInventory').textContent = Object.keys(allInventory).length;
+      document.getElementById('statSales').textContent = Object.keys(allSales).length;
+      document.getElementById('statSessions').textContent = Object.keys(allSessions).length;
+    }
+
+    let currentTab = 'members';
+    window.switchTab = (tab) => {
+      currentTab = tab;
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
+      document.querySelectorAll('.drawer-nav-item').forEach(a => a.style.background = '');
+      renderCurrentTab();
+    };
+
+    function renderCurrentTab() {
+      const c = document.getElementById('tabContent');
+      switch(currentTab) {
+        case 'members': renderMembers(c); break;
+        case 'inventory': renderInventory(c); break;
+        case 'sales': renderSales(c); break;
+        case 'sessions': renderSessions(c); break;
+        case 'downloads': renderDownloads(c); break;
+        case 'uploads': renderUploads(c); break;
+      }
+    }
+
+    function renderMembers(container) {
+      const members = Object.entries(allMembers).map(([id, m]) => ({ id, ...m }));
+      container.innerHTML = `
+        <div class="section">
+          <div class="section-header"><h3><i class="fas fa-users"></i> Club Members</h3><button class="add-btn" onclick="showAddMemberForm()">+ Add</button></div>
+          ${members.length ? members.map(m => `
+            <div class="list-item">
+              <div><strong>${escapeHtml(m.name || m.fullName || 'Member')}</strong><br><small>${escapeHtml(m.membershipTier || 'Standard')} · ${m.phone || ''}</small></div>
+              <div><span class="badge ${m.status==='active'?'active':'inactive'}">${m.status||'active'}</span>
+              <button style="background:none;border:none;color:#ef4444;cursor:pointer;margin-left:8px;" onclick="removeMember('${m.id}')"><i class="fas fa-trash"></i></button></div>
+            </div>`).join('') : '<div class="empty-state">No members yet</div>'}
+        </div>`;
+    }
+
+    window.showAddMemberForm = () => {
+      openModal(`
+        <div class="modal-header"><h3><i class="fas fa-user-plus"></i> Add Member</h3><button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button></div>
+        <div class="form-group"><label>Full Name *</label><input id="memName" placeholder="Member name"></div>
+        <div class="form-group"><label>Phone</label><input id="memPhone" placeholder="+254..."></div>
+        <div class="form-group"><label>Email</label><input id="memEmail" placeholder="email@..."></div>
+        <div class="form-group"><label>Membership Tier</label><select id="memTier"><option value="Basic">Basic</option><option value="Standard">Standard</option><option value="Premium">Premium</option></select></div>
+        <button class="submit-btn" onclick="addMember()">Save Member</button>
+      `);
+    };
+
+    window.addMember = async () => {
+      const name = document.getElementById('memName').value.trim();
+      if (!name) return showToast('Name required', true);
+      await db.ref('workfit_members').push({
+        name, fullName: name,
+        phone: document.getElementById('memPhone').value,
+        email: document.getElementById('memEmail').value,
+        membershipTier: document.getElementById('memTier').value,
+        clubId: currentClubId, clubName: currentClubName,
+        status: 'active', createdAt: firebase.database.ServerValue.TIMESTAMP
+      });
+      closeModal(); showToast('Member added!');
+    };
+
+    window.removeMember = async (id) => {
+      if (!confirm('Remove this member?')) return;
+      await db.ref(`workfit_members/${id}`).remove();
+      showToast('Member removed');
+    };
+
+    function renderInventory(container) {
+      const items = Object.entries(allInventory).map(([id, i]) => ({ id, ...i }));
+      container.innerHTML = `
+        <div class="section">
+          <div class="section-header"><h3><i class="fas fa-boxes-stacked"></i> Equipment Inventory</h3><button class="add-btn" onclick="showAddInventoryForm()">+ Add</button></div>
+          ${items.length ? items.map(i => `
+            <div class="list-item">
+              <div><strong>${escapeHtml(i.name)}</strong><br><small>${escapeHtml(i.category||'General')} · Qty: ${i.quantity||1}</small></div>
+              <div><span class="badge ${(i.condition||'good')==='good'?'active':'inactive'}">${i.condition||'good'}</span>
+              <button style="background:none;border:none;color:#ef4444;cursor:pointer;margin-left:8px;" onclick="removeInventory('${i.id}')"><i class="fas fa-trash"></i></button></div>
+            </div>`).join('') : '<div class="empty-state">No inventory items</div>'}
+        </div>`;
+    }
+
+    window.showAddInventoryForm = () => {
+      openModal(`
+        <div class="modal-header"><h3><i class="fas fa-plus-circle"></i> Add Equipment</h3><button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button></div>
+        <div class="form-group"><label>Name *</label><input id="invName" placeholder="Equipment name"></div>
+        <div class="form-group"><label>Category</label><select id="invCat"><option>Cardio</option><option>Strength</option><option>Flexibility</option><option>Machines</option><option>Accessories</option></select></div>
+        <div class="form-group"><label>Quantity</label><input id="invQty" type="number" value="1" min="1"></div>
+        <div class="form-group"><label>Condition</label><select id="invCond"><option>good</option><option>maintenance</option><option>damaged</option></select></div>
+        <button class="submit-btn" onclick="addInventory()">Save Equipment</button>
+      `);
+    };
+
+    window.addInventory = async () => {
+      const name = document.getElementById('invName').value.trim();
+      if (!name) return showToast('Name required', true);
+      await db.ref('workfit_equipment_inventory').push({
+        name, category: document.getElementById('invCat').value,
+        quantity: Number(document.getElementById('invQty').value)||1,
+        condition: document.getElementById('invCond').value,
+        clubId: currentClubId, clubName: currentClubName,
+        createdAt: firebase.database.ServerValue.TIMESTAMP
+      });
+      closeModal(); showToast('Equipment added!');
+    };
+
+    window.removeInventory = async (id) => {
+      if (!confirm('Remove this item?')) return;
+      await db.ref(`workfit_equipment_inventory/${id}`).remove();
+      showToast('Item removed');
+    };
+
+    function renderSales(container) {
+      const sales = Object.entries(allSales).map(([id, s]) => ({ id, ...s }));
+      const total = sales.reduce((sum, s) => sum + (Number(s.amount)||0), 0);
+      container.innerHTML = `
+        <div class="section">
+          <div class="section-header"><h3><i class="fas fa-cash-register"></i> Sales · KES ${total.toLocaleString()}</h3><button class="add-btn" onclick="showAddSaleForm()">+ Sale</button></div>
+          ${sales.length ? sales.map(s => `
+            <div class="list-item">
+              <div><strong>${escapeHtml(s.description || s.type || 'Sale')}</strong><br><small>${s.date || ''} · ${s.customerName || ''}</small></div>
+              <div><span class="badge sale">KES ${(s.amount||0).toLocaleString()}</span></div>
+            </div>`).join('') : '<div class="empty-state">No sales recorded</div>'}
+        </div>`;
+    }
+
+    window.showAddSaleForm = () => {
+      openModal(`
+        <div class="modal-header"><h3><i class="fas fa-plus-circle"></i> Record Sale</h3><button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button></div>
+        <div class="form-group"><label>Description *</label><input id="saleDesc" placeholder="e.g. Protein shake"></div>
+        <div class="form-group"><label>Amount (KES) *</label><input id="saleAmt" type="number" placeholder="500"></div>
+        <div class="form-group"><label>Customer Name</label><input id="saleCust" placeholder="Customer"></div>
+        <div class="form-group"><label>Type</label><select id="saleType"><option>Product</option><option>Membership</option><option>Session</option><option>Other</option></select></div>
+        <button class="submit-btn" onclick="addSale()">Record Sale</button>
+      `);
+    };
+
+    window.addSale = async () => {
+      const desc = document.getElementById('saleDesc').value.trim();
+      const amt = document.getElementById('saleAmt').value;
+      if (!desc || !amt) return showToast('Description and amount required', true);
+      await db.ref('workfit_revenue').push({
+        description: desc, type: document.getElementById('saleType').value,
+        amount: Number(amt), customerName: document.getElementById('saleCust').value,
+        clubId: currentClubId, clubName: currentClubName,
+        date: new Date().toISOString().split('T')[0],
+        createdAt: firebase.database.ServerValue.TIMESTAMP
+      });
+      closeModal(); showToast('Sale recorded!');
+    };
+
+    const weeklySessions = [
+      { day: 'Monday', time: '6:00 AM - 7:00 AM', name: 'Morning Cardio Blast', type: 'Cardio' },
+      { day: 'Monday', time: '5:00 PM - 6:00 PM', name: 'Strength Foundations', type: 'Strength' },
+      { day: 'Tuesday', time: '6:00 AM - 7:00 AM', name: 'HIIT Power Hour', type: 'HIIT' },
+      { day: 'Tuesday', time: '5:00 PM - 6:00 PM', name: 'Yoga Flow', type: 'Yoga' },
+      { day: 'Wednesday', time: '6:00 AM - 7:00 AM', name: 'Spin & Burn', type: 'Spin' },
+      { day: 'Wednesday', time: '5:00 PM - 6:00 PM', name: 'CrossFit Challenge', type: 'CrossFit' },
+      { day: 'Thursday', time: '6:00 AM - 7:00 AM', name: 'Pilates Core', type: 'Pilates' },
+      { day: 'Thursday', time: '5:00 PM - 6:00 PM', name: 'Zumba Party', type: 'Zumba' },
+      { day: 'Friday', time: '6:00 AM - 7:00 AM', name: 'Full Body Strength', type: 'Strength' },
+      { day: 'Friday', time: '5:00 PM - 6:00 PM', name: 'Cardio Kickboxing', type: 'Cardio' },
+      { day: 'Saturday', time: '8:00 AM - 9:30 AM', name: 'Weekend Warrior', type: 'HIIT' },
+      { day: 'Saturday', time: '10:00 AM - 11:00 AM', name: 'Family Fitness', type: 'Aerobics' }
+    ];
+
+    function renderSessions(container) {
+      const sessions = Object.entries(allSessions).map(([id, s]) => ({ id, ...s }));
+      container.innerHTML = `
+        <div class="section">
+          <div class="section-header"><h3><i class="fas fa-calendar-week"></i> Weekly Sessions</h3><button class="add-btn" onclick="initializeWeeklySessions()">🔄 Reset Week</button></div>
+          ${sessions.length ? sessions.sort((a,b) => (a.day||'').localeCompare(b.day||'')).map(s => `
+            <div class="session-card ${s.status==='done'?'done':''}">
+              <div class="session-header">
+                <strong>${escapeHtml(s.name)}</strong>
+                <span class="badge ${s.status==='done'?'active':'inactive'}">${s.status||'pending'}</span>
+              </div>
+              <div class="session-time">📅 ${s.day} · ⏰ ${s.time} · 🏷️ ${s.type}</div>
+              ${s.status !== 'done' ? `<button class="add-btn" style="margin-top:0.5rem;font-size:0.6rem;" onclick="markSessionDone('${s.id}')">✅ Mark Done</button>` : '<small style="color:#065f46;">✔ Completed</small>'}
+            </div>`).join('') : '<div class="empty-state">No sessions this week. Click "Reset Week" to initialize.</div>'}
+        </div>`;
+    }
+
+    window.initializeWeeklySessions = async () => {
+      if (!confirm('Reset weekly sessions? This will create the standard weekly schedule.')) return;
+      for (const s of weeklySessions) {
+        await db.ref('workfit_schedules').push({
+          ...s, clubId: currentClubId, clubName: currentClubName,
+          status: 'pending', createdAt: firebase.database.ServerValue.TIMESTAMP
+        });
+      }
+      showToast('Weekly sessions initialized!');
+    };
+
+    window.markSessionDone = async (id) => {
+      await db.ref(`workfit_schedules/${id}`).update({
+        status: 'done', completedAt: firebase.database.ServerValue.TIMESTAMP
+      });
+      showToast('Session marked complete!');
+    };
+
+    const downloadFiles = [
+      { name: 'WorkFit Trainer Manual.pdf', icon: 'fa-file-pdf', url: '#' },
+      { name: 'Session Planning Template.xlsx', icon: 'fa-file-excel', url: '#' },
+      { name: 'Member Registration Form.pdf', icon: 'fa-file-pdf', url: '#' },
+      { name: 'Equipment Maintenance Log.docx', icon: 'fa-file-word', url: '#' },
+      { name: 'Weekly Schedule Template.pdf', icon: 'fa-file-pdf', url: '#' }
+    ];
+
+    function renderDownloads(container) {
+      container.innerHTML = `
+        <div class="section">
+          <div class="section-header"><h3><i class="fas fa-download"></i> Downloads</h3></div>
+          ${downloadFiles.map(f => `
+            <div class="file-item">
+              <div><i class="fas ${f.icon}" style="color:var(--orange);margin-right:8px;"></i> ${f.name}</div>
+              <button class="add-btn" style="font-size:0.6rem;" onclick="showToast('Download started (demo)')"><i class="fas fa-download"></i></button>
+            </div>`).join('')}
+        </div>`;
+    }
+
+    function renderUploads(container) {
+      container.innerHTML = `
+        <div class="section">
+          <div class="section-header"><h3><i class="fas fa-upload"></i> Upload Files</h3></div>
+          <div class="file-upload" onclick="document.getElementById('fileInput').click()">
+            <i class="fas fa-cloud-upload-alt"></i>
+            <p style="font-size:0.75rem;">Tap to upload session reports, photos, or documents</p>
+            <input type="file" id="fileInput" style="display:none;" onchange="handleFileUpload(this)" multiple>
+          </div>
+          <div id="uploadedFiles"><p style="font-size:0.65rem;color:var(--text-muted);">No files uploaded yet</p></div>
+        </div>`;
+    }
+
+    window.handleFileUpload = (input) => {
+      const files = input.files;
+      if (!files.length) return;
+      const container = document.getElementById('uploadedFiles');
+      let html = '';
+      for (const f of files) {
+        html += `<div class="file-item"><span>📄 ${f.name}</span><span style="font-size:0.6rem;color:var(--text-muted);">${(f.size/1024).toFixed(1)} KB</span></div>`;
+      }
+      container.innerHTML = html;
+      showToast(`${files.length} file(s) selected (demo)`);
+    };
+
+    window.logout = async () => { await auth.signOut(); window.location.href = '/index.html'; };
+
+    // Drawer controls
+    document.getElementById('menuBtn').addEventListener('click', () => {
+      document.getElementById('drawerOverlay').style.display = 'block';
+      document.getElementById('drawer').classList.add('open');
+    });
+    document.getElementById('drawerClose').addEventListener('click', () => {
+      document.getElementById('drawerOverlay').style.display = 'none';
+      document.getElementById('drawer').classList.remove('open');
+    });
+    document.getElementById('drawerOverlay').addEventListener('click', (e) => {
+      if (e.target === document.getElementById('drawerOverlay')) {
+        document.getElementById('drawerOverlay').style.display = 'none';
+        document.getElementById('drawer').classList.remove('open');
+      }
+    });
+
+    auth.onAuthStateChanged(async (user) => {
+      if (!user) { window.location.href = '/index.html'; return; }
+      await loadTrainerData();
+      renderCurrentTab();
+    });
+  </script>
+</body>
+</html>
