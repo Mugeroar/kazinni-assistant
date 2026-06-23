@@ -22,10 +22,9 @@
     body {
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
       background: var(--bg); color: var(--text); min-height: 100vh;
-      -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
+      -webkit-font-smoothing: antialiased;
     }
 
-    /* Top Bar */
     .topbar {
       background: rgba(255,255,255,0.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
       border-bottom: 1px solid var(--border-light); padding: 0 1.5rem; height: 56px;
@@ -43,11 +42,9 @@
       display: flex; align-items: center; gap: 8px; background: white; border: 1px solid var(--border);
       padding: 0.3rem 0.8rem 0.3rem 0.4rem; border-radius: 30px; cursor: pointer; transition: all 0.2s;
     }
-    .user-pill:hover { background: #f8fafc; }
     .user-avatar { width: 28px; height: 28px; border-radius: 50%; background: linear-gradient(135deg, #f97316, #ea580c); display: flex; align-items: center; justify-content: center; font-size: 0.65rem; font-weight: 700; color: white; }
     .user-name { font-size: 0.7rem; font-weight: 600; color: var(--text); }
 
-    /* Sidebar */
     .sidebar-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.3); z-index: 200; opacity: 0; visibility: hidden; transition: all 0.3s; }
     .sidebar-overlay.open { opacity: 1; visibility: visible; }
     .sidebar {
@@ -72,16 +69,18 @@
     .sidebar-nav-item:hover { background: #f8fafc; color: var(--text); }
     .sidebar-nav-item.active { background: #fff7ed; color: var(--orange-dark); border-left-color: var(--orange); font-weight: 600; }
     .sidebar-nav-item i { width: 20px; text-align: center; }
+    .sidebar-nav-item .badge-count {
+      margin-left: auto; background: #ef4444; color: white; font-size: 0.6rem; padding: 2px 7px;
+      border-radius: 10px; font-weight: 600;
+    }
     .sidebar-footer { padding: 1rem 1.5rem; border-top: 1px solid var(--border-light); }
     .logout-btn { width: 100%; padding: 0.6rem; border-radius: var(--radius); border: 1px solid #fee2e2; background: #fef2f2; color: #ef4444; font-weight: 600; font-size: 0.75rem; cursor: pointer; transition: all 0.2s; }
     .logout-btn:hover { background: #fee2e2; }
 
-    /* Main Content */
     .main { padding: 1.5rem; max-width: 900px; margin: 0 auto; }
     .page-title { font-size: 1.3rem; font-weight: 800; margin-bottom: 0.2rem; }
     .page-subtitle { font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 1.5rem; }
 
-    /* Stats Cards */
     .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 1.5rem; }
     .stat-card {
       background: var(--surface); border-radius: var(--radius-lg); padding: 1rem;
@@ -92,17 +91,16 @@
     .stat-card .stat-icon.inventory { background: #fef3c7; color: #d97706; }
     .stat-card .stat-icon.sales { background: #ecfdf5; color: #059669; }
     .stat-card .stat-icon.sessions { background: #faf5ff; color: #7c3aed; }
+    .stat-card .stat-icon.messages { background: #fef2f2; color: #ef4444; }
     .stat-card .stat-value { font-size: 1.6rem; font-weight: 800; color: var(--text); line-height: 1; }
     .stat-card .stat-label { font-size: 0.6rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; margin-top: 0.2rem; }
 
-    /* Section */
     .section { background: var(--surface); border-radius: var(--radius-xl); border: 1px solid var(--border-light); box-shadow: var(--shadow-sm); margin-bottom: 1.5rem; overflow: hidden; }
     .section-header { padding: 1rem 1.2rem; border-bottom: 1px solid var(--border-light); display: flex; justify-content: space-between; align-items: center; }
     .section-header h3 { font-size: 0.85rem; font-weight: 700; display: flex; align-items: center; gap: 8px; }
     .section-body { padding: 1rem 1.2rem; }
     .section-body.no-padding { padding: 0; }
 
-    /* Buttons */
     .btn {
       padding: 0.45rem 0.9rem; border-radius: var(--radius-sm); font-weight: 600; font-size: 0.72rem;
       cursor: pointer; border: 1px solid transparent; transition: all 0.2s; display: inline-flex; align-items: center; gap: 6px; white-space: nowrap;
@@ -114,7 +112,6 @@
     .btn-sm { padding: 0.35rem 0.7rem; font-size: 0.68rem; }
     .btn-xs { padding: 0.25rem 0.5rem; font-size: 0.62rem; border-radius: 6px; }
 
-    /* List Items */
     .list-item {
       display: flex; align-items: center; justify-content: space-between; padding: 0.75rem 1.2rem;
       border-bottom: 1px solid var(--border-light); transition: background 0.15s;
@@ -131,7 +128,6 @@
     .list-item-subtitle { font-size: 0.65rem; color: var(--text-secondary); margin-top: 1px; }
     .list-item-right { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
 
-    /* Badges */
     .badge {
       padding: 0.18rem 0.5rem; border-radius: 6px; font-size: 0.6rem; font-weight: 600; text-transform: capitalize;
     }
@@ -141,28 +137,25 @@
     .badge-info { background: #eff6ff; color: #1e40af; }
     .badge-neutral { background: #f1f5f9; color: #475569; }
 
-    /* Session Card */
-    .session-item {
-      display: flex; align-items: center; gap: 12px; padding: 0.7rem 1.2rem;
-      border-bottom: 1px solid var(--border-light); transition: all 0.15s;
+    /* Message Card */
+    .message-card {
+      padding: 0.9rem 1.2rem; border-bottom: 1px solid var(--border-light);
+      transition: background 0.15s; cursor: pointer;
     }
-    .session-item:last-child { border-bottom: none; }
-    .session-item:hover { background: #fafbfc; }
-    .session-item.completed { opacity: 0.5; }
-    .session-day {
-      width: 80px; flex-shrink: 0; font-size: 0.7rem; font-weight: 600; color: var(--orange-dark);
-    }
-    .session-info { flex: 1; min-width: 0; }
-    .session-name { font-weight: 600; font-size: 0.78rem; }
-    .session-meta { font-size: 0.62rem; color: var(--text-secondary); }
-    .session-actions { flex-shrink: 0; }
+    .message-card:hover { background: #fafbfc; }
+    .message-card.unread { background: #fef2f2; border-left: 3px solid #ef4444; }
+    .message-card.read { border-left: 3px solid transparent; }
+    .message-card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.3rem; }
+    .message-card-from { font-weight: 600; font-size: 0.8rem; }
+    .message-card-email { font-size: 0.62rem; color: var(--text-secondary); }
+    .message-card-subject { font-weight: 600; font-size: 0.75rem; margin-bottom: 0.2rem; }
+    .message-card-preview { font-size: 0.68rem; color: var(--text-secondary); line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .message-card-time { font-size: 0.6rem; color: var(--text-secondary); white-space: nowrap; }
 
-    /* Empty State */
     .empty-state { text-align: center; padding: 2.5rem 1rem; }
     .empty-state i { font-size: 2.5rem; color: #cbd5e1; display: block; margin-bottom: 0.8rem; }
     .empty-state p { font-size: 0.78rem; color: var(--text-secondary); margin-bottom: 1rem; }
 
-    /* Modal */
     .modal-overlay {
       position: fixed; inset: 0; background: rgba(15,23,42,0.4); backdrop-filter: blur(4px);
       display: flex; align-items: flex-end; justify-content: center; z-index: 300;
@@ -186,7 +179,6 @@
     .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--orange); box-shadow: 0 0 0 3px rgba(249,115,22,0.06); background: white; }
     .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; }
 
-    /* Toast */
     .toast {
       position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); z-index: 400;
       padding: 0.6rem 1.2rem; border-radius: 10px; font-size: 0.75rem; font-weight: 600;
@@ -204,7 +196,6 @@
   </style>
 </head>
 <body>
-  <!-- Sidebar -->
   <div class="sidebar-overlay" id="sidebarOverlay"></div>
   <div class="sidebar" id="sidebar">
     <div class="sidebar-header">
@@ -220,6 +211,7 @@
     </div>
     <div class="sidebar-nav" id="sidebarNav">
       <div class="sidebar-nav-item active" data-tab="members"><i class="fas fa-users"></i> Members</div>
+      <div class="sidebar-nav-item" data-tab="messages"><i class="fas fa-envelope"></i> Messages <span class="badge-count" id="unreadBadge" style="display:none;">0</span></div>
       <div class="sidebar-nav-item" data-tab="inventory"><i class="fas fa-box"></i> Inventory</div>
       <div class="sidebar-nav-item" data-tab="sales"><i class="fas fa-chart-line"></i> Sales</div>
       <div class="sidebar-nav-item" data-tab="sessions"><i class="fas fa-calendar-week"></i> Sessions</div>
@@ -231,7 +223,6 @@
     </div>
   </div>
 
-  <!-- Top Bar -->
   <div class="topbar">
     <div class="topbar-left">
       <button class="menu-btn" id="menuBtn"><i class="fas fa-bars"></i></button>
@@ -249,16 +240,12 @@
     </div>
   </div>
 
-  <!-- Main Content -->
   <div class="main">
     <div id="mainContent"></div>
   </div>
 
-  <!-- Modal -->
   <div class="modal-overlay" id="modalOverlay">
-    <div class="modal" id="modalContent">
-      <div class="modal-handle"></div>
-    </div>
+    <div class="modal" id="modalContent"><div class="modal-handle"></div></div>
   </div>
 
   <div id="toast" class="toast" style="display:none;"></div>
@@ -284,6 +271,7 @@
     let allInventory = {};
     let allSales = {};
     let allSessions = {};
+    let allMessages = {};
 
     function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
     
@@ -302,7 +290,6 @@
     function closeModal() { document.getElementById('modalOverlay').classList.remove('active'); }
     document.getElementById('modalOverlay').addEventListener('click', function(e) { if (e.target === this) closeModal(); });
 
-    // Sidebar
     const sidebar = document.getElementById('sidebar');
     const overlay = document.getElementById('sidebarOverlay');
     document.getElementById('menuBtn').addEventListener('click', () => { sidebar.classList.add('open'); overlay.classList.add('open'); });
@@ -320,7 +307,6 @@
       });
     });
 
-    // Find trainer's club
     async function findClub(user) {
       try {
         const snap = await db.ref('workfit_trainers').once('value');
@@ -360,6 +346,27 @@
         Object.entries(data).forEach(([id, m]) => { if (m && m.clubId === currentClubId) allSessions[id] = m; });
         updateStats(); if (currentTab === 'sessions') renderTab();
       });
+      // Load messages
+      db.ref('workfit_contact_messages').on('value', snap => {
+        const data = snap.val() || {};
+        allMessages = {};
+        Object.entries(data).forEach(([id, m]) => {
+          if (m && m.clubId === currentClubId) allMessages[id] = { id, ...m };
+        });
+        updateUnreadBadge();
+        if (currentTab === 'messages') renderTab();
+      });
+    }
+
+    function updateUnreadBadge() {
+      const unread = Object.values(allMessages).filter(m => m.status === 'unread').length;
+      const badge = document.getElementById('unreadBadge');
+      if (unread > 0) {
+        badge.style.display = 'inline';
+        badge.textContent = unread;
+      } else {
+        badge.style.display = 'none';
+      }
     }
 
     function updateStats() {
@@ -367,6 +374,7 @@
       document.getElementById('statInventoryVal') && (document.getElementById('statInventoryVal').textContent = Object.keys(allInventory).length);
       document.getElementById('statSalesVal') && (document.getElementById('statSalesVal').textContent = Object.keys(allSales).length);
       document.getElementById('statSessionsVal') && (document.getElementById('statSessionsVal').textContent = Object.keys(allSessions).length);
+      document.getElementById('statMessagesVal') && (document.getElementById('statMessagesVal').textContent = Object.keys(allMessages).length);
     }
 
     function renderTab() {
@@ -374,6 +382,7 @@
       if (!c) return;
       switch(currentTab) {
         case 'members': renderMembers(c); break;
+        case 'messages': renderMessages(c); break;
         case 'inventory': renderInventory(c); break;
         case 'sales': renderSales(c); break;
         case 'sessions': renderSessions(c); break;
@@ -386,25 +395,103 @@
       return `
         <div class="stats-row">
           <div class="stat-card"><div class="stat-icon members"><i class="fas fa-users"></i></div><div class="stat-value" id="statMembersVal">${Object.keys(allMembers).length}</div><div class="stat-label">Members</div></div>
+          <div class="stat-card"><div class="stat-icon messages"><i class="fas fa-envelope"></i></div><div class="stat-value" id="statMessagesVal">${Object.keys(allMessages).length}</div><div class="stat-label">Messages</div></div>
           <div class="stat-card"><div class="stat-icon inventory"><i class="fas fa-box"></i></div><div class="stat-value" id="statInventoryVal">${Object.keys(allInventory).length}</div><div class="stat-label">Items</div></div>
-          <div class="stat-card"><div class="stat-icon sales"><i class="fas fa-chart-line"></i></div><div class="stat-value" id="statSalesVal">${Object.keys(allSales).length}</div><div class="stat-label">Sales</div></div>
           <div class="stat-card"><div class="stat-icon sessions"><i class="fas fa-calendar-check"></i></div><div class="stat-value" id="statSessionsVal">${Object.keys(allSessions).length}</div><div class="stat-label">Sessions</div></div>
         </div>`;
     }
+
+    // MESSAGES TAB
+    function renderMessages(c) {
+      const messages = Object.values(allMessages).sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+      const unreadCount = messages.filter(m => m.status === 'unread').length;
+      
+      let html = `<h1 class="page-title">📬 Messages</h1><p class="page-subtitle">${unreadCount} unread · From your Furnace members</p>${renderStatsBar()}<div class="section"><div class="section-header"><h3><i class="fas fa-envelope"></i> All Messages (${messages.length})</h3></div><div class="section-body no-padding">`;
+      
+      if (!messages.length) {
+        html += `<div class="empty-state"><i class="fas fa-inbox"></i><p>No messages yet</p><p style="font-size:0.7rem;">Messages from your members will appear here</p></div>`;
+      } else {
+        messages.forEach(msg => {
+          const timeAgo = msg.createdAt ? new Date(msg.createdAt).toLocaleDateString('en-KE', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : '';
+          html += `
+            <div class="message-card ${msg.status === 'unread' ? 'unread' : 'read'}" onclick="viewMessage('${msg.id}')">
+              <div class="message-card-header">
+                <div>
+                  <div class="message-card-from">${esc(msg.name || 'Member')}</div>
+                  <div class="message-card-email">${esc(msg.email || '')}</div>
+                </div>
+                <span class="message-card-time">${timeAgo}</span>
+              </div>
+              <div class="message-card-subject">${esc(msg.subject || 'No subject')}</div>
+              <div class="message-card-preview">${esc(msg.message || '')}</div>
+              <div style="margin-top:6px;">
+                <span class="badge ${msg.status === 'unread' ? 'badge-danger' : msg.status === 'replied' ? 'badge-success' : 'badge-neutral'}">${msg.status || 'unread'}</span>
+              </div>
+            </div>`;
+        });
+      }
+      html += `</div></div>`;
+      c.innerHTML = html;
+    }
+
+    window.viewMessage = function(msgId) {
+      const msg = allMessages[msgId];
+      if (!msg) return;
+      
+      // Mark as read
+      if (msg.status === 'unread') {
+        db.ref('workfit_contact_messages/' + msgId).update({ status: 'read' });
+      }
+      
+      openModal(`
+        <div class="modal-header">
+          <h3><i class="fas fa-envelope-open-text"></i> Message Details</h3>
+          <button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button>
+        </div>
+        <div style="margin-bottom:1rem;">
+          <div class="form-group"><label>From</label><input value="${esc(msg.name || 'Member')}" readonly></div>
+          <div class="form-group"><label>Email</label><input value="${esc(msg.email || '')}" readonly></div>
+          <div class="form-group"><label>Subject</label><input value="${esc(msg.subject || '')}" readonly></div>
+          <div class="form-group"><label>Message</label><textarea rows="4" readonly style="background:#f1f5f9;">${esc(msg.message || '')}</textarea></div>
+          <div class="form-group"><label>Status</label>
+            <select id="msgStatus" onchange="updateMessageStatus('${msgId}', this.value)">
+              <option value="unread" ${msg.status==='unread'?'selected':''}>Unread</option>
+              <option value="read" ${msg.status==='read'?'selected':''}>Read</option>
+              <option value="replied" ${msg.status==='replied'?'selected':''}>Replied</option>
+            </select>
+          </div>
+          <div class="form-group"><label>Notes / Response</label><textarea id="msgNotes" rows="3" placeholder="Add internal notes about this message...">${esc(msg.notes || '')}</textarea></div>
+        </div>
+        <button class="btn btn-primary" style="width:100%;" onclick="saveMessageNotes('${msgId}')"><i class="fas fa-save"></i> Save Notes</button>
+        <button class="btn btn-outline" style="width:100%;margin-top:8px;" onclick="closeModal()">Close</button>
+      `);
+    };
+
+    window.updateMessageStatus = function(msgId, status) {
+      db.ref('workfit_contact_messages/' + msgId).update({ status });
+    };
+
+    window.saveMessageNotes = function(msgId) {
+      const notes = document.getElementById('msgNotes').value.trim();
+      const status = document.getElementById('msgStatus').value;
+      db.ref('workfit_contact_messages/' + msgId).update({ notes, status }).then(() => {
+        toast('Notes saved!');
+        closeModal();
+      }).catch(() => toast('Error saving', true));
+    };
 
     // MEMBERS
     function renderMembers(c) {
       const members = Object.entries(allMembers).map(([id, m]) => ({ id, ...m }));
       let html = `<h1 class="page-title">👥 Members</h1><p class="page-subtitle">Manage your club members</p>${renderStatsBar()}<div class="section"><div class="section-header"><h3><i class="fas fa-users"></i> All Members (${members.length})</h3><button class="btn btn-primary btn-sm" onclick="showMemberForm()"><i class="fas fa-plus"></i> Add</button></div><div class="section-body no-padding">`;
       if (!members.length) {
-        html += `<div class="empty-state"><i class="fas fa-user-plus"></i><p>No members yet</p><button class="btn btn-primary btn-sm" onclick="showMemberForm()"><i class="fas fa-plus"></i> Add First Member</button></div>`;
+        html += `<div class="empty-state"><i class="fas fa-user-plus"></i><p>No members yet</p><button class="btn btn-primary btn-sm" onclick="showMemberForm()">Add First Member</button></div>`;
       } else {
         members.forEach(m => {
           html += `<div class="list-item"><div class="list-item-left"><div class="list-item-icon">👤</div><div class="list-item-info"><div class="list-item-title">${esc(m.name || m.fullName || 'Member')}</div><div class="list-item-subtitle">${esc(m.membershipTier || 'Standard')} · ${m.phone || 'No phone'}</div></div></div><div class="list-item-right"><span class="badge ${m.status==='active'?'badge-success':'badge-danger'}">${m.status||'active'}</span><button class="btn btn-outline btn-xs" onclick="showMemberForm('${m.id}')"><i class="fas fa-pen"></i></button><button class="btn btn-outline btn-xs" style="color:#ef4444;" onclick="if(confirm('Remove member?')) deleteItem('workfit_members','${m.id}')"><i class="fas fa-trash"></i></button></div></div>`;
         });
       }
-      html += `</div></div>`;
-      c.innerHTML = html;
+      html += `</div></div>`; c.innerHTML = html;
     }
 
     window.showMemberForm = function(id) {
@@ -575,17 +662,14 @@
       toast(`${files.length} file(s) selected`);
     };
 
-    // Delete helper
     window.deleteItem = async function(path, id) {
       try { await db.ref(path + '/' + id).remove(); toast('Deleted'); } catch(e) { toast('Error', true); }
     };
 
-    // Logout
     window.handleLogout = async function() {
       try { await auth.signOut(); window.location.href = '/'; } catch(e) { toast('Error signing out', true); }
     };
 
-    // Auth
     auth.onAuthStateChanged(async user => {
       if (!user) { window.location.href = '/'; return; }
       
