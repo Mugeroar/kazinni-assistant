@@ -18,17 +18,45 @@
       min-height: 100vh; padding: 2rem;
     }
     .container { max-width: 1200px; margin: 0 auto; }
+    
+    /* Login Screen */
+    .login-container {
+      display: flex; justify-content: center; align-items: center; min-height: 80vh;
+    }
+    .login-card {
+      background: white; border-radius: var(--radius); padding: 2rem;
+      box-shadow: var(--shadow); width: 100%; max-width: 400px; text-align: center;
+    }
+    .login-card h2 { margin-bottom: 0.5rem; }
+    .login-card p { color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 1.5rem; }
+    
+    /* Main Content (hidden until login) */
+    .main-content { display: none; }
+    .main-content.active { display: block; }
+    
     .header {
       background: white; border-radius: var(--radius); padding: 1.5rem;
       margin-bottom: 1.5rem; box-shadow: var(--shadow);
       display: flex; justify-content: space-between; align-items: center;
+      flex-wrap: wrap; gap: 1rem;
     }
     .header h1 { font-size: 1.5rem; display: flex; align-items: center; gap: 0.5rem; }
-    .header-actions { display: flex; gap: 0.5rem; }
+    .header-actions { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+    .user-info {
+      display: flex; align-items: center; gap: 0.5rem;
+      background: #f8fafc; padding: 0.5rem 1rem; border-radius: 20px;
+      font-size: 0.8rem; font-weight: 600;
+    }
+    .user-info img, .user-info .avatar {
+      width: 30px; height: 30px; border-radius: 50%;
+      background: linear-gradient(135deg, #f97316, #ea580c);
+      display: flex; align-items: center; justify-content: center;
+      color: white; font-weight: 700; font-size: 0.7rem;
+    }
     .btn {
       padding: 0.5rem 1rem; border-radius: 8px; font-weight: 600; font-size: 0.8rem;
       cursor: pointer; border: 1px solid transparent; transition: all 0.2s;
-      display: inline-flex; align-items: center; gap: 0.5rem;
+      display: inline-flex; align-items: center; gap: 0.5rem; white-space: nowrap;
     }
     .btn-primary { background: var(--orange); color: white; }
     .btn-primary:hover { background: var(--orange-dark); }
@@ -36,6 +64,7 @@
     .btn-success { background: var(--success); color: white; }
     .btn-danger { background: var(--danger); color: white; }
     .btn-info { background: var(--info); color: white; }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
     
     .card {
       background: white; border-radius: var(--radius); box-shadow: var(--shadow);
@@ -123,6 +152,18 @@
     .stat-value { font-size: 2rem; font-weight: 800; color: var(--orange); }
     .stat-label { font-size: 0.7rem; color: var(--text-secondary); text-transform: uppercase; margin-top: 0.25rem; }
     
+    .loading-screen {
+      display: flex; justify-content: center; align-items: center; min-height: 100vh;
+      font-size: 1.2rem; color: var(--text-secondary);
+    }
+    .loading-screen i { margin-right: 0.5rem; animation: spin 1s linear infinite; }
+    @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+    
+    .no-database-message {
+      text-align: center; padding: 3rem; color: var(--text-secondary);
+    }
+    .no-database-message i { font-size: 3rem; display: block; margin-bottom: 1rem; color: #cbd5e1; }
+    
     @media (max-width: 768px) {
       body { padding: 1rem; }
       .form-row { grid-template-columns: 1fr; }
@@ -132,39 +173,84 @@
   </style>
 </head>
 <body>
-  <div class="container">
-    <!-- Header -->
-    <div class="header">
-      <h1><i class="fas fa-dumbbell" style="color: var(--orange);"></i> Training Database Manager</h1>
-      <div class="header-actions">
-        <button class="btn btn-info" onclick="exportDatabase()"><i class="fas fa-download"></i> Export JSON</button>
-        <button class="btn btn-outline" onclick="resetToDefault()"><i class="fas fa-undo"></i> Reset Default</button>
-        <button class="btn btn-success" onclick="saveAndGenerate()"><i class="fas fa-save"></i> Save & Generate JS</button>
+  <!-- Loading Screen -->
+  <div class="loading-screen" id="loadingScreen">
+    <i class="fas fa-spinner"></i> Loading...
+  </div>
+
+  <!-- Login Screen -->
+  <div class="login-container" id="loginScreen" style="display:none;">
+    <div class="login-card">
+      <i class="fas fa-dumbbell" style="font-size:3rem; color:var(--orange); margin-bottom:1rem;"></i>
+      <h2>Training Database Manager</h2>
+      <p>Sign in with your trainer account to manage the training schedule</p>
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" id="loginEmail" placeholder="trainer@workfit.com">
       </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" id="loginPassword" placeholder="••••••••">
+      </div>
+      <button class="btn btn-primary" style="width:100%;" onclick="login()">
+        <i class="fas fa-sign-in-alt"></i> Sign In
+      </button>
+      <p style="margin-top:1rem; font-size:0.75rem; color:var(--text-secondary);">
+        <a href="/" style="color:var(--orange);">Back to Trainer Hub</a>
+      </p>
     </div>
-    
-    <!-- Stats -->
-    <div class="stats" id="stats"></div>
-    
-    <!-- Sessions List -->
-    <div class="card">
-      <div class="card-header">
-        <h3><i class="fas fa-calendar-week"></i> Current Training Sessions</h3>
-        <button class="btn btn-primary" onclick="showAddModal()"><i class="fas fa-plus"></i> Add Session</button>
+  </div>
+
+  <!-- Main Content (hidden until authenticated) -->
+  <div class="main-content" id="mainContent">
+    <div class="container">
+      <!-- Header -->
+      <div class="header">
+        <h1><i class="fas fa-dumbbell" style="color: var(--orange);"></i> Training Database Manager</h1>
+        <div style="display:flex; align-items:center; gap:1rem; flex-wrap:wrap;">
+          <div class="user-info">
+            <div class="avatar" id="userAvatar">TR</div>
+            <span id="userName">Trainer</span>
+          </div>
+          <div class="header-actions">
+            <button class="btn btn-info" onclick="exportDatabase()"><i class="fas fa-download"></i> Export JSON</button>
+            <button class="btn btn-success" onclick="saveToFirebaseAndLocal()"><i class="fas fa-cloud-upload-alt"></i> Save to Firebase</button>
+            <button class="btn btn-primary" onclick="generateAndDownloadJS()"><i class="fas fa-file-code"></i> Generate JS File</button>
+            <button class="btn btn-outline" onclick="copyToTrainerHub()"><i class="fas fa-copy"></i> Copy to Trainer Hub</button>
+            <button class="btn btn-danger" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
+          </div>
+        </div>
       </div>
-      <div class="card-body">
-        <div class="session-grid" id="sessionsList"></div>
+      
+      <!-- Stats -->
+      <div class="stats" id="stats"></div>
+      
+      <!-- Sessions List -->
+      <div class="card">
+        <div class="card-header">
+          <h3><i class="fas fa-calendar-week"></i> Training Sessions</h3>
+          <button class="btn btn-primary" onclick="showAddModal()"><i class="fas fa-plus"></i> Add Session</button>
+        </div>
+        <div class="card-body">
+          <div class="session-grid" id="sessionsList">
+            <div class="no-database-message">
+              <i class="fas fa-database"></i>
+              <p>No training sessions yet</p>
+              <button class="btn btn-primary" onclick="showAddModal()">Add Your First Session</button>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
-    
-    <!-- Generated JS Preview -->
-    <div class="card">
-      <div class="card-header">
-        <h3><i class="fas fa-code"></i> Generated JavaScript</h3>
-        <button class="btn btn-outline" onclick="copyToClipboard()"><i class="fas fa-copy"></i> Copy</button>
-      </div>
-      <div class="card-body">
-        <div class="json-preview" id="jsPreview"></div>
+      
+      <!-- Generated JS Preview -->
+      <div class="card">
+        <div class="card-header">
+          <h3><i class="fas fa-code"></i> Generated JavaScript</h3>
+          <button class="btn btn-outline" onclick="copyToClipboard()"><i class="fas fa-copy"></i> Copy</button>
+        </div>
+        <div class="card-body">
+          <div class="json-preview" id="jsPreview">// No sessions configured yet</div>
+        </div>
       </div>
     </div>
   </div>
@@ -229,22 +315,25 @@
   <!-- Toast -->
   <div class="toast" id="toast"></div>
 
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+
   <script>
-    // Initialize database from localStorage or use default
-    let trainingSessions = JSON.parse(localStorage.getItem('workfit_training_sessions')) || [
-      { day: 'Monday', time: '6:00 AM', name: 'Morning Cardio', type: 'Cardio', duration: 60, intensity: 'Medium', maxParticipants: 20 },
-      { day: 'Monday', time: '5:00 PM', name: 'Strength Foundations', type: 'Strength', duration: 45, intensity: 'High', maxParticipants: 15 },
-      { day: 'Tuesday', time: '6:00 AM', name: 'HIIT Power Hour', type: 'HIIT', duration: 60, intensity: 'High', maxParticipants: 20 },
-      { day: 'Tuesday', time: '5:00 PM', name: 'Yoga Flow', type: 'Yoga', duration: 60, intensity: 'Low', maxParticipants: 25 },
-      { day: 'Wednesday', time: '6:00 AM', name: 'Spin & Burn', type: 'Spin', duration: 45, intensity: 'High', maxParticipants: 15 },
-      { day: 'Wednesday', time: '5:00 PM', name: 'CrossFit Challenge', type: 'CrossFit', duration: 60, intensity: 'High', maxParticipants: 12 },
-      { day: 'Thursday', time: '6:00 AM', name: 'Pilates Core', type: 'Pilates', duration: 45, intensity: 'Medium', maxParticipants: 20 },
-      { day: 'Thursday', time: '5:00 PM', name: 'Zumba Party', type: 'Zumba', duration: 60, intensity: 'Medium', maxParticipants: 30 },
-      { day: 'Friday', time: '6:00 AM', name: 'Full Body Strength', type: 'Strength', duration: 60, intensity: 'High', maxParticipants: 15 },
-      { day: 'Friday', time: '5:00 PM', name: 'Cardio Kickboxing', type: 'Cardio', duration: 60, intensity: 'High', maxParticipants: 20 },
-      { day: 'Saturday', time: '8:00 AM', name: 'Weekend Warrior', type: 'HIIT', duration: 90, intensity: 'High', maxParticipants: 20 },
-      { day: 'Saturday', time: '10:00 AM', name: 'Family Fitness', type: 'Aerobics', duration: 60, intensity: 'Low', maxParticipants: 30 }
-    ];
+    // Initialize Firebase
+    firebase.initializeApp({
+      apiKey: "AIzaSyC7kppUyHUaPzeLBV62NEZWuHiuz1Kz0mA",
+      authDomain: "mugera-e51cc.firebaseapp.com",
+      databaseURL: "https://mugera-e51cc-default-rtdb.europe-west1.firebasedatabase.app",
+      projectId: "mugera-e51cc"
+    });
+    const auth = firebase.auth();
+    const db = firebase.database();
+
+    let currentUser = null;
+    let currentClubId = null;
+    let trainingSessions = [];
 
     function showToast(msg, type = '') {
       const t = document.getElementById('toast');
@@ -254,18 +343,37 @@
 
     function updateStats() {
       const stats = document.getElementById('stats');
+      if (!trainingSessions.length) {
+        stats.innerHTML = `<div class="stat-card"><div class="stat-value">0</div><div class="stat-label">Total Sessions</div></div>
+                          <div class="stat-card"><div class="stat-value">0</div><div class="stat-label">Active Days</div></div>
+                          <div class="stat-card"><div class="stat-value">0</div><div class="stat-label">Session Types</div></div>
+                          <div class="stat-card"><div class="stat-value">0</div><div class="stat-label">Total Hours/Week</div></div>`;
+        return;
+      }
       const days = [...new Set(trainingSessions.map(s => s.day))];
       const types = [...new Set(trainingSessions.map(s => s.type))];
       stats.innerHTML = `
         <div class="stat-card"><div class="stat-value">${trainingSessions.length}</div><div class="stat-label">Total Sessions</div></div>
         <div class="stat-card"><div class="stat-value">${days.length}</div><div class="stat-label">Active Days</div></div>
         <div class="stat-card"><div class="stat-value">${types.length}</div><div class="stat-label">Session Types</div></div>
-        <div class="stat-card"><div class="stat-value">${Math.round(trainingSessions.reduce((sum, s) => sum + s.duration, 0) / 60)}</div><div class="stat-label">Total Hours/Week</div></div>
+        <div class="stat-card"><div class="stat-value">${Math.round(trainingSessions.reduce((sum, s) => sum + (s.duration || 60), 0) / 60)}</div><div class="stat-label">Total Hours/Week</div></div>
       `;
     }
 
     function renderSessions() {
       const container = document.getElementById('sessionsList');
+      if (!trainingSessions.length) {
+        container.innerHTML = `
+          <div class="no-database-message">
+            <i class="fas fa-database"></i>
+            <p>No training sessions yet</p>
+            <button class="btn btn-primary" onclick="showAddModal()">Add Your First Session</button>
+          </div>`;
+        updateStats();
+        generateJSPreview();
+        return;
+      }
+      
       const sortedSessions = [...trainingSessions].sort((a, b) => {
         const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
         return days.indexOf(a.day) - days.indexOf(b.day) || a.time.localeCompare(b.time);
@@ -284,11 +392,11 @@
               </button>
             </div>
           </div>
-          <div class="session-time"><i class="far fa-clock"></i> ${session.time} (${session.duration} min)</div>
+          <div class="session-time"><i class="far fa-clock"></i> ${session.time} (${session.duration || 60} min)</div>
           <div class="session-name">${session.name}</div>
           <span class="session-type">${session.type}</span>
           <div style="font-size:0.7rem; color: var(--text-secondary); margin-top:0.5rem;">
-            Intensity: ${session.intensity} | Max: ${session.maxParticipants} people
+            Intensity: ${session.intensity || 'Medium'} | Max: ${session.maxParticipants || 20} people
           </div>
         </div>
       `).join('');
@@ -318,9 +426,9 @@
       document.getElementById('time').value = session.time;
       document.getElementById('name').value = session.name;
       document.getElementById('type').value = session.type;
-      document.getElementById('duration').value = session.duration;
-      document.getElementById('intensity').value = session.intensity;
-      document.getElementById('maxParticipants').value = session.maxParticipants;
+      document.getElementById('duration').value = session.duration || 60;
+      document.getElementById('intensity').value = session.intensity || 'Medium';
+      document.getElementById('maxParticipants').value = session.maxParticipants || 20;
       document.getElementById('sessionModal').classList.add('active');
     }
 
@@ -334,9 +442,9 @@
         time: document.getElementById('time').value,
         name: document.getElementById('name').value,
         type: document.getElementById('type').value,
-        duration: parseInt(document.getElementById('duration').value),
+        duration: parseInt(document.getElementById('duration').value) || 60,
         intensity: document.getElementById('intensity').value,
-        maxParticipants: parseInt(document.getElementById('maxParticipants').value)
+        maxParticipants: parseInt(document.getElementById('maxParticipants').value) || 20
       };
       
       if (!session.time || !session.name) {
@@ -353,7 +461,6 @@
         showToast('Session added successfully!', 'success');
       }
       
-      saveToStorage();
       renderSessions();
       closeModal();
     }
@@ -361,21 +468,40 @@
     function deleteSession(index) {
       if (confirm('Are you sure you want to delete this session?')) {
         trainingSessions.splice(index, 1);
-        saveToStorage();
         renderSessions();
         showToast('Session deleted', 'success');
       }
     }
 
-    function saveToStorage() {
-      localStorage.setItem('workfit_training_sessions', JSON.stringify(trainingSessions));
+    // Save to Firebase under the club's node
+    async function saveToFirebaseAndLocal() {
+      if (!currentClubId) {
+        showToast('No club assigned. Cannot save to Firebase.', 'error');
+        return;
+      }
+      
+      try {
+        // Save to Firebase
+        await db.ref('workfit_training_sessions/' + currentClubId).set({
+          sessions: trainingSessions,
+          updatedBy: currentUser.email,
+          updatedAt: firebase.database.ServerValue.TIMESTAMP
+        });
+        
+        // Also save to localStorage for the trainer hub
+        localStorage.setItem('workfit_training_sessions', JSON.stringify(trainingSessions));
+        
+        showToast('Saved to Firebase and local storage!', 'success');
+      } catch(e) {
+        console.error('Save error:', e);
+        showToast('Error saving to Firebase', 'error');
+      }
     }
 
-    function resetToDefault() {
-      if (confirm('Reset to default training schedule? This cannot be undone.')) {
-        localStorage.removeItem('workfit_training_sessions');
-        location.reload();
-      }
+    // Copy to localStorage only (for trainer hub access)
+    function copyToTrainerHub() {
+      localStorage.setItem('workfit_training_sessions', JSON.stringify(trainingSessions));
+      showToast('Copied to Trainer Hub storage!', 'success');
     }
 
     function exportDatabase() {
@@ -390,7 +516,11 @@
     }
 
     function generateJSPreview() {
-      // Generate backward compatible WEEKLY_SESSIONS array
+      if (!trainingSessions.length) {
+        document.getElementById('jsPreview').textContent = '// No training sessions configured yet';
+        return;
+      }
+      
       const weeklySessions = trainingSessions.map(s => ({
         day: s.day,
         time: s.time,
@@ -398,11 +528,14 @@
         type: s.type
       }));
       
-      const jsCode = `// training-database.js - Auto-generated by Training Database Manager
+      const jsCode = `// training-database.js - Generated by Training Database Manager
+// Club: ${currentClubId || 'N/A'}
+// Updated by: ${currentUser?.email || 'Unknown'}
 // Last updated: ${new Date().toISOString()}
 
 const TRAINING_SESSIONS_DATABASE = {
   version: "${new Date().toISOString().split('T')[0]}",
+  updatedBy: "${currentUser?.email || 'Unknown'}",
   sessions: ${JSON.stringify(trainingSessions, null, 2)},
   
   getSessionsByDay: function(day) {
@@ -414,7 +547,7 @@ const TRAINING_SESSIONS_DATABASE = {
   }
 };
 
-// Backward compatibility
+// Backward compatibility for Trainer Hub
 const WEEKLY_SESSIONS = ${JSON.stringify(weeklySessions, null, 2)};`;
       
       document.getElementById('jsPreview').textContent = jsCode;
@@ -422,6 +555,10 @@ const WEEKLY_SESSIONS = ${JSON.stringify(weeklySessions, null, 2)};`;
 
     function copyToClipboard() {
       const text = document.getElementById('jsPreview').textContent;
+      if (text === '// No training sessions configured yet') {
+        showToast('Nothing to copy', 'error');
+        return;
+      }
       navigator.clipboard.writeText(text).then(() => {
         showToast('Copied to clipboard!', 'success');
       }).catch(() => {
@@ -429,10 +566,12 @@ const WEEKLY_SESSIONS = ${JSON.stringify(weeklySessions, null, 2)};`;
       });
     }
 
-    function saveAndGenerate() {
-      saveToStorage();
+    function generateAndDownloadJS() {
+      if (!trainingSessions.length) {
+        showToast('Add sessions first', 'error');
+        return;
+      }
       
-      // Create downloadable JS file
       const weeklySessions = trainingSessions.map(s => ({
         day: s.day,
         time: s.time,
@@ -442,12 +581,12 @@ const WEEKLY_SESSIONS = ${JSON.stringify(weeklySessions, null, 2)};`;
       
       const jsContent = `// training-database.js - Generated by WorkFit Training Manager
 // Generated: ${new Date().toISOString()}
+// Updated by: ${currentUser?.email || 'Unknown'}
 
 const TRAINING_SESSIONS_DATABASE = ${JSON.stringify({
         version: new Date().toISOString().split('T')[0],
-        sessions: trainingSessions,
-        getSessionsByDay: "function(day) { return this.sessions.filter(s => s.day === day); }",
-        getSessionsByType: "function(type) { return this.sessions.filter(s => s.type === type); }"
+        updatedBy: currentUser?.email || 'Unknown',
+        sessions: trainingSessions
       }, null, 2)};
 
 const WEEKLY_SESSIONS = ${JSON.stringify(weeklySessions, null, 2)};`;
@@ -459,15 +598,121 @@ const WEEKLY_SESSIONS = ${JSON.stringify(weeklySessions, null, 2)};`;
       a.download = 'training-database.js';
       a.click();
       
-      showToast('Database saved and JS file generated!', 'success');
+      // Also save to localStorage
+      localStorage.setItem('workfit_training_sessions', JSON.stringify(trainingSessions));
+      
+      showToast('JS file generated and saved!', 'success');
     }
 
-    // Initial render
-    renderSessions();
-    
+    // Authentication
+    function login() {
+      const email = document.getElementById('loginEmail').value;
+      const password = document.getElementById('loginPassword').value;
+      
+      if (!email || !password) {
+        showToast('Please enter email and password', 'error');
+        return;
+      }
+      
+      auth.signInWithEmailAndPassword(email, password)
+        .catch(error => {
+          showToast(error.message, 'error');
+        });
+    }
+
+    function logout() {
+      auth.signOut();
+    }
+
+    // Load sessions from Firebase
+    async function loadSessionsFromFirebase() {
+      if (!currentClubId) return;
+      
+      try {
+        const snap = await db.ref('workfit_training_sessions/' + currentClubId).once('value');
+        const data = snap.val();
+        if (data && data.sessions && data.sessions.length > 0) {
+          trainingSessions = data.sessions;
+          // Update localStorage
+          localStorage.setItem('workfit_training_sessions', JSON.stringify(trainingSessions));
+        } else {
+          // Try localStorage as fallback
+          const local = localStorage.getItem('workfit_training_sessions');
+          if (local) {
+            trainingSessions = JSON.parse(local);
+          }
+        }
+      } catch(e) {
+        console.error('Load error:', e);
+        // Fallback to localStorage
+        const local = localStorage.getItem('workfit_training_sessions');
+        if (local) {
+          trainingSessions = JSON.parse(local);
+        }
+      }
+      
+      renderSessions();
+    }
+
+    // Find club for authenticated user
+    async function findClub(user) {
+      try {
+        const snap = await db.ref('workfit_trainers').once('value');
+        const trainers = snap.val() || {};
+        for (const [id, t] of Object.entries(trainers)) {
+          if (t.email && t.email.toLowerCase() === user.email.toLowerCase()) {
+            return { clubId: t.clubId || t.assignedClubId || '', clubName: t.clubName || t.assignedClub || '' };
+          }
+        }
+      } catch(e) { console.error('findClub error:', e); }
+      return null;
+    }
+
+    // Auth state listener
+    auth.onAuthStateChanged(async user => {
+      document.getElementById('loadingScreen').style.display = 'none';
+      
+      if (user) {
+        currentUser = user;
+        document.getElementById('loginScreen').style.display = 'none';
+        document.getElementById('mainContent').classList.add('active');
+        
+        // Update user display
+        document.getElementById('userAvatar').textContent = (user.displayName || user.email || 'T').substring(0,2).toUpperCase();
+        document.getElementById('userName').textContent = user.displayName || user.email?.split('@')[0] || 'Trainer';
+        
+        // Find club assignment
+        const assignment = await findClub(user);
+        if (assignment && assignment.clubId) {
+          currentClubId = assignment.clubId;
+          await loadSessionsFromFirebase();
+        } else {
+          // No club assigned - load from localStorage only
+          const local = localStorage.getItem('workfit_training_sessions');
+          if (local) {
+            trainingSessions = JSON.parse(local);
+          }
+          renderSessions();
+          showToast('No club assigned - using local storage only', 'error');
+        }
+      } else {
+        currentUser = null;
+        currentClubId = null;
+        document.getElementById('loginScreen').style.display = 'flex';
+        document.getElementById('mainContent').classList.remove('active');
+      }
+    });
+
     // Close modal on outside click
     document.getElementById('sessionModal').addEventListener('click', function(e) {
       if (e.target === this) closeModal();
+    });
+
+    // Enter key to login
+    document.addEventListener('keypress', function(e) {
+      if (e.key === 'Enter' && document.getElementById('loginScreen').style.display === 'flex') {
+        login();
+      }
     });
   </script>
 </body>
