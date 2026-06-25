@@ -91,6 +91,7 @@
     .btn-primary { background: var(--orange); color: white; border-color: var(--orange); }
     .btn-primary:hover { background: var(--orange-dark); }
     .btn-outline { background: white; border-color: var(--border); color: var(--text-secondary); }
+    .btn-info { background: var(--info); color: white; border-color: var(--info); }
     .btn-sm { padding: 0.35rem 0.7rem; font-size: 0.68rem; }
     .btn-xs { padding: 0.25rem 0.5rem; font-size: 0.62rem; border-radius: 6px; }
 
@@ -119,6 +120,23 @@
     .message-card-preview { font-size: 0.68rem; color: var(--text-secondary); line-height: 1.4; }
     .message-card-time { font-size: 0.6rem; color: var(--text-secondary); white-space: nowrap; }
 
+    .session-item {
+      display: flex; align-items: center; padding: 0.8rem 1.2rem; border-bottom: 1px solid var(--border-light);
+      gap: 12px; transition: background 0.15s;
+    }
+    .session-item:hover { background: #fafbfc; }
+    .session-item:last-child { border-bottom: none; }
+    .session-day {
+      width: 80px; font-weight: 700; font-size: 0.7rem; text-align: center; line-height: 1.3;
+      padding: 0.4rem; border-radius: var(--radius-sm); background: #fff7ed; color: var(--orange-dark); flex-shrink: 0;
+    }
+    .session-info { flex: 1; min-width: 0; }
+    .session-name { font-weight: 600; font-size: 0.8rem; }
+    .session-meta { font-size: 0.65rem; color: var(--text-secondary); margin-top: 2px; }
+    .session-actions { display: flex; gap: 4px; flex-shrink: 0; }
+    .session-item.completed { opacity: 0.7; }
+    .session-item.completed .session-day { background: #ecfdf5; color: #065f46; }
+
     .empty-state { text-align: center; padding: 2.5rem 1rem; }
     .empty-state i { font-size: 2.5rem; color: #cbd5e1; display: block; margin-bottom: 0.8rem; }
     .empty-state p { font-size: 0.78rem; color: var(--text-secondary); }
@@ -134,12 +152,26 @@
     .form-group label { display: block; font-weight: 600; font-size: 0.7rem; color: var(--text-secondary); margin-bottom: 0.3rem; }
     .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 0.55rem 0.8rem; border: 1px solid var(--border); border-radius: var(--radius-sm); font-family: 'Inter', sans-serif; font-size: 0.8rem; background: #f8fafc; outline: none; }
     .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--orange); }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; }
 
     .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); z-index: 400; padding: 0.6rem 1.2rem; border-radius: 10px; font-size: 0.75rem; font-weight: 600; box-shadow: var(--shadow-lg); animation: toastIn 0.3s ease; background: #0f172a; color: white; display: none; }
     .toast.error { background: #991b1b; }
     @keyframes toastIn { from { opacity: 0; transform: translateX(-50%) translateY(15px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }
 
-    @media (max-width: 640px) { .main { padding: 1rem; } .stats-row { grid-template-columns: 1fr 1fr; } }
+    .database-status {
+      display: inline-flex; align-items: center; gap: 6px; padding: 0.25rem 0.6rem;
+      border-radius: 12px; font-size: 0.65rem; font-weight: 600;
+    }
+    .database-status.configured { background: #ecfdf5; color: #065f46; }
+    .database-status.empty { background: #fef2f2; color: #991b1b; }
+
+    @media (max-width: 640px) { 
+      .main { padding: 1rem; } 
+      .stats-row { grid-template-columns: 1fr 1fr; }
+      .form-row { grid-template-columns: 1fr; }
+      .session-item { flex-wrap: wrap; }
+      .session-day { width: 100%; }
+    }
   </style>
 </head>
 <body>
@@ -197,6 +229,74 @@
     let allSales = {};
     let allSessions = {};
     let allMessages = {};
+
+    // Dynamic training database - loads from localStorage (set by manager page) or Firebase
+    function loadTrainingDatabase() {
+      const stored = localStorage.getItem('workfit_training_sessions');
+      if (stored) {
+        try {
+          const sessions = JSON.parse(stored);
+          return sessions.map(s => ({
+            day: s.day,
+            time: s.time,
+            name: s.name,
+            type: s.type,
+            duration: s.duration || 60,
+            intensity: s.intensity || 'Medium',
+            maxParticipants: s.maxParticipants || 20
+          }));
+        } catch(e) {
+          console.error('Error parsing training sessions:', e);
+        }
+      }
+      return []; // Empty array - no defaults
+    }
+
+    let WEEKLY_SESSIONS = loadTrainingDatabase();
+
+    // Listen for training database updates from other tabs/pages (manager)
+    window.addEventListener('storage', function(e) {
+      if (e.key === 'workfit_training_sessions') {
+        WEEKLY_SESSIONS = loadTrainingDatabase();
+        if (currentTab === 'sessions') renderTab();
+        updateStats();
+      }
+    });
+
+    // Load training sessions from Firebase
+    async function loadTrainingFromFirebase() {
+      if (!currentClubId) return;
+      try {
+        const snap = await db.ref('workfit_training_sessions/' + currentClubId).once('value');
+        const data = snap.val();
+        if (data && data.sessions && Array.isArray(data.sessions) && data.sessions.length > 0) {
+          localStorage.setItem('workfit_training_sessions', JSON.stringify(data.sessions));
+          WEEKLY_SESSIONS = data.sessions.map(s => ({
+            day: s.day,
+            time: s.time,
+            name: s.name,
+            type: s.type,
+            duration: s.duration || 60,
+            intensity: s.intensity || 'Medium',
+            maxParticipants: s.maxParticipants || 20
+          }));
+          if (currentTab === 'sessions') renderTab();
+          updateStats();
+        }
+      } catch(e) {
+        console.error('Error loading training from Firebase:', e);
+      }
+    }
+
+    // Poll for localStorage changes (in case storage event doesn't fire)
+    setInterval(() => {
+      const current = loadTrainingDatabase();
+      if (JSON.stringify(current) !== JSON.stringify(WEEKLY_SESSIONS)) {
+        WEEKLY_SESSIONS = current;
+        if (currentTab === 'sessions') renderTab();
+        updateStats();
+      }
+    }, 3000);
 
     function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
     function toast(msg, err) {
@@ -261,7 +361,6 @@
         Object.entries(data).forEach(([id, m]) => { if (m && m.clubId === currentClubId) allSessions[id] = m; });
         updateStats(); if (currentTab === 'sessions') renderTab();
       });
-      // Messages - load ALL then filter by clubId
       db.ref('workfit_contact_messages').on('value', snap => {
         const data = snap.val() || {};
         allMessages = {};
@@ -441,37 +540,115 @@
     };
 
     // SESSIONS
-    const WEEKLY_SESSIONS = [
-      { day: 'Monday', time: '6:00 AM', name: 'Morning Cardio', type: 'Cardio' },
-      { day: 'Monday', time: '5:00 PM', name: 'Strength Foundations', type: 'Strength' },
-      { day: 'Tuesday', time: '6:00 AM', name: 'HIIT Power Hour', type: 'HIIT' },
-      { day: 'Tuesday', time: '5:00 PM', name: 'Yoga Flow', type: 'Yoga' },
-      { day: 'Wednesday', time: '6:00 AM', name: 'Spin & Burn', type: 'Spin' },
-      { day: 'Wednesday', time: '5:00 PM', name: 'CrossFit Challenge', type: 'CrossFit' },
-      { day: 'Thursday', time: '6:00 AM', name: 'Pilates Core', type: 'Pilates' },
-      { day: 'Thursday', time: '5:00 PM', name: 'Zumba Party', type: 'Zumba' },
-      { day: 'Friday', time: '6:00 AM', name: 'Full Body Strength', type: 'Strength' },
-      { day: 'Friday', time: '5:00 PM', name: 'Cardio Kickboxing', type: 'Cardio' },
-      { day: 'Saturday', time: '8:00 AM', name: 'Weekend Warrior', type: 'HIIT' },
-      { day: 'Saturday', time: '10:00 AM', name: 'Family Fitness', type: 'Aerobics' }
-    ];
+    window.initSessions = async function() {
+      if (!WEEKLY_SESSIONS.length) {
+        toast('No training database configured. Use Training Database Manager first.', true);
+        return;
+      }
+      
+      if (!confirm(`Create ${WEEKLY_SESSIONS.length} sessions from training database?`)) return;
+      try { 
+        for (const s of WEEKLY_SESSIONS) { 
+          await db.ref('workfit_schedules').push({ 
+            day: s.day,
+            time: s.time,
+            name: s.name,
+            type: s.type,
+            clubId: currentClubId, 
+            clubName: currentClubName, 
+            status: 'pending',
+            createdAt: firebase.database.ServerValue.TIMESTAMP 
+          }); 
+        } 
+        toast('Sessions created!'); 
+      } catch(e) { 
+        toast('Error', true); 
+      }
+    };
 
     function renderSessions(c) {
       const sessions = Object.entries(allSessions).map(([id, m]) => ({ id, ...m }));
-      sessions.sort((a,b)=>['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'].indexOf(a.day)-['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'].indexOf(b.day));
-      let html = `<h1 class="page-title">📅 Sessions</h1>${renderStatsBar()}<div class="section"><div class="section-header"><h3><i class="fas fa-calendar-week"></i> Weekly Schedule (${sessions.length})</h3><button class="btn btn-primary btn-sm" onclick="initSessions()"><i class="fas fa-sync"></i> Reset Week</button></div><div class="section-body no-padding">`;
-      if (!sessions.length) { html += `<div class="empty-state"><i class="fas fa-calendar-plus"></i><p>No sessions</p><button class="btn btn-primary btn-sm" onclick="initSessions()">Initialize</button></div>`; }
-      else { sessions.forEach(s => { html += `<div class="session-item ${s.status==='done'?'completed':''}"><div class="session-day">${s.day}<br><small>${s.time}</small></div><div class="session-info"><div class="session-name">${esc(s.name)}</div><div class="session-meta">${s.type} · ${s.status==='done'?'✅ Done':'⏳ Pending'}</div></div><div class="session-actions">${s.status!=='done'?`<button class="btn btn-primary btn-xs" onclick="markDone('${s.id}')">Done</button>`:''}<button class="btn btn-outline btn-xs" style="color:#ef4444;margin-left:4px;" onclick="if(confirm('Delete?')) deleteItem('workfit_schedules','${s.id}')"><i class="fas fa-trash"></i></button></div></div>`; }); }
-      html += `</div></div>`; c.innerHTML = html;
+      sessions.sort((a,b)=>['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'].indexOf(a.day)-['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'].indexOf(b.day));
+      
+      const dbStatus = WEEKLY_SESSIONS.length > 0 ? 'configured' : 'empty';
+      const dbStatusText = WEEKLY_SESSIONS.length > 0 ? `${WEEKLY_SESSIONS.length} sessions configured` : 'Not configured';
+      
+      let html = `<h1 class="page-title">📅 Sessions</h1>
+        <p class="page-subtitle">
+          <span class="database-status ${dbStatus}">
+            <i class="fas fa-${dbStatus === 'configured' ? 'check-circle' : 'exclamation-circle'}"></i> 
+            Training DB: ${dbStatusText}
+          </span>
+        </p>
+        ${renderStatsBar()}
+        <div class="section">
+          <div class="section-header">
+            <h3><i class="fas fa-calendar-week"></i> Weekly Schedule (${sessions.length})</h3>
+            <div style="display:flex; gap:8px;">
+              <button class="btn btn-info btn-sm" onclick="window.open('training-database-manager.html', '_blank')">
+                <i class="fas fa-cog"></i> Manage DB
+              </button>
+              <button class="btn btn-primary btn-sm" onclick="initSessions()" ${WEEKLY_SESSIONS.length === 0 ? 'disabled' : ''}>
+                <i class="fas fa-sync"></i> Load from DB
+              </button>
+            </div>
+          </div>
+          <div class="section-body no-padding">`;
+      
+      if (!sessions.length) { 
+        html += `<div class="empty-state">
+          <i class="fas fa-calendar-plus"></i>
+          <p>No sessions scheduled yet</p>
+          ${WEEKLY_SESSIONS.length > 0 ? 
+            `<button class="btn btn-primary btn-sm" onclick="initSessions()">Load ${WEEKLY_SESSIONS.length} Sessions from Database</button>` :
+            `<p style="font-size:0.7rem;">Open the <a href="training-database-manager.html" target="_blank" style="color:var(--orange);">Training Database Manager</a> to configure your schedule first</p>`}
+        </div>`; 
+      }
+      else { 
+        sessions.forEach(s => { 
+          html += `<div class="session-item ${s.status==='done'?'completed':''}">
+            <div class="session-day">${s.day}<br><small>${s.time}</small></div>
+            <div class="session-info">
+              <div class="session-name">${esc(s.name)}</div>
+              <div class="session-meta">${s.type} · ${s.status==='done'?'✅ Done':'⏳ Pending'}</div>
+            </div>
+            <div class="session-actions">
+              ${s.status!=='done'?`<button class="btn btn-primary btn-xs" onclick="markDone('${s.id}')">Done</button>`:''}
+              <button class="btn btn-outline btn-xs" style="color:#ef4444;margin-left:4px;" onclick="if(confirm('Delete?')) deleteItem('workfit_schedules','${s.id}')"><i class="fas fa-trash"></i></button>
+            </div>
+          </div>`; 
+        }); 
+      }
+      html += `</div></div>`; 
+      c.innerHTML = html;
     }
 
-    window.initSessions = async function() {
-      if (!confirm('Create standard weekly schedule?')) return;
-      try { for (const s of WEEKLY_SESSIONS) { await db.ref('workfit_schedules').push({ ...s, clubId: currentClubId, clubName: currentClubName, status: 'pending', createdAt: firebase.database.ServerValue.TIMESTAMP }); } toast('Created!'); } catch(e) { toast('Error', true); }
+    window.markDone = async function(id) { 
+      try { 
+        await db.ref('workfit_schedules/' + id).update({ status: 'done', completedAt: firebase.database.ServerValue.TIMESTAMP }); 
+        toast('Done!'); 
+      } catch(e) { 
+        toast('Error', true); 
+      } 
     };
-    window.markDone = async function(id) { try { await db.ref('workfit_schedules/' + id).update({ status: 'done', completedAt: firebase.database.ServerValue.TIMESTAMP }); toast('Done!'); } catch(e) { toast('Error', true); } };
-    window.deleteItem = async function(path, id) { try { await db.ref(path + '/' + id).remove(); toast('Deleted'); } catch(e) { toast('Error', true); } };
-    window.handleLogout = async function() { try { await auth.signOut(); window.location.href = '/'; } catch(e) { toast('Error', true); } };
+    
+    window.deleteItem = async function(path, id) { 
+      try { 
+        await db.ref(path + '/' + id).remove(); 
+        toast('Deleted'); 
+      } catch(e) { 
+        toast('Error', true); 
+      } 
+    };
+    
+    window.handleLogout = async function() { 
+      try { 
+        await auth.signOut(); 
+        window.location.href = '/'; 
+      } catch(e) { 
+        toast('Error', true); 
+      } 
+    };
 
     // Auth
     auth.onAuthStateChanged(async user => {
@@ -487,6 +664,7 @@
         currentClubId = assignment.clubId;
         currentClubName = assignment.clubName || 'Your Club';
         document.getElementById('clubTag').textContent = currentClubName;
+        await loadTrainingFromFirebase();
         loadData();
         renderTab();
       } else {
