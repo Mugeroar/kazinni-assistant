@@ -25,43 +25,59 @@
       -webkit-font-smoothing: antialiased;
     }
     .topbar {
-      background: rgba(255,255,255,0.85); backdrop-filter: blur(20px);
+      background: rgba(255,255,255,0.95); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
       border-bottom: 1px solid var(--border-light); padding: 0 1.5rem; height: 56px;
       display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100;
     }
     .topbar-left { display: flex; align-items: center; gap: 12px; }
-    .menu-btn { width: 36px; height: 36px; border-radius: var(--radius-sm); border: 1px solid var(--border); background: white; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1rem; color: var(--text-secondary); }
+    .menu-btn { width: 36px; height: 36px; border-radius: var(--radius-sm); border: 1px solid var(--border); background: white; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1rem; color: var(--text-secondary); transition: all 0.2s; }
+    .menu-btn:hover { background: #f8fafc; }
     .brand { display: flex; align-items: center; gap: 8px; }
     .brand img { width: 30px; height: 30px; border-radius: 8px; }
-    .brand span { font-weight: 700; font-size: 0.9rem; }
-    .club-tag { background: #fff7ed; color: var(--orange-dark); padding: 0.2rem 0.6rem; border-radius: 20px; font-size: 0.65rem; font-weight: 600; }
-    .topbar-right { display: flex; align-items: center; gap: 12px; }
-    .user-pill { display: flex; align-items: center; gap: 8px; background: white; border: 1px solid var(--border); padding: 0.3rem 0.8rem 0.3rem 0.4rem; border-radius: 30px; }
+    .brand span { font-weight: 700; font-size: 0.9rem; color: var(--text); }
+    .club-tag { background: #fff7ed; color: var(--orange-dark); padding: 0.2rem 0.7rem; border-radius: 20px; font-size: 0.65rem; font-weight: 600; max-width: 130px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .topbar-right { display: flex; align-items: center; gap: 10px; }
+    .create-post-btn {
+      display: flex; align-items: center; gap: 6px; padding: 0.4rem 0.9rem;
+      border-radius: 20px; border: none; background: var(--info); color: white;
+      font-weight: 600; font-size: 0.7rem; cursor: pointer; transition: all 0.2s;
+      font-family: 'Inter', sans-serif; box-shadow: 0 2px 8px rgba(59,130,246,0.25);
+    }
+    .create-post-btn:hover { background: #2563eb; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(59,130,246,0.35); }
+    .user-pill { display: flex; align-items: center; gap: 8px; background: white; border: 1px solid var(--border); padding: 0.3rem 0.8rem 0.3rem 0.4rem; border-radius: 30px; cursor: pointer; transition: all 0.2s; }
+    .user-pill:hover { background: #f8fafc; }
     .user-avatar { width: 28px; height: 28px; border-radius: 50%; background: linear-gradient(135deg, #f97316, #ea580c); display: flex; align-items: center; justify-content: center; font-size: 0.65rem; font-weight: 700; color: white; }
-    .user-name { font-size: 0.7rem; font-weight: 600; }
+    .user-name { font-size: 0.7rem; font-weight: 600; color: var(--text); }
 
     .sidebar-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.3); z-index: 200; opacity: 0; visibility: hidden; transition: all 0.3s; }
     .sidebar-overlay.open { opacity: 1; visibility: visible; }
     .sidebar {
       position: fixed; top: 0; left: -280px; width: 280px; height: 100%; background: white;
-      z-index: 201; transition: left 0.3s; display: flex; flex-direction: column; box-shadow: 2px 0 20px rgba(0,0,0,0.05);
+      z-index: 201; transition: left 0.3s cubic-bezier(0.4,0,0.2,1); display: flex; flex-direction: column;
+      box-shadow: 2px 0 20px rgba(0,0,0,0.05);
     }
     .sidebar.open { left: 0; }
     .sidebar-header { padding: 1.2rem 1.5rem; border-bottom: 1px solid var(--border-light); display: flex; align-items: center; justify-content: space-between; }
-    .sidebar-close { width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--border); background: white; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+    .sidebar-header h3 { font-size: 0.85rem; font-weight: 700; }
+    .sidebar-close { width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--border); background: white; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+    .sidebar-close:hover { background: #fef2f2; color: #ef4444; }
     .sidebar-user { padding: 1rem 1.5rem; border-bottom: 1px solid var(--border-light); display: flex; align-items: center; gap: 10px; }
     .sidebar-avatar { width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, #f97316, #ea580c); display: flex; align-items: center; justify-content: center; font-weight: 700; color: white; font-size: 0.8rem; }
+    .sidebar-user-info h4 { font-size: 0.78rem; font-weight: 600; }
+    .sidebar-user-info p { font-size: 0.65rem; color: var(--text-secondary); }
     .sidebar-nav { flex: 1; padding: 0.5rem 0; overflow-y: auto; }
     .sidebar-nav-item {
       display: flex; align-items: center; gap: 10px; padding: 0.65rem 1.5rem;
       font-size: 0.78rem; font-weight: 500; color: var(--text-secondary); cursor: pointer;
-      border-left: 3px solid transparent; transition: all 0.15s;
+      transition: all 0.15s; border-left: 3px solid transparent;
     }
     .sidebar-nav-item:hover { background: #f8fafc; color: var(--text); }
     .sidebar-nav-item.active { background: #fff7ed; color: var(--orange-dark); border-left-color: var(--orange); font-weight: 600; }
+    .sidebar-nav-item i { width: 20px; text-align: center; }
     .sidebar-nav-item .badge-count { margin-left: auto; background: #ef4444; color: white; font-size: 0.6rem; padding: 2px 7px; border-radius: 10px; font-weight: 600; display: none; }
     .sidebar-footer { padding: 1rem 1.5rem; border-top: 1px solid var(--border-light); }
-    .logout-btn { width: 100%; padding: 0.6rem; border-radius: var(--radius); border: 1px solid #fee2e2; background: #fef2f2; color: #ef4444; font-weight: 600; font-size: 0.75rem; cursor: pointer; }
+    .logout-btn { width: 100%; padding: 0.6rem; border-radius: var(--radius); border: 1px solid #fee2e2; background: #fef2f2; color: #ef4444; font-weight: 600; font-size: 0.75rem; cursor: pointer; transition: all 0.2s; }
+    .logout-btn:hover { background: #fee2e2; }
 
     .main { padding: 1.5rem; max-width: 900px; margin: 0 auto; }
     .page-title { font-size: 1.3rem; font-weight: 800; margin-bottom: 0.2rem; }
@@ -75,10 +91,9 @@
     .stat-card .stat-icon { width: 36px; height: 36px; border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; margin-bottom: 0.6rem; font-size: 0.9rem; }
     .stat-card .stat-icon.members { background: #eff6ff; color: #3b82f6; }
     .stat-card .stat-icon.inventory { background: #fef3c7; color: #d97706; }
-    .stat-card .stat-icon.sales { background: #ecfdf5; color: #059669; }
     .stat-card .stat-icon.sessions { background: #faf5ff; color: #7c3aed; }
     .stat-card .stat-icon.messages { background: #fef2f2; color: #ef4444; }
-    .stat-card .stat-value { font-size: 1.6rem; font-weight: 800; }
+    .stat-card .stat-value { font-size: 1.6rem; font-weight: 800; color: var(--text); }
     .stat-card .stat-label { font-size: 0.6rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; margin-top: 0.2rem; }
 
     .section { background: var(--surface); border-radius: var(--radius-xl); border: 1px solid var(--border-light); box-shadow: var(--shadow-sm); margin-bottom: 1.5rem; overflow: hidden; }
@@ -87,28 +102,32 @@
     .section-body { padding: 1rem 1.2rem; }
     .section-body.no-padding { padding: 0; }
 
-    .btn { padding: 0.45rem 0.9rem; border-radius: var(--radius-sm); font-weight: 600; font-size: 0.72rem; cursor: pointer; border: 1px solid transparent; transition: all 0.2s; display: inline-flex; align-items: center; gap: 6px; }
+    .btn { padding: 0.45rem 0.9rem; border-radius: var(--radius-sm); font-weight: 600; font-size: 0.72rem; cursor: pointer; border: 1px solid transparent; transition: all 0.2s; display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
     .btn-primary { background: var(--orange); color: white; border-color: var(--orange); }
     .btn-primary:hover { background: var(--orange-dark); }
     .btn-outline { background: white; border-color: var(--border); color: var(--text-secondary); }
+    .btn-outline:hover { background: #f8fafc; }
     .btn-info { background: var(--info); color: white; border-color: var(--info); }
+    .btn-info:hover { background: #2563eb; }
     .btn-sm { padding: 0.35rem 0.7rem; font-size: 0.68rem; }
     .btn-xs { padding: 0.25rem 0.5rem; font-size: 0.62rem; border-radius: 6px; }
 
-    .list-item { display: flex; align-items: center; justify-content: space-between; padding: 0.75rem 1.2rem; border-bottom: 1px solid var(--border-light); }
+    .list-item { display: flex; align-items: center; justify-content: space-between; padding: 0.75rem 1.2rem; border-bottom: 1px solid var(--border-light); transition: background 0.15s; }
     .list-item:last-child { border-bottom: none; }
+    .list-item:hover { background: #fafbfc; }
     .list-item-left { display: flex; align-items: center; gap: 10px; min-width: 0; }
     .list-item-icon { width: 36px; height: 36px; border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; font-size: 0.9rem; flex-shrink: 0; background: #f8fafc; }
     .list-item-info { min-width: 0; }
-    .list-item-title { font-weight: 600; font-size: 0.8rem; }
+    .list-item-title { font-weight: 600; font-size: 0.8rem; color: var(--text); }
     .list-item-subtitle { font-size: 0.65rem; color: var(--text-secondary); margin-top: 1px; }
     .list-item-right { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
 
-    .badge { padding: 0.18rem 0.5rem; border-radius: 6px; font-size: 0.6rem; font-weight: 600; }
+    .badge { padding: 0.18rem 0.5rem; border-radius: 6px; font-size: 0.6rem; font-weight: 600; text-transform: capitalize; }
     .badge-success { background: #ecfdf5; color: #065f46; }
     .badge-warning { background: #fffbeb; color: #92400e; }
     .badge-danger { background: #fef2f2; color: #991b1b; }
     .badge-info { background: #eff6ff; color: #1e40af; }
+    .badge-neutral { background: #f1f5f9; color: #475569; }
 
     .message-card { padding: 0.9rem 1.2rem; border-bottom: 1px solid var(--border-light); cursor: pointer; transition: background 0.15s; }
     .message-card:hover { background: #fafbfc; }
@@ -117,60 +136,52 @@
     .message-card-from { font-weight: 600; font-size: 0.8rem; }
     .message-card-email { font-size: 0.62rem; color: var(--text-secondary); }
     .message-card-subject { font-weight: 600; font-size: 0.75rem; margin-bottom: 0.2rem; }
-    .message-card-preview { font-size: 0.68rem; color: var(--text-secondary); line-height: 1.4; }
+    .message-card-preview { font-size: 0.68rem; color: var(--text-secondary); line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
     .message-card-time { font-size: 0.6rem; color: var(--text-secondary); white-space: nowrap; }
 
     .session-item {
-      display: flex; align-items: center; padding: 0.8rem 1.2rem; border-bottom: 1px solid var(--border-light);
-      gap: 12px; transition: background 0.15s;
+      display: flex; align-items: center; gap: 12px; padding: 0.7rem 1.2rem;
+      border-bottom: 1px solid var(--border-light); transition: all 0.15s;
     }
-    .session-item:hover { background: #fafbfc; }
     .session-item:last-child { border-bottom: none; }
-    .session-day {
-      width: 80px; font-weight: 700; font-size: 0.7rem; text-align: center; line-height: 1.3;
-      padding: 0.4rem; border-radius: var(--radius-sm); background: #fff7ed; color: var(--orange-dark); flex-shrink: 0;
-    }
+    .session-item:hover { background: #fafbfc; }
+    .session-item.completed { opacity: 0.5; }
+    .session-day { width: 80px; flex-shrink: 0; font-size: 0.7rem; font-weight: 600; color: var(--orange-dark); }
     .session-info { flex: 1; min-width: 0; }
-    .session-name { font-weight: 600; font-size: 0.8rem; }
-    .session-meta { font-size: 0.65rem; color: var(--text-secondary); margin-top: 2px; }
-    .session-actions { display: flex; gap: 4px; flex-shrink: 0; }
-    .session-item.completed { opacity: 0.7; }
-    .session-item.completed .session-day { background: #ecfdf5; color: #065f46; }
+    .session-name { font-weight: 600; font-size: 0.78rem; }
+    .session-meta { font-size: 0.62rem; color: var(--text-secondary); }
+    .session-actions { flex-shrink: 0; display: flex; gap: 4px; }
 
     .empty-state { text-align: center; padding: 2.5rem 1rem; }
     .empty-state i { font-size: 2.5rem; color: #cbd5e1; display: block; margin-bottom: 0.8rem; }
-    .empty-state p { font-size: 0.78rem; color: var(--text-secondary); }
+    .empty-state p { font-size: 0.78rem; color: var(--text-secondary); margin-bottom: 1rem; }
 
+    /* Create Post Modal */
     .modal-overlay { position: fixed; inset: 0; background: rgba(15,23,42,0.4); backdrop-filter: blur(4px); display: flex; align-items: flex-end; justify-content: center; z-index: 300; opacity: 0; visibility: hidden; transition: all 0.25s; }
     .modal-overlay.active { opacity: 1; visibility: visible; }
     .modal { background: white; border-radius: 20px 20px 0 0; padding: 1.5rem; width: 100%; max-width: 500px; max-height: 85vh; overflow-y: auto; box-shadow: 0 -4px 30px rgba(0,0,0,0.1); }
     .modal-handle { width: 36px; height: 4px; background: #e2e8f0; border-radius: 2px; margin: 0 auto 1rem; }
     .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.2rem; }
     .modal-header h3 { font-size: 1rem; font-weight: 700; }
-    .modal-close { width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--border); background: white; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; }
+    .modal-close { width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--border); background: white; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; transition: all 0.2s; }
+    .modal-close:hover { background: #fef2f2; color: #ef4444; }
     .form-group { margin-bottom: 0.8rem; }
     .form-group label { display: block; font-weight: 600; font-size: 0.7rem; color: var(--text-secondary); margin-bottom: 0.3rem; }
-    .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 0.55rem 0.8rem; border: 1px solid var(--border); border-radius: var(--radius-sm); font-family: 'Inter', sans-serif; font-size: 0.8rem; background: #f8fafc; outline: none; }
-    .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--orange); }
+    .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 0.55rem 0.8rem; border: 1px solid var(--border); border-radius: var(--radius-sm); font-family: 'Inter', sans-serif; font-size: 0.8rem; background: #f8fafc; outline: none; transition: all 0.2s; }
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--orange); box-shadow: 0 0 0 3px rgba(249,115,22,0.06); background: white; }
     .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; }
+    .image-preview { width: 100%; max-height: 200px; object-fit: cover; border-radius: var(--radius-sm); margin-top: 0.5rem; display: none; }
 
     .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); z-index: 400; padding: 0.6rem 1.2rem; border-radius: 10px; font-size: 0.75rem; font-weight: 600; box-shadow: var(--shadow-lg); animation: toastIn 0.3s ease; background: #0f172a; color: white; display: none; }
     .toast.error { background: #991b1b; }
     @keyframes toastIn { from { opacity: 0; transform: translateX(-50%) translateY(15px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }
 
-    .database-status {
-      display: inline-flex; align-items: center; gap: 6px; padding: 0.25rem 0.6rem;
-      border-radius: 12px; font-size: 0.65rem; font-weight: 600;
-    }
-    .database-status.configured { background: #ecfdf5; color: #065f46; }
-    .database-status.empty { background: #fef2f2; color: #991b1b; }
-
     @media (max-width: 640px) { 
       .main { padding: 1rem; } 
       .stats-row { grid-template-columns: 1fr 1fr; }
       .form-row { grid-template-columns: 1fr; }
-      .session-item { flex-wrap: wrap; }
-      .session-day { width: 100%; }
+      .topbar { padding: 0 1rem; }
+      .create-post-btn { padding: 0.35rem 0.7rem; font-size: 0.65rem; }
     }
   </style>
 </head>
@@ -186,7 +197,6 @@
       <div class="sidebar-nav-item active" data-tab="members"><i class="fas fa-users"></i> Members</div>
       <div class="sidebar-nav-item" data-tab="messages"><i class="fas fa-envelope"></i> Messages <span class="badge-count" id="unreadBadge">0</span></div>
       <div class="sidebar-nav-item" data-tab="inventory"><i class="fas fa-box"></i> Inventory</div>
-      <div class="sidebar-nav-item" data-tab="sales"><i class="fas fa-chart-line"></i> Sales</div>
       <div class="sidebar-nav-item" data-tab="sessions"><i class="fas fa-calendar-week"></i> Sessions</div>
     </div>
     <div class="sidebar-footer"><button class="logout-btn" onclick="handleLogout()"><i class="fas fa-sign-out-alt"></i> Sign Out</button></div>
@@ -199,12 +209,21 @@
       <span class="club-tag" id="clubTag">Loading...</span>
     </div>
     <div class="topbar-right">
+      <button class="create-post-btn" onclick="openCreatePost()"><i class="fas fa-plus-circle"></i> New Post</button>
       <div class="user-pill"><div class="user-avatar" id="topAvatar">TR</div><span class="user-name" id="topName">Trainer</span></div>
     </div>
   </div>
 
   <div class="main"><div id="mainContent"></div></div>
+  
+  <!-- Modal -->
   <div class="modal-overlay" id="modalOverlay"><div class="modal" id="modalContent"><div class="modal-handle"></div></div></div>
+  
+  <!-- Create Post Modal -->
+  <div class="modal-overlay" id="postModal">
+    <div class="modal" id="postModalContent"><div class="modal-handle"></div></div>
+  </div>
+  
   <div id="toast" class="toast"></div>
 
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
@@ -226,77 +245,8 @@
     let currentTab = 'members';
     let allMembers = {};
     let allInventory = {};
-    let allSales = {};
     let allSessions = {};
     let allMessages = {};
-
-    // Dynamic training database - loads from localStorage (set by manager page) or Firebase
-    function loadTrainingDatabase() {
-      const stored = localStorage.getItem('workfit_training_sessions');
-      if (stored) {
-        try {
-          const sessions = JSON.parse(stored);
-          return sessions.map(s => ({
-            day: s.day,
-            time: s.time,
-            name: s.name,
-            type: s.type,
-            duration: s.duration || 60,
-            intensity: s.intensity || 'Medium',
-            maxParticipants: s.maxParticipants || 20
-          }));
-        } catch(e) {
-          console.error('Error parsing training sessions:', e);
-        }
-      }
-      return []; // Empty array - no defaults
-    }
-
-    let WEEKLY_SESSIONS = loadTrainingDatabase();
-
-    // Listen for training database updates from other tabs/pages (manager)
-    window.addEventListener('storage', function(e) {
-      if (e.key === 'workfit_training_sessions') {
-        WEEKLY_SESSIONS = loadTrainingDatabase();
-        if (currentTab === 'sessions') renderTab();
-        updateStats();
-      }
-    });
-
-    // Load training sessions from Firebase
-    async function loadTrainingFromFirebase() {
-      if (!currentClubId) return;
-      try {
-        const snap = await db.ref('workfit_training_sessions/' + currentClubId).once('value');
-        const data = snap.val();
-        if (data && data.sessions && Array.isArray(data.sessions) && data.sessions.length > 0) {
-          localStorage.setItem('workfit_training_sessions', JSON.stringify(data.sessions));
-          WEEKLY_SESSIONS = data.sessions.map(s => ({
-            day: s.day,
-            time: s.time,
-            name: s.name,
-            type: s.type,
-            duration: s.duration || 60,
-            intensity: s.intensity || 'Medium',
-            maxParticipants: s.maxParticipants || 20
-          }));
-          if (currentTab === 'sessions') renderTab();
-          updateStats();
-        }
-      } catch(e) {
-        console.error('Error loading training from Firebase:', e);
-      }
-    }
-
-    // Poll for localStorage changes (in case storage event doesn't fire)
-    setInterval(() => {
-      const current = loadTrainingDatabase();
-      if (JSON.stringify(current) !== JSON.stringify(WEEKLY_SESSIONS)) {
-        WEEKLY_SESSIONS = current;
-        if (currentTab === 'sessions') renderTab();
-        updateStats();
-      }
-    }, 3000);
 
     function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
     function toast(msg, err) {
@@ -308,6 +258,7 @@
     function closeModal() { document.getElementById('modalOverlay').classList.remove('active'); }
     document.getElementById('modalOverlay').addEventListener('click', function(e) { if (e.target === this) closeModal(); });
 
+    // Sidebar
     const sidebar = document.getElementById('sidebar');
     const overlay = document.getElementById('sidebarOverlay');
     document.getElementById('menuBtn').addEventListener('click', () => { sidebar.classList.add('open'); overlay.classList.add('open'); });
@@ -333,13 +284,12 @@
             return { clubId: t.clubId || t.assignedClubId || '', clubName: t.clubName || t.assignedClub || '' };
           }
         }
-      } catch(e) { console.error('findClub error:', e); }
+      } catch(e) {}
       return null;
     }
 
     function loadData() {
-      if (!currentClubId) { console.log('No clubId yet, skipping data load'); return; }
-      console.log('Loading data for club:', currentClubId);
+      if (!currentClubId) return;
       
       db.ref('workfit_members').on('value', snap => {
         const data = snap.val() || {}; allMembers = {};
@@ -351,30 +301,15 @@
         Object.entries(data).forEach(([id, m]) => { if (m && m.clubId === currentClubId) allInventory[id] = m; });
         updateStats(); if (currentTab === 'inventory') renderTab();
       });
-      db.ref('workfit_revenue').on('value', snap => {
-        const data = snap.val() || {}; allSales = {};
-        Object.entries(data).forEach(([id, m]) => { if (m && m.clubId === currentClubId) allSales[id] = m; });
-        updateStats(); if (currentTab === 'sales') renderTab();
-      });
       db.ref('workfit_schedules').on('value', snap => {
         const data = snap.val() || {}; allSessions = {};
         Object.entries(data).forEach(([id, m]) => { if (m && m.clubId === currentClubId) allSessions[id] = m; });
         updateStats(); if (currentTab === 'sessions') renderTab();
       });
       db.ref('workfit_contact_messages').on('value', snap => {
-        const data = snap.val() || {};
-        allMessages = {};
-        Object.entries(data).forEach(([id, m]) => {
-          if (m && m.clubId === currentClubId) {
-            allMessages[id] = { id, ...m };
-          }
-        });
-        console.log('Messages loaded for club:', currentClubId, 'Count:', Object.keys(allMessages).length);
-        updateUnreadBadge();
-        updateStats();
-        if (currentTab === 'messages') renderTab();
-      }, error => {
-        console.error('Messages error:', error);
+        const data = snap.val() || {}; allMessages = {};
+        Object.entries(data).forEach(([id, m]) => { if (m && m.clubId === currentClubId) allMessages[id] = { id, ...m }; });
+        updateUnreadBadge(); updateStats(); if (currentTab === 'messages') renderTab();
       });
     }
 
@@ -386,17 +321,10 @@
     }
 
     function updateStats() {
-      const els = {
-        statMembersVal: Object.keys(allMembers).length,
-        statInventoryVal: Object.keys(allInventory).length,
-        statSalesVal: Object.keys(allSales).length,
-        statSessionsVal: Object.keys(allSessions).length,
-        statMessagesVal: Object.keys(allMessages).length
-      };
-      Object.entries(els).forEach(([id, val]) => {
-        const el = document.getElementById(id);
-        if (el) el.textContent = val;
-      });
+      document.getElementById('statMembersVal') && (document.getElementById('statMembersVal').textContent = Object.keys(allMembers).length);
+      document.getElementById('statInventoryVal') && (document.getElementById('statInventoryVal').textContent = Object.keys(allInventory).length);
+      document.getElementById('statSessionsVal') && (document.getElementById('statSessionsVal').textContent = Object.keys(allSessions).length);
+      document.getElementById('statMessagesVal') && (document.getElementById('statMessagesVal').textContent = Object.keys(allMessages).length);
     }
 
     function renderTab() {
@@ -406,7 +334,6 @@
         case 'members': renderMembers(c); break;
         case 'messages': renderMessages(c); break;
         case 'inventory': renderInventory(c); break;
-        case 'sales': renderSales(c); break;
         case 'sessions': renderSessions(c); break;
       }
     }
@@ -420,20 +347,91 @@
       </div>`;
     }
 
-    // MESSAGES
+    // ============ CREATE POST ============
+    window.openCreatePost = function() {
+      document.getElementById('postModalContent').innerHTML = `
+        <div class="modal-handle"></div>
+        <div class="modal-header">
+          <h3><i class="fas fa-plus-circle" style="color:#3b82f6;"></i> New Club Post</h3>
+          <button class="modal-close" onclick="closePostModal()"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="form-group">
+          <label>What's happening at ${esc(currentClubName || 'your club')}? *</label>
+          <textarea id="postContent" rows="4" placeholder="Share an update, announcement, or motivation with your members..."></textarea>
+        </div>
+        <div class="form-group">
+          <label>Image URL (optional)</label>
+          <input type="url" id="postImageUrl" placeholder="https://example.com/image.jpg" oninput="previewImage()">
+          <img id="imagePreview" class="image-preview" src="" alt="Preview">
+        </div>
+        <div style="display:flex; gap:8px;">
+          <button class="btn btn-outline" style="flex:1;" onclick="closePostModal()">Cancel</button>
+          <button class="btn btn-info" style="flex:1;" onclick="publishPost()"><i class="fas fa-paper-plane"></i> Publish</button>
+        </div>
+      `;
+      document.getElementById('postModal').classList.add('active');
+    };
+
+    window.previewImage = function() {
+      const url = document.getElementById('postImageUrl').value.trim();
+      const preview = document.getElementById('imagePreview');
+      if (url && (url.startsWith('http') || url.startsWith('https'))) {
+        preview.src = url;
+        preview.style.display = 'block';
+      } else {
+        preview.style.display = 'none';
+      }
+    };
+
+    window.publishPost = async function() {
+      const content = document.getElementById('postContent').value.trim();
+      const imageUrl = document.getElementById('postImageUrl').value.trim();
+      
+      if (!content) return toast('Please write something for your post.', true);
+      
+      const btn = document.querySelector('#postModalContent .btn-info');
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Publishing...';
+
+      try {
+        await db.ref('workfit_posts').push({
+          clubId: currentClubId,
+          clubName: currentClubName,
+          authorName: auth.currentUser?.displayName || 'Trainer',
+          authorEmail: auth.currentUser?.email || '',
+          content: content,
+          imageUrl: imageUrl || '',
+          createdAt: firebase.database.ServerValue.TIMESTAMP,
+          timestamp: Date.now()
+        });
+        
+        closePostModal();
+        toast('✅ Post published! Your members can now see it in their feed.');
+      } catch(e) {
+        toast('Failed to publish. Please try again.', true);
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-paper-plane"></i> Publish';
+      }
+    };
+
+    function closePostModal() { document.getElementById('postModal').classList.remove('active'); }
+    document.getElementById('postModal').addEventListener('click', function(e) { if (e.target === this) closePostModal(); });
+
+    // ============ MESSAGES ============
     function renderMessages(c) {
       const messages = Object.values(allMessages).sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
       const unreadCount = messages.filter(m => m.status === 'unread').length;
       let html = `<h1 class="page-title">📬 Messages</h1><p class="page-subtitle">${unreadCount} unread · From ${currentClubName} members</p>${renderStatsBar()}<div class="section"><div class="section-header"><h3><i class="fas fa-envelope"></i> All Messages (${messages.length})</h3></div><div class="section-body no-padding">`;
       if (!messages.length) {
-        html += `<div class="empty-state"><i class="fas fa-inbox"></i><p>No messages yet</p><p style="font-size:0.7rem;">Messages from your members will appear here once they submit via the Contact page.</p></div>`;
+        html += `<div class="empty-state"><i class="fas fa-inbox"></i><p>No messages yet</p></div>`;
       } else {
         messages.forEach(msg => {
           const timeAgo = msg.createdAt ? new Date(msg.createdAt).toLocaleDateString('en-KE', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : '';
           html += `<div class="message-card ${msg.status === 'unread' ? 'unread' : ''}" onclick="viewMessage('${msg.id}')">
             <div class="message-card-header"><div><div class="message-card-from">${esc(msg.name || 'Member')}</div><div class="message-card-email">${esc(msg.email || '')}</div></div><span class="message-card-time">${timeAgo}</span></div>
             <div class="message-card-subject">${esc(msg.subject || 'No subject')}</div>
-            <div class="message-card-preview">${esc((msg.message || '').substring(0, 100))}${(msg.message || '').length > 100 ? '...' : ''}</div>
+            <div class="message-card-preview">${esc((msg.message || '').substring(0, 100))}</div>
             <div style="margin-top:6px;"><span class="badge ${msg.status === 'unread' ? 'badge-danger' : msg.status === 'replied' ? 'badge-success' : 'badge-info'}">${msg.status || 'unread'}</span></div>
           </div>`;
         });
@@ -465,7 +463,7 @@
       db.ref('workfit_contact_messages/' + msgId).update({ notes, status }).then(() => { toast('Saved!'); closeModal(); }).catch(() => toast('Error', true));
     };
 
-    // MEMBERS
+    // ============ MEMBERS ============
     function renderMembers(c) {
       const members = Object.entries(allMembers).map(([id, m]) => ({ id, ...m }));
       let html = `<h1 class="page-title">👥 Members</h1><p class="page-subtitle">${currentClubName}</p>${renderStatsBar()}<div class="section"><div class="section-header"><h3><i class="fas fa-users"></i> All Members (${members.length})</h3><button class="btn btn-primary btn-sm" onclick="showMemberForm()"><i class="fas fa-plus"></i> Add</button></div><div class="section-body no-padding">`;
@@ -490,7 +488,7 @@
       } catch(e) { toast('Error', true); }
     };
 
-    // INVENTORY
+    // ============ INVENTORY ============
     function renderInventory(c) {
       const items = Object.entries(allInventory).map(([id, m]) => ({ id, ...m }));
       let html = `<h1 class="page-title">📦 Inventory</h1>${renderStatsBar()}<div class="section"><div class="section-header"><h3><i class="fas fa-box"></i> Equipment (${items.length})</h3><button class="btn btn-primary btn-sm" onclick="showInventoryForm()"><i class="fas fa-plus"></i> Add</button></div><div class="section-body no-padding">`;
@@ -515,140 +513,20 @@
       } catch(e) { toast('Error', true); }
     };
 
-    // SALES
-    function renderSales(c) {
-      const sales = Object.entries(allSales).map(([id, m]) => ({ id, ...m }));
-      const total = sales.reduce((s, x) => s + (Number(x.amount)||0), 0);
-      let html = `<h1 class="page-title">💰 Sales</h1><p class="page-subtitle">Total: KES ${total.toLocaleString()}</p>${renderStatsBar()}<div class="section"><div class="section-header"><h3><i class="fas fa-chart-line"></i> Transactions (${sales.length})</h3><button class="btn btn-primary btn-sm" onclick="showSaleForm()"><i class="fas fa-plus"></i> Record</button></div><div class="section-body no-padding">`;
-      if (!sales.length) { html += `<div class="empty-state"><i class="fas fa-receipt"></i><p>No sales</p></div>`; }
-      else { sales.sort((a,b)=>(b.timestamp||0)-(a.timestamp||0)).forEach(s => { html += `<div class="list-item"><div class="list-item-left"><div class="list-item-icon">💵</div><div class="list-item-info"><div class="list-item-title">${esc(s.description||s.type||'Sale')}</div><div class="list-item-subtitle">${s.date||''} · ${esc(s.customerName||'')}</div></div></div><div class="list-item-right"><strong>KES ${(s.amount||0).toLocaleString()}</strong><button class="btn btn-outline btn-xs" style="color:#ef4444;" onclick="if(confirm('Delete?')) deleteItem('workfit_revenue','${s.id}')"><i class="fas fa-trash"></i></button></div></div>`; }); }
-      html += `</div></div>`; c.innerHTML = html;
-    }
-
-    window.showSaleForm = function() {
-      openModal(`<div class="modal-header"><h3>Record Sale</h3><button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button></div><div class="form-group"><label>Description *</label><input id="saleDesc" placeholder="e.g. Protein shake"></div><div class="form-row"><div class="form-group"><label>Amount (KES) *</label><input id="saleAmt" type="number" placeholder="500"></div><div class="form-group"><label>Type</label><select id="saleType"><option>Product</option><option>Membership</option><option>Session</option><option>Other</option></select></div></div><div class="form-group"><label>Customer</label><input id="saleCust" placeholder="Optional"></div><button class="btn btn-primary" style="width:100%;" onclick="saveSale()">Record</button>`);
-    };
-
-    window.saveSale = async function() {
-      const desc = document.getElementById('saleDesc').value.trim();
-      const amt = document.getElementById('saleAmt').value;
-      if (!desc || !amt) return toast('Required fields missing', true);
-      try {
-        await db.ref('workfit_revenue').push({ description: desc, amount: Number(amt), type: document.getElementById('saleType').value, customerName: document.getElementById('saleCust').value, clubId: currentClubId, clubName: currentClubName, date: new Date().toISOString().split('T')[0], createdAt: firebase.database.ServerValue.TIMESTAMP, timestamp: Date.now() });
-        closeModal(); toast('Sale recorded!');
-      } catch(e) { toast('Error', true); }
-    };
-
-    // SESSIONS
-    window.initSessions = async function() {
-      if (!WEEKLY_SESSIONS.length) {
-        toast('No training database configured. Use Training Database Manager first.', true);
-        return;
-      }
-      
-      if (!confirm(`Create ${WEEKLY_SESSIONS.length} sessions from training database?`)) return;
-      try { 
-        for (const s of WEEKLY_SESSIONS) { 
-          await db.ref('workfit_schedules').push({ 
-            day: s.day,
-            time: s.time,
-            name: s.name,
-            type: s.type,
-            clubId: currentClubId, 
-            clubName: currentClubName, 
-            status: 'pending',
-            createdAt: firebase.database.ServerValue.TIMESTAMP 
-          }); 
-        } 
-        toast('Sessions created!'); 
-      } catch(e) { 
-        toast('Error', true); 
-      }
-    };
-
+    // ============ SESSIONS ============
     function renderSessions(c) {
       const sessions = Object.entries(allSessions).map(([id, m]) => ({ id, ...m }));
       sessions.sort((a,b)=>['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'].indexOf(a.day)-['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'].indexOf(b.day));
       
-      const dbStatus = WEEKLY_SESSIONS.length > 0 ? 'configured' : 'empty';
-      const dbStatusText = WEEKLY_SESSIONS.length > 0 ? `${WEEKLY_SESSIONS.length} sessions configured` : 'Not configured';
-      
-      let html = `<h1 class="page-title">📅 Sessions</h1>
-        <p class="page-subtitle">
-          <span class="database-status ${dbStatus}">
-            <i class="fas fa-${dbStatus === 'configured' ? 'check-circle' : 'exclamation-circle'}"></i> 
-            Training DB: ${dbStatusText}
-          </span>
-        </p>
-        ${renderStatsBar()}
-        <div class="section">
-          <div class="section-header">
-            <h3><i class="fas fa-calendar-week"></i> Weekly Schedule (${sessions.length})</h3>
-            <div style="display:flex; gap:8px;">
-              <button class="btn btn-info btn-sm" onclick="window.open('training-database-manager.html', '_blank')">
-                <i class="fas fa-cog"></i> Manage DB
-              </button>
-              <button class="btn btn-primary btn-sm" onclick="initSessions()" ${WEEKLY_SESSIONS.length === 0 ? 'disabled' : ''}>
-                <i class="fas fa-sync"></i> Load from DB
-              </button>
-            </div>
-          </div>
-          <div class="section-body no-padding">`;
-      
-      if (!sessions.length) { 
-        html += `<div class="empty-state">
-          <i class="fas fa-calendar-plus"></i>
-          <p>No sessions scheduled yet</p>
-          ${WEEKLY_SESSIONS.length > 0 ? 
-            `<button class="btn btn-primary btn-sm" onclick="initSessions()">Load ${WEEKLY_SESSIONS.length} Sessions from Database</button>` :
-            `<p style="font-size:0.7rem;">Open the <a href="training-database-manager.html" target="_blank" style="color:var(--orange);">Training Database Manager</a> to configure your schedule first</p>`}
-        </div>`; 
-      }
-      else { 
-        sessions.forEach(s => { 
-          html += `<div class="session-item ${s.status==='done'?'completed':''}">
-            <div class="session-day">${s.day}<br><small>${s.time}</small></div>
-            <div class="session-info">
-              <div class="session-name">${esc(s.name)}</div>
-              <div class="session-meta">${s.type} · ${s.status==='done'?'✅ Done':'⏳ Pending'}</div>
-            </div>
-            <div class="session-actions">
-              ${s.status!=='done'?`<button class="btn btn-primary btn-xs" onclick="markDone('${s.id}')">Done</button>`:''}
-              <button class="btn btn-outline btn-xs" style="color:#ef4444;margin-left:4px;" onclick="if(confirm('Delete?')) deleteItem('workfit_schedules','${s.id}')"><i class="fas fa-trash"></i></button>
-            </div>
-          </div>`; 
-        }); 
-      }
-      html += `</div></div>`; 
-      c.innerHTML = html;
+      let html = `<h1 class="page-title">📅 Sessions</h1><p class="page-subtitle">Weekly training schedule</p>${renderStatsBar()}<div class="section"><div class="section-header"><h3><i class="fas fa-calendar-week"></i> This Week (${sessions.length})</h3></div><div class="section-body no-padding">`;
+      if (!sessions.length) { html += `<div class="empty-state"><i class="fas fa-calendar-plus"></i><p>No sessions scheduled</p></div>`; }
+      else { sessions.forEach(s => { html += `<div class="session-item ${s.status==='done'?'completed':''}"><div class="session-day">${s.day}<br><small style="color:var(--text-secondary);">${s.time}</small></div><div class="session-info"><div class="session-name">${esc(s.name)}</div><div class="session-meta">${s.type} · ${s.status==='done'?'✅ Completed':'⏳ Pending'}</div></div><div class="session-actions">${s.status!=='done'?`<button class="btn btn-primary btn-xs" onclick="markDone('${s.id}')">Done</button>`:''}<button class="btn btn-outline btn-xs" style="color:#ef4444;margin-left:4px;" onclick="if(confirm('Delete?')) deleteItem('workfit_schedules','${s.id}')"><i class="fas fa-trash"></i></button></div></div>`; }); }
+      html += `</div></div>`; c.innerHTML = html;
     }
 
-    window.markDone = async function(id) { 
-      try { 
-        await db.ref('workfit_schedules/' + id).update({ status: 'done', completedAt: firebase.database.ServerValue.TIMESTAMP }); 
-        toast('Done!'); 
-      } catch(e) { 
-        toast('Error', true); 
-      } 
-    };
-    
-    window.deleteItem = async function(path, id) { 
-      try { 
-        await db.ref(path + '/' + id).remove(); 
-        toast('Deleted'); 
-      } catch(e) { 
-        toast('Error', true); 
-      } 
-    };
-    
-    window.handleLogout = async function() { 
-      try { 
-        await auth.signOut(); 
-        window.location.href = '/'; 
-      } catch(e) { 
-        toast('Error', true); 
-      } 
-    };
+    window.markDone = async function(id) { try { await db.ref('workfit_schedules/' + id).update({ status: 'done', completedAt: firebase.database.ServerValue.TIMESTAMP }); toast('Done!'); } catch(e) { toast('Error', true); } };
+    window.deleteItem = async function(path, id) { try { await db.ref(path + '/' + id).remove(); toast('Deleted'); } catch(e) { toast('Error', true); } };
+    window.handleLogout = async function() { try { await auth.signOut(); window.location.href = '/'; } catch(e) { toast('Error', true); } };
 
     // Auth
     auth.onAuthStateChanged(async user => {
@@ -664,7 +542,6 @@
         currentClubId = assignment.clubId;
         currentClubName = assignment.clubName || 'Your Club';
         document.getElementById('clubTag').textContent = currentClubName;
-        await loadTrainingFromFirebase();
         loadData();
         renderTab();
       } else {
