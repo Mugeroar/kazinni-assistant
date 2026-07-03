@@ -24,19 +24,71 @@
       background: var(--bg); color: var(--text); min-height: 100vh;
       -webkit-font-smoothing: antialiased;
     }
+
+    /* Clean Top Bar */
     .topbar {
       background: rgba(255,255,255,0.95); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
       border-bottom: 1px solid var(--border-light); padding: 0 1.5rem; height: 56px;
       display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100;
     }
-    .topbar-left { display: flex; align-items: center; gap: 12px; }
-    .menu-btn { width: 36px; height: 36px; border-radius: var(--radius-sm); border: 1px solid var(--border); background: white; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1rem; color: var(--text-secondary); transition: all 0.2s; }
-    .menu-btn:hover { background: #f8fafc; }
-    .brand { display: flex; align-items: center; gap: 8px; }
+    .topbar-left { display: flex; align-items: center; gap: 10px; }
+    .brand { display: flex; align-items: center; gap: 8px; text-decoration: none; }
     .brand img { width: 30px; height: 30px; border-radius: 8px; }
     .brand span { font-weight: 700; font-size: 0.9rem; color: var(--text); }
     .club-tag { background: #fff7ed; color: var(--orange-dark); padding: 0.2rem 0.7rem; border-radius: 20px; font-size: 0.65rem; font-weight: 600; max-width: 130px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+    /* Right Side - Only Avatar */
     .topbar-right { display: flex; align-items: center; gap: 10px; }
+    
+    .user-menu { position: relative; }
+    .user-avatar-btn {
+      width: 36px; height: 36px; border-radius: 50%; border: 2px solid var(--border);
+      background: linear-gradient(135deg, #f97316, #ea580c); color: white;
+      display: flex; align-items: center; justify-content: center; font-size: 0.8rem;
+      font-weight: 700; cursor: pointer; transition: all 0.2s; overflow: hidden;
+    }
+    .user-avatar-btn img { width: 100%; height: 100%; object-fit: cover; }
+    .user-avatar-btn:hover { border-color: var(--orange); box-shadow: 0 0 16px rgba(249,115,22,0.2); transform: scale(1.05); }
+    
+    .user-dropdown {
+      position: absolute; top: 46px; right: 0; background: var(--surface);
+      border: 1px solid var(--border); border-radius: 16px; padding: 0.5rem 0;
+      min-width: 220px; box-shadow: var(--shadow-lg);
+      opacity: 0; visibility: hidden; transform: translateY(-8px);
+      transition: all 0.25s; z-index: 200;
+    }
+    .user-dropdown.open { opacity: 1; visibility: visible; transform: translateY(0); }
+    
+    .dropdown-header {
+      padding: 0.6rem 1rem; border-bottom: 1px solid var(--border-light);
+      display: flex; align-items: center; gap: 10px;
+    }
+    .dropdown-avatar {
+      width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, #f97316, #ea580c);
+      display: flex; align-items: center; justify-content: center; font-weight: 700; color: white; font-size: 0.75rem; flex-shrink: 0;
+    }
+    .dropdown-user-info { min-width: 0; }
+    .dropdown-user-name { font-weight: 600; font-size: 0.78rem; color: var(--text); }
+    .dropdown-user-email { font-size: 0.62rem; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .dropdown-user-role { font-size: 0.58rem; color: var(--orange); font-weight: 600; margin-top: 2px; }
+    
+    .user-dropdown-item {
+      display: flex; align-items: center; gap: 10px; padding: 0.6rem 1rem;
+      font-size: 0.75rem; color: var(--text-secondary); cursor: pointer;
+      transition: all 0.15s; text-decoration: none; border: none; background: none; width: 100%;
+      font-family: 'Inter', sans-serif; text-align: left;
+    }
+    .user-dropdown-item:hover { background: #f8fafc; color: var(--text); }
+    .user-dropdown-item i { width: 18px; text-align: center; font-size: 0.85rem; }
+    .user-dropdown-item .badge-count { 
+      margin-left: auto; background: #ef4444; color: white; font-size: 0.6rem; 
+      padding: 2px 7px; border-radius: 10px; font-weight: 600; 
+    }
+    .dropdown-divider { height: 1px; background: var(--border-light); margin: 0.3rem 0; }
+    .user-dropdown-item.signout { color: #ef4444; }
+    .user-dropdown-item.signout:hover { background: #fef2f2; }
+
+    /* Create Post Button */
     .create-post-btn {
       display: flex; align-items: center; gap: 6px; padding: 0.4rem 0.9rem;
       border-radius: 20px; border: none; background: var(--info); color: white;
@@ -44,44 +96,30 @@
       font-family: 'Inter', sans-serif; box-shadow: 0 2px 8px rgba(59,130,246,0.25);
     }
     .create-post-btn:hover { background: #2563eb; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(59,130,246,0.35); }
-    .user-pill { display: flex; align-items: center; gap: 8px; background: white; border: 1px solid var(--border); padding: 0.3rem 0.8rem 0.3rem 0.4rem; border-radius: 30px; cursor: pointer; transition: all 0.2s; }
-    .user-pill:hover { background: #f8fafc; }
-    .user-avatar { width: 28px; height: 28px; border-radius: 50%; background: linear-gradient(135deg, #f97316, #ea580c); display: flex; align-items: center; justify-content: center; font-size: 0.65rem; font-weight: 700; color: white; }
-    .user-name { font-size: 0.7rem; font-weight: 600; color: var(--text); }
-
-    .sidebar-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.3); z-index: 200; opacity: 0; visibility: hidden; transition: all 0.3s; }
-    .sidebar-overlay.open { opacity: 1; visibility: visible; }
-    .sidebar {
-      position: fixed; top: 0; left: -280px; width: 280px; height: 100%; background: white;
-      z-index: 201; transition: left 0.3s cubic-bezier(0.4,0,0.2,1); display: flex; flex-direction: column;
-      box-shadow: 2px 0 20px rgba(0,0,0,0.05);
-    }
-    .sidebar.open { left: 0; }
-    .sidebar-header { padding: 1.2rem 1.5rem; border-bottom: 1px solid var(--border-light); display: flex; align-items: center; justify-content: space-between; }
-    .sidebar-header h3 { font-size: 0.85rem; font-weight: 700; }
-    .sidebar-close { width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--border); background: white; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
-    .sidebar-close:hover { background: #fef2f2; color: #ef4444; }
-    .sidebar-user { padding: 1rem 1.5rem; border-bottom: 1px solid var(--border-light); display: flex; align-items: center; gap: 10px; }
-    .sidebar-avatar { width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, #f97316, #ea580c); display: flex; align-items: center; justify-content: center; font-weight: 700; color: white; font-size: 0.8rem; }
-    .sidebar-user-info h4 { font-size: 0.78rem; font-weight: 600; }
-    .sidebar-user-info p { font-size: 0.65rem; color: var(--text-secondary); }
-    .sidebar-nav { flex: 1; padding: 0.5rem 0; overflow-y: auto; }
-    .sidebar-nav-item {
-      display: flex; align-items: center; gap: 10px; padding: 0.65rem 1.5rem;
-      font-size: 0.78rem; font-weight: 500; color: var(--text-secondary); cursor: pointer;
-      transition: all 0.15s; border-left: 3px solid transparent;
-    }
-    .sidebar-nav-item:hover { background: #f8fafc; color: var(--text); }
-    .sidebar-nav-item.active { background: #fff7ed; color: var(--orange-dark); border-left-color: var(--orange); font-weight: 600; }
-    .sidebar-nav-item i { width: 20px; text-align: center; }
-    .sidebar-nav-item .badge-count { margin-left: auto; background: #ef4444; color: white; font-size: 0.6rem; padding: 2px 7px; border-radius: 10px; font-weight: 600; display: none; }
-    .sidebar-footer { padding: 1rem 1.5rem; border-top: 1px solid var(--border-light); }
-    .logout-btn { width: 100%; padding: 0.6rem; border-radius: var(--radius); border: 1px solid #fee2e2; background: #fef2f2; color: #ef4444; font-weight: 600; font-size: 0.75rem; cursor: pointer; transition: all 0.2s; }
-    .logout-btn:hover { background: #fee2e2; }
 
     .main { padding: 1.5rem; max-width: 900px; margin: 0 auto; }
     .page-title { font-size: 1.3rem; font-weight: 800; margin-bottom: 0.2rem; }
     .page-subtitle { font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 1.5rem; }
+
+    /* Tab Navigation */
+    .tab-nav {
+      display: flex; gap: 4px; background: var(--surface); border-radius: var(--radius);
+      padding: 4px; margin-bottom: 1.5rem; border: 1px solid var(--border-light);
+      box-shadow: var(--shadow-sm); overflow-x: auto;
+    }
+    .tab-btn {
+      flex: 1; min-width: fit-content; padding: 0.5rem 0.8rem; border-radius: 10px;
+      border: none; cursor: pointer; font-family: 'Inter', sans-serif; font-size: 0.72rem;
+      font-weight: 600; background: transparent; color: var(--text-secondary);
+      transition: all 0.2s; white-space: nowrap; display: flex; align-items: center;
+      justify-content: center; gap: 6px;
+    }
+    .tab-btn:hover { background: #f8fafc; color: var(--text); }
+    .tab-btn.active { background: var(--orange); color: white; box-shadow: 0 2px 8px rgba(249,115,22,0.2); }
+    .tab-btn .badge-count { 
+      background: rgba(255,255,255,0.2); padding: 1px 6px; border-radius: 8px; font-size: 0.6rem; 
+    }
+    .tab-btn.active .badge-count { background: rgba(255,255,255,0.3); }
 
     .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 1.5rem; }
     .stat-card {
@@ -156,7 +194,6 @@
     .empty-state i { font-size: 2.5rem; color: #cbd5e1; display: block; margin-bottom: 0.8rem; }
     .empty-state p { font-size: 0.78rem; color: var(--text-secondary); margin-bottom: 1rem; }
 
-    /* Create Post Modal */
     .modal-overlay { position: fixed; inset: 0; background: rgba(15,23,42,0.4); backdrop-filter: blur(4px); display: flex; align-items: flex-end; justify-content: center; z-index: 300; opacity: 0; visibility: hidden; transition: all 0.25s; }
     .modal-overlay.active { opacity: 1; visibility: visible; }
     .modal { background: white; border-radius: 20px 20px 0 0; padding: 1.5rem; width: 100%; max-width: 500px; max-height: 85vh; overflow-y: auto; box-shadow: 0 -4px 30px rgba(0,0,0,0.1); }
@@ -181,49 +218,67 @@
       .stats-row { grid-template-columns: 1fr 1fr; }
       .form-row { grid-template-columns: 1fr; }
       .topbar { padding: 0 1rem; }
-      .create-post-btn { padding: 0.35rem 0.7rem; font-size: 0.65rem; }
+      .tab-btn { font-size: 0.68rem; padding: 0.4rem 0.6rem; }
     }
   </style>
 </head>
 <body>
-  <div class="sidebar-overlay" id="sidebarOverlay"></div>
-  <div class="sidebar" id="sidebar">
-    <div class="sidebar-header"><h3>Trainer Hub</h3><button class="sidebar-close" id="sidebarClose"><i class="fas fa-times"></i></button></div>
-    <div class="sidebar-user">
-      <div class="sidebar-avatar" id="sidebarAvatar">TR</div>
-      <div class="sidebar-user-info"><h4 id="sidebarName">Trainer</h4><p id="sidebarEmail">...</p></div>
-    </div>
-    <div class="sidebar-nav" id="sidebarNav">
-      <div class="sidebar-nav-item active" data-tab="members"><i class="fas fa-users"></i> Members</div>
-      <div class="sidebar-nav-item" data-tab="messages"><i class="fas fa-envelope"></i> Messages <span class="badge-count" id="unreadBadge">0</span></div>
-      <div class="sidebar-nav-item" data-tab="inventory"><i class="fas fa-box"></i> Inventory</div>
-      <div class="sidebar-nav-item" data-tab="sessions"><i class="fas fa-calendar-week"></i> Sessions</div>
-    </div>
-    <div class="sidebar-footer"><button class="logout-btn" onclick="handleLogout()"><i class="fas fa-sign-out-alt"></i> Sign Out</button></div>
-  </div>
-
+  <!-- Clean Top Bar -->
   <div class="topbar">
     <div class="topbar-left">
-      <button class="menu-btn" id="menuBtn"><i class="fas fa-bars"></i></button>
-      <div class="brand"><img src="https://i.postimg.cc/rFfXDj3L/kazinni-removebg-preview(1).png" alt="Logo"><span>WorkFit</span></div>
+      <div class="brand">
+        <img src="https://i.postimg.cc/rFfXDj3L/kazinni-removebg-preview(1).png" alt="Logo">
+        <span>WorkFit</span>
+      </div>
       <span class="club-tag" id="clubTag">Loading...</span>
     </div>
     <div class="topbar-right">
       <button class="create-post-btn" onclick="openCreatePost()"><i class="fas fa-plus-circle"></i> New Post</button>
-      <div class="user-pill"><div class="user-avatar" id="topAvatar">TR</div><span class="user-name" id="topName">Trainer</span></div>
+      <div class="user-menu" id="userMenu">
+        <button class="user-avatar-btn" id="userAvatarBtn" onclick="toggleUserMenu()">
+          <img id="userAvatarImg" src="" alt="" style="display:none;">
+          <span id="userAvatarText">TR</span>
+        </button>
+        <div class="user-dropdown" id="userDropdown">
+          <div class="dropdown-header">
+            <div class="dropdown-avatar" id="dropdownAvatar">TR</div>
+            <div class="dropdown-user-info">
+              <div class="dropdown-user-name" id="dropdownName">Trainer</div>
+              <div class="dropdown-user-email" id="dropdownEmail">...</div>
+              <div class="dropdown-user-role"><i class="fas fa-dumbbell"></i> Trainer</div>
+            </div>
+          </div>
+          <a href="/feed.html" class="user-dropdown-item"><i class="fas fa-newspaper"></i> View Club Feed</a>
+          <a href="/profile.html" class="user-dropdown-item"><i class="fas fa-user"></i> My Profile</a>
+          <div class="dropdown-divider"></div>
+          <button class="user-dropdown-item" onclick="switchTab('members')"><i class="fas fa-users"></i> Members <span class="badge-count" id="unreadMembersBadge" style="display:none;">0</span></button>
+          <button class="user-dropdown-item" onclick="switchTab('messages')"><i class="fas fa-envelope"></i> Messages <span class="badge-count" id="unreadBadge">0</span></button>
+          <button class="user-dropdown-item" onclick="switchTab('inventory')"><i class="fas fa-box"></i> Inventory</button>
+          <button class="user-dropdown-item" onclick="switchTab('sessions')"><i class="fas fa-calendar-week"></i> Sessions</button>
+          <div class="dropdown-divider"></div>
+          <button class="user-dropdown-item signout" onclick="handleLogout()"><i class="fas fa-sign-out-alt"></i> Sign Out</button>
+        </div>
+      </div>
     </div>
   </div>
 
-  <div class="main"><div id="mainContent"></div></div>
+  <div class="main">
+    <div id="mainContent">
+      <!-- Tab Navigation -->
+      <div class="tab-nav">
+        <button class="tab-btn active" onclick="switchTab('members')"><i class="fas fa-users"></i> Members</button>
+        <button class="tab-btn" onclick="switchTab('messages')"><i class="fas fa-envelope"></i> Messages <span class="badge-count" id="tabUnreadBadge">0</span></button>
+        <button class="tab-btn" onclick="switchTab('inventory')"><i class="fas fa-box"></i> Inventory</button>
+        <button class="tab-btn" onclick="switchTab('sessions')"><i class="fas fa-calendar-week"></i> Sessions</button>
+      </div>
+      <div id="tabContent"></div>
+    </div>
+  </div>
   
   <!-- Modal -->
   <div class="modal-overlay" id="modalOverlay"><div class="modal" id="modalContent"><div class="modal-handle"></div></div></div>
-  
-  <!-- Create Post Modal -->
-  <div class="modal-overlay" id="postModal">
-    <div class="modal" id="postModalContent"><div class="modal-handle"></div></div>
-  </div>
-  
+  <!-- Post Modal -->
+  <div class="modal-overlay" id="postModal"><div class="modal" id="postModalContent"><div class="modal-handle"></div></div></div>
   <div id="toast" class="toast"></div>
 
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
@@ -258,22 +313,24 @@
     function closeModal() { document.getElementById('modalOverlay').classList.remove('active'); }
     document.getElementById('modalOverlay').addEventListener('click', function(e) { if (e.target === this) closeModal(); });
 
-    // Sidebar
-    const sidebar = document.getElementById('sidebar');
-    const overlay = document.getElementById('sidebarOverlay');
-    document.getElementById('menuBtn').addEventListener('click', () => { sidebar.classList.add('open'); overlay.classList.add('open'); });
-    document.getElementById('sidebarClose').addEventListener('click', () => { sidebar.classList.remove('open'); overlay.classList.remove('open'); });
-    overlay.addEventListener('click', () => { sidebar.classList.remove('open'); overlay.classList.remove('open'); });
-
-    document.querySelectorAll('.sidebar-nav-item').forEach(item => {
-      item.addEventListener('click', function() {
-        document.querySelectorAll('.sidebar-nav-item').forEach(i => i.classList.remove('active'));
-        this.classList.add('active');
-        currentTab = this.dataset.tab;
-        sidebar.classList.remove('open'); overlay.classList.remove('open');
-        renderTab();
-      });
+    // User Menu
+    window.toggleUserMenu = function() { document.getElementById('userDropdown').classList.toggle('open'); };
+    document.addEventListener('click', function(e) {
+      if (!document.getElementById('userMenu')?.contains(e.target)) {
+        document.getElementById('userDropdown')?.classList.remove('open');
+      }
     });
+
+    // Tab Switching
+    window.switchTab = function(tab) {
+      currentTab = tab;
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', false));
+      document.querySelectorAll(`.tab-btn`).forEach(b => {
+        if (b.textContent.toLowerCase().includes(tab)) b.classList.add('active');
+      });
+      document.getElementById('userDropdown')?.classList.remove('open');
+      renderTab();
+    };
 
     async function findClub(user) {
       try {
@@ -290,7 +347,6 @@
 
     function loadData() {
       if (!currentClubId) return;
-      
       db.ref('workfit_members').on('value', snap => {
         const data = snap.val() || {}; allMembers = {};
         Object.entries(data).forEach(([id, m]) => { if (m && m.clubId === currentClubId) allMembers[id] = m; });
@@ -315,9 +371,10 @@
 
     function updateUnreadBadge() {
       const unread = Object.values(allMessages).filter(m => m.status === 'unread').length;
-      const badge = document.getElementById('unreadBadge');
-      badge.textContent = unread;
-      badge.style.display = unread > 0 ? 'inline' : 'none';
+      const tabBadge = document.getElementById('tabUnreadBadge');
+      const dropBadge = document.getElementById('unreadBadge');
+      if (tabBadge) { tabBadge.textContent = unread; tabBadge.style.display = unread > 0 ? 'inline' : 'none'; }
+      if (dropBadge) { dropBadge.textContent = unread; dropBadge.style.display = unread > 0 ? 'inline' : 'none'; }
     }
 
     function updateStats() {
@@ -328,7 +385,7 @@
     }
 
     function renderTab() {
-      const c = document.getElementById('mainContent');
+      const c = document.getElementById('tabContent');
       if (!c) return;
       switch(currentTab) {
         case 'members': renderMembers(c); break;
@@ -347,148 +404,81 @@
       </div>`;
     }
 
-    // ============ CREATE POST ============
+    // CREATE POST
     window.openCreatePost = function() {
       document.getElementById('postModalContent').innerHTML = `
         <div class="modal-handle"></div>
-        <div class="modal-header">
-          <h3><i class="fas fa-plus-circle" style="color:#3b82f6;"></i> New Club Post</h3>
-          <button class="modal-close" onclick="closePostModal()"><i class="fas fa-times"></i></button>
-        </div>
-        <div class="form-group">
-          <label>What's happening at ${esc(currentClubName || 'your club')}? *</label>
-          <textarea id="postContent" rows="4" placeholder="Share an update, announcement, or motivation with your members..."></textarea>
-        </div>
-        <div class="form-group">
-          <label>Image URL (optional)</label>
-          <input type="url" id="postImageUrl" placeholder="https://example.com/image.jpg" oninput="previewImage()">
-          <img id="imagePreview" class="image-preview" src="" alt="Preview">
-        </div>
-        <div style="display:flex; gap:8px;">
-          <button class="btn btn-outline" style="flex:1;" onclick="closePostModal()">Cancel</button>
-          <button class="btn btn-info" style="flex:1;" onclick="publishPost()"><i class="fas fa-paper-plane"></i> Publish</button>
-        </div>
+        <div class="modal-header"><h3><i class="fas fa-plus-circle" style="color:#3b82f6;"></i> New Club Post</h3><button class="modal-close" onclick="closePostModal()"><i class="fas fa-times"></i></button></div>
+        <div class="form-group"><label>What's happening at ${esc(currentClubName || 'your club')}? *</label><textarea id="postContent" rows="4" placeholder="Share an update, announcement, or motivation..."></textarea></div>
+        <div class="form-group"><label>Image URL (optional)</label><input type="url" id="postImageUrl" placeholder="https://example.com/image.jpg" oninput="previewImage()"><img id="imagePreview" class="image-preview" src="" alt="Preview"></div>
+        <div style="display:flex; gap:8px;"><button class="btn btn-outline" style="flex:1;" onclick="closePostModal()">Cancel</button><button class="btn btn-info" style="flex:1;" onclick="publishPost()"><i class="fas fa-paper-plane"></i> Publish</button></div>
       `;
       document.getElementById('postModal').classList.add('active');
     };
-
     window.previewImage = function() {
       const url = document.getElementById('postImageUrl').value.trim();
       const preview = document.getElementById('imagePreview');
-      if (url && (url.startsWith('http') || url.startsWith('https'))) {
-        preview.src = url;
-        preview.style.display = 'block';
-      } else {
-        preview.style.display = 'none';
-      }
+      if (url && (url.startsWith('http'))) { preview.src = url; preview.style.display = 'block'; }
+      else { preview.style.display = 'none'; }
     };
-
     window.publishPost = async function() {
       const content = document.getElementById('postContent').value.trim();
+      if (!content) return toast('Please write something.', true);
       const imageUrl = document.getElementById('postImageUrl').value.trim();
-      
-      if (!content) return toast('Please write something for your post.', true);
-      
       const btn = document.querySelector('#postModalContent .btn-info');
-      btn.disabled = true;
-      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Publishing...';
-
+      btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Publishing...';
       try {
         await db.ref('workfit_posts').push({
-          clubId: currentClubId,
-          clubName: currentClubName,
+          clubId: currentClubId, clubName: currentClubName,
           authorName: auth.currentUser?.displayName || 'Trainer',
           authorEmail: auth.currentUser?.email || '',
-          content: content,
-          imageUrl: imageUrl || '',
-          createdAt: firebase.database.ServerValue.TIMESTAMP,
-          timestamp: Date.now()
+          content, imageUrl: imageUrl || '',
+          createdAt: firebase.database.ServerValue.TIMESTAMP, timestamp: Date.now()
         });
-        
-        closePostModal();
-        toast('✅ Post published! Your members can now see it in their feed.');
-      } catch(e) {
-        toast('Failed to publish. Please try again.', true);
-      } finally {
-        btn.disabled = false;
-        btn.innerHTML = '<i class="fas fa-paper-plane"></i> Publish';
-      }
+        closePostModal(); toast('✅ Post published!');
+      } catch(e) { toast('Failed to publish.', true); }
+      finally { btn.disabled = false; btn.innerHTML = '<i class="fas fa-paper-plane"></i> Publish'; }
     };
-
     function closePostModal() { document.getElementById('postModal').classList.remove('active'); }
     document.getElementById('postModal').addEventListener('click', function(e) { if (e.target === this) closePostModal(); });
 
-    // ============ MESSAGES ============
+    // MESSAGES
     function renderMessages(c) {
       const messages = Object.values(allMessages).sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
       const unreadCount = messages.filter(m => m.status === 'unread').length;
       let html = `<h1 class="page-title">📬 Messages</h1><p class="page-subtitle">${unreadCount} unread · From ${currentClubName} members</p>${renderStatsBar()}<div class="section"><div class="section-header"><h3><i class="fas fa-envelope"></i> All Messages (${messages.length})</h3></div><div class="section-body no-padding">`;
-      if (!messages.length) {
-        html += `<div class="empty-state"><i class="fas fa-inbox"></i><p>No messages yet</p></div>`;
-      } else {
-        messages.forEach(msg => {
-          const timeAgo = msg.createdAt ? new Date(msg.createdAt).toLocaleDateString('en-KE', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : '';
-          html += `<div class="message-card ${msg.status === 'unread' ? 'unread' : ''}" onclick="viewMessage('${msg.id}')">
-            <div class="message-card-header"><div><div class="message-card-from">${esc(msg.name || 'Member')}</div><div class="message-card-email">${esc(msg.email || '')}</div></div><span class="message-card-time">${timeAgo}</span></div>
-            <div class="message-card-subject">${esc(msg.subject || 'No subject')}</div>
-            <div class="message-card-preview">${esc((msg.message || '').substring(0, 100))}</div>
-            <div style="margin-top:6px;"><span class="badge ${msg.status === 'unread' ? 'badge-danger' : msg.status === 'replied' ? 'badge-success' : 'badge-info'}">${msg.status || 'unread'}</span></div>
-          </div>`;
-        });
-      }
+      if (!messages.length) { html += `<div class="empty-state"><i class="fas fa-inbox"></i><p>No messages yet</p></div>`; }
+      else { messages.forEach(msg => { const timeAgo = msg.createdAt ? new Date(msg.createdAt).toLocaleDateString('en-KE',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}) : ''; html += `<div class="message-card ${msg.status==='unread'?'unread':''}" onclick="viewMessage('${msg.id}')"><div class="message-card-header"><div><div class="message-card-from">${esc(msg.name||'Member')}</div><div class="message-card-email">${esc(msg.email||'')}</div></div><span class="message-card-time">${timeAgo}</span></div><div class="message-card-subject">${esc(msg.subject||'No subject')}</div><div class="message-card-preview">${esc((msg.message||'').substring(0,100))}</div><div style="margin-top:6px;"><span class="badge ${msg.status==='unread'?'badge-danger':msg.status==='replied'?'badge-success':'badge-info'}">${msg.status||'unread'}</span></div></div>`; }); }
       html += `</div></div>`; c.innerHTML = html;
     }
-
     window.viewMessage = function(msgId) {
-      const msg = allMessages[msgId];
-      if (!msg) return;
+      const msg = allMessages[msgId]; if (!msg) return;
       if (msg.status === 'unread') { db.ref('workfit_contact_messages/' + msgId).update({ status: 'read' }); }
-      openModal(`
-        <div class="modal-header"><h3><i class="fas fa-envelope-open-text"></i> Message</h3><button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button></div>
-        <div class="form-group"><label>From</label><input value="${esc(msg.name || 'Member')}" readonly></div>
-        <div class="form-group"><label>Email</label><input value="${esc(msg.email || '')}" readonly></div>
-        <div class="form-group"><label>Subject</label><input value="${esc(msg.subject || '')}" readonly></div>
-        <div class="form-group"><label>Message</label><textarea rows="4" readonly style="background:#f1f5f9;">${esc(msg.message || '')}</textarea></div>
-        <div class="form-group"><label>Status</label><select id="msgStatus" onchange="updateMsgStatus('${msgId}', this.value)"><option value="unread" ${msg.status==='unread'?'selected':''}>Unread</option><option value="read" ${msg.status==='read'?'selected':''}>Read</option><option value="replied" ${msg.status==='replied'?'selected':''}>Replied</option></select></div>
-        <div class="form-group"><label>Notes</label><textarea id="msgNotes" rows="3" placeholder="Add notes...">${esc(msg.notes || '')}</textarea></div>
-        <button class="btn btn-primary" style="width:100%;" onclick="saveMsgNotes('${msgId}')"><i class="fas fa-save"></i> Save</button>
-        <button class="btn btn-outline" style="width:100%;margin-top:8px;" onclick="closeModal()">Close</button>
-      `);
+      openModal(`<div class="modal-header"><h3><i class="fas fa-envelope-open-text"></i> Message</h3><button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button></div><div class="form-group"><label>From</label><input value="${esc(msg.name||'Member')}" readonly></div><div class="form-group"><label>Email</label><input value="${esc(msg.email||'')}" readonly></div><div class="form-group"><label>Subject</label><input value="${esc(msg.subject||'')}" readonly></div><div class="form-group"><label>Message</label><textarea rows="4" readonly style="background:#f1f5f9;">${esc(msg.message||'')}</textarea></div><div class="form-group"><label>Status</label><select id="msgStatus" onchange="updateMsgStatus('${msgId}',this.value)"><option value="unread" ${msg.status==='unread'?'selected':''}>Unread</option><option value="read" ${msg.status==='read'?'selected':''}>Read</option><option value="replied" ${msg.status==='replied'?'selected':''}>Replied</option></select></div><div class="form-group"><label>Notes</label><textarea id="msgNotes" rows="3">${esc(msg.notes||'')}</textarea></div><button class="btn btn-primary" style="width:100%;" onclick="saveMsgNotes('${msgId}')"><i class="fas fa-save"></i> Save</button><button class="btn btn-outline" style="width:100%;margin-top:8px;" onclick="closeModal()">Close</button>`);
     };
-
     window.updateMsgStatus = function(msgId, status) { db.ref('workfit_contact_messages/' + msgId).update({ status }); };
-    window.saveMsgNotes = function(msgId) {
-      const notes = document.getElementById('msgNotes').value.trim();
-      const status = document.getElementById('msgStatus').value;
-      db.ref('workfit_contact_messages/' + msgId).update({ notes, status }).then(() => { toast('Saved!'); closeModal(); }).catch(() => toast('Error', true));
-    };
+    window.saveMsgNotes = function(msgId) { const notes = document.getElementById('msgNotes').value.trim(); const status = document.getElementById('msgStatus').value; db.ref('workfit_contact_messages/' + msgId).update({ notes, status }).then(() => { toast('Saved!'); closeModal(); }).catch(() => toast('Error', true)); };
 
-    // ============ MEMBERS ============
+    // MEMBERS
     function renderMembers(c) {
       const members = Object.entries(allMembers).map(([id, m]) => ({ id, ...m }));
       let html = `<h1 class="page-title">👥 Members</h1><p class="page-subtitle">${currentClubName}</p>${renderStatsBar()}<div class="section"><div class="section-header"><h3><i class="fas fa-users"></i> All Members (${members.length})</h3><button class="btn btn-primary btn-sm" onclick="showMemberForm()"><i class="fas fa-plus"></i> Add</button></div><div class="section-body no-padding">`;
       if (!members.length) { html += `<div class="empty-state"><i class="fas fa-user-plus"></i><p>No members yet</p></div>`; }
-      else { members.forEach(m => { html += `<div class="list-item"><div class="list-item-left"><div class="list-item-icon">👤</div><div class="list-item-info"><div class="list-item-title">${esc(m.name || m.fullName || 'Member')}</div><div class="list-item-subtitle">${esc(m.membershipTier || 'Standard')} · ${m.phone || ''}</div></div></div><div class="list-item-right"><span class="badge ${m.status==='active'?'badge-success':'badge-danger'}">${m.status||'active'}</span><button class="btn btn-outline btn-xs" onclick="showMemberForm('${m.id}')"><i class="fas fa-pen"></i></button><button class="btn btn-outline btn-xs" style="color:#ef4444;" onclick="if(confirm('Remove?')) deleteItem('workfit_members','${m.id}')"><i class="fas fa-trash"></i></button></div></div>`; }); }
+      else { members.forEach(m => { html += `<div class="list-item"><div class="list-item-left"><div class="list-item-icon">👤</div><div class="list-item-info"><div class="list-item-title">${esc(m.name||m.fullName||'Member')}</div><div class="list-item-subtitle">${esc(m.membershipTier||'Standard')} · ${m.phone||''}</div></div></div><div class="list-item-right"><span class="badge ${m.status==='active'?'badge-success':'badge-danger'}">${m.status||'active'}</span><button class="btn btn-outline btn-xs" onclick="showMemberForm('${m.id}')"><i class="fas fa-pen"></i></button><button class="btn btn-outline btn-xs" style="color:#ef4444;" onclick="if(confirm('Remove?')) deleteItem('workfit_members','${m.id}')"><i class="fas fa-trash"></i></button></div></div>`; }); }
       html += `</div></div>`; c.innerHTML = html;
     }
-
     window.showMemberForm = function(id) {
       const m = id ? allMembers[id] : null;
-      openModal(`<div class="modal-header"><h3>${id ? 'Edit' : 'Add'} Member</h3><button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button></div><input type="hidden" id="editId" value="${id||''}"><div class="form-group"><label>Full Name *</label><input id="memName" value="${esc(m?.name||m?.fullName||'')}" placeholder="Name"></div><div class="form-row"><div class="form-group"><label>Phone</label><input id="memPhone" value="${esc(m?.phone||'')}"></div><div class="form-group"><label>Email</label><input id="memEmail" value="${esc(m?.email||'')}"></div></div><div class="form-row"><div class="form-group"><label>Tier</label><select id="memTier"><option value="Basic" ${m?.membershipTier==='Basic'?'selected':''}>Basic</option><option value="Standard" ${m?.membershipTier==='Standard'?'selected':''}>Standard</option><option value="Premium" ${m?.membershipTier==='Premium'?'selected':''}>Premium</option></select></div><div class="form-group"><label>Status</label><select id="memStatus"><option value="active" ${m?.status==='active'?'selected':''}>Active</option><option value="inactive" ${m?.status==='inactive'?'selected':''}>Inactive</option></select></div></div><button class="btn btn-primary" style="width:100%;" onclick="saveMember()">${id?'Update':'Save'}</button>`);
+      openModal(`<div class="modal-header"><h3>${id?'Edit':'Add'} Member</h3><button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button></div><input type="hidden" id="editId" value="${id||''}"><div class="form-group"><label>Full Name *</label><input id="memName" value="${esc(m?.name||m?.fullName||'')}" placeholder="Name"></div><div class="form-row"><div class="form-group"><label>Phone</label><input id="memPhone" value="${esc(m?.phone||'')}"></div><div class="form-group"><label>Email</label><input id="memEmail" value="${esc(m?.email||'')}"></div></div><div class="form-row"><div class="form-group"><label>Tier</label><select id="memTier"><option value="Basic" ${m?.membershipTier==='Basic'?'selected':''}>Basic</option><option value="Standard" ${m?.membershipTier==='Standard'?'selected':''}>Standard</option><option value="Premium" ${m?.membershipTier==='Premium'?'selected':''}>Premium</option></select></div><div class="form-group"><label>Status</label><select id="memStatus"><option value="active" ${m?.status==='active'?'selected':''}>Active</option><option value="inactive" ${m?.status==='inactive'?'selected':''}>Inactive</option></select></div></div><button class="btn btn-primary" style="width:100%;" onclick="saveMember()">${id?'Update':'Save'}</button>`);
     };
-
     window.saveMember = async function() {
-      const name = document.getElementById('memName').value.trim();
-      if (!name) return toast('Name required', true);
+      const name = document.getElementById('memName').value.trim(); if (!name) return toast('Name required', true);
       const data = { name, fullName: name, phone: document.getElementById('memPhone').value, email: document.getElementById('memEmail').value, membershipTier: document.getElementById('memTier').value, status: document.getElementById('memStatus').value, clubId: currentClubId, clubName: currentClubName, updatedAt: firebase.database.ServerValue.TIMESTAMP };
       const editId = document.getElementById('editId').value;
-      try {
-        if (editId) { await db.ref('workfit_members/' + editId).update(data); } else { data.createdAt = firebase.database.ServerValue.TIMESTAMP; await db.ref('workfit_members').push(data); }
-        closeModal(); toast(editId ? 'Updated!' : 'Added!');
-      } catch(e) { toast('Error', true); }
+      try { if (editId) { await db.ref('workfit_members/' + editId).update(data); } else { data.createdAt = firebase.database.ServerValue.TIMESTAMP; await db.ref('workfit_members').push(data); } closeModal(); toast(editId ? 'Updated!' : 'Added!'); } catch(e) { toast('Error', true); }
     };
 
-    // ============ INVENTORY ============
+    // INVENTORY
     function renderInventory(c) {
       const items = Object.entries(allInventory).map(([id, m]) => ({ id, ...m }));
       let html = `<h1 class="page-title">📦 Inventory</h1>${renderStatsBar()}<div class="section"><div class="section-header"><h3><i class="fas fa-box"></i> Equipment (${items.length})</h3><button class="btn btn-primary btn-sm" onclick="showInventoryForm()"><i class="fas fa-plus"></i> Add</button></div><div class="section-body no-padding">`;
@@ -496,34 +486,26 @@
       else { items.forEach(i => { html += `<div class="list-item"><div class="list-item-left"><div class="list-item-icon">📦</div><div class="list-item-info"><div class="list-item-title">${esc(i.name)}</div><div class="list-item-subtitle">${esc(i.category||'General')} · Qty: ${i.quantity||1} · ${i.condition||'good'}</div></div></div><div class="list-item-right"><span class="badge ${(i.condition||'good')==='good'?'badge-success':'badge-warning'}">${i.condition||'good'}</span><button class="btn btn-outline btn-xs" onclick="showInventoryForm('${i.id}')"><i class="fas fa-pen"></i></button><button class="btn btn-outline btn-xs" style="color:#ef4444;" onclick="if(confirm('Remove?')) deleteItem('workfit_equipment_inventory','${i.id}')"><i class="fas fa-trash"></i></button></div></div>`; }); }
       html += `</div></div>`; c.innerHTML = html;
     }
-
     window.showInventoryForm = function(id) {
       const i = id ? allInventory[id] : null;
       openModal(`<div class="modal-header"><h3>${id?'Edit':'Add'} Equipment</h3><button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button></div><input type="hidden" id="editId" value="${id||''}"><div class="form-group"><label>Name *</label><input id="invName" value="${esc(i?.name||'')}"></div><div class="form-row"><div class="form-group"><label>Category</label><select id="invCat">${['Cardio','Strength','Flexibility','Machines','Accessories'].map(c=>`<option ${i?.category===c?'selected':''}>${c}</option>`).join('')}</select></div><div class="form-group"><label>Qty</label><input id="invQty" type="number" value="${i?.quantity||1}" min="1"></div></div><div class="form-row"><div class="form-group"><label>Condition</label><select id="invCond"><option value="good" ${i?.condition==='good'?'selected':''}>Good</option><option value="maintenance" ${i?.condition==='maintenance'?'selected':''}>Maintenance</option><option value="damaged" ${i?.condition==='damaged'?'selected':''}>Damaged</option></select></div><div class="form-group"><label>Value (KES)</label><input id="invValue" type="number" value="${i?.value||''}"></div></div><button class="btn btn-primary" style="width:100%;" onclick="saveInventory()">${id?'Update':'Save'}</button>`);
     };
-
     window.saveInventory = async function() {
-      const name = document.getElementById('invName').value.trim();
-      if (!name) return toast('Name required', true);
+      const name = document.getElementById('invName').value.trim(); if (!name) return toast('Name required', true);
       const data = { name, category: document.getElementById('invCat').value, quantity: Number(document.getElementById('invQty').value)||1, condition: document.getElementById('invCond').value, value: Number(document.getElementById('invValue').value)||0, clubId: currentClubId, clubName: currentClubName, updatedAt: firebase.database.ServerValue.TIMESTAMP };
       const editId = document.getElementById('editId').value;
-      try {
-        if (editId) { await db.ref('workfit_equipment_inventory/' + editId).update(data); } else { data.createdAt = firebase.database.ServerValue.TIMESTAMP; await db.ref('workfit_equipment_inventory').push(data); }
-        closeModal(); toast(editId ? 'Updated!' : 'Added!');
-      } catch(e) { toast('Error', true); }
+      try { if (editId) { await db.ref('workfit_equipment_inventory/' + editId).update(data); } else { data.createdAt = firebase.database.ServerValue.TIMESTAMP; await db.ref('workfit_equipment_inventory').push(data); } closeModal(); toast(editId ? 'Updated!' : 'Added!'); } catch(e) { toast('Error', true); }
     };
 
-    // ============ SESSIONS ============
+    // SESSIONS
     function renderSessions(c) {
       const sessions = Object.entries(allSessions).map(([id, m]) => ({ id, ...m }));
       sessions.sort((a,b)=>['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'].indexOf(a.day)-['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'].indexOf(b.day));
-      
       let html = `<h1 class="page-title">📅 Sessions</h1><p class="page-subtitle">Weekly training schedule</p>${renderStatsBar()}<div class="section"><div class="section-header"><h3><i class="fas fa-calendar-week"></i> This Week (${sessions.length})</h3></div><div class="section-body no-padding">`;
       if (!sessions.length) { html += `<div class="empty-state"><i class="fas fa-calendar-plus"></i><p>No sessions scheduled</p></div>`; }
       else { sessions.forEach(s => { html += `<div class="session-item ${s.status==='done'?'completed':''}"><div class="session-day">${s.day}<br><small style="color:var(--text-secondary);">${s.time}</small></div><div class="session-info"><div class="session-name">${esc(s.name)}</div><div class="session-meta">${s.type} · ${s.status==='done'?'✅ Completed':'⏳ Pending'}</div></div><div class="session-actions">${s.status!=='done'?`<button class="btn btn-primary btn-xs" onclick="markDone('${s.id}')">Done</button>`:''}<button class="btn btn-outline btn-xs" style="color:#ef4444;margin-left:4px;" onclick="if(confirm('Delete?')) deleteItem('workfit_schedules','${s.id}')"><i class="fas fa-trash"></i></button></div></div>`; }); }
       html += `</div></div>`; c.innerHTML = html;
     }
-
     window.markDone = async function(id) { try { await db.ref('workfit_schedules/' + id).update({ status: 'done', completedAt: firebase.database.ServerValue.TIMESTAMP }); toast('Done!'); } catch(e) { toast('Error', true); } };
     window.deleteItem = async function(path, id) { try { await db.ref(path + '/' + id).remove(); toast('Deleted'); } catch(e) { toast('Error', true); } };
     window.handleLogout = async function() { try { await auth.signOut(); window.location.href = '/'; } catch(e) { toast('Error', true); } };
@@ -531,11 +513,17 @@
     // Auth
     auth.onAuthStateChanged(async user => {
       if (!user) { window.location.href = '/'; return; }
-      document.getElementById('sidebarName').textContent = user.displayName || user.email?.split('@')[0] || 'Trainer';
-      document.getElementById('sidebarEmail').textContent = user.email;
-      document.getElementById('sidebarAvatar').textContent = (user.displayName || user.email?.[0] || 'T').substring(0,2).toUpperCase();
-      document.getElementById('topName').textContent = user.displayName?.split(' ')[0] || 'Trainer';
-      document.getElementById('topAvatar').textContent = (user.displayName || user.email?.[0] || 'T').substring(0,2).toUpperCase();
+      
+      // Update UI
+      document.getElementById('dropdownName').textContent = user.displayName || user.email?.split('@')[0] || 'Trainer';
+      document.getElementById('dropdownEmail').textContent = user.email;
+      document.getElementById('dropdownAvatar').textContent = (user.displayName || user.email?.[0] || 'T').substring(0,2).toUpperCase();
+      if (user.photoURL) {
+        document.getElementById('userAvatarText').style.display = 'none';
+        document.getElementById('userAvatarImg').style.display = 'block';
+        document.getElementById('userAvatarImg').src = user.photoURL;
+      }
+      document.getElementById('userAvatarText').textContent = (user.displayName || 'T')[0].toUpperCase();
 
       const assignment = await findClub(user);
       if (assignment && assignment.clubId) {
@@ -546,7 +534,7 @@
         renderTab();
       } else {
         document.getElementById('clubTag').textContent = 'No Club';
-        document.getElementById('mainContent').innerHTML = `<div class="section"><div class="section-body"><div class="empty-state"><i class="fas fa-exclamation-triangle" style="color:#f59e0b;"></i><p><strong>No Club Assigned</strong></p><p>Contact your administrator.</p></div></div></div>`;
+        document.getElementById('tabContent').innerHTML = `<div class="section"><div class="section-body"><div class="empty-state"><i class="fas fa-exclamation-triangle" style="color:#f59e0b;"></i><p><strong>No Club Assigned</strong></p><p>Contact your administrator.</p></div></div></div>`;
       }
     });
   </script>
