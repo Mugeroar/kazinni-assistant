@@ -1,14 +1,366 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Heritage Partners - Debug</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Heritage Marketplace · Full Access</title>
+  <meta name="theme-color" content="#d97706">
+  <link rel="icon" type="image/png" href="https://i.postimg.cc/rFfXDj3L/kazinni-removebg-preview(1).png">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    :root {
+      --gold: #d97706; --gold-dark: #92400e; --gold-light: #fbbf24;
+      --gold-bg: #fffbeb; --gold-border: #fde68a;
+      --navy: #0f172a; --navy-light: #1e293b;
+      --text: #1e293b; --text-muted: #64748b; --text-light: #94a3b8;
+      --bg: #f8fafc; --white: #ffffff;
+      --success: #10b981; --danger: #ef4444; --info: #3b82f6; --warning: #f59e0b;
+      --border: #e2e8f0; --border-light: #f1f5f9;
+      --shadow: 0 1px 3px rgba(0,0,0,0.06);
+      --shadow-md: 0 4px 16px rgba(0,0,0,0.08);
+      --shadow-lg: 0 8px 30px rgba(0,0,0,0.12);
+      --radius: 12px; --radius-lg: 16px; --radius-xl: 20px;
+    }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg); color: var(--text); min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Topbar */
+    .topbar {
+      background: var(--navy); color: white; padding: 0 1.5rem; height: 64px;
+      display: flex; align-items: center; justify-content: space-between;
+      border-bottom: 3px solid var(--gold); position: sticky; top:0; z-index:100;
+      flex-wrap: wrap; gap: 0.5rem;
+    }
+    .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.1rem; text-decoration: none; }
+    .brand img { width: 34px; height: 34px; border-radius: 10px; background: white; padding: 2px; }
+    .brand i { color: var(--gold); }
+    .brand span { color: white; }
+    .brand .gold { color: var(--gold); }
+    .topbar-right { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .user-badge {
+      display: flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.08);
+      padding: 0.3rem 0.9rem 0.3rem 0.5rem; border-radius: 30px; font-size: 0.75rem;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    .user-badge .avatar {
+      width: 28px; height: 28px; border-radius: 50%; background: var(--gold);
+      display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.65rem;
+      color: white;
+    }
+    .btn {
+      padding: 0.4rem 0.9rem; border-radius: 8px; font-weight: 600; font-size: 0.7rem;
+      border: none; cursor: pointer; transition: all 0.2s; display: inline-flex;
+      align-items: center; gap: 5px; font-family: inherit; text-decoration: none;
+    }
+    .btn-gold { background: var(--gold); color: white; }
+    .btn-gold:hover { background: var(--gold-dark); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(217,119,6,0.3); }
+    .btn-outline { background: transparent; border: 1px solid rgba(255,255,255,0.2); color: white; }
+    .btn-outline:hover { background: rgba(255,255,255,0.1); }
+    .btn-sm { padding: 0.3rem 0.7rem; font-size: 0.65rem; }
+    .btn-xs { padding: 0.2rem 0.5rem; font-size: 0.6rem; border-radius: 6px; }
+    .btn-danger { background: var(--danger); color: white; }
+    .btn-danger:hover { background: #dc2626; }
+    .btn-success { background: var(--success); color: white; }
+    .btn-success:hover { background: #059669; }
+    .btn-info { background: var(--info); color: white; }
+    .btn-info:hover { background: #2563eb; }
+
+    .main { max-width: 1280px; margin: 0 auto; padding: 1.2rem; }
+
+    /* Page Header */
+    .page-header {
+      display: flex; justify-content: space-between; align-items: center;
+      flex-wrap: wrap; gap: 0.8rem; margin-bottom: 1.2rem;
+    }
+    .page-header h1 {
+      font-size: 1.4rem; font-weight: 800; display: flex; align-items: center; gap: 10px;
+    }
+    .page-header h1 i { color: var(--gold); }
+    .page-header .subtitle { font-size: 0.75rem; color: var(--text-muted); font-weight: 400; }
+    .header-actions { display: flex; gap: 6px; flex-wrap: wrap; }
+
+    /* Stats Grid */
+    .stats-grid {
+      display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 1.5rem;
+    }
+    .stat-card {
+      background: var(--white); border-radius: var(--radius); padding: 1rem 1.2rem;
+      border: 1px solid var(--gold-border); box-shadow: var(--shadow);
+      transition: all 0.25s; cursor: default;
+    }
+    .stat-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); }
+    .stat-card .num { font-size: 1.8rem; font-weight: 800; color: var(--gold-dark); line-height: 1.1; }
+    .stat-card .label { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); margin-top: 2px; }
+    .stat-card .icon { float: right; font-size: 1.2rem; color: var(--gold-light); opacity: 0.5; }
+
+    /* Tabs */
+    .tab-nav {
+      display: flex; gap: 4px; background: var(--white); border-radius: var(--radius);
+      padding: 4px; margin-bottom: 1.2rem; border: 1px solid var(--border-light);
+      box-shadow: var(--shadow); overflow-x: auto; flex-wrap: nowrap;
+    }
+    .tab-btn {
+      flex: 0 0 auto; padding: 0.5rem 1.2rem; border-radius: 10px; border: none;
+      cursor: pointer; font-family: 'Inter', sans-serif; font-size: 0.72rem;
+      font-weight: 600; background: transparent; color: var(--text-muted);
+      transition: all 0.2s; white-space: nowrap; display: flex; align-items: center; gap: 6px;
+    }
+    .tab-btn:hover { background: var(--gold-bg); color: var(--gold-dark); }
+    .tab-btn.active {
+      background: var(--navy); color: white; box-shadow: 0 2px 12px rgba(15,23,42,0.2);
+    }
+    .tab-btn .badge {
+      background: rgba(255,255,255,0.2); padding: 0 8px; border-radius: 10px;
+      font-size: 0.55rem; font-weight: 700;
+    }
+    .tab-btn.active .badge { background: rgba(255,255,255,0.2); }
+
+    .tab-content { display: none; animation: fadeIn 0.25s ease; }
+    .tab-content.active { display: block; }
+    @keyframes fadeIn { from { opacity:0; transform:translateY(6px); } to { opacity:1; transform:translateY(0); } }
+
+    /* Section Cards */
+    .section {
+      background: var(--white); border-radius: var(--radius-lg);
+      border: 1px solid var(--border-light); box-shadow: var(--shadow);
+      margin-bottom: 1.2rem; overflow: hidden;
+    }
+    .section-header {
+      padding: 0.8rem 1.2rem; border-bottom: 1px solid var(--border-light);
+      display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.4rem;
+    }
+    .section-header h3 {
+      font-size: 0.8rem; font-weight: 700; display: flex; align-items: center; gap: 8px;
+    }
+    .section-header h3 i { color: var(--gold); }
+    .section-body { padding: 0.8rem 1.2rem; }
+    .section-body.no-padding { padding: 0; }
+
+    /* List Items */
+    .list-item {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0.7rem 1.2rem; border-bottom: 1px solid var(--border-light);
+      transition: background 0.15s;
+    }
+    .list-item:last-child { border-bottom: none; }
+    .list-item:hover { background: var(--gold-bg); }
+    .list-item-left { display: flex; align-items: center; gap: 12px; min-width:0; flex:1; }
+    .list-item-icon {
+      width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center;
+      justify-content: center; font-size: 0.9rem; flex-shrink: 0;
+      background: var(--gold-bg); color: var(--gold);
+    }
+    .list-item-info { min-width:0; }
+    .list-item-title { font-weight: 600; font-size: 0.82rem; }
+    .list-item-sub { font-size: 0.65rem; color: var(--text-muted); margin-top: 1px; }
+    .list-item-right { display: flex; align-items: center; gap: 6px; flex-shrink:0; flex-wrap: wrap; }
+
+    /* Badges */
+    .badge {
+      padding: 0.15rem 0.6rem; border-radius: 6px; font-size: 0.6rem;
+      font-weight: 600; text-transform: capitalize;
+    }
+    .badge-success { background: #ecfdf5; color: #065f46; }
+    .badge-warning { background: #fffbeb; color: #92400e; }
+    .badge-danger { background: #fef2f2; color: #991b1b; }
+    .badge-info { background: #eff6ff; color: #1e40af; }
+    .badge-neutral { background: #f1f5f9; color: #475569; }
+    .badge-active { background: #ecfdf5; color: #065f46; }
+    .badge-inactive { background: #fef2f2; color: #991b1b; }
+    .badge-pending { background: #fffbeb; color: #92400e; }
+    .badge-completed { background: #ecfdf5; color: #065f46; }
+    .badge-cancelled { background: #fef2f2; color: #991b1b; }
+    .badge-draft { background: #f1f5f9; color: #475569; }
+
+    .empty-state { text-align: center; padding: 3rem 1rem; }
+    .empty-state i { font-size: 2.5rem; color: #cbd5e1; display: block; margin-bottom: 0.8rem; }
+    .empty-state p { font-size: 0.8rem; color: var(--text-muted); }
+
+    /* Modal */
+    .modal-overlay {
+      position: fixed; inset:0; background: rgba(15,23,42,0.5);
+      backdrop-filter: blur(4px); display: none; align-items: flex-end;
+      justify-content: center; z-index:300;
+    }
+    .modal-overlay.active { display: flex; }
+    .modal {
+      background: var(--white); border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+      padding: 1.5rem; width:100%; max-width:560px; max-height:85vh;
+      overflow-y: auto; box-shadow: 0 -8px 40px rgba(0,0,0,0.15);
+    }
+    .modal-handle { width: 40px; height: 4px; background: var(--border); border-radius: 2px; margin:0 auto 1.2rem; }
+    .modal-header {
+      display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.2rem;
+    }
+    .modal-header h3 { font-size: 1rem; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+    .modal-header h3 i { color: var(--gold); }
+    .modal-close {
+      width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--border);
+      background: var(--white); cursor: pointer; display: flex; align-items: center;
+      justify-content: center; transition: all 0.2s;
+    }
+    .modal-close:hover { background: #fef2f2; color: var(--danger); }
+
+    .form-group { margin-bottom: 0.8rem; }
+    .form-group label {
+      display: block; font-weight: 600; font-size: 0.7rem;
+      color: var(--text-muted); margin-bottom: 0.2rem; text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+    .form-group input, .form-group select, .form-group textarea {
+      width:100%; padding:0.5rem 0.8rem; border:1.5px solid var(--border);
+      border-radius:8px; font-family:'Inter',sans-serif; font-size:0.8rem;
+      background:var(--bg); outline:none; transition:0.2s;
+    }
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+      border-color: var(--gold); box-shadow:0 0 0 3px rgba(217,119,6,0.08);
+      background: var(--white);
+    }
+    .form-row { display: grid; grid-template-columns:1fr 1fr; gap:0.8rem; }
+    .form-actions { display: flex; gap: 8px; margin-top: 0.5rem; }
+    .form-actions .btn { flex:1; justify-content:center; }
+
+    /* Toast */
+    .toast {
+      position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+      z-index: 400; padding: 0.7rem 1.5rem; border-radius: 12px;
+      font-size: 0.75rem; font-weight: 600; box-shadow: var(--shadow-lg);
+      background: var(--navy); color: white; display: none; max-width: 90%;
+    }
+    .toast.error { background: var(--danger); }
+    .toast.success { background: var(--success); }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .stats-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+    @media (max-width: 768px) {
+      .topbar { padding: 0.5rem 1rem; height: auto; }
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+      .form-row { grid-template-columns:1fr; }
+      .page-header h1 { font-size: 1.1rem; }
+      .tab-btn { padding: 0.4rem 0.7rem; font-size: 0.65rem; }
+    }
+    @media (max-width: 480px) {
+      .stats-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
+      .stat-card { padding: 0.6rem 0.8rem; }
+      .stat-card .num { font-size: 1.2rem; }
+      .header-actions .btn { font-size: 0.6rem; padding: 0.2rem 0.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="topbar">
+    <a href="#" class="brand">
+      <img src="https://i.postimg.cc/rFfXDj3L/kazinni-removebg-preview(1).png" alt="">
+      <span><i class="fas fa-crown"></i> Heritage <span class="gold">Marketplace</span></span>
+    </a>
+    <div class="topbar-right">
+      <div class="user-badge">
+        <div class="avatar" id="userAvatar">HM</div>
+        <span id="userName">Manager</span>
+      </div>
+      <button class="btn btn-outline btn-sm" onclick="handleLogout()"><i class="fas fa-sign-out-alt"></i></button>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="page-header">
+      <div>
+        <h1><i class="fas fa-store-alt"></i> Heritage Marketplace</h1>
+        <span class="subtitle"><i class="fas fa-circle" style="color:var(--gold);font-size:0.4rem;"></i> Live · Manage partners, products, orders & listings</span>
+      </div>
+      <div class="header-actions">
+        <button class="btn btn-gold btn-sm" onclick="openModal('partner')"><i class="fas fa-handshake"></i> Partner</button>
+        <button class="btn btn-gold btn-sm" onclick="openModal('product')"><i class="fas fa-box"></i> Product</button>
+        <button class="btn btn-gold btn-sm" onclick="openModal('order')"><i class="fas fa-shopping-cart"></i> Order</button>
+        <button class="btn btn-gold btn-sm" onclick="openModal('listing')"><i class="fas fa-map-pin"></i> Listing</button>
+        <button class="btn btn-gold btn-sm" onclick="openModal('catalogue')"><i class="fas fa-images"></i> Catalogue</button>
+      </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-grid" id="statsGrid">
+      <div class="stat-card"><div class="num" id="statPartners">0</div><div class="label"><i class="fas fa-handshake"></i> Partners</div><div class="icon"><i class="fas fa-building"></i></div></div>
+      <div class="stat-card"><div class="num" id="statProducts">0</div><div class="label"><i class="fas fa-box"></i> Products</div><div class="icon"><i class="fas fa-tags"></i></div></div>
+      <div class="stat-card"><div class="num" id="statOrders">0</div><div class="label"><i class="fas fa-shopping-cart"></i> Orders</div><div class="icon"><i class="fas fa-truck"></i></div></div>
+      <div class="stat-card"><div class="num" id="statListings">0</div><div class="label"><i class="fas fa-map-marked-alt"></i> Listings</div><div class="icon"><i class="fas fa-map-pin"></i></div></div>
+      <div class="stat-card"><div class="num" id="statCatalogues">0</div><div class="label"><i class="fas fa-images"></i> Catalogues</div><div class="icon"><i class="fas fa-folder"></i></div></div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tab-nav">
+      <button class="tab-btn active" data-tab="overview"><i class="fas fa-chart-pie"></i> Overview</button>
+      <button class="tab-btn" data-tab="partners"><i class="fas fa-handshake"></i> Partners <span class="badge" id="badgePartners">0</span></button>
+      <button class="tab-btn" data-tab="products"><i class="fas fa-box"></i> Products <span class="badge" id="badgeProducts">0</span></button>
+      <button class="tab-btn" data-tab="orders"><i class="fas fa-shopping-cart"></i> Orders <span class="badge" id="badgeOrders">0</span></button>
+      <button class="tab-btn" data-tab="listings"><i class="fas fa-map-marked-alt"></i> Listings <span class="badge" id="badgeListings">0</span></button>
+      <button class="tab-btn" data-tab="catalogues"><i class="fas fa-images"></i> Catalogues <span class="badge" id="badgeCatalogues">0</span></button>
+    </div>
+
+    <!-- TAB: Overview -->
+    <div class="tab-content active" id="tab-overview">
+      <div class="section">
+        <div class="section-header"><h3><i class="fas fa-clock-rotate-left"></i> Recent Activity</h3></div>
+        <div class="section-body no-padding" id="recentActivity">
+          <div class="empty-state"><i class="fas fa-clock"></i><p>No recent activity</p></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB: Partners -->
+    <div class="tab-content" id="tab-partners">
+      <div class="section">
+        <div class="section-header"><h3><i class="fas fa-handshake"></i> Business Partners</h3><button class="btn btn-gold btn-sm" onclick="openModal('partner')"><i class="fas fa-plus"></i> Add</button></div>
+        <div class="section-body no-padding" id="partnerList"></div>
+      </div>
+    </div>
+
+    <!-- TAB: Products -->
+    <div class="tab-content" id="tab-products">
+      <div class="section">
+        <div class="section-header"><h3><i class="fas fa-box"></i> Product Catalogue</h3><button class="btn btn-gold btn-sm" onclick="openModal('product')"><i class="fas fa-plus"></i> Add</button></div>
+        <div class="section-body no-padding" id="productList"></div>
+      </div>
+    </div>
+
+    <!-- TAB: Orders -->
+    <div class="tab-content" id="tab-orders">
+      <div class="section">
+        <div class="section-header"><h3><i class="fas fa-shopping-cart"></i> Orders</h3><button class="btn btn-gold btn-sm" onclick="openModal('order')"><i class="fas fa-plus"></i> Add</button></div>
+        <div class="section-body no-padding" id="orderList"></div>
+      </div>
+    </div>
+
+    <!-- TAB: Listings -->
+    <div class="tab-content" id="tab-listings">
+      <div class="section">
+        <div class="section-header"><h3><i class="fas fa-map-marked-alt"></i> Business Listings</h3><button class="btn btn-gold btn-sm" onclick="openModal('listing')"><i class="fas fa-plus"></i> Add</button></div>
+        <div class="section-body no-padding" id="listingList"></div>
+      </div>
+    </div>
+
+    <!-- TAB: Catalogues -->
+    <div class="tab-content" id="tab-catalogues">
+      <div class="section">
+        <div class="section-header"><h3><i class="fas fa-images"></i> Partner Catalogues</h3><button class="btn btn-gold btn-sm" onclick="openModal('catalogue')"><i class="fas fa-plus"></i> Add</button></div>
+        <div class="section-body no-padding" id="catalogueList"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modalOverlay"><div class="modal" id="modalContent"><div class="modal-handle"></div></div></div>
+  <div id="toast" class="toast"></div>
+
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
-</head>
-<body>
-  <h1>Heritage Partners</h1>
-  <div id="output">Loading...</div>
 
   <script>
     firebase.initializeApp({
@@ -17,40 +369,566 @@
       databaseURL: "https://mugera-e51cc-default-rtdb.europe-west1.firebasedatabase.app",
       projectId: "mugera-e51cc"
     });
-
-    const db = firebase.database();
     const auth = firebase.auth();
+    const db = firebase.database();
 
-    auth.onAuthStateChanged(user => {
-      if (!user) {
-        document.getElementById('output').innerHTML = '❌ Not logged in';
+    // Data stores
+    let data = {
+      partners: {},
+      products: {},
+      orders: {},
+      listings: {},
+      catalogues: {}
+    };
+
+    const NODE_MAP = {
+      partners: 'heritage_partners',
+      products: 'heritage_products',
+      orders: 'heritage_orders',
+      listings: 'heritage_listings',
+      catalogues: 'heritage_catalogues'
+    };
+
+    function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+    function toast(msg, type) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.className = 'toast ' + (type || '');
+      t.style.display = 'block';
+      clearTimeout(t._timer);
+      t._timer = setTimeout(() => t.style.display = 'none', 3000);
+    }
+
+    // Tab switching
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        this.classList.add('active');
+        document.getElementById('tab-' + this.dataset.tab).classList.add('active');
+      });
+    });
+
+    function updateBadges() {
+      document.getElementById('badgePartners').textContent = Object.keys(data.partners).length;
+      document.getElementById('badgeProducts').textContent = Object.keys(data.products).length;
+      document.getElementById('badgeOrders').textContent = Object.keys(data.orders).length;
+      document.getElementById('badgeListings').textContent = Object.keys(data.listings).length;
+      document.getElementById('badgeCatalogues').textContent = Object.keys(data.catalogues).length;
+    }
+
+    function updateStats() {
+      document.getElementById('statPartners').textContent = Object.keys(data.partners).length;
+      document.getElementById('statProducts').textContent = Object.keys(data.products).length;
+      document.getElementById('statOrders').textContent = Object.keys(data.orders).length;
+      document.getElementById('statListings').textContent = Object.keys(data.listings).length;
+      document.getElementById('statCatalogues').textContent = Object.keys(data.catalogues).length;
+      updateBadges();
+    }
+
+    function getPartnerName(id) {
+      if (!id) return 'No Partner';
+      const p = data.partners[id];
+      return p ? (p.businessName || p.name || 'Partner') : id;
+    }
+
+    function getProductName(id) {
+      if (!id) return 'No Product';
+      const p = data.products[id];
+      return p ? (p.name || 'Product') : id;
+    }
+
+    function getStatusClass(status) {
+      const s = (status || 'pending').toLowerCase();
+      const map = {
+        'active': 'badge-success',
+        'inactive': 'badge-danger',
+        'pending': 'badge-warning',
+        'confirmed': 'badge-info',
+        'completed': 'badge-success',
+        'cancelled': 'badge-danger',
+        'draft': 'badge-neutral',
+        'new': 'badge-warning'
+      };
+      return map[s] || 'badge-neutral';
+    }
+
+    function formatDate(ts) {
+      if (!ts) return 'N/A';
+      const d = typeof ts === 'number' ? new Date(ts) : new Date(ts);
+      if (isNaN(d.getTime())) return 'N/A';
+      return d.toLocaleDateString('en-KE', { day:'numeric', month:'short', year:'numeric' });
+    }
+
+    function timeAgo(ts) {
+      if (!ts) return '';
+      const d = typeof ts === 'number' ? new Date(ts) : new Date(ts);
+      if (isNaN(d.getTime())) return '';
+      const diff = Date.now() - d.getTime();
+      const mins = Math.floor(diff / 60000);
+      const hrs = Math.floor(mins / 60);
+      const days = Math.floor(hrs / 24);
+      if (days > 7) return formatDate(ts);
+      if (days > 0) return days + 'd ago';
+      if (hrs > 0) return hrs + 'h ago';
+      if (mins > 0) return mins + 'm ago';
+      return 'Just now';
+    }
+
+    // RENDER FUNCTIONS
+    function renderRecentActivity() {
+      const container = document.getElementById('recentActivity');
+      const all = [
+        ...Object.entries(data.partners).map(([id,d]) => ({ id, ...d, _type: 'partner' })),
+        ...Object.entries(data.orders).map(([id,d]) => ({ id, ...d, _type: 'order' })),
+        ...Object.entries(data.listings).map(([id,d]) => ({ id, ...d, _type: 'listing' })),
+        ...Object.entries(data.catalogues).map(([id,d]) => ({ id, ...d, _type: 'catalogue' }))
+      ].sort((a,b) => (b.updatedAt || b.createdAt || 0) - (a.updatedAt || a.createdAt || 0)).slice(0, 10);
+
+      if (!all.length) {
+        container.innerHTML = '<div class="empty-state"><i class="fas fa-clock"></i><p>No recent activity</p></div>';
         return;
       }
-      
-      document.getElementById('output').innerHTML = `✅ Logged in as: ${user.email}<br>UID: ${user.uid}<br><br>Loading data...`;
 
-      // Read data with error handling
-      db.ref('heritage_partners').once('value')
-        .then(snap => {
-          const data = snap.val();
-          console.log('Data:', data);
-          
-          if (!data) {
-            document.getElementById('output').innerHTML += '<br>⚠️ No data found at heritage_partners';
-            return;
-          }
-          
-          let html = '<br><strong>Partners:</strong><br><ul>';
-          Object.entries(data).forEach(([id, partner]) => {
-            html += `<li>${partner.businessName || partner.name || id} - ${partner.status || 'active'}</li>`;
-          });
-          html += '</ul>';
-          document.getElementById('output').innerHTML += html;
-        })
-        .catch(err => {
-          document.getElementById('output').innerHTML += `<br>❌ Error: ${err.message}`;
-          console.error('Error:', err);
-        });
+      const icons = { partner: 'fa-handshake', order: 'fa-shopping-cart', listing: 'fa-map-pin', catalogue: 'fa-images' };
+      const labels = { partner: 'Partner', order: 'Order', listing: 'Listing', catalogue: 'Catalogue' };
+
+      container.innerHTML = all.map(item => {
+        const name = item.businessName || item.name || item.customerName || 'Item';
+        const icon = icons[item._type] || 'fa-clock';
+        const label = labels[item._type] || 'Item';
+        return `
+          <div class="list-item">
+            <div class="list-item-left">
+              <div class="list-item-icon"><i class="fas ${icon}"></i></div>
+              <div class="list-item-info">
+                <div class="list-item-title">${esc(name)}</div>
+                <div class="list-item-sub">${label} · ${timeAgo(item.createdAt)}</div>
+              </div>
+            </div>
+            <div class="list-item-right">
+              <span class="badge ${getStatusClass(item.status)}">${item.status || 'new'}</span>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderPartners() {
+      const container = document.getElementById('partnerList');
+      const items = Object.entries(data.partners).map(([id,d]) => ({ id, ...d }));
+      if (!items.length) {
+        container.innerHTML = '<div class="empty-state"><i class="fas fa-handshake"></i><p>No partners registered yet</p></div>';
+        return;
+      }
+      container.innerHTML = items.map(p => `
+        <div class="list-item">
+          <div class="list-item-left">
+            <div class="list-item-icon"><i class="fas fa-building"></i></div>
+            <div class="list-item-info">
+              <div class="list-item-title">${esc(p.businessName || p.name || 'Partner')}</div>
+              <div class="list-item-sub">${esc(p.contactPerson || '')} · ${p.phone || ''} · ${p.industry || 'General'}</div>
+            </div>
+          </div>
+          <div class="list-item-right">
+            <span class="badge ${getStatusClass(p.status)}">${p.status || 'active'}</span>
+            <button class="btn btn-outline btn-xs" onclick="editItem('partner','${p.id}')"><i class="fas fa-pen"></i></button>
+            <button class="btn btn-outline btn-xs" style="color:var(--danger);" onclick="deleteItem('partners','${p.id}')"><i class="fas fa-trash"></i></button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function renderProducts() {
+      const container = document.getElementById('productList');
+      const items = Object.entries(data.products).map(([id,d]) => ({ id, ...d }));
+      if (!items.length) {
+        container.innerHTML = '<div class="empty-state"><i class="fas fa-box-open"></i><p>No products listed</p></div>';
+        return;
+      }
+      container.innerHTML = items.map(p => `
+        <div class="list-item">
+          <div class="list-item-left">
+            <div class="list-item-icon">📦</div>
+            <div class="list-item-info">
+              <div class="list-item-title">${esc(p.name)}</div>
+              <div class="list-item-sub">${getPartnerName(p.partnerId)} · KES ${p.price || 0} · Stock: ${p.stock || 0}</div>
+            </div>
+          </div>
+          <div class="list-item-right">
+            <span class="badge ${p.isActive !== false ? 'badge-success' : 'badge-danger'}">${p.isActive !== false ? 'active' : 'inactive'}</span>
+            <button class="btn btn-outline btn-xs" onclick="editItem('product','${p.id}')"><i class="fas fa-pen"></i></button>
+            <button class="btn btn-outline btn-xs" style="color:var(--danger);" onclick="deleteItem('products','${p.id}')"><i class="fas fa-trash"></i></button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function renderOrders() {
+      const container = document.getElementById('orderList');
+      const items = Object.entries(data.orders).map(([id,d]) => ({ id, ...d }))
+        .sort((a,b) => (b.createdAt || 0) - (a.createdAt || 0));
+      if (!items.length) {
+        container.innerHTML = '<div class="empty-state"><i class="fas fa-shopping-bag"></i><p>No orders yet</p></div>';
+        return;
+      }
+      container.innerHTML = items.map(o => `
+        <div class="list-item">
+          <div class="list-item-left">
+            <div class="list-item-icon">🛒</div>
+            <div class="list-item-info">
+              <div class="list-item-title">${esc(o.customerName || 'Guest')}</div>
+              <div class="list-item-sub">${esc(o.productName || getProductName(o.productId))} × ${o.quantity || 1} · KES ${o.total || 0}</div>
+            </div>
+          </div>
+          <div class="list-item-right">
+            <span class="badge ${getStatusClass(o.status)}">${o.status || 'pending'}</span>
+            <button class="btn btn-outline btn-xs" onclick="editItem('order','${o.id}')"><i class="fas fa-pen"></i></button>
+            <button class="btn btn-outline btn-xs" style="color:var(--danger);" onclick="deleteItem('orders','${o.id}')"><i class="fas fa-trash"></i></button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function renderListings() {
+      const container = document.getElementById('listingList');
+      const items = Object.entries(data.listings).map(([id,d]) => ({ id, ...d }));
+      if (!items.length) {
+        container.innerHTML = '<div class="empty-state"><i class="fas fa-map"></i><p>No listings registered</p></div>';
+        return;
+      }
+      container.innerHTML = items.map(l => `
+        <div class="list-item">
+          <div class="list-item-left">
+            <div class="list-item-icon"><i class="fas fa-store"></i></div>
+            <div class="list-item-info">
+              <div class="list-item-title">${esc(l.businessName || l.name || 'Business')}</div>
+              <div class="list-item-sub">${esc(l.location || '')} · ${l.adType || 'Standard'} · ${l.occupiedBy || 'Available'}</div>
+            </div>
+          </div>
+          <div class="list-item-right">
+            <span class="badge ${getStatusClass(l.status)}">${l.status || 'active'}</span>
+            <button class="btn btn-outline btn-xs" onclick="editItem('listing','${l.id}')"><i class="fas fa-pen"></i></button>
+            <button class="btn btn-outline btn-xs" style="color:var(--danger);" onclick="deleteItem('listings','${l.id}')"><i class="fas fa-trash"></i></button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function renderCatalogues() {
+      const container = document.getElementById('catalogueList');
+      const items = Object.entries(data.catalogues).map(([id,d]) => ({ id, ...d }));
+      if (!items.length) {
+        container.innerHTML = '<div class="empty-state"><i class="fas fa-images"></i><p>No catalogues created</p></div>';
+        return;
+      }
+      container.innerHTML = items.map(c => `
+        <div class="list-item">
+          <div class="list-item-left">
+            <div class="list-item-icon"><i class="fas fa-folder"></i></div>
+            <div class="list-item-info">
+              <div class="list-item-title">${esc(c.name || 'Catalogue')}</div>
+              <div class="list-item-sub">${getPartnerName(c.partnerId)} · ${(c.productIds || []).length} products · ${c.platform || 'WhatsApp'}</div>
+            </div>
+          </div>
+          <div class="list-item-right">
+            <span class="badge ${getStatusClass(c.status)}">${c.status || 'draft'}</span>
+            <button class="btn btn-outline btn-xs" onclick="editItem('catalogue','${c.id}')"><i class="fas fa-pen"></i></button>
+            <button class="btn btn-outline btn-xs" style="color:var(--danger);" onclick="deleteItem('catalogues','${c.id}')"><i class="fas fa-trash"></i></button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function renderAll() {
+      updateStats();
+      renderRecentActivity();
+      renderPartners();
+      renderProducts();
+      renderOrders();
+      renderListings();
+      renderCatalogues();
+    }
+
+    // MODAL SYSTEM
+    function getModalFields(type, item) {
+      const forms = {
+        partner: `
+          <div class="form-group"><label>Business Name *</label><input id="fName" value="${esc(item?.businessName || item?.name || '')}" placeholder="e.g., Gifted Woodworks"></div>
+          <div class="form-row">
+            <div class="form-group"><label>Contact Person</label><input id="fContact" value="${esc(item?.contactPerson || '')}" placeholder="Name"></div>
+            <div class="form-group"><label>Phone</label><input id="fPhone" value="${esc(item?.phone || '')}" placeholder="+254..."></div>
+          </div>
+          <div class="form-row">
+            <div class="form-group"><label>Email</label><input id="fEmail" value="${esc(item?.email || '')}" placeholder="email@example.com"></div>
+            <div class="form-group"><label>Industry</label><select id="fIndustry"><option value="Retail" ${item?.industry==='Retail'?'selected':''}>Retail</option><option value="Fashion" ${item?.industry==='Fashion'?'selected':''}>Fashion</option><option value="Food" ${item?.industry==='Food'?'selected':''}>Food</option><option value="Other" ${item?.industry==='Other'?'selected':''}>Other</option></select></div>
+          </div>
+          <div class="form-row">
+            <div class="form-group"><label>Tier</label><select id="fTier"><option value="Standard" ${item?.tier==='Standard'?'selected':''}>Standard</option><option value="Premium" ${item?.tier==='Premium'?'selected':''}>Premium</option></select></div>
+            <div class="form-group"><label>Status</label><select id="fStatus"><option value="active" ${item?.status==='active'?'selected':''}>Active</option><option value="inactive" ${item?.status==='inactive'?'selected':''}>Inactive</option></select></div>
+          </div>
+          <div class="form-group"><label>Notes</label><textarea id="fNotes" rows="2" placeholder="Internal notes...">${esc(item?.notes || '')}</textarea></div>
+        `,
+        product: `
+          <div class="form-group"><label>Product Name *</label><input id="fName" value="${esc(item?.name || '')}" placeholder="e.g., Sofa Set 6 Seater"></div>
+          <div class="form-row">
+            <div class="form-group"><label>Price (KES)</label><input id="fPrice" type="number" value="${item?.price || 0}"></div>
+            <div class="form-group"><label>Stock</label><input id="fStock" type="number" value="${item?.stock || 0}"></div>
+          </div>
+          <div class="form-row">
+            <div class="form-group"><label>Partner</label><select id="fPartner"><option value="">None</option>${Object.entries(data.partners).map(([id,p]) => `<option value="${id}" ${item?.partnerId===id?'selected':''}>${esc(p.businessName||p.name||id)}</option>`).join('')}</select></div>
+            <div class="form-group"><label>Unit</label><input id="fUnit" value="${esc(item?.unit || 'Piece')}"></div>
+          </div>
+          <div class="form-group"><label>Description</label><textarea id="fNotes" rows="2">${esc(item?.description || '')}</textarea></div>
+          <div class="form-group"><label>Status</label><select id="fStatus"><option value="active" ${item?.isActive!==false?'selected':''}>Active</option><option value="inactive" ${item?.isActive===false?'selected':''}>Inactive</option></select></div>
+        `,
+        order: `
+          <div class="form-group"><label>Customer Name *</label><input id="fName" value="${esc(item?.customerName || '')}" placeholder="Full name"></div>
+          <div class="form-row">
+            <div class="form-group"><label>Phone</label><input id="fPhone" value="${esc(item?.customerPhone || '')}" placeholder="+254..."></div>
+            <div class="form-group"><label>Product</label><select id="fPartner"><option value="">Select Product</option>${Object.entries(data.products).map(([id,p]) => `<option value="${id}" ${item?.productId===id?'selected':''}>${esc(p.name)} (KES ${p.price||0})</option>`).join('')}</select></div>
+          </div>
+          <div class="form-row">
+            <div class="form-group"><label>Quantity</label><input id="fStock" type="number" value="${item?.quantity || 1}"></div>
+            <div class="form-group"><label>Total (KES)</label><input id="fPrice" type="number" value="${item?.total || 0}"></div>
+          </div>
+          <div class="form-row">
+            <div class="form-group"><label>Status</label><select id="fStatus"><option value="pending" ${item?.status==='pending'?'selected':''}>Pending</option><option value="confirmed" ${item?.status==='confirmed'?'selected':''}>Confirmed</option><option value="completed" ${item?.status==='completed'?'selected':''}>Completed</option><option value="cancelled" ${item?.status==='cancelled'?'selected':''}>Cancelled</option></select></div>
+            <div class="form-group"><label>Location</label><input id="fNotes" value="${esc(item?.customerLocation || '')}" placeholder="Delivery location"></div>
+          </div>
+        `,
+        listing: `
+          <div class="form-group"><label>Business Name *</label><input id="fName" value="${esc(item?.businessName || item?.name || '')}" placeholder="Business name"></div>
+          <div class="form-row">
+            <div class="form-group"><label>Location</label><input id="fNotes" value="${esc(item?.location || '')}" placeholder="e.g., Ngong Road"></div>
+            <div class="form-group"><label>Ad Type</label><select id="fStatus"><option value="Facebook Ads" ${item?.adType==='Facebook Ads'?'selected':''}>Facebook Ads</option><option value="Instagram Ad" ${item?.adType==='Instagram Ad'?'selected':''}>Instagram Ad</option><option value="WhatsApp Ad" ${item?.adType==='WhatsApp Ad'?'selected':''}>WhatsApp Ad</option><option value="Other" ${item?.adType==='Other'?'selected':''}>Other</option></select></div>
+          </div>
+          <div class="form-group"><label>Occupied By</label><input id="fContact" value="${esc(item?.occupiedBy || item?.partnerName || '')}" placeholder="Partner or business name"></div>
+        `,
+        catalogue: `
+          <div class="form-group"><label>Catalogue Name *</label><input id="fName" value="${esc(item?.name || '')}" placeholder="e.g., Kitchen Essentials"></div>
+          <div class="form-row">
+            <div class="form-group"><label>Partner</label><select id="fPartner"><option value="">None</option>${Object.entries(data.partners).map(([id,p]) => `<option value="${id}" ${item?.partnerId===id?'selected':''}>${esc(p.businessName||p.name||id)}</option>`).join('')}</select></div>
+            <div class="form-group"><label>Status</label><select id="fStatus"><option value="draft" ${item?.status==='draft'?'selected':''}>Draft</option><option value="active" ${item?.status==='active'?'selected':''}>Active</option></select></div>
+          </div>
+          <div class="form-row">
+            <div class="form-group"><label>Cover Image URL</label><input id="fNotes" value="${esc(item?.coverImage || '')}" placeholder="https://..."></div>
+            <div class="form-group"><label>Platform</label><select id="fPlatform"><option value="WhatsApp" ${item?.platform==='WhatsApp'?'selected':''}>WhatsApp</option><option value="Instagram" ${item?.platform==='Instagram'?'selected':''}>Instagram</option><option value="Facebook" ${item?.platform==='Facebook'?'selected':''}>Facebook</option></select></div>
+          </div>
+        `
+      };
+      return forms[type] || '';
+    }
+
+    function getDataForType(type, id) {
+      const map = {
+        partner: data.partners,
+        product: data.products,
+        order: data.orders,
+        listing: data.listings,
+        catalogue: data.catalogues
+      };
+      return id ? map[type]?.[id] : null;
+    }
+
+    function getNodeForType(type) {
+      const map = {
+        partner: 'heritage_partners',
+        product: 'heritage_products',
+        order: 'heritage_orders',
+        listing: 'heritage_listings',
+        catalogue: 'heritage_catalogues'
+      };
+      return map[type];
+    }
+
+    window.openModal = function(type, id) {
+      const item = getDataForType(type, id);
+      const title = id ? 'Edit' : 'New';
+      const labels = {
+        partner: 'Partner',
+        product: 'Product',
+        order: 'Order',
+        listing: 'Listing',
+        catalogue: 'Catalogue'
+      };
+
+      document.getElementById('modalContent').innerHTML = `
+        <div class="modal-handle"></div>
+        <div class="modal-header">
+          <h3><i class="fas ${id?'fa-pen':'fa-plus'}"></i> ${title} ${labels[type]}</h3>
+          <button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button>
+        </div>
+        <input type="hidden" id="editType" value="${type}">
+        <input type="hidden" id="editId" value="${id || ''}">
+        ${getModalFields(type, item)}
+        <div class="form-actions">
+          <button class="btn btn-gold" onclick="saveItem()"><i class="fas fa-save"></i> ${id ? 'Update' : 'Create'}</button>
+          <button class="btn btn-outline" style="color:var(--text);background:var(--bg);" onclick="closeModal()">Cancel</button>
+        </div>
+      `;
+      document.getElementById('modalOverlay').classList.add('active');
+    };
+
+    window.editItem = function(type, id) {
+      openModal(type, id);
+    };
+
+    window.saveItem = async function() {
+      const type = document.getElementById('editType').value;
+      const id = document.getElementById('editId').value;
+      const name = document.getElementById('fName')?.value?.trim() || '';
+
+      if (!name && type !== 'order') {
+        toast('Name is required', 'error');
+        return;
+      }
+
+      let data = { updatedAt: Date.now() };
+
+      switch(type) {
+        case 'partner':
+          data = {
+            ...data,
+            businessName: name,
+            name: name,
+            contactPerson: document.getElementById('fContact')?.value || '',
+            phone: document.getElementById('fPhone')?.value || '',
+            email: document.getElementById('fEmail')?.value || '',
+            industry: document.getElementById('fIndustry')?.value || 'Other',
+            tier: document.getElementById('fTier')?.value || 'Standard',
+            status: document.getElementById('fStatus')?.value || 'active',
+            notes: document.getElementById('fNotes')?.value || ''
+          };
+          if (!id) data.createdAt = Date.now();
+          break;
+
+        case 'product':
+          data = {
+            ...data,
+            name: name,
+            partnerId: document.getElementById('fPartner')?.value || '',
+            price: Number(document.getElementById('fPrice')?.value) || 0,
+            stock: Number(document.getElementById('fStock')?.value) || 0,
+            unit: document.getElementById('fUnit')?.value || 'Piece',
+            description: document.getElementById('fNotes')?.value || '',
+            isActive: document.getElementById('fStatus')?.value !== 'inactive'
+          };
+          if (!id) data.createdAt = Date.now();
+          break;
+
+        case 'order':
+          const productId = document.getElementById('fPartner')?.value || '';
+          const product = data.products?.[productId];
+          data = {
+            ...data,
+            customerName: name || 'Guest',
+            customerPhone: document.getElementById('fPhone')?.value || '',
+            productId: productId,
+            productName: product?.name || '',
+            quantity: Number(document.getElementById('fStock')?.value) || 1,
+            total: Number(document.getElementById('fPrice')?.value) || 0,
+            status: document.getElementById('fStatus')?.value || 'pending',
+            customerLocation: document.getElementById('fNotes')?.value || ''
+          };
+          if (!id) data.createdAt = Date.now();
+          break;
+
+        case 'listing':
+          data = {
+            ...data,
+            businessName: name,
+            name: name,
+            location: document.getElementById('fNotes')?.value || '',
+            adType: document.getElementById('fStatus')?.value || 'Other',
+            occupiedBy: document.getElementById('fContact')?.value || '',
+            partnerName: document.getElementById('fContact')?.value || '',
+            status: 'active'
+          };
+          if (!id) data.createdAt = Date.now();
+          break;
+
+        case 'catalogue':
+          data = {
+            ...data,
+            name: name,
+            partnerId: document.getElementById('fPartner')?.value || '',
+            status: document.getElementById('fStatus')?.value || 'draft',
+            coverImage: document.getElementById('fNotes')?.value || '',
+            platform: document.getElementById('fPlatform')?.value || 'WhatsApp',
+            productIds: []
+          };
+          if (!id) data.createdAt = Date.now();
+          break;
+      }
+
+      const node = getNodeForType(type);
+      try {
+        if (id) {
+          await db.ref(node + '/' + id).update(data);
+          toast('Updated successfully!', 'success');
+        } else {
+          await db.ref(node).push(data);
+          toast('Created successfully!', 'success');
+        }
+        closeModal();
+      } catch(e) {
+        toast('Error: ' + e.message, 'error');
+      }
+    };
+
+    window.deleteItem = async function(type, id) {
+      if (!confirm('Delete this item?')) return;
+      const node = getNodeForType(type);
+      try {
+        await db.ref(node + '/' + id).remove();
+        toast('Deleted', 'success');
+      } catch(e) {
+        toast('Error deleting', 'error');
+      }
+    };
+
+    window.closeModal = function() {
+      document.getElementById('modalOverlay').classList.remove('active');
+    };
+
+    document.getElementById('modalOverlay').addEventListener('click', function(e) {
+      if (e.target === this) closeModal();
+    });
+
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') closeModal();
+    });
+
+    window.handleLogout = async function() {
+      try {
+        await auth.signOut();
+        window.location.href = '/';
+      } catch(e) {
+        toast('Error signing out', 'error');
+      }
+    };
+
+    // Firebase listeners
+    const nodes = ['partners', 'products', 'orders', 'listings', 'catalogues'];
+    nodes.forEach(key => {
+      const node = NODE_MAP[key];
+      db.ref(node).on('value', snap => {
+        data[key] = snap.val() || {};
+        renderAll();
+      });
+    });
+
+    // Auth
+    auth.onAuthStateChanged(user => {
+      if (!user) {
+        window.location.href = '/';
+        return;
+      }
+      const name = user.displayName || user.email?.split('@')[0] || 'Manager';
+      document.getElementById('userName').textContent = name;
+      document.getElementById('userAvatar').textContent = (name[0] || 'M').toUpperCase();
     });
   </script>
 </body>
