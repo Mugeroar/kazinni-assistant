@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Admin Profile | WorkFit Club</title>
+    <title>My Profile | Trainer Hub</title>
     <meta name="theme-color" content="#f97316">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Admin Profile">
+    <meta name="apple-mobile-web-app-title" content="Trainer Profile">
 
     <link rel="icon" type="image/png" href="https://i.postimg.cc/rFfXDj3L/kazinni-removebg-preview(1).png">
     <link rel="apple-touch-icon" href="https://i.postimg.cc/rFfXDj3L/kazinni-removebg-preview(1).png">
@@ -37,122 +37,100 @@
         .topbar {
             position: sticky; top: 0; z-index: 100;
             background: rgba(255,255,255,0.95); backdrop-filter: blur(20px);
-            border-bottom: 1px solid var(--border-light); padding: 0 1.5rem; height: 56px;
+            border-bottom: 1px solid var(--border-light); padding: 0 1.2rem; height: 54px;
             display: flex; align-items: center; justify-content: space-between;
         }
         .topbar-left { display: flex; align-items: center; gap: 10px; }
         .brand { display: flex; align-items: center; gap: 8px; text-decoration: none; }
-        .brand img { width: 30px; height: 30px; border-radius: 8px; }
-        .brand span { font-weight: 700; font-size: 0.9rem; color: var(--text); }
-        .admin-badge { background: #fef3c7; color: #92400e; padding: 0.2rem 0.7rem; border-radius: 20px; font-size: 0.65rem; font-weight: 600; }
+        .brand img { width: 28px; height: 28px; border-radius: 8px; }
+        .brand span { font-weight: 700; font-size: 0.85rem; color: var(--text); }
+        .trainer-badge { background: #fff7ed; color: var(--orange-dark); padding: 0.2rem 0.6rem; border-radius: 20px; font-size: 0.62rem; font-weight: 600; }
         
-        .topbar-right { display: flex; align-items: center; gap: 10px; }
+        .topbar-right { display: flex; align-items: center; gap: 8px; }
         .nav-btn {
-            display: inline-flex; align-items: center; gap: 5px; padding: 0.35rem 0.8rem;
-            border-radius: 8px; font-weight: 600; font-size: 0.68rem; cursor: pointer;
+            display: inline-flex; align-items: center; gap: 5px; padding: 0.3rem 0.7rem;
+            border-radius: 8px; font-weight: 600; font-size: 0.65rem; cursor: pointer;
             border: 1px solid var(--border); background: white; color: var(--text-secondary);
             text-decoration: none; transition: all 0.2s;
         }
-        .nav-btn:hover { background: #f8fafc; border-color: #cbd5e1; }
+        .nav-btn:hover { background: #f8fafc; }
         .nav-btn.signout { color: #ef4444; border-color: #fee2e2; }
         .nav-btn.signout:hover { background: #fef2f2; }
 
-        .main { padding: 1.5rem; max-width: 800px; margin: 0 auto; }
+        .main { padding: 1.2rem; max-width: 650px; margin: 0 auto; }
 
         /* Profile Hero */
         .profile-hero {
             background: linear-gradient(135deg, #1e293b, #0f172a);
-            border-radius: var(--radius-xl); padding: 2rem; margin-bottom: 1.5rem;
+            border-radius: var(--radius-xl); padding: 1.8rem; margin-bottom: 1.2rem;
             border: 1px solid #334155; text-align: center; color: white;
         }
         .profile-avatar-large {
-            width: 90px; height: 90px; border-radius: 50%; object-fit: cover;
-            border: 3px solid var(--orange); margin: 0 auto 1rem; display: block;
+            width: 80px; height: 80px; border-radius: 50%; object-fit: cover;
+            border: 3px solid var(--orange); margin: 0 auto 0.8rem; display: block;
         }
         .profile-avatar-placeholder {
-            width: 90px; height: 90px; border-radius: 50%; background: linear-gradient(135deg, #f97316, #ea580c);
-            display: flex; align-items: center; justify-content: center; font-size: 2.2rem;
+            width: 80px; height: 80px; border-radius: 50%; background: linear-gradient(135deg, #f97316, #ea580c);
+            display: flex; align-items: center; justify-content: center; font-size: 2rem;
             font-weight: 700; color: white; border: 3px solid var(--orange);
-            margin: 0 auto 1rem;
+            margin: 0 auto 0.8rem;
         }
-        .profile-name { font-size: 1.3rem; font-weight: 800; }
-        .profile-email { font-size: 0.75rem; color: #94a3b8; margin-top: 4px; }
+        .profile-name { font-size: 1.2rem; font-weight: 800; }
+        .profile-email { font-size: 0.7rem; color: #94a3b8; margin-top: 3px; }
+        .profile-club-badge {
+            display: inline-flex; align-items: center; gap: 6px; padding: 0.35rem 0.9rem;
+            background: rgba(249,115,22,0.2); border: 1px solid rgba(249,115,22,0.3);
+            border-radius: 20px; font-size: 0.7rem; font-weight: 600; color: var(--orange-light); margin-top: 0.6rem;
+        }
         .profile-role-badge {
-            display: inline-flex; align-items: center; gap: 6px; padding: 0.4rem 1rem;
-            background: rgba(245,158,11,0.2); border: 1px solid rgba(245,158,11,0.3);
-            border-radius: 20px; font-size: 0.7rem; font-weight: 600; color: #fbbf24; margin-top: 0.8rem;
+            display: inline-flex; align-items: center; gap: 6px; padding: 0.3rem 0.8rem;
+            background: rgba(59,130,246,0.2); border: 1px solid rgba(59,130,246,0.3);
+            border-radius: 20px; font-size: 0.65rem; font-weight: 600; color: #60a5fa; margin-top: 0.4rem;
         }
 
         /* Stats */
         .stats-row {
-            display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 1.5rem;
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 1.2rem;
         }
         .stat-card {
-            background: var(--surface); border-radius: var(--radius); padding: 1rem;
+            background: var(--surface); border-radius: var(--radius); padding: 0.9rem;
             border: 1px solid var(--border-light); box-shadow: var(--shadow-sm); text-align: center;
         }
         .stat-icon {
-            width: 34px; height: 34px; border-radius: 8px; display: flex; align-items: center;
-            justify-content: center; font-size: 0.85rem; margin: 0 auto 0.5rem;
+            width: 30px; height: 30px; border-radius: 8px; display: flex; align-items: center;
+            justify-content: center; font-size: 0.8rem; margin: 0 auto 0.4rem;
         }
         .stat-icon.orange { background: #fff7ed; color: #f97316; }
         .stat-icon.green { background: #ecfdf5; color: #10b981; }
         .stat-icon.blue { background: #eff6ff; color: #3b82f6; }
-        .stat-icon.purple { background: #faf5ff; color: #8b5cf6; }
-        .stat-value { font-size: 1.3rem; font-weight: 800; }
+        .stat-value { font-size: 1.2rem; font-weight: 800; }
         .stat-label { font-size: 0.55rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px; }
 
         /* Section */
         .section {
-            background: var(--surface); border-radius: var(--radius-lg); margin-bottom: 1.2rem;
+            background: var(--surface); border-radius: var(--radius-lg); margin-bottom: 1rem;
             border: 1px solid var(--border-light); box-shadow: var(--shadow-sm); overflow: hidden;
         }
         .section-header {
-            padding: 0.9rem 1.2rem; border-bottom: 1px solid var(--border-light);
+            padding: 0.8rem 1.1rem; border-bottom: 1px solid var(--border-light);
             display: flex; justify-content: space-between; align-items: center;
         }
-        .section-header h3 { font-size: 0.82rem; font-weight: 700; display: flex; align-items: center; gap: 6px; }
+        .section-header h3 { font-size: 0.8rem; font-weight: 700; display: flex; align-items: center; gap: 6px; }
         .edit-btn {
-            padding: 0.3rem 0.7rem; border-radius: 6px; border: 1px solid var(--orange);
-            background: rgba(249,115,22,0.08); color: var(--orange-dark); font-size: 0.65rem;
+            padding: 0.25rem 0.6rem; border-radius: 6px; border: 1px solid var(--orange);
+            background: rgba(249,115,22,0.08); color: var(--orange-dark); font-size: 0.62rem;
             font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 4px;
-            transition: all 0.2s;
         }
         .edit-btn:hover { background: rgba(249,115,22,0.15); }
-        .section-body { padding: 1rem 1.2rem; }
+        .section-body { padding: 0.9rem 1.1rem; }
 
         .detail-row {
             display: flex; justify-content: space-between; align-items: center;
-            padding: 0.55rem 0; border-bottom: 1px solid var(--border-light);
+            padding: 0.5rem 0; border-bottom: 1px solid var(--border-light);
         }
         .detail-row:last-child { border-bottom: none; }
-        .detail-label { font-size: 0.7rem; color: var(--text-secondary); }
-        .detail-value { font-size: 0.78rem; font-weight: 600; text-align: right; }
-
-        /* Quick Links */
-        .quick-links {
-            display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-bottom: 1.5rem;
-        }
-        .quick-link-card {
-            background: var(--surface); border-radius: var(--radius); padding: 1rem;
-            border: 1px solid var(--border-light); box-shadow: var(--shadow-sm);
-            text-decoration: none; color: inherit; display: flex; align-items: center; gap: 10px;
-            transition: all 0.2s;
-        }
-        .quick-link-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); border-color: #fed7aa; }
-        .quick-link-icon {
-            width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center;
-            justify-content: center; font-size: 0.9rem; flex-shrink: 0;
-        }
-        .quick-link-icon.clubs { background: #fff7ed; color: #f97316; }
-        .quick-link-icon.trainers { background: #eff6ff; color: #3b82f6; }
-        .quick-link-icon.members { background: #ecfdf5; color: #10b981; }
-        .quick-link-icon.revenue { background: #faf5ff; color: #8b5cf6; }
-        .quick-link-icon.shop { background: #fef3c7; color: #d97706; }
-        .quick-link-icon.settings { background: #f1f5f9; color: #64748b; }
-        .quick-link-info { flex: 1; }
-        .quick-link-title { font-weight: 600; font-size: 0.78rem; }
-        .quick-link-subtitle { font-size: 0.62rem; color: var(--text-secondary); margin-top: 2px; }
+        .detail-label { font-size: 0.68rem; color: var(--text-secondary); }
+        .detail-value { font-size: 0.75rem; font-weight: 600; text-align: right; }
 
         /* Modal */
         .modal-overlay {
@@ -172,7 +150,7 @@
         .modal-close {
             width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--border);
             background: white; cursor: pointer; display: flex; align-items: center; justify-content: center;
-            font-size: 0.85rem; transition: all 0.2s;
+            font-size: 0.85rem;
         }
         .modal-close:hover { background: #fef2f2; color: #ef4444; }
         .form-group { margin-bottom: 0.8rem; }
@@ -210,26 +188,26 @@
         }
         @keyframes spin { to { transform: rotate(360deg); } }
 
-        @media (max-width: 600px) {
+        @media (max-width: 500px) {
             .main { padding: 1rem; }
-            .stats-row { grid-template-columns: 1fr 1fr; }
-            .quick-links { grid-template-columns: 1fr; }
+            .stats-row { grid-template-columns: repeat(3, 1fr); gap: 6px; }
             .form-row { grid-template-columns: 1fr; }
-            .topbar { padding: 0 1rem; }
+            .topbar { padding: 0 0.8rem; }
         }
     </style>
 </head>
 <body>
     <header class="topbar">
         <div class="topbar-left">
-            <a class="brand" href="/workspaces/workfit/dashboard.html">
+            <a class="brand" href="/trainer-hub.html">
                 <img src="https://i.postimg.cc/rFfXDj3L/kazinni-removebg-preview(1).png" alt="WorkFit">
-                <span>WorkFit Club</span>
+                <span>WorkFit</span>
             </a>
-            <span class="admin-badge"><i class="fas fa-shield-halved"></i> Admin</span>
+            <span class="trainer-badge" id="clubTag"><i class="fas fa-dumbbell"></i> Trainer</span>
         </div>
         <div class="topbar-right">
-            <a href="/workspaces/workfit/dashboard.html" class="nav-btn"><i class="fas fa-th-large"></i> Dashboard</a>
+            <a href="/trainer-hub.html" class="nav-btn"><i class="fas fa-arrow-left"></i> Hub</a>
+            <a href="/feed.html" class="nav-btn"><i class="fas fa-newspaper"></i> Feed</a>
             <button class="nav-btn signout" onclick="signOut()"><i class="fas fa-sign-out-alt"></i> Sign Out</button>
         </div>
     </header>
@@ -237,7 +215,7 @@
     <div class="main" id="mainContent">
         <div style="text-align:center;padding:3rem 1rem;">
             <div class="loading-spinner" style="margin:0 auto 12px;border-top-color:#f97316;"></div>
-            <p style="font-size:0.8rem;color:var(--text-secondary);margin-top:12px;">Loading admin profile...</p>
+            <p style="font-size:0.8rem;color:var(--text-secondary);margin-top:12px;">Loading profile...</p>
         </div>
     </div>
 
@@ -263,11 +241,9 @@
         const auth = firebase.auth();
         const db = firebase.database();
 
-        let adminData = null;
-        let totalClubs = 0;
-        let totalMembers = 0;
-        let totalTrainers = 0;
-        let totalRevenue = 0;
+        let trainerData = null;
+        let clubData = null;
+        let clubStats = { members: 0, sessions: 0, attendance: 0 };
 
         function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
         function toast(msg, type) {
@@ -276,48 +252,52 @@
             t.style.display = 'block'; clearTimeout(t._t);
             t._t = setTimeout(() => t.style.display = 'none', 3000);
         }
-        function getInitials(name) { return (name || 'A').split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase(); }
+        function getInitials(name) { return (name || 'T').split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase(); }
 
-        async function loadAdminProfile(user) {
+        async function loadTrainerProfile(user) {
             const email = user.email;
-            console.log('Loading admin profile for:', email);
+            console.log('Loading trainer profile for:', email);
 
             try {
-                // Check if user is admin
-                const adminSnap = await db.ref('admins').orderByChild('email').equalTo(email).once('value');
+                // Find trainer by email
+                const snap = await db.ref('workfit_trainers').once('value');
+                const trainers = snap.val() || {};
                 
-                if (!adminSnap.exists()) {
+                let found = null;
+                Object.entries(trainers).forEach(([id, t]) => {
+                    if (t && t.email && t.email.toLowerCase() === email.toLowerCase()) {
+                        found = { id, ...t };
+                    }
+                });
+
+                if (!found) {
                     document.getElementById('mainContent').innerHTML = `
                         <div style="text-align:center;padding:3rem 1rem;color:var(--text-secondary);">
-                            <i class="fas fa-shield-halved" style="font-size:3rem;display:block;margin-bottom:1rem;color:#f59e0b;"></i>
-                            <p style="font-weight:600;font-size:0.9rem;">Admin access required</p>
-                            <p style="font-size:0.75rem;margin-top:0.5rem;">This page is only accessible to administrators.</p>
+                            <i class="fas fa-user-slash" style="font-size:3rem;display:block;margin-bottom:1rem;opacity:0.4;"></i>
+                            <p style="font-weight:600;font-size:0.9rem;">Trainer account not found</p>
+                            <p style="font-size:0.75rem;margin-top:0.5rem;">Your account is not registered as a trainer.</p>
                             <button class="btn btn-primary" style="margin-top:1rem;display:inline-flex;width:auto;" onclick="signOut()">Sign Out</button>
                         </div>`;
                     return;
                 }
 
-                const admins = adminSnap.val();
-                const adminEntry = Object.entries(admins)[0];
-                adminData = { id: adminEntry[0], ...adminEntry[1] };
+                trainerData = found;
+                document.getElementById('clubTag').textContent = trainerData.clubName || 'Trainer';
 
-                // Load stats
-                const [clubsSnap, membersSnap, trainersSnap, revenueSnap] = await Promise.all([
-                    db.ref('workfit_clubs').once('value'),
-                    db.ref('workfit_members').once('value'),
-                    db.ref('workfit_trainers').once('value'),
-                    db.ref('workfit_revenue').once('value')
-                ]);
+                // Load club data
+                if (trainerData.clubId) {
+                    const clubSnap = await db.ref('workfit_clubs/' + trainerData.clubId).once('value');
+                    clubData = clubSnap.val() || {};
 
-                const clubs = clubsSnap.val() || {};
-                const members = membersSnap.val() || {};
-                const trainers = trainersSnap.val() || {};
-                const revenue = revenueSnap.val() || {};
+                    // Load stats
+                    const [membersSnap, sessionsSnap] = await Promise.all([
+                        db.ref('workfit_members').orderByChild('clubId').equalTo(trainerData.clubId).once('value'),
+                        db.ref('workfit_schedules').orderByChild('clubId').equalTo(trainerData.clubId).once('value')
+                    ]);
 
-                totalClubs = Object.values(clubs).filter(c => c && (c.businessName || c.name)).length;
-                totalMembers = Object.values(members).filter(m => m && m.name).length;
-                totalTrainers = Object.values(trainers).filter(t => t && t.name).length;
-                totalRevenue = Object.values(revenue).reduce((sum, r) => sum + (Number(r.amount) || 0), 0);
+                    clubStats.members = Object.keys(membersSnap.val() || {}).length;
+                    clubStats.sessions = Object.keys(sessionsSnap.val() || {}).length;
+                }
 
                 renderProfile();
 
@@ -332,152 +312,111 @@
             }
         }
 
-        function formatCurrency(n) {
-            if (!n) return '0';
-            const num = Number(n);
-            if (num >= 1e6) return (num / 1e6).toFixed(1) + 'M';
-            if (num >= 1e3) return (num / 1e3).toFixed(1) + 'K';
-            return num.toLocaleString();
-        }
-
         function renderProfile() {
-            if (!adminData) return;
+            if (!trainerData) return;
 
-            const adminName = esc(adminData.name || auth.currentUser?.displayName || 'Administrator');
-            const photoURL = adminData.photoURL || auth.currentUser?.photoURL || '';
-            const initials = getInitials(adminName);
-            const email = adminData.email || auth.currentUser?.email || '';
+            const trainerName = esc(trainerData.name || auth.currentUser?.displayName || 'Trainer');
+            const photoURL = trainerData.photoURL || auth.currentUser?.photoURL || '';
+            const initials = getInitials(trainerName);
+            const email = trainerData.email || auth.currentUser?.email || '';
+            const clubName = esc(clubData?.businessName || clubData?.name || trainerData.clubName || 'Not assigned');
+            const specialty = trainerData.specialty || trainerData.specialization || 'General';
+            const certification = trainerData.certification || 'Not specified';
+            const experience = trainerData.experience || trainerData.yearsOfExperience || 0;
+            const hourlyRate = trainerData.hourlyRate || trainerData.rate || 0;
+            const status = trainerData.status || 'available';
 
             document.getElementById('mainContent').innerHTML = `
                 <!-- Profile Hero -->
                 <div class="profile-hero">
                     ${photoURL ? `<img src="${photoURL}" class="profile-avatar-large" alt="">` : `<div class="profile-avatar-placeholder">${initials}</div>`}
-                    <div class="profile-name">${adminName}</div>
+                    <div class="profile-name">${trainerName}</div>
                     <div class="profile-email">${email}</div>
-                    <div class="profile-role-badge"><i class="fas fa-crown"></i> System Administrator</div>
+                    <div class="profile-club-badge"><i class="fas fa-building"></i> ${clubName}</div>
+                    <div class="profile-role-badge"><i class="fas fa-dumbbell"></i> ${specialty} Trainer</div>
                 </div>
 
                 <!-- Stats -->
                 <div class="stats-row">
                     <div class="stat-card">
-                        <div class="stat-icon orange"><i class="fas fa-building"></i></div>
-                        <div class="stat-value">${totalClubs}</div>
-                        <div class="stat-label">Total Clubs</div>
+                        <div class="stat-icon orange"><i class="fas fa-users"></i></div>
+                        <div class="stat-value">${clubStats.members}</div>
+                        <div class="stat-label">Club Members</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-icon green"><i class="fas fa-users"></i></div>
-                        <div class="stat-value">${totalMembers}</div>
-                        <div class="stat-label">Total Members</div>
+                        <div class="stat-icon green"><i class="fas fa-calendar-check"></i></div>
+                        <div class="stat-value">${clubStats.sessions}</div>
+                        <div class="stat-label">Sessions/Week</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-icon blue"><i class="fas fa-user-check"></i></div>
-                        <div class="stat-value">${totalTrainers}</div>
-                        <div class="stat-label">Total Trainers</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon purple"><i class="fas fa-chart-line"></i></div>
-                        <div class="stat-value">KES ${formatCurrency(totalRevenue)}</div>
-                        <div class="stat-label">Total Revenue</div>
+                        <div class="stat-icon blue"><i class="fas fa-clock"></i></div>
+                        <div class="stat-value">${experience}yrs</div>
+                        <div class="stat-label">Experience</div>
                     </div>
                 </div>
 
-                <!-- Quick Links -->
-                <div class="quick-links">
-                    <a href="/workspaces/workfit/clubs.html" class="quick-link-card">
-                        <div class="quick-link-icon clubs"><i class="fas fa-building"></i></div>
-                        <div class="quick-link-info">
-                            <div class="quick-link-title">Club Manager</div>
-                            <div class="quick-link-subtitle">Manage all gym franchises</div>
-                        </div>
-                        <i class="fas fa-chevron-right" style="color:var(--text-muted);font-size:0.8rem;"></i>
-                    </a>
-                    <a href="/workspaces/workfit/trainers.html" class="quick-link-card">
-                        <div class="quick-link-icon trainers"><i class="fas fa-users-gear"></i></div>
-                        <div class="quick-link-info">
-                            <div class="quick-link-title">Trainers</div>
-                            <div class="quick-link-subtitle">Manage all trainers</div>
-                        </div>
-                        <i class="fas fa-chevron-right" style="color:var(--text-muted);font-size:0.8rem;"></i>
-                    </a>
-                    <a href="/workspaces/workfit/memberships.html" class="quick-link-card">
-                        <div class="quick-link-icon members"><i class="fas fa-id-card"></i></div>
-                        <div class="quick-link-info">
-                            <div class="quick-link-title">Memberships</div>
-                            <div class="quick-link-subtitle">Track members & subscriptions</div>
-                        </div>
-                        <i class="fas fa-chevron-right" style="color:var(--text-muted);font-size:0.8rem;"></i>
-                    </a>
-                    <a href="/workspaces/workfit/revenue.html" class="quick-link-card">
-                        <div class="quick-link-icon revenue"><i class="fas fa-chart-line"></i></div>
-                        <div class="quick-link-info">
-                            <div class="quick-link-title">Revenue</div>
-                            <div class="quick-link-subtitle">Financial overview</div>
-                        </div>
-                        <i class="fas fa-chevron-right" style="color:var(--text-muted);font-size:0.8rem;"></i>
-                    </a>
-                    <a href="/workspaces/workfit/shop.html" class="quick-link-card">
-                        <div class="quick-link-icon shop"><i class="fas fa-store"></i></div>
-                        <div class="quick-link-info">
-                            <div class="quick-link-title">Shop Manager</div>
-                            <div class="quick-link-subtitle">Products & inventory</div>
-                        </div>
-                        <i class="fas fa-chevron-right" style="color:var(--text-muted);font-size:0.8rem;"></i>
-                    </a>
-                    <a href="/workspaces/workfit/settings.html" class="quick-link-card">
-                        <div class="quick-link-icon settings"><i class="fas fa-cog"></i></div>
-                        <div class="quick-link-info">
-                            <div class="quick-link-title">Settings</div>
-                            <div class="quick-link-subtitle">Platform configuration</div>
-                        </div>
-                        <i class="fas fa-chevron-right" style="color:var(--text-muted);font-size:0.8rem;"></i>
-                    </a>
-                </div>
-
-                <!-- Admin Details -->
+                <!-- Personal Details -->
                 <div class="section">
                     <div class="section-header">
-                        <h3><i class="fas fa-user-shield"></i> Admin Details</h3>
+                        <h3><i class="fas fa-id-card"></i> Personal Details</h3>
                         <button class="edit-btn" onclick="openEditModal()"><i class="fas fa-pen"></i> Edit</button>
                     </div>
                     <div class="section-body">
-                        <div class="detail-row"><span class="detail-label">Name</span><span class="detail-value">${adminName}</span></div>
+                        <div class="detail-row"><span class="detail-label">Full Name</span><span class="detail-value">${trainerName}</span></div>
                         <div class="detail-row"><span class="detail-label">Email</span><span class="detail-value">${email}</span></div>
-                        <div class="detail-row"><span class="detail-label">Role</span><span class="detail-value" style="color:#f59e0b;">System Administrator</span></div>
-                        <div class="detail-row"><span class="detail-label">Phone</span><span class="detail-value" style="color:${!adminData.phone?'var(--text-muted)':'var(--text)'}">${esc(adminData.phone || 'Not set')}</span></div>
-                        <div class="detail-row"><span class="detail-label">Clubs Managed</span><span class="detail-value">${totalClubs}</span></div>
+                        <div class="detail-row"><span class="detail-label">Phone</span><span class="detail-value" style="color:${!trainerData.phone?'var(--text-muted)':'var(--text)'}">${esc(trainerData.phone || 'Not set')}</span></div>
+                        <div class="detail-row"><span class="detail-label">Status</span><span class="detail-value" style="color:${status==='available'?'#10b981':status==='busy'?'#f59e0b':'#ef4444'}">${status.replace(/_/g, ' ')}</span></div>
                     </div>
                 </div>
 
-                <!-- Account Info -->
+                <!-- Professional Details -->
                 <div class="section">
-                    <div class="section-header"><h3><i class="fas fa-shield-halved"></i> Permissions</h3></div>
+                    <div class="section-header"><h3><i class="fas fa-briefcase"></i> Professional Info</h3></div>
                     <div class="section-body">
-                        <div class="detail-row"><span class="detail-label">Club Management</span><span class="detail-value" style="color:#10b981;">✅ Full Access</span></div>
-                        <div class="detail-row"><span class="detail-label">Trainer Management</span><span class="detail-value" style="color:#10b981;">✅ Full Access</span></div>
-                        <div class="detail-row"><span class="detail-label">Member Management</span><span class="detail-value" style="color:#10b981;">✅ Full Access</span></div>
-                        <div class="detail-row"><span class="detail-label">Revenue Access</span><span class="detail-value" style="color:#10b981;">✅ Full Access</span></div>
-                        <div class="detail-row"><span class="detail-label">Shop Management</span><span class="detail-value" style="color:#10b981;">✅ Full Access</span></div>
-                        <div class="detail-row"><span class="detail-label">System Settings</span><span class="detail-value" style="color:#10b981;">✅ Full Access</span></div>
-                        <div class="detail-row"><span class="detail-label">Content Moderation</span><span class="detail-value" style="color:#10b981;">✅ Full Access</span></div>
+                        <div class="detail-row"><span class="detail-label">Specialty</span><span class="detail-value">${specialty}</span></div>
+                        <div class="detail-row"><span class="detail-label">Certification</span><span class="detail-value">${certification}</span></div>
+                        <div class="detail-row"><span class="detail-label">Experience</span><span class="detail-value">${experience} years</span></div>
+                        <div class="detail-row"><span class="detail-label">Hourly Rate</span><span class="detail-value">KES ${Number(hourlyRate).toLocaleString()}</span></div>
+                        <div class="detail-row"><span class="detail-label">Assigned Club</span><span class="detail-value">${clubName}</span></div>
                     </div>
                 </div>
+
+                <!-- Bio -->
+                ${trainerData.bio ? `
+                <div class="section">
+                    <div class="section-header"><h3><i class="fas fa-book-open"></i> Bio</h3></div>
+                    <div class="section-body">
+                        <p style="font-size:0.78rem;color:var(--text-secondary);line-height:1.6;">${esc(trainerData.bio)}</p>
+                    </div>
+                </div>` : ''}
             `;
         }
 
         // Edit Modal
         window.openEditModal = function() {
-            if (!adminData) return;
+            if (!trainerData) return;
             document.getElementById('profileModalContent').innerHTML = `
                 <div class="modal-handle"></div>
                 <div class="modal-header">
-                    <h3><i class="fas fa-user-edit" style="color:#f97316;"></i> Edit Admin Profile</h3>
+                    <h3><i class="fas fa-user-edit" style="color:#f97316;"></i> Edit Profile</h3>
                     <button class="modal-close" onclick="closeProfileModal()"><i class="fas fa-times"></i></button>
                 </div>
-                <div class="form-group"><label>Full Name *</label><input id="editName" value="${esc(adminData.name || auth.currentUser?.displayName || '')}" placeholder="Your full name"></div>
+                <div class="form-group"><label>Full Name *</label><input id="editName" value="${esc(trainerData.name || '')}" placeholder="Your full name"></div>
                 <div class="form-row">
-                    <div class="form-group"><label>Phone</label><input id="editPhone" value="${esc(adminData.phone || '')}" placeholder="+254..."></div>
-                    <div class="form-group"><label>Email</label><input id="editEmail" value="${esc(adminData.email || auth.currentUser?.email || '')}" placeholder="email@..." type="email"></div>
+                    <div class="form-group"><label>Phone</label><input id="editPhone" value="${esc(trainerData.phone || '')}" placeholder="+254..."></div>
+                    <div class="form-group"><label>Email</label><input id="editEmail" value="${esc(trainerData.email || '')}" placeholder="email@..." type="email"></div>
                 </div>
+                <div class="form-row">
+                    <div class="form-group"><label>Specialty</label>
+                        <select id="editSpecialty">
+                            ${['Yoga','Cardio','Strength Training','HIIT','Zumba','Pilates','CrossFit','Spin','Aerobics'].map(s => `<option value="${s}" ${trainerData.specialty===s?'selected':''}>${s}</option>`).join('')}
+                        </select>
+                    </div>
+                    <div class="form-group"><label>Experience (years)</label><input id="editExperience" type="number" value="${trainerData.experience || 0}" min="0"></div>
+                </div>
+                <div class="form-group"><label>Certification</label><input id="editCert" value="${esc(trainerData.certification || '')}" placeholder="e.g. ACE, NASM"></div>
+                <div class="form-group"><label>Hourly Rate (KES)</label><input id="editRate" type="number" value="${trainerData.hourlyRate || 0}" min="0"></div>
+                <div class="form-group"><label>Bio</label><textarea id="editBio" rows="3" placeholder="Tell us about yourself...">${esc(trainerData.bio || '')}</textarea></div>
                 <button class="btn btn-primary" onclick="saveProfile()"><i class="fas fa-save"></i> Save Changes</button>
                 <button class="btn btn-outline" style="width:100%;margin-top:8px;" onclick="closeProfileModal()">Cancel</button>
             `;
@@ -492,15 +431,27 @@
             btn.disabled = true; btn.innerHTML = '<span class="loading-spinner"></span> Saving...';
 
             try {
-                await db.ref('admins/' + adminData.id).update({
+                const updates = {
                     name, fullName: name,
                     phone: document.getElementById('editPhone').value.trim(),
                     email: document.getElementById('editEmail').value.trim(),
-                    updatedAt: firebase.database.ServerValue.TIMESTAMP
-                });
-                adminData.name = name;
-                adminData.phone = document.getElementById('editPhone').value.trim();
-                adminData.email = document.getElementById('editEmail').value.trim();
+                    specialty: document.getElementById('editSpecialty').value,
+                    specialization: document.getElementById('editSpecialty').value,
+                    experience: Number(document.getElementById('editExperience').value) || 0,
+                    yearsOfExperience: Number(document.getElementById('editExperience').value) || 0,
+                    certification: document.getElementById('editCert').value.trim(),
+                    hourlyRate: Number(document.getElementById('editRate').value) || 0,
+                    rate: Number(document.getElementById('editRate').value) || 0,
+                    bio: document.getElementById('editBio').value.trim(),
+                    updatedAt: firebase.database.ServerValue.TIMESTAMP,
+                    updatedBy: 'trainer'
+                };
+
+                await db.ref('workfit_trainers/' + trainerData.id).update(updates);
+                
+                // Update local data
+                Object.assign(trainerData, updates);
+                
                 closeProfileModal(); toast('Profile updated!'); renderProfile();
             } catch(e) { toast('Failed to update', 'error'); }
             finally { btn.disabled = false; btn.innerHTML = '<i class="fas fa-save"></i> Save Changes'; }
@@ -513,7 +464,7 @@
 
         auth.onAuthStateChanged(async user => {
             if (!user) { window.location.href = '/'; return; }
-            await loadAdminProfile(user);
+            await loadTrainerProfile(user);
         });
     </script>
 </body>
