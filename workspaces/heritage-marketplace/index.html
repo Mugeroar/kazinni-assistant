@@ -1,43 +1,44 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <title>Heritage Marketplace · Assistant Hub</title>
-  <meta name="theme-color" content="#0f172a" />
-  <link rel="icon" type="image/png" href="https://i.postimg.cc/rFfXDj3L/kazinni-removebg-preview(1).png" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Heritage Marketplace · Full Access</title>
+  <meta name="theme-color" content="#d97706">
+  <link rel="icon" type="image/png" href="https://i.postimg.cc/rFfXDj3L/kazinni-removebg-preview(1).png">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
-    * { margin:0; padding:0; box-sizing:border-box; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     :root {
-      --navy: #0f172a; --navy-light: #1e293b; --gold: #ca8a04; --gold-light: #fef3c7;
-      --surface: #ffffff; --bg: #f1f5f9; --text: #0f172a; --text-secondary: #64748b;
+      --amber: #d97706; --amber-dark: #92400e; --amber-light: #fbbf24;
+      --navy: #0f172a; --text-primary: #1e293b; --text-muted: #64748b;
       --border: #e2e8f0; --border-light: #f1f5f9;
-      --success: #10b981; --warning: #f59e0b; --danger: #ef4444; --info: #3b82f6;
-      --shadow: 0 1px 3px rgba(0,0,0,0.08); --shadow-md: 0 4px 12px rgba(0,0,0,0.07);
-      --radius: 12px; --radius-lg: 16px;
+      --success: #10b981; --danger: #ef4444; --info: #3b82f6;
+      --shadow: 0 1px 3px rgba(0,0,0,0.06);
+      --shadow-md: 0 4px 16px rgba(0,0,0,0.08);
+      --radius: 12px; --radius-lg: 16px; --radius-xl: 20px;
     }
-    body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
-    /* top bar */
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #f8fafc; color: var(--text-primary); min-height: 100vh;
+    }
+    /* Topbar */
     .topbar {
       background: var(--navy); color: white; padding: 0 1.5rem; height: 60px;
       display: flex; align-items: center; justify-content: space-between;
-      border-bottom: 2px solid var(--gold); position: sticky; top:0; z-index:100;
+      border-bottom: 2px solid var(--amber); position: sticky; top:0; z-index:100;
     }
     .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1rem; }
     .brand img { width: 32px; height: 32px; border-radius: 8px; background: white; }
-    .brand span { color: white; }
-    .brand i { color: var(--gold); }
-    .topbar-right { display: flex; align-items: center; gap: 14px; }
-    .user-badge { display: flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.08); padding: 0.3rem 0.9rem; border-radius: 30px; font-size: 0.75rem; }
-    .user-badge img { width: 26px; height: 26px; border-radius: 50%; border: 1px solid var(--gold); }
-    .user-badge .name { max-width: 120px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .brand i { color: var(--amber); }
+    .topbar-right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+    .user-badge { display: flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.1); padding: 0.3rem 0.9rem; border-radius: 30px; font-size: 0.75rem; }
+    .user-badge .avatar { width: 28px; height: 28px; border-radius: 50%; background: var(--amber); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.7rem; }
     .btn { padding: 0.4rem 0.9rem; border-radius: 8px; font-weight: 600; font-size: 0.7rem; border: none; cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; gap: 5px; }
-    .btn-gold { background: var(--gold); color: white; }
+    .btn-gold { background: var(--amber); color: white; }
     .btn-gold:hover { background: #a16207; }
-    .btn-outline { background: transparent; border: 1px solid rgba(255,255,255,0.25); color: white; }
+    .btn-outline { background: transparent; border: 1px solid rgba(255,255,255,0.2); color: white; }
     .btn-outline:hover { background: rgba(255,255,255,0.1); }
     .btn-sm { padding: 0.3rem 0.7rem; font-size: 0.65rem; }
     .btn-xs { padding: 0.2rem 0.5rem; font-size: 0.6rem; border-radius: 6px; }
@@ -45,42 +46,64 @@
     .btn-primary:hover { background: #2563eb; }
     .btn-danger { background: var(--danger); color: white; }
     .btn-danger:hover { background: #dc2626; }
+    .btn-success { background: var(--success); color: white; }
+    .btn-success:hover { background: #059669; }
 
-    .main { max-width: 1100px; margin: 0 auto; padding: 1.2rem; }
-    .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.2rem; flex-wrap: wrap; gap: 0.5rem; }
+    .main { max-width: 1200px; margin: 0 auto; padding: 1.2rem; }
+    .page-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.8rem; margin-bottom: 1.2rem; }
     .page-header h1 { font-size: 1.3rem; font-weight: 800; display: flex; align-items: center; gap: 8px; }
-    .page-header h1 i { color: var(--gold); }
+    .page-header h1 i { color: var(--amber); }
 
+    /* Stats */
+    .stats-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-bottom: 1.2rem; }
+    .stat-card {
+      background: white; border-radius: var(--radius); padding: 0.8rem 1rem;
+      border: 1px solid var(--border-light); box-shadow: var(--shadow);
+      text-align: center; transition: all 0.2s;
+    }
+    .stat-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+    .stat-card .num { font-size: 1.5rem; font-weight: 800; color: var(--amber-dark); }
+    .stat-card .label { font-size: 0.55rem; text-transform: uppercase; letter-spacing: 0.3px; color: var(--text-muted); }
+
+    /* Tabs */
     .tab-nav {
       display: flex; gap: 4px; background: white; border-radius: var(--radius);
-      padding: 4px; margin-bottom: 1.5rem; border: 1px solid var(--border-light);
-      box-shadow: var(--shadow); overflow-x: auto;
+      padding: 4px; margin-bottom: 1.2rem; border: 1px solid var(--border-light);
+      box-shadow: var(--shadow); overflow-x: auto; flex-wrap: nowrap;
     }
     .tab-btn {
-      flex: 1; min-width: fit-content; padding: 0.5rem 0.8rem; border-radius: 10px;
-      border: none; cursor: pointer; font-family: 'Inter', sans-serif; font-size: 0.72rem;
-      font-weight: 600; background: transparent; color: var(--text-secondary);
-      transition: all 0.2s; white-space: nowrap; display: flex; align-items: center;
-      justify-content: center; gap: 6px;
+      flex: 0 0 auto; padding: 0.5rem 1rem; border-radius: 10px; border: none;
+      cursor: pointer; font-family: 'Inter', sans-serif; font-size: 0.7rem;
+      font-weight: 600; background: transparent; color: var(--text-muted);
+      transition: all 0.2s; white-space: nowrap; display: flex; align-items: center; gap: 6px;
     }
+    .tab-btn:hover { background: #f8fafc; color: var(--text-primary); }
     .tab-btn.active { background: var(--navy); color: white; box-shadow: 0 2px 8px rgba(15,23,42,0.15); }
-    .tab-btn .badge { background: rgba(255,255,255,0.2); padding: 1px 7px; border-radius: 12px; font-size: 0.6rem; }
+    .tab-btn .badge { background: rgba(255,255,255,0.2); padding: 0 7px; border-radius: 10px; font-size: 0.6rem; }
     .tab-btn.active .badge { background: rgba(255,255,255,0.25); }
 
-    .section { background: white; border-radius: var(--radius-lg); border: 1px solid var(--border-light); box-shadow: var(--shadow); margin-bottom: 1.5rem; overflow: hidden; }
-    .section-header { padding: 0.9rem 1.2rem; border-bottom: 1px solid var(--border-light); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.4rem; }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    /* Cards */
+    .section { background: white; border-radius: var(--radius-lg); border: 1px solid var(--border-light); box-shadow: var(--shadow); margin-bottom: 1.2rem; overflow: hidden; }
+    .section-header { padding: 0.8rem 1.2rem; border-bottom: 1px solid var(--border-light); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.4rem; }
     .section-header h3 { font-size: 0.8rem; font-weight: 700; display: flex; align-items: center; gap: 8px; }
     .section-body { padding: 0.8rem 1.2rem; }
     .section-body.no-padding { padding: 0; }
 
-    .list-item { display: flex; align-items: center; justify-content: space-between; padding: 0.7rem 1.2rem; border-bottom: 1px solid var(--border-light); transition: background 0.1s; }
+    .list-item {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0.6rem 1.2rem; border-bottom: 1px solid var(--border-light);
+      transition: background 0.1s;
+    }
     .list-item:last-child { border-bottom: none; }
     .list-item:hover { background: #f8fafc; }
     .list-item-left { display: flex; align-items: center; gap: 10px; min-width:0; }
-    .list-item-icon { width: 34px; height: 34px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; flex-shrink: 0; background: var(--gold-light); color: var(--gold); }
+    .list-item-icon { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; flex-shrink: 0; background: #fffbeb; color: var(--amber); }
     .list-item-info { min-width:0; }
     .list-item-title { font-weight: 600; font-size: 0.78rem; }
-    .list-item-sub { font-size: 0.62rem; color: var(--text-secondary); margin-top:1px; }
+    .list-item-sub { font-size: 0.62rem; color: var(--text-muted); margin-top:1px; }
     .list-item-right { display: flex; align-items: center; gap: 6px; flex-shrink:0; flex-wrap: wrap; }
 
     .badge { padding: 0.15rem 0.5rem; border-radius: 6px; font-size: 0.6rem; font-weight: 600; text-transform: capitalize; }
@@ -92,54 +115,152 @@
 
     .empty-state { text-align: center; padding: 2.5rem 1rem; }
     .empty-state i { font-size: 2.5rem; color: #cbd5e1; display: block; margin-bottom: 0.5rem; }
-    .empty-state p { font-size: 0.78rem; color: var(--text-secondary); }
+    .empty-state p { font-size: 0.78rem; color: var(--text-muted); }
 
-    .modal-overlay { position: fixed; inset:0; background: rgba(15,23,42,0.4); backdrop-filter: blur(4px); display: flex; align-items: flex-end; justify-content: center; z-index:300; opacity:0; visibility:hidden; transition: all 0.25s; }
-    .modal-overlay.active { opacity:1; visibility:visible; }
-    .modal { background: white; border-radius: 20px 20px 0 0; padding: 1.5rem; width:100%; max-width:540px; max-height:85vh; overflow-y:auto; box-shadow: 0 -4px 30px rgba(0,0,0,0.1); }
+    /* Modal */
+    .modal-overlay {
+      position: fixed; inset:0; background: rgba(15,23,42,0.4); backdrop-filter: blur(4px);
+      display: none; align-items: flex-end; justify-content: center; z-index:300;
+    }
+    .modal-overlay.active { display: flex; }
+    .modal {
+      background: white; border-radius: 20px 20px 0 0; padding: 1.5rem;
+      width:100%; max-width:560px; max-height:85vh; overflow-y:auto;
+      box-shadow: 0 -4px 30px rgba(0,0,0,0.1);
+    }
     .modal-handle { width: 36px; height: 4px; background: #e2e8f0; border-radius: 2px; margin:0 auto 1rem; }
     .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
     .modal-header h3 { font-size: 1rem; font-weight: 700; }
-    .modal-close { width: 30px; height: 30px; border-radius: 50%; border:1px solid var(--border); background:white; cursor:pointer; display: flex; align-items:center; justify-content:center; font-size:0.8rem; }
+    .modal-close { width: 30px; height: 30px; border-radius: 50%; border:1px solid var(--border); background:white; cursor:pointer; display:flex; align-items:center; justify-content:center; }
     .form-group { margin-bottom: 0.8rem; }
-    .form-group label { display: block; font-weight:600; font-size:0.7rem; color:var(--text-secondary); margin-bottom:0.2rem; }
-    .form-group input, .form-group select, .form-group textarea { width:100%; padding:0.5rem 0.7rem; border:1px solid var(--border); border-radius:8px; font-family:'Inter',sans-serif; font-size:0.8rem; background:#f8fafc; outline:none; transition:0.2s; }
-    .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--gold); box-shadow:0 0 0 3px rgba(202,138,4,0.08); background:white; }
+    .form-group label { display: block; font-weight:600; font-size:0.7rem; color:var(--text-muted); margin-bottom:0.2rem; }
+    .form-group input, .form-group select, .form-group textarea {
+      width:100%; padding:0.5rem 0.7rem; border:1px solid var(--border);
+      border-radius:8px; font-family:'Inter',sans-serif; font-size:0.8rem;
+      background:#f8fafc; outline:none; transition:0.2s;
+    }
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+      border-color: var(--amber); box-shadow:0 0 0 3px rgba(202,138,4,0.08); background:white;
+    }
     .form-row { display: grid; grid-template-columns:1fr 1fr; gap:0.8rem; }
-    .map-placeholder { background: #e2e8f0; border-radius: 8px; height: 140px; display: flex; align-items: center; justify-content: center; color: var(--text-secondary); font-size:0.8rem; margin:0.5rem 0; }
 
-    .toast { position:fixed; bottom:24px; left:50%; transform:translateX(-50%); z-index:400; padding:0.6rem 1.4rem; border-radius:12px; font-size:0.75rem; font-weight:600; box-shadow:var(--shadow-md); background:#0f172a; color:white; display:none; }
+    .toast {
+      position:fixed; bottom:24px; left:50%; transform:translateX(-50%);
+      z-index:400; padding:0.6rem 1.4rem; border-radius:12px; font-size:0.75rem;
+      font-weight:600; box-shadow:var(--shadow-md); background:#0f172a; color:white;
+      display:none;
+    }
     .toast.error { background:#991b1b; }
 
-    @media (max-width:640px) { .topbar { padding:0 1rem; } .page-header h1 { font-size:1rem; } .form-row { grid-template-columns:1fr; } .list-item { flex-wrap: wrap; gap:0.4rem; } .list-item-right { margin-left: auto; } }
+    @media (max-width: 768px) {
+      .stats-grid { grid-template-columns: repeat(3, 1fr); }
+      .form-row { grid-template-columns:1fr; }
+      .topbar { padding:0 1rem; height:auto; gap:0.5rem; flex-wrap:wrap; }
+    }
+    @media (max-width: 500px) {
+      .stats-grid { grid-template-columns: 1fr 1fr; }
+      .tab-btn { font-size:0.6rem; padding:0.3rem 0.6rem; }
+    }
   </style>
 </head>
 <body>
-  <div class="topbar">
-    <div class="brand"><img src="https://i.postimg.cc/rFfXDj3L/kazinni-removebg-preview(1).png" alt=""><span><i class="fas fa-crown"></i> Heritage</span></div>
-    <div class="topbar-right">
-      <div class="user-badge"><img id="avatarImg" src="" alt=""><span class="name" id="userNameDisplay">Assistant</span></div>
-      <button class="btn btn-outline" onclick="handleLogout()"><i class="fas fa-sign-out-alt"></i></button>
-    </div>
-  </div>
-  <div class="main">
-    <div class="page-header"><h1><i class="fas fa-store-alt"></i> Marketplace Hub</h1><button class="btn btn-gold btn-sm" onclick="showBusinessRegistration()"><i class="fas fa-map-pin"></i> Register Business</button></div>
-    <div class="tab-nav">
-      <button class="tab-btn active" onclick="switchTab('partners')"><i class="fas fa-handshake"></i> Partners</button>
-      <button class="tab-btn" onclick="switchTab('products')"><i class="fas fa-box"></i> Products</button>
-      <button class="tab-btn" onclick="switchTab('orders')"><i class="fas fa-truck"></i> Orders</button>
-      <button class="tab-btn" onclick="switchTab('listings')"><i class="fas fa-map-marked-alt"></i> Listings</button>
-    </div>
-    <div id="tabContent"></div>
-  </div>
-  <div id="toast" class="toast"></div>
 
-  <!-- Modals -->
+  <div class="topbar">
+    <div class="brand"><img src="https://i.postimg.cc/rFfXDj3L/kazinni-removebg-preview(1).png" alt=""><i class="fas fa-crown"></i> Heritage</div>
+    <div class="topbar-right">
+      <div class="user-badge"><div class="avatar" id="userAvatar">HM</div><span id="userName">Manager</span></div>
+      <button class="btn btn-outline btn-sm" onclick="handleLogout()"><i class="fas fa-sign-out-alt"></i></button>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="page-header">
+      <h1><i class="fas fa-store-alt"></i> Heritage Marketplace</h1>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;">
+        <button class="btn btn-gold btn-sm" onclick="openModal('partner')"><i class="fas fa-handshake"></i> Add Partner</button>
+        <button class="btn btn-gold btn-sm" onclick="openModal('product')"><i class="fas fa-box"></i> Add Product</button>
+        <button class="btn btn-gold btn-sm" onclick="openModal('order')"><i class="fas fa-shopping-cart"></i> Add Order</button>
+        <button class="btn btn-gold btn-sm" onclick="openModal('listing')"><i class="fas fa-map-pin"></i> Register</button>
+      </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-grid" id="statsGrid">
+      <div class="stat-card"><div class="num" id="statPartners">0</div><div class="label">Partners</div></div>
+      <div class="stat-card"><div class="num" id="statProducts">0</div><div class="label">Products</div></div>
+      <div class="stat-card"><div class="num" id="statOrders">0</div><div class="label">Orders</div></div>
+      <div class="stat-card"><div class="num" id="statListings">0</div><div class="label">Listings</div></div>
+      <div class="stat-card"><div class="num" id="statCatalogues">0</div><div class="label">Catalogues</div></div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tab-nav">
+      <button class="tab-btn active" data-tab="overview"><i class="fas fa-chart-pie"></i> Overview</button>
+      <button class="tab-btn" data-tab="partners"><i class="fas fa-handshake"></i> Partners</button>
+      <button class="tab-btn" data-tab="products"><i class="fas fa-box"></i> Products</button>
+      <button class="tab-btn" data-tab="orders"><i class="fas fa-shopping-cart"></i> Orders</button>
+      <button class="tab-btn" data-tab="listings"><i class="fas fa-map-marked-alt"></i> Listings</button>
+      <button class="tab-btn" data-tab="catalogues"><i class="fas fa-images"></i> Catalogues</button>
+    </div>
+
+    <!-- TAB: Overview -->
+    <div class="tab-content active" id="tab-overview">
+      <div class="section">
+        <div class="section-header"><h3><i class="fas fa-clock-rotate-left"></i> Recent Activity</h3></div>
+        <div class="section-body no-padding" id="recentActivity">
+          <div class="empty-state"><i class="fas fa-clock"></i><p>No recent activity</p></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB: Partners -->
+    <div class="tab-content" id="tab-partners">
+      <div class="section">
+        <div class="section-header"><h3><i class="fas fa-handshake"></i> Business Partners</h3></div>
+        <div class="section-body no-padding" id="partnerList"></div>
+      </div>
+    </div>
+
+    <!-- TAB: Products -->
+    <div class="tab-content" id="tab-products">
+      <div class="section">
+        <div class="section-header"><h3><i class="fas fa-box"></i> Product Catalogue</h3></div>
+        <div class="section-body no-padding" id="productList"></div>
+      </div>
+    </div>
+
+    <!-- TAB: Orders -->
+    <div class="tab-content" id="tab-orders">
+      <div class="section">
+        <div class="section-header"><h3><i class="fas fa-shopping-cart"></i> Orders</h3></div>
+        <div class="section-body no-padding" id="orderList"></div>
+      </div>
+    </div>
+
+    <!-- TAB: Listings -->
+    <div class="tab-content" id="tab-listings">
+      <div class="section">
+        <div class="section-header"><h3><i class="fas fa-map-marked-alt"></i> Business Listings</h3></div>
+        <div class="section-body no-padding" id="listingList"></div>
+      </div>
+    </div>
+
+    <!-- TAB: Catalogues -->
+    <div class="tab-content" id="tab-catalogues">
+      <div class="section">
+        <div class="section-header"><h3><i class="fas fa-images"></i> Partner Catalogues</h3></div>
+        <div class="section-body no-padding" id="catalogueList"></div>
+      </div>
+    </div>
+  </div>
+
   <div class="modal-overlay" id="modalOverlay"><div class="modal" id="modalContent"><div class="modal-handle"></div></div></div>
+  <div id="toast" class="toast"></div>
 
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+
   <script>
     firebase.initializeApp({
       apiKey: "AIzaSyC7kppUyHUaPzeLBV62NEZWuHiuz1Kz0mA",
@@ -149,168 +270,250 @@
     });
     const auth = firebase.auth(); const db = firebase.database();
 
-    let currentTab = 'partners';
-    let allPartners = {}, allProducts = {}, allOrders = {}, allListings = {};
+    let allPartners = {}, allProducts = {}, allOrders = {}, allListings = {}, allCatalogues = {};
+    let currentTab = 'overview';
 
     function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
-    function toast(msg, err) { const t = document.getElementById('toast'); t.textContent=msg; t.className='toast'+(err?' error':''); t.style.display='block'; clearTimeout(t._t); t._t=setTimeout(()=>t.style.display='none', 2800); }
-    function openModal(html) { document.getElementById('modalContent').innerHTML='<div class="modal-handle"></div>'+html; document.getElementById('modalOverlay').classList.add('active'); }
-    function closeModal() { document.getElementById('modalOverlay').classList.remove('active'); }
-    document.getElementById('modalOverlay').addEventListener('click', e=>{ if(e.target===this) closeModal(); });
+    function toast(msg, err) { const t=document.getElementById('toast'); t.textContent=msg; t.className='toast'+(err?' error':''); t.style.display='block'; clearTimeout(t._t); t._t=setTimeout(()=>t.style.display='none', 2800); }
 
-    window.switchTab = function(tab) {
-      currentTab = tab; document.querySelectorAll('.tab-btn').forEach(b=>b.classList.toggle('active', b.textContent.toLowerCase().includes(tab)||b.textContent.toLowerCase().includes(tab.slice(0,-1))));
-      renderTab();
-    };
-
-    function renderTab() {
-      const c = document.getElementById('tabContent'); if(!c) return;
-      switch(currentTab) {
-        case 'partners': renderPartners(c); break;
-        case 'products': renderProducts(c); break;
-        case 'orders': renderOrders(c); break;
-        case 'listings': renderListings(c); break;
-        default: c.innerHTML='<div class="empty-state"><i class="fas fa-store"></i><p>Select a tab</p></div>';
-      }
-    }
-
-    // ---------- DATA LOAD ----------
-    function loadData() {
-      db.ref('heritage_partners').on('value', snap => { allPartners=snap.val()||{}; if(currentTab==='partners') renderTab(); });
-      db.ref('heritage_products').on('value', snap => { allProducts=snap.val()||{}; if(currentTab==='products') renderTab(); });
-      db.ref('heritage_orders').on('value', snap => { allOrders=snap.val()||{}; if(currentTab==='orders') renderTab(); });
-      db.ref('heritage_listings').on('value', snap => { allListings=snap.val()||{}; if(currentTab==='listings') renderTab(); });
-    }
-
-    // ---------- PARTNERS ----------
-    function renderPartners(c) {
-      const partners = Object.entries(allPartners).map(([id,p])=>({id,...p}));
-      let html = `<div class="section"><div class="section-header"><h3><i class="fas fa-handshake"></i> Partners (${partners.length})</h3><button class="btn btn-gold btn-sm" onclick="showPartnerForm()"><i class="fas fa-plus"></i> Add</button></div><div class="section-body no-padding">`;
-      if(!partners.length) html += `<div class="empty-state"><i class="fas fa-user-plus"></i><p>No partners yet</p></div>`;
-      else partners.forEach(p=>{
-        html += `<div class="list-item"><div class="list-item-left"><div class="list-item-icon"><i class="fas fa-building"></i></div><div class="list-item-info"><div class="list-item-title">${esc(p.businessName||p.name||'Unnamed')}</div><div class="list-item-sub">${esc(p.contactPerson||'')} · ${esc(p.phone||'')} · ${p.tier||'Standard'}</div></div></div><div class="list-item-right"><span class="badge ${p.status==='active'?'badge-success':'badge-neutral'}">${p.status||'active'}</span><button class="btn btn-outline btn-xs" onclick="showPartnerForm('${p.id}')"><i class="fas fa-pen"></i></button><button class="btn btn-outline btn-xs" style="color:#ef4444;" onclick="if(confirm('Remove?')) deleteItem('heritage_partners','${p.id}')"><i class="fas fa-trash"></i></button></div></div>`;
+    // Tab switching
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
+        this.classList.add('active');
+        const tab = this.dataset.tab;
+        document.getElementById('tab-'+tab).classList.add('active');
+        currentTab = tab;
+        renderAll();
       });
-      html += `</div></div>`;
-      c.innerHTML = html;
-    }
-    window.showPartnerForm = function(id) {
-      const p = id ? allPartners[id] : null;
-      openModal(`<div class="modal-header"><h3>${id?'Edit':'Add'} Partner</h3><button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button></div><input type="hidden" id="editPartnerId" value="${id||''}">
-        <div class="form-group"><label>Business Name *</label><input id="pBusiness" value="${esc(p?.businessName||p?.name||'')}"></div>
-        <div class="form-row"><div class="form-group"><label>Contact Person</label><input id="pContact" value="${esc(p?.contactPerson||'')}"></div><div class="form-group"><label>Phone</label><input id="pPhone" value="${esc(p?.phone||'')}"></div></div>
-        <div class="form-row"><div class="form-group"><label>Email</label><input id="pEmail" value="${esc(p?.email||'')}"></div><div class="form-group"><label>Industry</label><select id="pIndustry"><option ${p?.industry==='Retail'?'selected':''}>Retail</option><option ${p?.industry==='Fashion'?'selected':''}>Fashion</option><option ${p?.industry==='Food'?'selected':''}>Food</option><option ${p?.industry==='Other'?'selected':''}>Other</option></select></div></div>
-        <div class="form-row"><div class="form-group"><label>Tier</label><select id="pTier"><option value="Standard" ${p?.tier==='Standard'?'selected':''}>Standard</option><option value="Premium" ${p?.tier==='Premium'?'selected':''}>Premium</option></select></div><div class="form-group"><label>Status</label><select id="pStatus"><option value="active" ${p?.status==='active'?'selected':''}>Active</option><option value="inactive" ${p?.status==='inactive'?'selected':''}>Inactive</option></select></div></div>
-        <div class="form-group"><label>Notes</label><textarea id="pNotes" rows="2">${esc(p?.notes||'')}</textarea></div>
-        <button class="btn btn-gold" style="width:100%;" onclick="savePartner()">${id?'Update':'Add Partner'}</button>`);
-    };
-    window.savePartner = async function() {
-      const name = document.getElementById('pBusiness').value.trim(); if(!name) return toast('Business name required',true);
-      const data = { businessName: name, name, contactPerson: document.getElementById('pContact').value, phone: document.getElementById('pPhone').value, email: document.getElementById('pEmail').value, industry: document.getElementById('pIndustry').value, tier: document.getElementById('pTier').value, status: document.getElementById('pStatus').value, notes: document.getElementById('pNotes').value, updatedAt: Date.now() };
-      const id = document.getElementById('editPartnerId').value;
-      try { if(id) { await db.ref('heritage_partners/'+id).update(data); } else { data.createdAt=Date.now(); await db.ref('heritage_partners').push(data); } closeModal(); toast(id?'Updated!':'Added!'); } catch(e){ toast('Error',true); }
-    };
-
-    // ---------- PRODUCTS ----------
-    function renderProducts(c) {
-      const products = Object.entries(allProducts).map(([id,p])=>({id,...p}));
-      let html = `<div class="section"><div class="section-header"><h3><i class="fas fa-box"></i> Products (${products.length})</h3><button class="btn btn-gold btn-sm" onclick="showProductForm()"><i class="fas fa-plus"></i> Add</button></div><div class="section-body no-padding">`;
-      if(!products.length) html += `<div class="empty-state"><i class="fas fa-box-open"></i><p>No products</p></div>`;
-      else products.forEach(p=>{
-        html += `<div class="list-item"><div class="list-item-left"><div class="list-item-icon">📦</div><div class="list-item-info"><div class="list-item-title">${esc(p.name)}</div><div class="list-item-sub">SKU: ${p.sku||'—'} · KSh ${p.price||0} · Stock: ${p.stock||0}</div></div></div><div class="list-item-right"><span class="badge ${p.isActive!==false?'badge-success':'badge-neutral'}">${p.isActive!==false?'active':'inactive'}</span><button class="btn btn-outline btn-xs" onclick="showProductForm('${p.id}')"><i class="fas fa-pen"></i></button><button class="btn btn-outline btn-xs" style="color:#ef4444;" onclick="if(confirm('Remove?')) deleteItem('heritage_products','${p.id}')"><i class="fas fa-trash"></i></button></div></div>`;
-      });
-      html += `</div></div>`;
-      c.innerHTML = html;
-    }
-    window.showProductForm = function(id) {
-      const p = id ? allProducts[id] : null;
-      const partnerOpts = Object.entries(allPartners).map(([pid, partner]) => `<option value="${pid}" ${p?.partnerId===pid?'selected':''}>${esc(partner.businessName||partner.name||pid)}</option>`).join('');
-      openModal(`<div class="modal-header"><h3>${id?'Edit':'Add'} Product</h3><button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button></div><input type="hidden" id="editProductId" value="${id||''}">
-        <div class="form-group"><label>Product Name *</label><input id="prodName" value="${esc(p?.name||'')}"></div>
-        <div class="form-row"><div class="form-group"><label>Price (KES)</label><input id="prodPrice" type="number" value="${p?.price||0}"></div><div class="form-group"><label>Stock</label><input id="prodStock" type="number" value="${p?.stock||0}"></div></div>
-        <div class="form-row"><div class="form-group"><label>SKU</label><input id="prodSku" value="${esc(p?.sku||'')}"></div><div class="form-group"><label>Partner</label><select id="prodPartner"><option value="">None</option>${partnerOpts}</select></div></div>
-        <div class="form-group"><label>Description</label><textarea id="prodDesc" rows="2">${esc(p?.description||'')}</textarea></div>
-        <div class="form-group"><label>Unit</label><input id="prodUnit" value="${esc(p?.unit||'Piece')}"></div>
-        <button class="btn btn-gold" style="width:100%;" onclick="saveProduct()">${id?'Update':'Add Product'}</button>`);
-    };
-    window.saveProduct = async function() {
-      const name = document.getElementById('prodName').value.trim(); if(!name) return toast('Name required',true);
-      const data = { name, price: Number(document.getElementById('prodPrice').value)||0, stock: Number(document.getElementById('prodStock').value)||0, sku: document.getElementById('prodSku').value, partnerId: document.getElementById('prodPartner').value, description: document.getElementById('prodDesc').value, unit: document.getElementById('prodUnit').value||'Piece', isActive: true, updatedAt: Date.now() };
-      const id = document.getElementById('editProductId').value;
-      try { if(id) { await db.ref('heritage_products/'+id).update(data); } else { data.createdAt=Date.now(); await db.ref('heritage_products').push(data); } closeModal(); toast(id?'Updated!':'Added!'); } catch(e){ toast('Error',true); }
-    };
-
-    // ---------- ORDERS ----------
-    function renderOrders(c) {
-      const orders = Object.entries(allOrders).map(([id,o])=>({id,...o})).sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
-      let html = `<div class="section"><div class="section-header"><h3><i class="fas fa-truck"></i> Orders (${orders.length})</h3><button class="btn btn-gold btn-sm" onclick="showOrderForm()"><i class="fas fa-plus"></i> New Order</button></div><div class="section-body no-padding">`;
-      if(!orders.length) html += `<div class="empty-state"><i class="fas fa-shopping-bag"></i><p>No orders</p></div>`;
-      else orders.forEach(o=>{
-        html += `<div class="list-item"><div class="list-item-left"><div class="list-item-icon">🛒</div><div class="list-item-info"><div class="list-item-title">${esc(o.customerName||'Guest')} · KSh ${o.total||0}</div><div class="list-item-sub">${esc(o.productName||'')} × ${o.quantity||1} · ${o.status||'pending'}</div></div></div><div class="list-item-right"><span class="badge ${o.status==='completed'?'badge-success':o.status==='cancelled'?'badge-danger':'badge-warning'}">${o.status||'pending'}</span><button class="btn btn-outline btn-xs" onclick="showOrderForm('${o.id}')"><i class="fas fa-pen"></i></button><button class="btn btn-outline btn-xs" style="color:#ef4444;" onclick="if(confirm('Remove?')) deleteItem('heritage_orders','${o.id}')"><i class="fas fa-trash"></i></button></div></div>`;
-      });
-      html += `</div></div>`;
-      c.innerHTML = html;
-    }
-    window.showOrderForm = function(id) {
-      const o = id ? allOrders[id] : null;
-      const prodOpts = Object.entries(allProducts).map(([pid, p]) => `<option value="${pid}" ${o?.productId===pid?'selected':''}>${esc(p.name)} (KSh ${p.price||0})</option>`).join('');
-      openModal(`<div class="modal-header"><h3>${id?'Edit':'New'} Order</h3><button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button></div><input type="hidden" id="editOrderId" value="${id||''}">
-        <div class="form-group"><label>Customer Name *</label><input id="ordCustomer" value="${esc(o?.customerName||'')}"></div>
-        <div class="form-row"><div class="form-group"><label>Phone</label><input id="ordPhone" value="${esc(o?.customerPhone||'')}"></div><div class="form-group"><label>Product</label><select id="ordProduct"><option value="">Select</option>${prodOpts}</select></div></div>
-        <div class="form-row"><div class="form-group"><label>Quantity</label><input id="ordQty" type="number" value="${o?.quantity||1}"></div><div class="form-group"><label>Total (KES)</label><input id="ordTotal" type="number" value="${o?.total||0}"></div></div>
-        <div class="form-group"><label>Status</label><select id="ordStatus"><option value="pending" ${o?.status==='pending'?'selected':''}>Pending</option><option value="confirmed" ${o?.status==='confirmed'?'selected':''}>Confirmed</option><option value="completed" ${o?.status==='completed'?'selected':''}>Completed</option><option value="cancelled" ${o?.status==='cancelled'?'selected':''}>Cancelled</option></select></div>
-        <div class="form-group"><label>Location</label><input id="ordLocation" value="${esc(o?.customerLocation||'')}"></div>
-        <button class="btn btn-gold" style="width:100%;" onclick="saveOrder()">${id?'Update':'Create Order'}</button>`);
-    };
-    window.saveOrder = async function() {
-      const name = document.getElementById('ordCustomer').value.trim(); if(!name) return toast('Customer name required',true);
-      const pid = document.getElementById('ordProduct').value;
-      const pname = pid && allProducts[pid] ? allProducts[pid].name : '';
-      const data = { customerName: name, customerPhone: document.getElementById('ordPhone').value, productId: pid, productName: pname, quantity: Number(document.getElementById('ordQty').value)||1, total: Number(document.getElementById('ordTotal').value)||0, status: document.getElementById('ordStatus').value, customerLocation: document.getElementById('ordLocation').value, updatedAt: Date.now() };
-      const id = document.getElementById('editOrderId').value;
-      try { if(id) { await db.ref('heritage_orders/'+id).update(data); } else { data.createdAt=Date.now(); await db.ref('heritage_orders').push(data); } closeModal(); toast(id?'Updated!':'Order placed!'); } catch(e){ toast('Error',true); }
-    };
-
-    // ---------- LISTINGS / MAP REGISTRATION ----------
-    function renderListings(c) {
-      const listings = Object.entries(allListings).map(([id,l])=>({id,...l}));
-      let html = `<div class="section"><div class="section-header"><h3><i class="fas fa-map-marked-alt"></i> Business Listings (${listings.length})</h3><button class="btn btn-gold btn-sm" onclick="showBusinessRegistration()"><i class="fas fa-map-pin"></i> Register</button></div><div class="section-body no-padding">`;
-      if(!listings.length) html += `<div class="empty-state"><i class="fas fa-map"></i><p>No businesses registered on map</p></div>`;
-      else listings.forEach(l=>{
-        html += `<div class="list-item"><div class="list-item-left"><div class="list-item-icon"><i class="fas fa-store"></i></div><div class="list-item-info"><div class="list-item-title">${esc(l.businessName||l.name||'Unnamed')}</div><div class="list-item-sub">${esc(l.location||'')} · ${l.adType||'Standard'} · ${l.status||'active'}</div></div></div><div class="list-item-right"><span class="badge ${l.status==='active'?'badge-success':'badge-neutral'}">${l.status||'active'}</span><button class="btn btn-outline btn-xs" onclick="showBusinessRegistration('${l.id}')"><i class="fas fa-pen"></i></button><button class="btn btn-outline btn-xs" style="color:#ef4444;" onclick="if(confirm('Remove?')) deleteItem('heritage_listings','${l.id}')"><i class="fas fa-trash"></i></button></div></div>`;
-      });
-      html += `</div></div>`;
-      c.innerHTML = html;
-    }
-    window.showBusinessRegistration = function(id) {
-      const l = id ? allListings[id] : null;
-      openModal(`<div class="modal-header"><h3>${id?'Edit':'Register'} Business on Map</h3><button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button></div><input type="hidden" id="editListingId" value="${id||''}">
-        <div class="form-group"><label>Business Name *</label><input id="listName" value="${esc(l?.businessName||l?.name||'')}"></div>
-        <div class="form-row"><div class="form-group"><label>Location / Area</label><input id="listLocation" value="${esc(l?.location||'')}"></div><div class="form-group"><label>Ad Type</label><select id="listType"><option value="Facebook Ads" ${l?.adType==='Facebook Ads'?'selected':''}>Facebook Ads</option><option value="Instagram Ad" ${l?.adType==='Instagram Ad'?'selected':''}>Instagram Ad</option><option value="WhatsApp Ad" ${l?.adType==='WhatsApp Ad'?'selected':''}>WhatsApp Ad</option><option value="Other" ${l?.adType==='Other'?'selected':''}>Other</option></select></div></div>
-        <div class="form-row"><div class="form-group"><label>Partner / Occupied By</label><input id="listPartner" value="${esc(l?.partnerName||l?.occupiedBy||'')}"></div><div class="form-group"><label>Status</label><select id="listStatus"><option value="active" ${l?.status==='active'?'selected':''}>Active</option><option value="expired" ${l?.status==='expired'?'selected':''}>Expired</option></select></div></div>
-        <div class="form-group"><label>Notes</label><textarea id="listNotes" rows="2">${esc(l?.notes||'')}</textarea></div>
-        <div class="map-placeholder"><i class="fas fa-map-pin" style="color:var(--gold);margin-right:6px;"></i> Map coordinates will be set automatically</div>
-        <button class="btn btn-gold" style="width:100%;" onclick="saveListing()">${id?'Update':'Register'}</button>`);
-    };
-    window.saveListing = async function() {
-      const name = document.getElementById('listName').value.trim(); if(!name) return toast('Business name required',true);
-      const data = { businessName: name, name, location: document.getElementById('listLocation').value, adType: document.getElementById('listType').value, partnerName: document.getElementById('listPartner').value, occupiedBy: document.getElementById('listPartner').value, status: document.getElementById('listStatus').value, notes: document.getElementById('listNotes').value, updatedAt: Date.now() };
-      const id = document.getElementById('editListingId').value;
-      try { if(id) { await db.ref('heritage_listings/'+id).update(data); } else { data.createdAt=Date.now(); await db.ref('heritage_listings').push(data); } closeModal(); toast(id?'Updated!':'Registered!'); } catch(e){ toast('Error',true); }
-    };
-
-    // ---------- UTILITY ----------
-    window.deleteItem = async function(path, id) { try { await db.ref(path+'/'+id).remove(); toast('Deleted'); } catch(e){ toast('Error',true); } };
-    window.handleLogout = async function() { try { await auth.signOut(); window.location.href='/'; } catch(e){ toast('Error',true); } };
-
-    // ---------- AUTH ----------
-    auth.onAuthStateChanged(async user => {
-      if(!user){ window.location.href='/'; return; }
-      document.getElementById('userNameDisplay').textContent = user.displayName || user.email?.split('@')[0] || 'Assistant';
-      if(user.photoURL) document.getElementById('avatarImg').src = user.photoURL;
-      else document.getElementById('avatarImg').style.display='none';
-      loadData();
-      renderTab();
     });
+
+    function renderAll() {
+      updateStats();
+      renderPartners();
+      renderProducts();
+      renderOrders();
+      renderListings();
+      renderCatalogues();
+      renderRecentActivity();
+    }
+
+    function updateStats() {
+      document.getElementById('statPartners').textContent = Object.keys(allPartners).length;
+      document.getElementById('statProducts').textContent = Object.keys(allProducts).length;
+      document.getElementById('statOrders').textContent = Object.keys(allOrders).length;
+      document.getElementById('statListings').textContent = Object.keys(allListings).length;
+      document.getElementById('statCatalogues').textContent = Object.keys(allCatalogues).length;
+    }
+
+    function renderRecentActivity() {
+      const container = document.getElementById('recentActivity');
+      const all = [
+        ...Object.entries(allPartners).map(([id,d])=>({id,...d,type:'partner'})),
+        ...Object.entries(allOrders).map(([id,d])=>({id,...d,type:'order'})),
+        ...Object.entries(allListings).map(([id,d])=>({id,...d,type:'listing'}))
+      ].sort((a,b)=>(b.updatedAt||b.createdAt||0)-(a.updatedAt||a.createdAt||0)).slice(0, 8);
+
+      if(!all.length) { container.innerHTML = '<div class="empty-state"><i class="fas fa-clock"></i><p>No recent activity</p></div>'; return; }
+
+      container.innerHTML = all.map(item => {
+        const icons = { partner:'fa-handshake', order:'fa-shopping-cart', listing:'fa-map-pin' };
+        const labels = { partner:'Partner', order:'Order', listing:'Listing' };
+        const name = item.businessName || item.name || item.customerName || 'Item';
+        return `<div class="list-item"><div class="list-item-left"><div class="list-item-icon"><i class="fas ${icons[item.type]||'fa-clock'}"></i></div><div class="list-item-info"><div class="list-item-title">${esc(name)}</div><div class="list-item-sub">${labels[item.type]} · ${new Date(item.createdAt||Date.now()).toLocaleDateString()}</div></div></div><div class="list-item-right"><span class="badge ${item.status==='active'||item.status==='completed'?'badge-success':'badge-warning'}">${item.status||'new'}</span></div></div>`;
+      }).join('');
+    }
+
+    function renderPartners() {
+      const container = document.getElementById('partnerList');
+      const items = Object.entries(allPartners).map(([id,d])=>({id,...d}));
+      if(!items.length) { container.innerHTML = '<div class="empty-state"><i class="fas fa-handshake"></i><p>No partners</p></div>'; return; }
+      container.innerHTML = items.map(p => `
+        <div class="list-item">
+          <div class="list-item-left"><div class="list-item-icon"><i class="fas fa-building"></i></div><div class="list-item-info"><div class="list-item-title">${esc(p.businessName||p.name||'Partner')}</div><div class="list-item-sub">${esc(p.contactPerson||'')} · ${p.phone||''}</div></div></div>
+          <div class="list-item-right"><span class="badge ${p.status==='active'?'badge-success':'badge-neutral'}">${p.status||'active'}</span><button class="btn btn-outline btn-xs" onclick="editItem('partner','${p.id}')"><i class="fas fa-pen"></i></button><button class="btn btn-outline btn-xs" style="color:#ef4444;" onclick="deleteItem('heritage_partners','${p.id}')"><i class="fas fa-trash"></i></button></div>
+        </div>
+      `).join('');
+    }
+
+    function renderProducts() {
+      const container = document.getElementById('productList');
+      const items = Object.entries(allProducts).map(([id,d])=>({id,...d}));
+      if(!items.length) { container.innerHTML = '<div class="empty-state"><i class="fas fa-box-open"></i><p>No products</p></div>'; return; }
+      container.innerHTML = items.map(p => {
+        const partner = allPartners[p.partnerId];
+        return `<div class="list-item">
+          <div class="list-item-left"><div class="list-item-icon">📦</div><div class="list-item-info"><div class="list-item-title">${esc(p.name)}</div><div class="list-item-sub">${partner ? esc(partner.businessName||partner.name) : 'No partner'} · KES ${p.price||0} · Stock: ${p.stock||0}</div></div></div>
+          <div class="list-item-right"><span class="badge ${p.isActive!==false?'badge-success':'badge-neutral'}">${p.isActive!==false?'active':'inactive'}</span><button class="btn btn-outline btn-xs" onclick="editItem('product','${p.id}')"><i class="fas fa-pen"></i></button><button class="btn btn-outline btn-xs" style="color:#ef4444;" onclick="deleteItem('heritage_products','${p.id}')"><i class="fas fa-trash"></i></button></div>
+        </div>`;
+      }).join('');
+    }
+
+    function renderOrders() {
+      const container = document.getElementById('orderList');
+      const items = Object.entries(allOrders).map(([id,d])=>({id,...d})).sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
+      if(!items.length) { container.innerHTML = '<div class="empty-state"><i class="fas fa-shopping-bag"></i><p>No orders</p></div>'; return; }
+      container.innerHTML = items.map(o => `
+        <div class="list-item">
+          <div class="list-item-left"><div class="list-item-icon">🛒</div><div class="list-item-info"><div class="list-item-title">${esc(o.customerName||'Guest')}</div><div class="list-item-sub">${esc(o.productName||'')} × ${o.quantity||1} · KES ${o.total||0}</div></div></div>
+          <div class="list-item-right"><span class="badge ${o.status==='completed'?'badge-success':o.status==='cancelled'?'badge-danger':'badge-warning'}">${o.status||'pending'}</span><button class="btn btn-outline btn-xs" onclick="editItem('order','${o.id}')"><i class="fas fa-pen"></i></button><button class="btn btn-outline btn-xs" style="color:#ef4444;" onclick="deleteItem('heritage_orders','${o.id}')"><i class="fas fa-trash"></i></button></div>
+        </div>
+      `).join('');
+    }
+
+    function renderListings() {
+      const container = document.getElementById('listingList');
+      const items = Object.entries(allListings).map(([id,d])=>({id,...d}));
+      if(!items.length) { container.innerHTML = '<div class="empty-state"><i class="fas fa-map"></i><p>No listings</p></div>'; return; }
+      container.innerHTML = items.map(l => `
+        <div class="list-item">
+          <div class="list-item-left"><div class="list-item-icon"><i class="fas fa-store"></i></div><div class="list-item-info"><div class="list-item-title">${esc(l.businessName||l.name||'Business')}</div><div class="list-item-sub">${esc(l.location||'')} · ${l.adType||'Standard'}</div></div></div>
+          <div class="list-item-right"><span class="badge ${l.status==='active'?'badge-success':'badge-neutral'}">${l.status||'active'}</span><button class="btn btn-outline btn-xs" onclick="editItem('listing','${l.id}')"><i class="fas fa-pen"></i></button><button class="btn btn-outline btn-xs" style="color:#ef4444;" onclick="deleteItem('heritage_listings','${l.id}')"><i class="fas fa-trash"></i></button></div>
+        </div>
+      `).join('');
+    }
+
+    function renderCatalogues() {
+      const container = document.getElementById('catalogueList');
+      const items = Object.entries(allCatalogues).map(([id,d])=>({id,...d}));
+      if(!items.length) { container.innerHTML = '<div class="empty-state"><i class="fas fa-images"></i><p>No catalogues</p></div>'; return; }
+      container.innerHTML = items.map(c => {
+        const partner = allPartners[c.partnerId];
+        return `<div class="list-item">
+          <div class="list-item-left"><div class="list-item-icon"><i class="fas fa-folder"></i></div><div class="list-item-info"><div class="list-item-title">${esc(c.name||'Catalogue')}</div><div class="list-item-sub">${partner ? esc(partner.businessName||partner.name) : 'No partner'} · ${(c.productIds||[]).length} products</div></div></div>
+          <div class="list-item-right"><span class="badge ${c.status==='active'?'badge-success':'badge-neutral'}">${c.status||'draft'}</span><button class="btn btn-outline btn-xs" onclick="editItem('catalogue','${c.id}')"><i class="fas fa-pen"></i></button><button class="btn btn-outline btn-xs" style="color:#ef4444;" onclick="deleteItem('heritage_catalogues','${c.id}')"><i class="fas fa-trash"></i></button></div>
+        </div>`;
+      }).join('');
+    }
+
+    // Modal system
+    window.openModal = function(type, id) {
+      const item = id ? getItem(type, id) : null;
+      let html = `<div class="modal-handle"></div><div class="modal-header"><h3>${id?'Edit':'Add'} ${type.charAt(0).toUpperCase()+type.slice(1)}</h3><button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button></div><input type="hidden" id="editType" value="${type}"><input type="hidden" id="editId" value="${id||''}">`;
+
+      switch(type) {
+        case 'partner':
+          html += `<div class="form-group"><label>Business Name *</label><input id="fName" value="${esc(item?.businessName||item?.name||'')}"></div>
+            <div class="form-row"><div class="form-group"><label>Contact Person</label><input id="fContact" value="${esc(item?.contactPerson||'')}"></div><div class="form-group"><label>Phone</label><input id="fPhone" value="${esc(item?.phone||'')}"></div></div>
+            <div class="form-row"><div class="form-group"><label>Email</label><input id="fEmail" value="${esc(item?.email||'')}"></div><div class="form-group"><label>Status</label><select id="fStatus"><option value="active" ${item?.status==='active'?'selected':''}>Active</option><option value="inactive" ${item?.status==='inactive'?'selected':''}>Inactive</option></select></div></div>
+            <div class="form-group"><label>Notes</label><textarea id="fNotes" rows="2">${esc(item?.notes||'')}</textarea></div>`;
+          break;
+        case 'product':
+          const partnerOpts = Object.entries(allPartners).map(([pid,p]) => `<option value="${pid}" ${item?.partnerId===pid?'selected':''}>${esc(p.businessName||p.name||pid)}</option>`).join('');
+          html += `<div class="form-group"><label>Product Name *</label><input id="fName" value="${esc(item?.name||'')}"></div>
+            <div class="form-row"><div class="form-group"><label>Price (KES)</label><input id="fPrice" type="number" value="${item?.price||0}"></div><div class="form-group"><label>Stock</label><input id="fStock" type="number" value="${item?.stock||0}"></div></div>
+            <div class="form-row"><div class="form-group"><label>Partner</label><select id="fPartner"><option value="">None</option>${partnerOpts}</select></div><div class="form-group"><label>Status</label><select id="fStatus"><option value="active" ${item?.isActive!==false?'selected':''}>Active</option><option value="inactive" ${item?.isActive===false?'selected':''}>Inactive</option></select></div></div>
+            <div class="form-group"><label>Description</label><textarea id="fNotes" rows="2">${esc(item?.description||'')}</textarea></div>`;
+          break;
+        case 'order':
+          const prodOpts = Object.entries(allProducts).map(([pid,p]) => `<option value="${pid}" ${item?.productId===pid?'selected':''}>${esc(p.name)} (KES ${p.price||0})</option>`).join('');
+          html += `<div class="form-group"><label>Customer Name *</label><input id="fName" value="${esc(item?.customerName||'')}"></div>
+            <div class="form-row"><div class="form-group"><label>Phone</label><input id="fPhone" value="${esc(item?.customerPhone||'')}"></div><div class="form-group"><label>Product</label><select id="fPartner"><option value="">Select</option>${prodOpts}</select></div></div>
+            <div class="form-row"><div class="form-group"><label>Quantity</label><input id="fStock" type="number" value="${item?.quantity||1}"></div><div class="form-group"><label>Total (KES)</label><input id="fPrice" type="number" value="${item?.total||0}"></div></div>
+            <div class="form-row"><div class="form-group"><label>Status</label><select id="fStatus"><option value="pending" ${item?.status==='pending'?'selected':''}>Pending</option><option value="confirmed" ${item?.status==='confirmed'?'selected':''}>Confirmed</option><option value="completed" ${item?.status==='completed'?'selected':''}>Completed</option><option value="cancelled" ${item?.status==='cancelled'?'selected':''}>Cancelled</option></select></div><div class="form-group"><label>Location</label><input id="fNotes" value="${esc(item?.customerLocation||'')}"></div></div>`;
+          break;
+        case 'listing':
+          html += `<div class="form-group"><label>Business Name *</label><input id="fName" value="${esc(item?.businessName||item?.name||'')}"></div>
+            <div class="form-row"><div class="form-group"><label>Location</label><input id="fNotes" value="${esc(item?.location||'')}"></div><div class="form-group"><label>Ad Type</label><select id="fStatus"><option value="Facebook Ads" ${item?.adType==='Facebook Ads'?'selected':''}>Facebook Ads</option><option value="Instagram Ad" ${item?.adType==='Instagram Ad'?'selected':''}>Instagram Ad</option><option value="WhatsApp Ad" ${item?.adType==='WhatsApp Ad'?'selected':''}>WhatsApp Ad</option><option value="Other" ${item?.adType==='Other'?'selected':''}>Other</option></select></div></div>
+            <div class="form-group"><label>Partner/Occupied By</label><input id="fContact" value="${esc(item?.partnerName||item?.occupiedBy||'')}"></div>`;
+          break;
+        case 'catalogue':
+          const catPartnerOpts = Object.entries(allPartners).map(([pid,p]) => `<option value="${pid}" ${item?.partnerId===pid?'selected':''}>${esc(p.businessName||p.name||pid)}</option>`).join('');
+          html += `<div class="form-group"><label>Catalogue Name *</label><input id="fName" value="${esc(item?.name||'')}"></div>
+            <div class="form-group"><label>Partner</label><select id="fPartner"><option value="">None</option>${catPartnerOpts}</select></div>
+            <div class="form-row"><div class="form-group"><label>Status</label><select id="fStatus"><option value="draft" ${item?.status==='draft'?'selected':''}>Draft</option><option value="active" ${item?.status==='active'?'selected':''}>Active</option></select></div><div class="form-group"><label>Cover Image</label><input id="fNotes" value="${esc(item?.coverImage||'')}" placeholder="Image URL"></div></div>`;
+          break;
+      }
+
+      html += `<button class="btn btn-gold" style="width:100%;margin-top:0.5rem;" onclick="saveModal()"><i class="fas fa-save"></i> ${id?'Update':'Create'}</button>`;
+      document.getElementById('modalContent').innerHTML = html;
+      document.getElementById('modalOverlay').classList.add('active');
+    };
+
+    window.saveModal = async function() {
+      const type = document.getElementById('editType').value;
+      const id = document.getElementById('editId').value;
+      const name = document.getElementById('fName')?.value?.trim() || '';
+      if (!name && type !== 'listing') { toast('Name required', true); return; }
+
+      let data = { updatedAt: Date.now() };
+      const pathMap = { partner:'heritage_partners', product:'heritage_products', order:'heritage_orders', listing:'heritage_listings', catalogue:'heritage_catalogues' };
+
+      switch(type) {
+        case 'partner':
+          data = { ...data, businessName: name, name, contactPerson: document.getElementById('fContact')?.value||'', phone: document.getElementById('fPhone')?.value||'', email: document.getElementById('fEmail')?.value||'', status: document.getElementById('fStatus')?.value||'active', notes: document.getElementById('fNotes')?.value||'' };
+          if(!id) data.createdAt = Date.now();
+          break;
+        case 'product':
+          data = { ...data, name, partnerId: document.getElementById('fPartner')?.value||'', price: Number(document.getElementById('fPrice')?.value)||0, stock: Number(document.getElementById('fStock')?.value)||0, isActive: document.getElementById('fStatus')?.value !== 'inactive', description: document.getElementById('fNotes')?.value||'' };
+          if(!id) data.createdAt = Date.now();
+          break;
+        case 'order':
+          const pid = document.getElementById('fPartner')?.value||'';
+          const prod = allProducts[pid];
+          data = { ...data, customerName: name, customerPhone: document.getElementById('fPhone')?.value||'', productId: pid, productName: prod?.name||'', quantity: Number(document.getElementById('fStock')?.value)||1, total: Number(document.getElementById('fPrice')?.value)||0, status: document.getElementById('fStatus')?.value||'pending', customerLocation: document.getElementById('fNotes')?.value||'' };
+          if(!id) data.createdAt = Date.now();
+          break;
+        case 'listing':
+          data = { ...data, businessName: name, name, location: document.getElementById('fNotes')?.value||'', adType: document.getElementById('fStatus')?.value||'Other', partnerName: document.getElementById('fContact')?.value||'', occupiedBy: document.getElementById('fContact')?.value||'', status: 'active' };
+          if(!id) data.createdAt = Date.now();
+          break;
+        case 'catalogue':
+          data = { ...data, name, partnerId: document.getElementById('fPartner')?.value||'', status: document.getElementById('fStatus')?.value||'draft', coverImage: document.getElementById('fNotes')?.value||'', productIds: [] };
+          if(!id) data.createdAt = Date.now();
+          break;
+      }
+
+      try {
+        if(id) { await db.ref(pathMap[type]+'/'+id).update(data); }
+        else { await db.ref(pathMap[type]).push(data); }
+        closeModal(); toast(id?'Updated!':'Added!');
+      } catch(e) { toast('Error saving', true); }
+    };
+
+    window.editItem = function(type, id) { openModal(type, id); };
+    window.getType = function(id) {
+      if(allPartners[id]) return 'partner';
+      if(allProducts[id]) return 'product';
+      if(allOrders[id]) return 'order';
+      if(allListings[id]) return 'listing';
+      if(allCatalogues[id]) return 'catalogue';
+      return null;
+    };
+    window.getItem = function(type, id) {
+      const map = { partner:allPartners, product:allProducts, order:allOrders, listing:allListings, catalogue:allCatalogues };
+      return map[type]?.[id] || null;
+    };
+    window.closeModal = function() { document.getElementById('modalOverlay').classList.remove('active'); };
+    document.getElementById('modalOverlay').addEventListener('click', function(e) { if(e.target===this) closeModal(); });
+
+    window.deleteItem = async function(path, id) {
+      if(!confirm('Delete this item?')) return;
+      try { await db.ref(path+'/'+id).remove(); toast('Deleted'); } catch(e) { toast('Error', true); }
+    };
+
+    window.handleLogout = async function() { try { await auth.signOut(); window.location.href='/'; } catch(e) { toast('Error', true); } };
+
+    // Firebase listeners
+    const nodes = ['heritage_partners', 'heritage_products', 'heritage_orders', 'heritage_listings', 'heritage_catalogues'];
+    const maps = [allPartners, allProducts, allOrders, allListings, allCatalogues];
+    nodes.forEach((node, i) => {
+      db.ref(node).on('value', snap => {
+        Object.assign(maps[i], snap.val()||{});
+        renderAll();
+      });
+    });
+
+    auth.onAuthStateChanged(user => {
+      if(!user) { window.location.href='/'; return; }
+      document.getElementById('userAvatar').textContent = (user.displayName || user.email?.[0] || 'M')[0].toUpperCase();
+      document.getElementById('userName').textContent = user.displayName || user.email?.split('@')[0] || 'Manager';
+      renderAll();
+    });
+
+    // Fix close modal on ESC
+    document.addEventListener('keydown', e => { if(e.key === 'Escape') closeModal(); });
   </script>
 </body>
 </html>
