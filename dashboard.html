@@ -71,7 +71,7 @@
             white-space: nowrap;
         }
         
-        /* User Menu - compact & aligned right */
+        /* User Menu */
         .user-menu {
             display: flex;
             align-items: center;
@@ -164,6 +164,21 @@
             color: #94a3b8;
         }
         
+        .no-access {
+            text-align: center;
+            padding: 2rem;
+            color: #94a3b8;
+        }
+        .no-access i {
+            font-size: 3rem;
+            opacity: 0.3;
+            margin-bottom: 1rem;
+        }
+        .no-access h3 {
+            color: white;
+            margin-bottom: 0.5rem;
+        }
+        
         /* Section Title */
         .section-title {
             font-size: 0.75rem;
@@ -224,6 +239,51 @@
         .card-icon.workfit {
             background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(16, 185, 129, 0.1));
             color: #10b981;
+        }
+        
+        .card-icon.brandinn {
+            background: linear-gradient(135deg, rgba(79, 70, 229, 0.2), rgba(79, 70, 229, 0.1));
+            color: #818cf8;
+        }
+        
+        .card-icon.print {
+            background: linear-gradient(135deg, rgba(219, 39, 119, 0.2), rgba(219, 39, 119, 0.1));
+            color: #ec4899;
+        }
+        
+        .card-icon.dsog {
+            background: linear-gradient(135deg, rgba(236, 72, 153, 0.2), rgba(236, 72, 153, 0.1));
+            color: #ec4899;
+        }
+        
+        .card-icon.fusion {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(16, 185, 129, 0.1));
+            color: #10b981;
+        }
+        
+        .card-icon.heritage {
+            background: linear-gradient(135deg, rgba(217, 70, 239, 0.2), rgba(217, 70, 239, 0.1));
+            color: #d946ef;
+        }
+        
+        .card-icon.ekazi {
+            background: linear-gradient(135deg, rgba(5, 150, 105, 0.2), rgba(5, 150, 105, 0.1));
+            color: #34d399;
+        }
+        
+        .card-icon.epitome {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(59, 130, 246, 0.1));
+            color: #60a5fa;
+        }
+        
+        .card-icon.digital {
+            background: linear-gradient(135deg, rgba(14, 165, 233, 0.2), rgba(14, 165, 233, 0.1));
+            color: #38bdf8;
+        }
+        
+        .card-icon.pickme {
+            background: linear-gradient(135deg, rgba(6, 182, 212, 0.2), rgba(6, 182, 212, 0.1));
+            color: #22d3ee;
         }
         
         .card-title {
@@ -352,11 +412,11 @@
         
         <!-- Workspaces Section -->
         <div class="section-title">
-            <i class="fas fa-th-large"></i> Available Workspaces
+            <i class="fas fa-th-large"></i> Your Workspaces
         </div>
         
         <div class="workspace-grid" id="workspaceGrid">
-            <!-- Cards will be inserted here -->
+            <!-- Will be populated by JavaScript -->
         </div>
     </div>
     
@@ -376,38 +436,129 @@
         
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
+        const db = firebase.database();
         
-        // Workspace definitions - includes WorkFit Club
-        const WORKSPACES = [
+        // ===== COMPLETE WORKSPACE DEFINITIONS =====
+        const ALL_WORKSPACES = [
             {
                 id: 'workfit',
                 name: 'WorkFit Club',
                 description: 'Fitness Franchise Management - Manage clubs, trainers, equipment inventory, shop products, and member sessions.',
                 icon: 'fa-dumbbell',
-                iconColor: 'workfit',
+                iconClass: 'workfit',
                 path: '/workspaces/workfit/index.html',
                 features: ['Club Management', 'Trainers & Members', 'Equipment & Shop']
             },
             {
-                id: 'mugsndines',
-                name: 'Mugs N Dines',
+                id: 'mugs-n-dines',
+                name: 'Mugs n Dines',
                 description: 'Restaurant & Kitchen Management - Manage orders, menu, recipes, and catering events.',
                 icon: 'fa-utensils',
-                iconColor: 'mugs',
-                path: '/workspaces/mugsndines/index.html',
+                iconClass: 'mugs',
+                path: '/workspaces/mugs-n-dines/index.html',
                 features: ['Order Management', 'Menu & Recipes', 'Catering Events']
             },
             {
-                id: 'delivery-assistants',
-                name: 'Delivery Assistants',
+                id: 'pick-up',
+                name: 'Pick-Up Deliveries',
                 description: 'Delivery Management - Accept deliveries, track shipments, and manage routes.',
                 icon: 'fa-truck-fast',
-                iconColor: 'delivery',
-                path: '/workspaces/delivery-assistants/index.html',
+                iconClass: 'delivery',
+                path: '/workspaces/pick-up/index.html',
                 features: ['Accept Deliveries', 'Track Shipments', 'Navigation']
+            },
+            {
+                id: 'pick-me',
+                name: 'Pick-Me Rides',
+                description: 'Ride-hailing Management - Manage drivers, rides, and customer requests.',
+                icon: 'fa-taxi',
+                iconClass: 'pickme',
+                path: '/workspaces/pick-me/index.html',
+                features: ['Driver Management', 'Ride Tracking', 'Customer Support']
+            },
+            {
+                id: 'brandinn',
+                name: 'BrandInn Business',
+                description: 'Business Branding & Management - Manage businesses, branding, and website presence.',
+                icon: 'fa-building',
+                iconClass: 'brandinn',
+                path: '/workspaces/brandinn/index.html',
+                features: ['Business Listings', 'Branding', 'Subdomains']
+            },
+            {
+                id: 'brandinn-print',
+                name: 'BrandInn Print',
+                description: 'Print & Merchandise Management - Manage print orders, designs, and merchandise.',
+                icon: 'fa-print',
+                iconClass: 'print',
+                path: '/workspaces/brandinn-print/index.html',
+                features: ['Print Orders', 'Design Management', 'Merchandise']
+            },
+            {
+                id: 'dsog',
+                name: 'DSOG Fashion',
+                description: 'Fashion & Apparel Management - Manage fashion orders, inventory, and franchisees.',
+                icon: 'fa-tshirt',
+                iconClass: 'dsog',
+                path: '/workspaces/dsog/index.html',
+                features: ['Fashion Orders', 'Inventory', 'Franchisees']
+            },
+            {
+                id: 'fusion-foods',
+                name: 'Fusion Foods',
+                description: 'Food & Grocery Supply Management - Manage food orders, inventory, and suppliers.',
+                icon: 'fa-utensil-spoon',
+                iconClass: 'fusion',
+                path: '/workspaces/fusion-foods/index.html',
+                features: ['Food Orders', 'Inventory', 'Suppliers']
+            },
+            {
+                id: 'heritage',
+                name: 'Heritage Ads',
+                description: 'Outdoor Advertising Management - Manage ad listings, campaigns, and partners.',
+                icon: 'fa-bullhorn',
+                iconClass: 'heritage',
+                path: '/workspaces/heritage/index.html',
+                features: ['Ad Listings', 'Campaigns', 'Partners']
+            },
+            {
+                id: 'heritage-marketplace',
+                name: 'Heritage Marketplace',
+                description: 'WhatsApp Marketplace Management - Manage orders, products, and partners.',
+                icon: 'fa-store',
+                iconClass: 'heritage',
+                path: '/workspaces/heritage-marketplace/index.html',
+                features: ['Orders', 'Products', 'Partners']
+            },
+            {
+                id: 'ekazi',
+                name: 'E-Kazi Tasks',
+                description: 'Freelance Task Management - Manage taskers, tasks, and job postings.',
+                icon: 'fa-tasks',
+                iconClass: 'ekazi',
+                path: '/workspaces/ekazi/index.html',
+                features: ['Taskers', 'Task Management', 'Job Postings']
+            },
+            {
+                id: 'epitome',
+                name: 'Epitome Reviews',
+                description: 'Real Estate & Car Sales Management - Manage property and vehicle listings.',
+                icon: 'fa-home',
+                iconClass: 'epitome',
+                path: '/workspaces/epitome/index.html',
+                features: ['Property Listings', 'Car Sales', 'Inquiries']
+            },
+            {
+                id: 'digital-services',
+                name: 'Digital Services',
+                description: 'Digital Services & Solutions - Manage applications, clients, and payments.',
+                icon: 'fa-globe',
+                iconClass: 'digital',
+                path: '/workspaces/digital-services/index.html',
+                features: ['Applications', 'Clients', 'Payments']
             }
         ];
-        
+
         function showToast(message, isError = false) {
             const container = document.getElementById('toastContainer');
             const toast = document.createElement('div');
@@ -422,13 +573,91 @@
             return name.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
         }
         
-        // Render workspace cards
-        function renderWorkspaces() {
+        function updateUserUI(user) {
+            const displayName = user.displayName || user.email?.split('@')[0] || 'Assistant';
+            const initials = getInitials(displayName);
+            const email = user.email;
+            
+            document.getElementById('userName').textContent = displayName;
+            document.getElementById('userEmail').textContent = email;
+            document.getElementById('userAvatar').textContent = initials;
+            document.getElementById('welcomeTitle').textContent = `Welcome back, ${displayName.split(' ')[0]}!`;
+        }
+
+        // ===== MAIN: Load workspaces based on user permissions =====
+        async function loadUserWorkspaces() {
+            const user = auth.currentUser;
+            if (!user) {
+                window.location.href = '/index.html';
+                return;
+            }
+            
+            updateUserUI(user);
+            
+            try {
+                // Get user permissions from Firebase
+                const permSnap = await db.ref(`workspacePermissions/${user.uid}`).once('value');
+                const permissions = permSnap.exists() ? permSnap.val() : {};
+                
+                console.log('📋 User permissions:', permissions);
+                
+                // Filter workspaces based on permissions
+                let accessibleWorkspaces = [];
+                
+                // If user has no permissions but is admin, show all
+                if (Object.keys(permissions).length === 0) {
+                    // Check if user is admin
+                    const adminSnap = await db.ref(`admins/${user.uid}`).once('value');
+                    if (adminSnap.val() === true) {
+                        accessibleWorkspaces = ALL_WORKSPACES;
+                        console.log('👑 Admin - showing all workspaces');
+                    } else {
+                        // No permissions - show empty state
+                        document.getElementById('workspaceGrid').innerHTML = `
+                            <div class="no-access" style="grid-column: 1 / -1;">
+                                <i class="fas fa-lock"></i>
+                                <h3>No Workspace Access</h3>
+                                <p>You don't have permission to access any workspaces. Please contact your administrator.</p>
+                            </div>
+                        `;
+                        return;
+                    }
+                } else {
+                    // Filter workspaces by permissions
+                    accessibleWorkspaces = ALL_WORKSPACES.filter(ws => {
+                        // Check if user has permission for this workspace ID
+                        return permissions[ws.id] === true;
+                    });
+                    
+                    console.log('🔓 Accessible workspaces:', accessibleWorkspaces.map(w => w.name));
+                }
+                
+                // Render workspaces
+                renderWorkspaces(accessibleWorkspaces);
+                
+                // Show message if no workspaces
+                if (accessibleWorkspaces.length === 0) {
+                    document.getElementById('workspaceGrid').innerHTML = `
+                        <div class="no-access" style="grid-column: 1 / -1;">
+                            <i class="fas fa-lock"></i>
+                            <h3>No Access</h3>
+                            <p>You don't have permission to access any workspaces. Contact your administrator to request access.</p>
+                        </div>
+                    `;
+                }
+                
+            } catch (error) {
+                console.error('Error loading permissions:', error);
+                showToast('Error loading workspace permissions', true);
+            }
+        }
+        
+        function renderWorkspaces(workspaces) {
             const grid = document.getElementById('workspaceGrid');
             
-            grid.innerHTML = WORKSPACES.map(ws => `
+            grid.innerHTML = workspaces.map(ws => `
                 <div class="workspace-card" onclick="navigateToWorkspace('${ws.path}')">
-                    <div class="card-icon ${ws.iconColor}">
+                    <div class="card-icon ${ws.iconClass}">
                         <i class="fas ${ws.icon}"></i>
                     </div>
                     <div class="card-title">${ws.name}</div>
@@ -444,10 +673,10 @@
             showToast(`Opening workspace...`, false);
             setTimeout(() => {
                 window.location.href = path;
-            }, 200);
+            }, 300);
         };
         
-        async function logout() {
+        window.logout = async function() {
             try {
                 await auth.signOut();
                 showToast('Signed out successfully', false);
@@ -457,49 +686,16 @@
             } catch (error) {
                 showToast('Error signing out', true);
             }
-        }
-        
-        // Update UI with user info
-        function updateUserUI(user) {
-            const displayName = user.displayName || user.email?.split('@')[0] || 'Assistant';
-            const initials = getInitials(displayName);
-            const email = user.email;
-            
-            document.getElementById('userName').textContent = displayName;
-            document.getElementById('userEmail').textContent = email;
-            document.getElementById('userAvatar').textContent = initials;
-            document.getElementById('welcomeTitle').textContent = `Welcome back, ${displayName.split(' ')[0]}!`;
-        }
-        
-        // Main load function
-        async function loadUser() {
-            const user = auth.currentUser;
-            if (!user) {
-                window.location.href = '/index.html';
-                return;
-            }
-            
-            // Update UI with user info
-            updateUserUI(user);
-            
-            // Render workspaces IMMEDIATELY
-            renderWorkspaces();
-        }
+        };
         
         // Auth state listener
         auth.onAuthStateChanged((user) => {
             if (user) {
-                loadUser();
+                loadUserWorkspaces();
             } else {
                 window.location.href = '/index.html';
             }
         });
-        
-        // Render immediately if already logged in
-        if (auth.currentUser) {
-            updateUserUI(auth.currentUser);
-            renderWorkspaces();
-        }
     </script>
 </body>
 </html>
