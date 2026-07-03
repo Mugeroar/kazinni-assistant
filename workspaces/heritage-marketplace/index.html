@@ -1,1 +1,316 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <title>Heritage Marketplace · Assistant Hub</title>
+  <meta name="theme-color" content="#0f172a" />
+  <link rel="icon" type="image/png" href="https://i.postimg.cc/rFfXDj3L/kazinni-removebg-preview(1).png" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    :root {
+      --navy: #0f172a; --navy-light: #1e293b; --gold: #ca8a04; --gold-light: #fef3c7;
+      --surface: #ffffff; --bg: #f1f5f9; --text: #0f172a; --text-secondary: #64748b;
+      --border: #e2e8f0; --border-light: #f1f5f9;
+      --success: #10b981; --warning: #f59e0b; --danger: #ef4444; --info: #3b82f6;
+      --shadow: 0 1px 3px rgba(0,0,0,0.08); --shadow-md: 0 4px 12px rgba(0,0,0,0.07);
+      --radius: 12px; --radius-lg: 16px;
+    }
+    body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+    /* top bar */
+    .topbar {
+      background: var(--navy); color: white; padding: 0 1.5rem; height: 60px;
+      display: flex; align-items: center; justify-content: space-between;
+      border-bottom: 2px solid var(--gold); position: sticky; top:0; z-index:100;
+    }
+    .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1rem; }
+    .brand img { width: 32px; height: 32px; border-radius: 8px; background: white; }
+    .brand span { color: white; }
+    .brand i { color: var(--gold); }
+    .topbar-right { display: flex; align-items: center; gap: 14px; }
+    .user-badge { display: flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.08); padding: 0.3rem 0.9rem; border-radius: 30px; font-size: 0.75rem; }
+    .user-badge img { width: 26px; height: 26px; border-radius: 50%; border: 1px solid var(--gold); }
+    .user-badge .name { max-width: 120px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .btn { padding: 0.4rem 0.9rem; border-radius: 8px; font-weight: 600; font-size: 0.7rem; border: none; cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; gap: 5px; }
+    .btn-gold { background: var(--gold); color: white; }
+    .btn-gold:hover { background: #a16207; }
+    .btn-outline { background: transparent; border: 1px solid rgba(255,255,255,0.25); color: white; }
+    .btn-outline:hover { background: rgba(255,255,255,0.1); }
+    .btn-sm { padding: 0.3rem 0.7rem; font-size: 0.65rem; }
+    .btn-xs { padding: 0.2rem 0.5rem; font-size: 0.6rem; border-radius: 6px; }
+    .btn-primary { background: var(--info); color: white; }
+    .btn-primary:hover { background: #2563eb; }
+    .btn-danger { background: var(--danger); color: white; }
+    .btn-danger:hover { background: #dc2626; }
+
+    .main { max-width: 1100px; margin: 0 auto; padding: 1.2rem; }
+    .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.2rem; flex-wrap: wrap; gap: 0.5rem; }
+    .page-header h1 { font-size: 1.3rem; font-weight: 800; display: flex; align-items: center; gap: 8px; }
+    .page-header h1 i { color: var(--gold); }
+
+    .tab-nav {
+      display: flex; gap: 4px; background: white; border-radius: var(--radius);
+      padding: 4px; margin-bottom: 1.5rem; border: 1px solid var(--border-light);
+      box-shadow: var(--shadow); overflow-x: auto;
+    }
+    .tab-btn {
+      flex: 1; min-width: fit-content; padding: 0.5rem 0.8rem; border-radius: 10px;
+      border: none; cursor: pointer; font-family: 'Inter', sans-serif; font-size: 0.72rem;
+      font-weight: 600; background: transparent; color: var(--text-secondary);
+      transition: all 0.2s; white-space: nowrap; display: flex; align-items: center;
+      justify-content: center; gap: 6px;
+    }
+    .tab-btn.active { background: var(--navy); color: white; box-shadow: 0 2px 8px rgba(15,23,42,0.15); }
+    .tab-btn .badge { background: rgba(255,255,255,0.2); padding: 1px 7px; border-radius: 12px; font-size: 0.6rem; }
+    .tab-btn.active .badge { background: rgba(255,255,255,0.25); }
+
+    .section { background: white; border-radius: var(--radius-lg); border: 1px solid var(--border-light); box-shadow: var(--shadow); margin-bottom: 1.5rem; overflow: hidden; }
+    .section-header { padding: 0.9rem 1.2rem; border-bottom: 1px solid var(--border-light); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.4rem; }
+    .section-header h3 { font-size: 0.8rem; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+    .section-body { padding: 0.8rem 1.2rem; }
+    .section-body.no-padding { padding: 0; }
+
+    .list-item { display: flex; align-items: center; justify-content: space-between; padding: 0.7rem 1.2rem; border-bottom: 1px solid var(--border-light); transition: background 0.1s; }
+    .list-item:last-child { border-bottom: none; }
+    .list-item:hover { background: #f8fafc; }
+    .list-item-left { display: flex; align-items: center; gap: 10px; min-width:0; }
+    .list-item-icon { width: 34px; height: 34px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; flex-shrink: 0; background: var(--gold-light); color: var(--gold); }
+    .list-item-info { min-width:0; }
+    .list-item-title { font-weight: 600; font-size: 0.78rem; }
+    .list-item-sub { font-size: 0.62rem; color: var(--text-secondary); margin-top:1px; }
+    .list-item-right { display: flex; align-items: center; gap: 6px; flex-shrink:0; flex-wrap: wrap; }
+
+    .badge { padding: 0.15rem 0.5rem; border-radius: 6px; font-size: 0.6rem; font-weight: 600; text-transform: capitalize; }
+    .badge-success { background: #ecfdf5; color: #065f46; }
+    .badge-warning { background: #fffbeb; color: #92400e; }
+    .badge-danger { background: #fef2f2; color: #991b1b; }
+    .badge-info { background: #eff6ff; color: #1e40af; }
+    .badge-neutral { background: #f1f5f9; color: #475569; }
+
+    .empty-state { text-align: center; padding: 2.5rem 1rem; }
+    .empty-state i { font-size: 2.5rem; color: #cbd5e1; display: block; margin-bottom: 0.5rem; }
+    .empty-state p { font-size: 0.78rem; color: var(--text-secondary); }
+
+    .modal-overlay { position: fixed; inset:0; background: rgba(15,23,42,0.4); backdrop-filter: blur(4px); display: flex; align-items: flex-end; justify-content: center; z-index:300; opacity:0; visibility:hidden; transition: all 0.25s; }
+    .modal-overlay.active { opacity:1; visibility:visible; }
+    .modal { background: white; border-radius: 20px 20px 0 0; padding: 1.5rem; width:100%; max-width:540px; max-height:85vh; overflow-y:auto; box-shadow: 0 -4px 30px rgba(0,0,0,0.1); }
+    .modal-handle { width: 36px; height: 4px; background: #e2e8f0; border-radius: 2px; margin:0 auto 1rem; }
+    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+    .modal-header h3 { font-size: 1rem; font-weight: 700; }
+    .modal-close { width: 30px; height: 30px; border-radius: 50%; border:1px solid var(--border); background:white; cursor:pointer; display: flex; align-items:center; justify-content:center; font-size:0.8rem; }
+    .form-group { margin-bottom: 0.8rem; }
+    .form-group label { display: block; font-weight:600; font-size:0.7rem; color:var(--text-secondary); margin-bottom:0.2rem; }
+    .form-group input, .form-group select, .form-group textarea { width:100%; padding:0.5rem 0.7rem; border:1px solid var(--border); border-radius:8px; font-family:'Inter',sans-serif; font-size:0.8rem; background:#f8fafc; outline:none; transition:0.2s; }
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--gold); box-shadow:0 0 0 3px rgba(202,138,4,0.08); background:white; }
+    .form-row { display: grid; grid-template-columns:1fr 1fr; gap:0.8rem; }
+    .map-placeholder { background: #e2e8f0; border-radius: 8px; height: 140px; display: flex; align-items: center; justify-content: center; color: var(--text-secondary); font-size:0.8rem; margin:0.5rem 0; }
+
+    .toast { position:fixed; bottom:24px; left:50%; transform:translateX(-50%); z-index:400; padding:0.6rem 1.4rem; border-radius:12px; font-size:0.75rem; font-weight:600; box-shadow:var(--shadow-md); background:#0f172a; color:white; display:none; }
+    .toast.error { background:#991b1b; }
+
+    @media (max-width:640px) { .topbar { padding:0 1rem; } .page-header h1 { font-size:1rem; } .form-row { grid-template-columns:1fr; } .list-item { flex-wrap: wrap; gap:0.4rem; } .list-item-right { margin-left: auto; } }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="brand"><img src="https://i.postimg.cc/rFfXDj3L/kazinni-removebg-preview(1).png" alt=""><span><i class="fas fa-crown"></i> Heritage</span></div>
+    <div class="topbar-right">
+      <div class="user-badge"><img id="avatarImg" src="" alt=""><span class="name" id="userNameDisplay">Assistant</span></div>
+      <button class="btn btn-outline" onclick="handleLogout()"><i class="fas fa-sign-out-alt"></i></button>
+    </div>
+  </div>
+  <div class="main">
+    <div class="page-header"><h1><i class="fas fa-store-alt"></i> Marketplace Hub</h1><button class="btn btn-gold btn-sm" onclick="showBusinessRegistration()"><i class="fas fa-map-pin"></i> Register Business</button></div>
+    <div class="tab-nav">
+      <button class="tab-btn active" onclick="switchTab('partners')"><i class="fas fa-handshake"></i> Partners</button>
+      <button class="tab-btn" onclick="switchTab('products')"><i class="fas fa-box"></i> Products</button>
+      <button class="tab-btn" onclick="switchTab('orders')"><i class="fas fa-truck"></i> Orders</button>
+      <button class="tab-btn" onclick="switchTab('listings')"><i class="fas fa-map-marked-alt"></i> Listings</button>
+    </div>
+    <div id="tabContent"></div>
+  </div>
+  <div id="toast" class="toast"></div>
+
+  <!-- Modals -->
+  <div class="modal-overlay" id="modalOverlay"><div class="modal" id="modalContent"><div class="modal-handle"></div></div></div>
+
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+  <script>
+    firebase.initializeApp({
+      apiKey: "AIzaSyC7kppUyHUaPzeLBV62NEZWuHiuz1Kz0mA",
+      authDomain: "mugera-e51cc.firebaseapp.com",
+      databaseURL: "https://mugera-e51cc-default-rtdb.europe-west1.firebasedatabase.app",
+      projectId: "mugera-e51cc"
+    });
+    const auth = firebase.auth(); const db = firebase.database();
+
+    let currentTab = 'partners';
+    let allPartners = {}, allProducts = {}, allOrders = {}, allListings = {};
+
+    function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+    function toast(msg, err) { const t = document.getElementById('toast'); t.textContent=msg; t.className='toast'+(err?' error':''); t.style.display='block'; clearTimeout(t._t); t._t=setTimeout(()=>t.style.display='none', 2800); }
+    function openModal(html) { document.getElementById('modalContent').innerHTML='<div class="modal-handle"></div>'+html; document.getElementById('modalOverlay').classList.add('active'); }
+    function closeModal() { document.getElementById('modalOverlay').classList.remove('active'); }
+    document.getElementById('modalOverlay').addEventListener('click', e=>{ if(e.target===this) closeModal(); });
+
+    window.switchTab = function(tab) {
+      currentTab = tab; document.querySelectorAll('.tab-btn').forEach(b=>b.classList.toggle('active', b.textContent.toLowerCase().includes(tab)||b.textContent.toLowerCase().includes(tab.slice(0,-1))));
+      renderTab();
+    };
+
+    function renderTab() {
+      const c = document.getElementById('tabContent'); if(!c) return;
+      switch(currentTab) {
+        case 'partners': renderPartners(c); break;
+        case 'products': renderProducts(c); break;
+        case 'orders': renderOrders(c); break;
+        case 'listings': renderListings(c); break;
+        default: c.innerHTML='<div class="empty-state"><i class="fas fa-store"></i><p>Select a tab</p></div>';
+      }
+    }
+
+    // ---------- DATA LOAD ----------
+    function loadData() {
+      db.ref('heritage_partners').on('value', snap => { allPartners=snap.val()||{}; if(currentTab==='partners') renderTab(); });
+      db.ref('heritage_products').on('value', snap => { allProducts=snap.val()||{}; if(currentTab==='products') renderTab(); });
+      db.ref('heritage_orders').on('value', snap => { allOrders=snap.val()||{}; if(currentTab==='orders') renderTab(); });
+      db.ref('heritage_listings').on('value', snap => { allListings=snap.val()||{}; if(currentTab==='listings') renderTab(); });
+    }
+
+    // ---------- PARTNERS ----------
+    function renderPartners(c) {
+      const partners = Object.entries(allPartners).map(([id,p])=>({id,...p}));
+      let html = `<div class="section"><div class="section-header"><h3><i class="fas fa-handshake"></i> Partners (${partners.length})</h3><button class="btn btn-gold btn-sm" onclick="showPartnerForm()"><i class="fas fa-plus"></i> Add</button></div><div class="section-body no-padding">`;
+      if(!partners.length) html += `<div class="empty-state"><i class="fas fa-user-plus"></i><p>No partners yet</p></div>`;
+      else partners.forEach(p=>{
+        html += `<div class="list-item"><div class="list-item-left"><div class="list-item-icon"><i class="fas fa-building"></i></div><div class="list-item-info"><div class="list-item-title">${esc(p.businessName||p.name||'Unnamed')}</div><div class="list-item-sub">${esc(p.contactPerson||'')} · ${esc(p.phone||'')} · ${p.tier||'Standard'}</div></div></div><div class="list-item-right"><span class="badge ${p.status==='active'?'badge-success':'badge-neutral'}">${p.status||'active'}</span><button class="btn btn-outline btn-xs" onclick="showPartnerForm('${p.id}')"><i class="fas fa-pen"></i></button><button class="btn btn-outline btn-xs" style="color:#ef4444;" onclick="if(confirm('Remove?')) deleteItem('heritage_partners','${p.id}')"><i class="fas fa-trash"></i></button></div></div>`;
+      });
+      html += `</div></div>`;
+      c.innerHTML = html;
+    }
+    window.showPartnerForm = function(id) {
+      const p = id ? allPartners[id] : null;
+      openModal(`<div class="modal-header"><h3>${id?'Edit':'Add'} Partner</h3><button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button></div><input type="hidden" id="editPartnerId" value="${id||''}">
+        <div class="form-group"><label>Business Name *</label><input id="pBusiness" value="${esc(p?.businessName||p?.name||'')}"></div>
+        <div class="form-row"><div class="form-group"><label>Contact Person</label><input id="pContact" value="${esc(p?.contactPerson||'')}"></div><div class="form-group"><label>Phone</label><input id="pPhone" value="${esc(p?.phone||'')}"></div></div>
+        <div class="form-row"><div class="form-group"><label>Email</label><input id="pEmail" value="${esc(p?.email||'')}"></div><div class="form-group"><label>Industry</label><select id="pIndustry"><option ${p?.industry==='Retail'?'selected':''}>Retail</option><option ${p?.industry==='Fashion'?'selected':''}>Fashion</option><option ${p?.industry==='Food'?'selected':''}>Food</option><option ${p?.industry==='Other'?'selected':''}>Other</option></select></div></div>
+        <div class="form-row"><div class="form-group"><label>Tier</label><select id="pTier"><option value="Standard" ${p?.tier==='Standard'?'selected':''}>Standard</option><option value="Premium" ${p?.tier==='Premium'?'selected':''}>Premium</option></select></div><div class="form-group"><label>Status</label><select id="pStatus"><option value="active" ${p?.status==='active'?'selected':''}>Active</option><option value="inactive" ${p?.status==='inactive'?'selected':''}>Inactive</option></select></div></div>
+        <div class="form-group"><label>Notes</label><textarea id="pNotes" rows="2">${esc(p?.notes||'')}</textarea></div>
+        <button class="btn btn-gold" style="width:100%;" onclick="savePartner()">${id?'Update':'Add Partner'}</button>`);
+    };
+    window.savePartner = async function() {
+      const name = document.getElementById('pBusiness').value.trim(); if(!name) return toast('Business name required',true);
+      const data = { businessName: name, name, contactPerson: document.getElementById('pContact').value, phone: document.getElementById('pPhone').value, email: document.getElementById('pEmail').value, industry: document.getElementById('pIndustry').value, tier: document.getElementById('pTier').value, status: document.getElementById('pStatus').value, notes: document.getElementById('pNotes').value, updatedAt: Date.now() };
+      const id = document.getElementById('editPartnerId').value;
+      try { if(id) { await db.ref('heritage_partners/'+id).update(data); } else { data.createdAt=Date.now(); await db.ref('heritage_partners').push(data); } closeModal(); toast(id?'Updated!':'Added!'); } catch(e){ toast('Error',true); }
+    };
+
+    // ---------- PRODUCTS ----------
+    function renderProducts(c) {
+      const products = Object.entries(allProducts).map(([id,p])=>({id,...p}));
+      let html = `<div class="section"><div class="section-header"><h3><i class="fas fa-box"></i> Products (${products.length})</h3><button class="btn btn-gold btn-sm" onclick="showProductForm()"><i class="fas fa-plus"></i> Add</button></div><div class="section-body no-padding">`;
+      if(!products.length) html += `<div class="empty-state"><i class="fas fa-box-open"></i><p>No products</p></div>`;
+      else products.forEach(p=>{
+        html += `<div class="list-item"><div class="list-item-left"><div class="list-item-icon">📦</div><div class="list-item-info"><div class="list-item-title">${esc(p.name)}</div><div class="list-item-sub">SKU: ${p.sku||'—'} · KSh ${p.price||0} · Stock: ${p.stock||0}</div></div></div><div class="list-item-right"><span class="badge ${p.isActive!==false?'badge-success':'badge-neutral'}">${p.isActive!==false?'active':'inactive'}</span><button class="btn btn-outline btn-xs" onclick="showProductForm('${p.id}')"><i class="fas fa-pen"></i></button><button class="btn btn-outline btn-xs" style="color:#ef4444;" onclick="if(confirm('Remove?')) deleteItem('heritage_products','${p.id}')"><i class="fas fa-trash"></i></button></div></div>`;
+      });
+      html += `</div></div>`;
+      c.innerHTML = html;
+    }
+    window.showProductForm = function(id) {
+      const p = id ? allProducts[id] : null;
+      const partnerOpts = Object.entries(allPartners).map(([pid, partner]) => `<option value="${pid}" ${p?.partnerId===pid?'selected':''}>${esc(partner.businessName||partner.name||pid)}</option>`).join('');
+      openModal(`<div class="modal-header"><h3>${id?'Edit':'Add'} Product</h3><button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button></div><input type="hidden" id="editProductId" value="${id||''}">
+        <div class="form-group"><label>Product Name *</label><input id="prodName" value="${esc(p?.name||'')}"></div>
+        <div class="form-row"><div class="form-group"><label>Price (KES)</label><input id="prodPrice" type="number" value="${p?.price||0}"></div><div class="form-group"><label>Stock</label><input id="prodStock" type="number" value="${p?.stock||0}"></div></div>
+        <div class="form-row"><div class="form-group"><label>SKU</label><input id="prodSku" value="${esc(p?.sku||'')}"></div><div class="form-group"><label>Partner</label><select id="prodPartner"><option value="">None</option>${partnerOpts}</select></div></div>
+        <div class="form-group"><label>Description</label><textarea id="prodDesc" rows="2">${esc(p?.description||'')}</textarea></div>
+        <div class="form-group"><label>Unit</label><input id="prodUnit" value="${esc(p?.unit||'Piece')}"></div>
+        <button class="btn btn-gold" style="width:100%;" onclick="saveProduct()">${id?'Update':'Add Product'}</button>`);
+    };
+    window.saveProduct = async function() {
+      const name = document.getElementById('prodName').value.trim(); if(!name) return toast('Name required',true);
+      const data = { name, price: Number(document.getElementById('prodPrice').value)||0, stock: Number(document.getElementById('prodStock').value)||0, sku: document.getElementById('prodSku').value, partnerId: document.getElementById('prodPartner').value, description: document.getElementById('prodDesc').value, unit: document.getElementById('prodUnit').value||'Piece', isActive: true, updatedAt: Date.now() };
+      const id = document.getElementById('editProductId').value;
+      try { if(id) { await db.ref('heritage_products/'+id).update(data); } else { data.createdAt=Date.now(); await db.ref('heritage_products').push(data); } closeModal(); toast(id?'Updated!':'Added!'); } catch(e){ toast('Error',true); }
+    };
+
+    // ---------- ORDERS ----------
+    function renderOrders(c) {
+      const orders = Object.entries(allOrders).map(([id,o])=>({id,...o})).sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
+      let html = `<div class="section"><div class="section-header"><h3><i class="fas fa-truck"></i> Orders (${orders.length})</h3><button class="btn btn-gold btn-sm" onclick="showOrderForm()"><i class="fas fa-plus"></i> New Order</button></div><div class="section-body no-padding">`;
+      if(!orders.length) html += `<div class="empty-state"><i class="fas fa-shopping-bag"></i><p>No orders</p></div>`;
+      else orders.forEach(o=>{
+        html += `<div class="list-item"><div class="list-item-left"><div class="list-item-icon">🛒</div><div class="list-item-info"><div class="list-item-title">${esc(o.customerName||'Guest')} · KSh ${o.total||0}</div><div class="list-item-sub">${esc(o.productName||'')} × ${o.quantity||1} · ${o.status||'pending'}</div></div></div><div class="list-item-right"><span class="badge ${o.status==='completed'?'badge-success':o.status==='cancelled'?'badge-danger':'badge-warning'}">${o.status||'pending'}</span><button class="btn btn-outline btn-xs" onclick="showOrderForm('${o.id}')"><i class="fas fa-pen"></i></button><button class="btn btn-outline btn-xs" style="color:#ef4444;" onclick="if(confirm('Remove?')) deleteItem('heritage_orders','${o.id}')"><i class="fas fa-trash"></i></button></div></div>`;
+      });
+      html += `</div></div>`;
+      c.innerHTML = html;
+    }
+    window.showOrderForm = function(id) {
+      const o = id ? allOrders[id] : null;
+      const prodOpts = Object.entries(allProducts).map(([pid, p]) => `<option value="${pid}" ${o?.productId===pid?'selected':''}>${esc(p.name)} (KSh ${p.price||0})</option>`).join('');
+      openModal(`<div class="modal-header"><h3>${id?'Edit':'New'} Order</h3><button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button></div><input type="hidden" id="editOrderId" value="${id||''}">
+        <div class="form-group"><label>Customer Name *</label><input id="ordCustomer" value="${esc(o?.customerName||'')}"></div>
+        <div class="form-row"><div class="form-group"><label>Phone</label><input id="ordPhone" value="${esc(o?.customerPhone||'')}"></div><div class="form-group"><label>Product</label><select id="ordProduct"><option value="">Select</option>${prodOpts}</select></div></div>
+        <div class="form-row"><div class="form-group"><label>Quantity</label><input id="ordQty" type="number" value="${o?.quantity||1}"></div><div class="form-group"><label>Total (KES)</label><input id="ordTotal" type="number" value="${o?.total||0}"></div></div>
+        <div class="form-group"><label>Status</label><select id="ordStatus"><option value="pending" ${o?.status==='pending'?'selected':''}>Pending</option><option value="confirmed" ${o?.status==='confirmed'?'selected':''}>Confirmed</option><option value="completed" ${o?.status==='completed'?'selected':''}>Completed</option><option value="cancelled" ${o?.status==='cancelled'?'selected':''}>Cancelled</option></select></div>
+        <div class="form-group"><label>Location</label><input id="ordLocation" value="${esc(o?.customerLocation||'')}"></div>
+        <button class="btn btn-gold" style="width:100%;" onclick="saveOrder()">${id?'Update':'Create Order'}</button>`);
+    };
+    window.saveOrder = async function() {
+      const name = document.getElementById('ordCustomer').value.trim(); if(!name) return toast('Customer name required',true);
+      const pid = document.getElementById('ordProduct').value;
+      const pname = pid && allProducts[pid] ? allProducts[pid].name : '';
+      const data = { customerName: name, customerPhone: document.getElementById('ordPhone').value, productId: pid, productName: pname, quantity: Number(document.getElementById('ordQty').value)||1, total: Number(document.getElementById('ordTotal').value)||0, status: document.getElementById('ordStatus').value, customerLocation: document.getElementById('ordLocation').value, updatedAt: Date.now() };
+      const id = document.getElementById('editOrderId').value;
+      try { if(id) { await db.ref('heritage_orders/'+id).update(data); } else { data.createdAt=Date.now(); await db.ref('heritage_orders').push(data); } closeModal(); toast(id?'Updated!':'Order placed!'); } catch(e){ toast('Error',true); }
+    };
+
+    // ---------- LISTINGS / MAP REGISTRATION ----------
+    function renderListings(c) {
+      const listings = Object.entries(allListings).map(([id,l])=>({id,...l}));
+      let html = `<div class="section"><div class="section-header"><h3><i class="fas fa-map-marked-alt"></i> Business Listings (${listings.length})</h3><button class="btn btn-gold btn-sm" onclick="showBusinessRegistration()"><i class="fas fa-map-pin"></i> Register</button></div><div class="section-body no-padding">`;
+      if(!listings.length) html += `<div class="empty-state"><i class="fas fa-map"></i><p>No businesses registered on map</p></div>`;
+      else listings.forEach(l=>{
+        html += `<div class="list-item"><div class="list-item-left"><div class="list-item-icon"><i class="fas fa-store"></i></div><div class="list-item-info"><div class="list-item-title">${esc(l.businessName||l.name||'Unnamed')}</div><div class="list-item-sub">${esc(l.location||'')} · ${l.adType||'Standard'} · ${l.status||'active'}</div></div></div><div class="list-item-right"><span class="badge ${l.status==='active'?'badge-success':'badge-neutral'}">${l.status||'active'}</span><button class="btn btn-outline btn-xs" onclick="showBusinessRegistration('${l.id}')"><i class="fas fa-pen"></i></button><button class="btn btn-outline btn-xs" style="color:#ef4444;" onclick="if(confirm('Remove?')) deleteItem('heritage_listings','${l.id}')"><i class="fas fa-trash"></i></button></div></div>`;
+      });
+      html += `</div></div>`;
+      c.innerHTML = html;
+    }
+    window.showBusinessRegistration = function(id) {
+      const l = id ? allListings[id] : null;
+      openModal(`<div class="modal-header"><h3>${id?'Edit':'Register'} Business on Map</h3><button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button></div><input type="hidden" id="editListingId" value="${id||''}">
+        <div class="form-group"><label>Business Name *</label><input id="listName" value="${esc(l?.businessName||l?.name||'')}"></div>
+        <div class="form-row"><div class="form-group"><label>Location / Area</label><input id="listLocation" value="${esc(l?.location||'')}"></div><div class="form-group"><label>Ad Type</label><select id="listType"><option value="Facebook Ads" ${l?.adType==='Facebook Ads'?'selected':''}>Facebook Ads</option><option value="Instagram Ad" ${l?.adType==='Instagram Ad'?'selected':''}>Instagram Ad</option><option value="WhatsApp Ad" ${l?.adType==='WhatsApp Ad'?'selected':''}>WhatsApp Ad</option><option value="Other" ${l?.adType==='Other'?'selected':''}>Other</option></select></div></div>
+        <div class="form-row"><div class="form-group"><label>Partner / Occupied By</label><input id="listPartner" value="${esc(l?.partnerName||l?.occupiedBy||'')}"></div><div class="form-group"><label>Status</label><select id="listStatus"><option value="active" ${l?.status==='active'?'selected':''}>Active</option><option value="expired" ${l?.status==='expired'?'selected':''}>Expired</option></select></div></div>
+        <div class="form-group"><label>Notes</label><textarea id="listNotes" rows="2">${esc(l?.notes||'')}</textarea></div>
+        <div class="map-placeholder"><i class="fas fa-map-pin" style="color:var(--gold);margin-right:6px;"></i> Map coordinates will be set automatically</div>
+        <button class="btn btn-gold" style="width:100%;" onclick="saveListing()">${id?'Update':'Register'}</button>`);
+    };
+    window.saveListing = async function() {
+      const name = document.getElementById('listName').value.trim(); if(!name) return toast('Business name required',true);
+      const data = { businessName: name, name, location: document.getElementById('listLocation').value, adType: document.getElementById('listType').value, partnerName: document.getElementById('listPartner').value, occupiedBy: document.getElementById('listPartner').value, status: document.getElementById('listStatus').value, notes: document.getElementById('listNotes').value, updatedAt: Date.now() };
+      const id = document.getElementById('editListingId').value;
+      try { if(id) { await db.ref('heritage_listings/'+id).update(data); } else { data.createdAt=Date.now(); await db.ref('heritage_listings').push(data); } closeModal(); toast(id?'Updated!':'Registered!'); } catch(e){ toast('Error',true); }
+    };
+
+    // ---------- UTILITY ----------
+    window.deleteItem = async function(path, id) { try { await db.ref(path+'/'+id).remove(); toast('Deleted'); } catch(e){ toast('Error',true); } };
+    window.handleLogout = async function() { try { await auth.signOut(); window.location.href='/'; } catch(e){ toast('Error',true); } };
+
+    // ---------- AUTH ----------
+    auth.onAuthStateChanged(async user => {
+      if(!user){ window.location.href='/'; return; }
+      document.getElementById('userNameDisplay').textContent = user.displayName || user.email?.split('@')[0] || 'Assistant';
+      if(user.photoURL) document.getElementById('avatarImg').src = user.photoURL;
+      else document.getElementById('avatarImg').style.display='none';
+      loadData();
+      renderTab();
+    });
+  </script>
+</body>
+</html>
