@@ -155,25 +155,19 @@
         .post-body { padding: 0.8rem 1rem; }
         .post-text { font-size: 0.78rem; line-height: 1.5; }
         
-        /* Media - Image & Video */
-        .post-media {
+        /* Media - Image */
+        .post-image {
             width: 100%;
             border-radius: var(--radius-sm);
             margin-top: 0.5rem;
             max-height: 450px;
             object-fit: contain;
-            background: #000;
+            background: #f8fafc;
             cursor: pointer;
             transition: opacity 0.2s;
         }
-        .post-media:hover { opacity: 0.95; }
-        .post-media.video-media {
-            cursor: default;
-            max-height: 500px;
-            background: #000;
-        }
-        .post-media.video-media:hover { opacity: 1; }
-        .post-media.video-error {
+        .post-image:hover { opacity: 0.95; }
+        .post-image.image-error {
             background: #fef2f2;
             padding: 1rem;
             text-align: center;
@@ -182,10 +176,30 @@
             border-radius: var(--radius-sm);
             border: 1px solid #fecaca;
         }
-        .post-media.video-error i {
+        .post-image.image-error i {
             font-size: 1.5rem;
             display: block;
             margin-bottom: 0.3rem;
+        }
+
+        /* YouTube Embed */
+        .youtube-wrapper {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%; /* 16:9 aspect ratio */
+            height: 0;
+            margin-top: 0.5rem;
+            border-radius: var(--radius-sm);
+            overflow: hidden;
+            background: #000;
+        }
+        .youtube-wrapper iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
         }
         
         .post-actions {
@@ -236,19 +250,18 @@
             cursor: pointer; font-family: 'Inter', sans-serif;
         }
 
-        /* Full Screen Media Viewer */
-        .media-viewer-overlay {
+        /* Full Screen Image Viewer */
+        .image-viewer-overlay {
             position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 500;
             display: flex; align-items: center; justify-content: center;
             opacity: 0; visibility: hidden; transition: all 0.3s; cursor: pointer;
         }
-        .media-viewer-overlay.open { opacity: 1; visibility: visible; }
-        .media-viewer-overlay img,
-        .media-viewer-overlay video {
+        .image-viewer-overlay.open { opacity: 1; visibility: visible; }
+        .image-viewer-overlay img {
             max-width: 95vw; max-height: 95vh; object-fit: contain;
             border-radius: 8px;
         }
-        .media-viewer-close {
+        .image-viewer-close {
             position: absolute; top: 16px; right: 16px; width: 40px; height: 40px;
             border-radius: 50%; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
             color: white; font-size: 1.2rem; cursor: pointer; display: flex;
@@ -334,11 +347,10 @@
         <div class="skeleton-post"><div class="skeleton-header"><div class="skeleton skeleton-avatar"></div><div style="flex:1;"><div class="skeleton skeleton-line medium"></div><div class="skeleton skeleton-line short"></div></div></div><div class="skeleton skeleton-line long"></div></div>
     </div>
 
-    <!-- Media Viewer -->
-    <div class="media-viewer-overlay" id="mediaViewer" onclick="closeMediaViewer()">
-        <button class="media-viewer-close"><i class="fas fa-times"></i></button>
-        <img id="mediaViewerImg" src="" alt="" style="display:none;">
-        <video id="mediaViewerVideo" controls style="display:none;"></video>
+    <!-- Image Viewer -->
+    <div class="image-viewer-overlay" id="imageViewer" onclick="closeImageViewer()">
+        <button class="image-viewer-close"><i class="fas fa-times"></i></button>
+        <img id="imageViewerImg" src="" alt="">
     </div>
 
     <!-- Create/Edit Post Modal -->
@@ -399,14 +411,9 @@
             sow.setDate(now.getDate() - now.getDay() + 1); return sow.toISOString().split('T')[0];
         }
 
-        // Helper: Convert GitHub raw URLs to proper format
-        function fixGitHubUrl(url) {
+        // Helper: Convert GitHub blob URLs to raw URLs
+        function fixGitHubImageUrl(url) {
             if (!url) return url;
-            
-            // Convert raw.githubusercontent.com to github.com with ?raw=true
-            if (url.includes('raw.githubusercontent.com')) {
-                return url;
-            }
             
             // Convert github.com/blob/ to raw.githubusercontent.com
             const blobMatch = url.match(/github\.com\/([^\/]+)\/([^\/]+)\/blob\/([^\/]+)\/(.+)/);
@@ -418,79 +425,52 @@
             return url;
         }
 
-        // Helper: Check if URL is a video (including GitHub)
-        function isVideoUrl(url) {
+        // Helper: Check if URL is a YouTube link
+        function isYouTubeUrl(url) {
             if (!url) return false;
-            const videoExtensions = /\.(mp4|webm|mov|avi|m4v|mkv|wmv|flv|3gp)$/i;
-            if (videoExtensions.test(url)) return true;
-            // Check for GitHub raw video links
-            if (url.includes('raw.githubusercontent.com') && !url.match(/\.(png|jpg|jpeg|gif|webp|svg|bmp)$/i)) return true;
-            // GitHub user-attachments
-            if (url.includes('user-attachments') && !url.match(/\.(png|jpg|jpeg|gif|webp|svg|bmp)$/i)) return true;
-            return false;
+            return url.includes('youtube.com/watch') || 
+                   url.includes('youtu.be/') || 
+                   url.includes('youtube.com/embed/') ||
+                   url.includes('youtube.com/shorts/');
         }
 
-        // Helper: Check if URL is an image
-        function isImageUrl(url) {
-            if (!url) return false;
-            const imageExtensions = /\.(png|jpg|jpeg|gif|webp|svg|bmp|ico)$/i;
-            return imageExtensions.test(url) || url.includes('i.postimg.cc') || url.includes('imgur.com');
-        }
-
-        // Get media type and fixed URL
-        function getMediaInfo(url) {
-            if (!url || !url.startsWith('http')) return null;
-            
-            // Fix GitHub URLs
-            const fixedUrl = fixGitHubUrl(url);
-            
-            // Check if it's a video
-            if (isVideoUrl(fixedUrl)) {
-                return { type: 'video', url: fixedUrl };
+        // Helper: Extract YouTube video ID
+        function getYouTubeId(url) {
+            const patterns = [
+                /youtube\.com\/watch\?v=([^&]+)/,
+                /youtu\.be\/([^?]+)/,
+                /youtube\.com\/embed\/([^?]+)/,
+                /youtube\.com\/shorts\/([^?]+)/
+            ];
+            for (const pattern of patterns) {
+                const match = url.match(pattern);
+                if (match) return match[1];
             }
-            
-            // Check if it's an image
-            if (isImageUrl(fixedUrl) || !isVideoUrl(fixedUrl)) {
-                return { type: 'image', url: fixedUrl };
-            }
-            
             return null;
         }
 
-        // Media Viewer - supports both images and videos
-        window.openMediaViewer = function(url, isVideo = false) {
-            const viewer = document.getElementById('mediaViewer');
-            const img = document.getElementById('mediaViewerImg');
-            const video = document.getElementById('mediaViewerVideo');
-            
-            // Reset
-            img.style.display = 'none';
-            img.src = '';
-            video.style.display = 'none';
-            video.src = '';
-            video.pause();
-            
-            if (isVideo) {
-                video.style.display = 'block';
-                video.src = url;
-                video.load();
-                video.play().catch(() => {});
-            } else {
-                img.style.display = 'block';
-                img.src = url;
+        // Helper: Check if URL is a GitHub image
+        function isGitHubImageUrl(url) {
+            if (!url) return false;
+            const imageExtensions = /\.(png|jpg|jpeg|gif|webp|svg|bmp|ico)$/i;
+            // Check if it's a GitHub raw or blob URL with image extension
+            if (url.includes('github.com') || url.includes('raw.githubusercontent.com')) {
+                return imageExtensions.test(url);
             }
-            viewer.classList.add('open');
+            return false;
+        }
+
+        // Image Viewer
+        window.openImageViewer = function(url) {
+            document.getElementById('imageViewerImg').src = url;
+            document.getElementById('imageViewer').classList.add('open');
             document.body.style.overflow = 'hidden';
         };
-
-        window.closeMediaViewer = function() {
-            const viewer = document.getElementById('mediaViewer');
-            viewer.classList.remove('open');
+        window.closeImageViewer = function() {
+            document.getElementById('imageViewer').classList.remove('open');
             document.body.style.overflow = '';
-            const video = document.getElementById('mediaViewerVideo');
-            if (video) { video.pause(); }
         };
-        document.addEventListener('keydown', e => { if (e.key === 'Escape') closeMediaViewer(); });
+        document.addEventListener('keydown', e => { if (e.key === 'Escape') closeImageViewer(); });
 
         // Post Menu
         window.togglePostMenu = function(postId, e) {
@@ -589,22 +569,37 @@
                     // Process media
                     let mediaHtml = '';
                     if (post.imageUrl && post.imageUrl.startsWith('http')) {
-                        const mediaInfo = getMediaInfo(post.imageUrl);
-                        if (mediaInfo) {
-                            if (mediaInfo.type === 'video') {
+                        const url = post.imageUrl;
+                        
+                        // Check for YouTube
+                        if (isYouTubeUrl(url)) {
+                            const videoId = getYouTubeId(url);
+                            if (videoId) {
+                                const embedUrl = `https://www.youtube.com/embed/${videoId}`;
                                 mediaHtml = `
-                                <video src="${esc(mediaInfo.url)}" class="post-media video-media" controls preload="metadata" 
-                                       onclick="event.stopPropagation()" 
-                                       oncontextmenu="event.stopPropagation()"
-                                       onerror="this.style.display='none'; this.parentElement.innerHTML += '<div class=\\'post-media video-error\\'><i class=\\'fas fa-exclamation-triangle\\'></i>Video failed to load<br><small style=\\'font-size:0.6rem;\\'>${esc(post.imageUrl)}</small></div>'">
-                                    Your browser does not support the video tag.
-                                </video>`;
-                            } else {
-                                mediaHtml = `
-                                <img src="${esc(mediaInfo.url)}" class="post-media" alt="Post media" loading="lazy" 
-                                     onclick="event.stopPropagation(); openMediaViewer('${esc(mediaInfo.url)}', false)"
-                                     onerror="this.style.display='none'; this.parentElement.innerHTML += '<div class=\\'post-media video-error\\'><i class=\\'fas fa-image\\'></i>Image failed to load<br><small style=\\'font-size:0.6rem;\\'>${esc(post.imageUrl)}</small></div>'">`;
+                                <div class="youtube-wrapper">
+                                    <iframe src="${embedUrl}" 
+                                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                                            allowfullscreen
+                                            loading="lazy">
+                                    </iframe>
+                                </div>`;
                             }
+                        }
+                        // Check for GitHub image
+                        else if (isGitHubImageUrl(url)) {
+                            const rawUrl = fixGitHubImageUrl(url);
+                            mediaHtml = `
+                            <img src="${esc(rawUrl)}" class="post-image" alt="Post image" loading="lazy" 
+                                 onclick="event.stopPropagation(); openImageViewer('${esc(rawUrl)}')"
+                                 onerror="this.style.display='none'; this.parentElement.innerHTML += '<div class=\\'post-image image-error\\'><i class=\\'fas fa-image\\'></i>Image failed to load<br><small style=\\'font-size:0.6rem;\\'>${esc(url)}</small></div>'">`;
+                        }
+                        // Fallback: try to show as image if it has image extension
+                        else if (/\.(png|jpg|jpeg|gif|webp|svg|bmp|ico)$/i.test(url)) {
+                            mediaHtml = `
+                            <img src="${esc(url)}" class="post-image" alt="Post image" loading="lazy" 
+                                 onclick="event.stopPropagation(); openImageViewer('${esc(url)}')"
+                                 onerror="this.style.display='none'; this.parentElement.innerHTML += '<div class=\\'post-image image-error\\'><i class=\\'fas fa-image\\'></i>Image failed to load<br><small style=\\'font-size:0.6rem;\\'>${esc(url)}</small></div>'">`;
                         }
                     }
 
@@ -665,8 +660,8 @@
                 <div class="form-group"><label>Content *</label><textarea id="postContent" rows="4" placeholder="Share an update with your members..."></textarea></div>
                 <div class="form-group">
                     <label>Media URL (optional)</label>
-                    <input type="url" id="postImageUrl" placeholder="https://github.com/user/repo/blob/main/image.jpg or video.mp4">
-                    <small class="hint">✅ Supports: GitHub raw links, images (JPG, PNG, GIF), videos (MP4, WebM, MOV)</small>
+                    <input type="url" id="postImageUrl" placeholder="https://github.com/user/repo/blob/main/image.jpg or https://youtube.com/watch?v=...">
+                    <small class="hint">📷 Images: GitHub links (JPG, PNG, GIF) &nbsp;|&nbsp; 🎬 Videos: YouTube links</small>
                 </div>
                 <div style="display:flex;gap:8px;"><button class="btn btn-outline" style="flex:1;" onclick="closePostModal()">Cancel</button><button class="btn btn-primary" style="flex:1;background:var(--info);" onclick="publishPost()"><i class="fas fa-paper-plane"></i> Publish</button></div>
             `;
@@ -684,8 +679,8 @@
                 <div class="form-group"><label>Content *</label><textarea id="postContent" rows="4">${esc(post.content || post.text || '')}</textarea></div>
                 <div class="form-group">
                     <label>Media URL (optional)</label>
-                    <input type="url" id="postImageUrl" value="${esc(post.imageUrl || '')}" placeholder="https://github.com/user/repo/blob/main/image.jpg">
-                    <small class="hint">✅ Supports: GitHub raw links, images (JPG, PNG, GIF), videos (MP4, WebM, MOV)</small>
+                    <input type="url" id="postImageUrl" value="${esc(post.imageUrl || '')}" placeholder="https://github.com/... or https://youtube.com/...">
+                    <small class="hint">📷 Images: GitHub links (JPG, PNG, GIF) &nbsp;|&nbsp; 🎬 Videos: YouTube links</small>
                 </div>
                 <div style="display:flex;gap:8px;"><button class="btn btn-outline" style="flex:1;" onclick="closePostModal()">Cancel</button><button class="btn btn-primary" style="flex:1;background:var(--info);" onclick="publishPost()"><i class="fas fa-save"></i> Update</button></div>
             `;
@@ -709,13 +704,8 @@
         window.publishPost = async function() {
             const content = document.getElementById('postContent').value.trim();
             if (!content) return toast('Please write something.', 'error');
-            let imageUrl = document.getElementById('postImageUrl').value.trim();
+            const imageUrl = document.getElementById('postImageUrl').value.trim();
             const editId = document.getElementById('editPostId').value;
-            
-            // Fix GitHub URL before saving
-            if (imageUrl) {
-                imageUrl = fixGitHubUrl(imageUrl);
-            }
             
             const btn = document.querySelector('#postModalContent .btn-primary');
             btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
