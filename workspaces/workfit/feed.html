@@ -154,8 +154,26 @@
         .post-menu-item.delete:hover { background: #fef2f2; }
         .post-body { padding: 0.8rem 1rem; }
         .post-text { font-size: 0.78rem; line-height: 1.5; }
-        .post-image { width: 100%; border-radius: var(--radius-sm); margin-top: 0.5rem; max-height: 400px; object-fit: cover; cursor: pointer; }
-        .post-image:hover { opacity: 0.9; }
+        
+        /* Media - Image & Video */
+        .post-media {
+            width: 100%;
+            border-radius: var(--radius-sm);
+            margin-top: 0.5rem;
+            max-height: 450px;
+            object-fit: contain;
+            background: #000;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+        .post-media:hover { opacity: 0.95; }
+        .post-media.video-media {
+            cursor: default;
+            max-height: 500px;
+            background: #000;
+        }
+        .post-media.video-media:hover { opacity: 1; }
+        
         .post-actions {
             padding: 0.5rem 1rem; display: flex; gap: 4px;
             border-top: 1px solid var(--border-light);
@@ -204,15 +222,19 @@
             cursor: pointer; font-family: 'Inter', sans-serif;
         }
 
-        /* Full Screen Image */
-        .image-viewer-overlay {
+        /* Full Screen Media Viewer */
+        .media-viewer-overlay {
             position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 500;
             display: flex; align-items: center; justify-content: center;
             opacity: 0; visibility: hidden; transition: all 0.3s; cursor: pointer;
         }
-        .image-viewer-overlay.open { opacity: 1; visibility: visible; }
-        .image-viewer-overlay img { max-width: 95vw; max-height: 95vh; object-fit: contain; border-radius: 8px; }
-        .image-viewer-close {
+        .media-viewer-overlay.open { opacity: 1; visibility: visible; }
+        .media-viewer-overlay img,
+        .media-viewer-overlay video {
+            max-width: 95vw; max-height: 95vh; object-fit: contain;
+            border-radius: 8px;
+        }
+        .media-viewer-close {
             position: absolute; top: 16px; right: 16px; width: 40px; height: 40px;
             border-radius: 50%; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
             color: white; font-size: 1.2rem; cursor: pointer; display: flex;
@@ -243,6 +265,7 @@
             font-family: 'Inter', sans-serif; font-size: 0.8rem; background: #f8fafc; color: var(--text); outline: none;
         }
         .form-group input:focus, .form-group textarea:focus { border-color: var(--orange); }
+        .form-group .hint { font-size: 0.6rem; color: var(--text-muted); margin-top: 0.2rem; display: block; }
         .btn {
             padding: 0.55rem 1.1rem; border-radius: var(--radius-sm); font-weight: 600; font-size: 0.75rem;
             cursor: pointer; border: none; transition: all 0.2s; display: inline-flex; align-items: center;
@@ -271,6 +294,8 @@
         @media (max-width: 500px) {
             .main { padding: 0.8rem; }
             .post-text { font-size: 0.75rem; }
+            .topbar-right .nav-btn span { display: none; }
+            .topbar-right .nav-btn { padding: 0.3rem 0.55rem; }
         }
     </style>
 </head>
@@ -285,8 +310,8 @@
         </div>
         <div class="topbar-right">
             <button class="create-post-btn" onclick="openCreatePost()"><i class="fas fa-plus-circle"></i> New Post</button>
-            <a href="/trainer-hub.html" class="nav-btn"><i class="fas fa-th-large"></i> Hub</a>
-            <a href="/trainer-profile.html" class="nav-btn"><i class="fas fa-user"></i> Profile</a>
+            <a href="/trainer-hub.html" class="nav-btn"><i class="fas fa-th-large"></i><span> Hub</span></a>
+            <a href="/trainer-profile.html" class="nav-btn"><i class="fas fa-user"></i><span> Profile</span></a>
         </div>
     </header>
 
@@ -295,10 +320,11 @@
         <div class="skeleton-post"><div class="skeleton-header"><div class="skeleton skeleton-avatar"></div><div style="flex:1;"><div class="skeleton skeleton-line medium"></div><div class="skeleton skeleton-line short"></div></div></div><div class="skeleton skeleton-line long"></div></div>
     </div>
 
-    <!-- Image Viewer -->
-    <div class="image-viewer-overlay" id="imageViewer" onclick="closeImageViewer()">
-        <button class="image-viewer-close"><i class="fas fa-times"></i></button>
-        <img id="imageViewerImg" src="" alt="">
+    <!-- Media Viewer -->
+    <div class="media-viewer-overlay" id="mediaViewer" onclick="closeMediaViewer()">
+        <button class="media-viewer-close"><i class="fas fa-times"></i></button>
+        <img id="mediaViewerImg" src="" alt="" style="display:none;">
+        <video id="mediaViewerVideo" controls style="display:none;"></video>
     </div>
 
     <!-- Create/Edit Post Modal -->
@@ -359,22 +385,63 @@
             sow.setDate(now.getDate() - now.getDay() + 1); return sow.toISOString().split('T')[0];
         }
 
-        // Image Viewer
-        window.openImageViewer = function(url) {
-            document.getElementById('imageViewerImg').src = url;
-            document.getElementById('imageViewer').classList.add('open');
+        // Helper: Check if URL is a video
+        function isVideoUrl(url) {
+            if (!url) return false;
+            const videoExtensions = /\.(mp4|webm|mov|avi|m4v|mkv|wmv|flv|3gp)$/i;
+            if (videoExtensions.test(url)) return true;
+            // GitHub user-attachments often serve videos
+            if (url.includes('user-attachments') && !url.match(/\.(png|jpg|jpeg|gif|webp|svg|bmp)$/i)) return true;
+            // Check for common video hosting patterns
+            if (url.includes('video') && !url.match(/\.(png|jpg|jpeg|gif|webp|svg|bmp)$/i)) return true;
+            return false;
+        }
+
+        // Helper: Check if URL is an image
+        function isImageUrl(url) {
+            if (!url) return false;
+            const imageExtensions = /\.(png|jpg|jpeg|gif|webp|svg|bmp|ico)$/i;
+            return imageExtensions.test(url) || url.includes('i.postimg.cc') || url.includes('imgur.com');
+        }
+
+        // Media Viewer - supports both images and videos
+        window.openMediaViewer = function(url, isVideo = false) {
+            const viewer = document.getElementById('mediaViewer');
+            const img = document.getElementById('mediaViewerImg');
+            const video = document.getElementById('mediaViewerVideo');
+            
+            // Reset
+            img.style.display = 'none';
+            img.src = '';
+            video.style.display = 'none';
+            video.src = '';
+            video.pause();
+            
+            if (isVideo) {
+                video.style.display = 'block';
+                video.src = url;
+                video.load();
+                video.play().catch(() => {});
+            } else {
+                img.style.display = 'block';
+                img.src = url;
+            }
+            viewer.classList.add('open');
             document.body.style.overflow = 'hidden';
         };
-        window.closeImageViewer = function() {
-            document.getElementById('imageViewer').classList.remove('open');
+
+        window.closeMediaViewer = function() {
+            const viewer = document.getElementById('mediaViewer');
+            viewer.classList.remove('open');
             document.body.style.overflow = '';
+            const video = document.getElementById('mediaViewerVideo');
+            if (video) { video.pause(); }
         };
-        document.addEventListener('keydown', e => { if (e.key === 'Escape') closeImageViewer(); });
+        document.addEventListener('keydown', e => { if (e.key === 'Escape') closeMediaViewer(); });
 
         // Post Menu
         window.togglePostMenu = function(postId, e) {
             e.stopPropagation();
-            // Close all other menus
             Object.keys(openMenus).forEach(id => { if (id !== postId) openMenus[id] = false; });
             openMenus[postId] = !openMenus[postId];
             renderFeed();
@@ -388,7 +455,6 @@
         async function initFeed(user) {
             currentUser = user;
 
-            // Find trainer
             try {
                 const snap = await db.ref('workfit_trainers').once('value');
                 const trainers = snap.val() || {};
@@ -407,7 +473,6 @@
                 return;
             }
 
-            // Load posts
             db.ref('workfit_posts').orderByChild('clubId').equalTo(clubId).on('value', snap => {
                 allPosts = snap.val() || {};
                 renderFeed();
@@ -415,7 +480,6 @@
             db.ref('workfit_post_likes').on('value', snap => { allLikes = snap.val() || {}; renderFeed(); });
             db.ref('workfit_post_comments').on('value', snap => { allComments = snap.val() || {}; renderFeed(); });
 
-            // Today's attendance
             db.ref('workfit_schedules').orderByChild('clubId').equalTo(clubId).on('value', snap => {
                 const sessions = snap.val() || {};
                 todaySessions = Object.entries(sessions).map(([id, s]) => ({ id, ...s })).filter(s => s.day === getToday());
@@ -468,7 +532,25 @@
                     const isOpen = openComments[post.id];
                     const menuOpen = openMenus[post.id];
                     const mine = isMyPost(post);
-                    const hasImage = post.imageUrl && post.imageUrl.startsWith('http');
+                    const hasMedia = post.imageUrl && post.imageUrl.startsWith('http');
+                    const isVideo = hasMedia && isVideoUrl(post.imageUrl);
+                    const isImage = hasMedia && !isVideo;
+
+                    let mediaHtml = '';
+                    if (hasMedia) {
+                        if (isVideo) {
+                            mediaHtml = `
+                            <video src="${esc(post.imageUrl)}" class="post-media video-media" controls preload="metadata" 
+                                   onclick="event.stopPropagation()" 
+                                   oncontextmenu="event.stopPropagation()">
+                                Your browser does not support the video tag.
+                            </video>`;
+                        } else {
+                            mediaHtml = `
+                            <img src="${esc(post.imageUrl)}" class="post-media" alt="Post media" loading="lazy" 
+                                 onclick="event.stopPropagation(); openMediaViewer('${esc(post.imageUrl)}', false)">`;
+                        }
+                    }
 
                     return `
                     <div class="post-card ${mine ? 'my-post' : ''}">
@@ -493,7 +575,7 @@
                         </div>
                         <div class="post-body">
                             <div class="post-text">${esc(post.content || post.text || '')}</div>
-                            ${hasImage ? `<img src="${esc(post.imageUrl)}" class="post-image" alt="" loading="lazy" onclick="event.stopPropagation(); openImageViewer('${esc(post.imageUrl)}')">` : ''}
+                            ${mediaHtml}
                         </div>
                         <div class="post-actions">
                             <button class="post-action-btn ${Object.values(allLikes).some(l => l.postId === post.id && l.uid === currentUser?.uid) ? 'liked' : ''}" onclick="toggleLike('${post.id}')">
@@ -525,7 +607,11 @@
                 <div class="modal-header"><h3><i class="fas fa-plus-circle" style="color:#3b82f6;"></i> New Post</h3><button class="modal-close" onclick="closePostModal()"><i class="fas fa-times"></i></button></div>
                 <input type="hidden" id="editPostId" value="">
                 <div class="form-group"><label>Content *</label><textarea id="postContent" rows="4" placeholder="Share an update with your members..."></textarea></div>
-                <div class="form-group"><label>Image URL (optional)</label><input type="url" id="postImageUrl" placeholder="https://..."></div>
+                <div class="form-group">
+                    <label>Media URL (optional)</label>
+                    <input type="url" id="postImageUrl" placeholder="https://... (image or video link)">
+                    <small class="hint">Supports: JPG, PNG, GIF, MP4, WebM, MOV, and GitHub video links</small>
+                </div>
                 <div style="display:flex;gap:8px;"><button class="btn btn-outline" style="flex:1;" onclick="closePostModal()">Cancel</button><button class="btn btn-primary" style="flex:1;background:var(--info);" onclick="publishPost()"><i class="fas fa-paper-plane"></i> Publish</button></div>
             `;
             document.getElementById('postModal').classList.add('active');
@@ -540,7 +626,11 @@
                 <div class="modal-header"><h3><i class="fas fa-pen" style="color:#3b82f6;"></i> Edit Post</h3><button class="modal-close" onclick="closePostModal()"><i class="fas fa-times"></i></button></div>
                 <input type="hidden" id="editPostId" value="${postId}">
                 <div class="form-group"><label>Content *</label><textarea id="postContent" rows="4">${esc(post.content || post.text || '')}</textarea></div>
-                <div class="form-group"><label>Image URL (optional)</label><input type="url" id="postImageUrl" value="${esc(post.imageUrl || '')}" placeholder="https://..."></div>
+                <div class="form-group">
+                    <label>Media URL (optional)</label>
+                    <input type="url" id="postImageUrl" value="${esc(post.imageUrl || '')}" placeholder="https://...">
+                    <small class="hint">Supports: JPG, PNG, GIF, MP4, WebM, MOV, and GitHub video links</small>
+                </div>
                 <div style="display:flex;gap:8px;"><button class="btn btn-outline" style="flex:1;" onclick="closePostModal()">Cancel</button><button class="btn btn-primary" style="flex:1;background:var(--info);" onclick="publishPost()"><i class="fas fa-save"></i> Update</button></div>
             `;
             document.getElementById('postModal').classList.add('active');
@@ -551,7 +641,6 @@
             if (!confirm('Delete this post? This cannot be undone.')) return;
             try {
                 await db.ref('workfit_posts/' + postId).remove();
-                // Also clean up likes and comments
                 const likesToDelete = Object.entries(allLikes).filter(([id, l]) => l.postId === postId);
                 const commentsToDelete = Object.entries(allComments).filter(([id, c]) => c.postId === postId);
                 for (const [id] of likesToDelete) { await db.ref('workfit_post_likes/' + id).remove(); }
