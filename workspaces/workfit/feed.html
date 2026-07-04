@@ -173,6 +173,20 @@
             background: #000;
         }
         .post-media.video-media:hover { opacity: 1; }
+        .post-media.video-error {
+            background: #fef2f2;
+            padding: 1rem;
+            text-align: center;
+            color: #ef4444;
+            font-size: 0.75rem;
+            border-radius: var(--radius-sm);
+            border: 1px solid #fecaca;
+        }
+        .post-media.video-error i {
+            font-size: 1.5rem;
+            display: block;
+            margin-bottom: 0.3rem;
+        }
         
         .post-actions {
             padding: 0.5rem 1rem; display: flex; gap: 4px;
@@ -385,15 +399,34 @@
             sow.setDate(now.getDate() - now.getDay() + 1); return sow.toISOString().split('T')[0];
         }
 
-        // Helper: Check if URL is a video
+        // Helper: Convert GitHub raw URLs to proper format
+        function fixGitHubUrl(url) {
+            if (!url) return url;
+            
+            // Convert raw.githubusercontent.com to github.com with ?raw=true
+            if (url.includes('raw.githubusercontent.com')) {
+                return url;
+            }
+            
+            // Convert github.com/blob/ to raw.githubusercontent.com
+            const blobMatch = url.match(/github\.com\/([^\/]+)\/([^\/]+)\/blob\/([^\/]+)\/(.+)/);
+            if (blobMatch) {
+                const [, user, repo, branch, path] = blobMatch;
+                return `https://raw.githubusercontent.com/${user}/${repo}/${branch}/${path}`;
+            }
+            
+            return url;
+        }
+
+        // Helper: Check if URL is a video (including GitHub)
         function isVideoUrl(url) {
             if (!url) return false;
             const videoExtensions = /\.(mp4|webm|mov|avi|m4v|mkv|wmv|flv|3gp)$/i;
             if (videoExtensions.test(url)) return true;
-            // GitHub user-attachments often serve videos
+            // Check for GitHub raw video links
+            if (url.includes('raw.githubusercontent.com') && !url.match(/\.(png|jpg|jpeg|gif|webp|svg|bmp)$/i)) return true;
+            // GitHub user-attachments
             if (url.includes('user-attachments') && !url.match(/\.(png|jpg|jpeg|gif|webp|svg|bmp)$/i)) return true;
-            // Check for common video hosting patterns
-            if (url.includes('video') && !url.match(/\.(png|jpg|jpeg|gif|webp|svg|bmp)$/i)) return true;
             return false;
         }
 
@@ -402,6 +435,26 @@
             if (!url) return false;
             const imageExtensions = /\.(png|jpg|jpeg|gif|webp|svg|bmp|ico)$/i;
             return imageExtensions.test(url) || url.includes('i.postimg.cc') || url.includes('imgur.com');
+        }
+
+        // Get media type and fixed URL
+        function getMediaInfo(url) {
+            if (!url || !url.startsWith('http')) return null;
+            
+            // Fix GitHub URLs
+            const fixedUrl = fixGitHubUrl(url);
+            
+            // Check if it's a video
+            if (isVideoUrl(fixedUrl)) {
+                return { type: 'video', url: fixedUrl };
+            }
+            
+            // Check if it's an image
+            if (isImageUrl(fixedUrl) || !isVideoUrl(fixedUrl)) {
+                return { type: 'image', url: fixedUrl };
+            }
+            
+            return null;
         }
 
         // Media Viewer - supports both images and videos
@@ -532,23 +585,26 @@
                     const isOpen = openComments[post.id];
                     const menuOpen = openMenus[post.id];
                     const mine = isMyPost(post);
-                    const hasMedia = post.imageUrl && post.imageUrl.startsWith('http');
-                    const isVideo = hasMedia && isVideoUrl(post.imageUrl);
-                    const isImage = hasMedia && !isVideo;
-
+                    
+                    // Process media
                     let mediaHtml = '';
-                    if (hasMedia) {
-                        if (isVideo) {
-                            mediaHtml = `
-                            <video src="${esc(post.imageUrl)}" class="post-media video-media" controls preload="metadata" 
-                                   onclick="event.stopPropagation()" 
-                                   oncontextmenu="event.stopPropagation()">
-                                Your browser does not support the video tag.
-                            </video>`;
-                        } else {
-                            mediaHtml = `
-                            <img src="${esc(post.imageUrl)}" class="post-media" alt="Post media" loading="lazy" 
-                                 onclick="event.stopPropagation(); openMediaViewer('${esc(post.imageUrl)}', false)">`;
+                    if (post.imageUrl && post.imageUrl.startsWith('http')) {
+                        const mediaInfo = getMediaInfo(post.imageUrl);
+                        if (mediaInfo) {
+                            if (mediaInfo.type === 'video') {
+                                mediaHtml = `
+                                <video src="${esc(mediaInfo.url)}" class="post-media video-media" controls preload="metadata" 
+                                       onclick="event.stopPropagation()" 
+                                       oncontextmenu="event.stopPropagation()"
+                                       onerror="this.style.display='none'; this.parentElement.innerHTML += '<div class=\\'post-media video-error\\'><i class=\\'fas fa-exclamation-triangle\\'></i>Video failed to load<br><small style=\\'font-size:0.6rem;\\'>${esc(post.imageUrl)}</small></div>'">
+                                    Your browser does not support the video tag.
+                                </video>`;
+                            } else {
+                                mediaHtml = `
+                                <img src="${esc(mediaInfo.url)}" class="post-media" alt="Post media" loading="lazy" 
+                                     onclick="event.stopPropagation(); openMediaViewer('${esc(mediaInfo.url)}', false)"
+                                     onerror="this.style.display='none'; this.parentElement.innerHTML += '<div class=\\'post-media video-error\\'><i class=\\'fas fa-image\\'></i>Image failed to load<br><small style=\\'font-size:0.6rem;\\'>${esc(post.imageUrl)}</small></div>'">`;
+                            }
                         }
                     }
 
@@ -609,8 +665,8 @@
                 <div class="form-group"><label>Content *</label><textarea id="postContent" rows="4" placeholder="Share an update with your members..."></textarea></div>
                 <div class="form-group">
                     <label>Media URL (optional)</label>
-                    <input type="url" id="postImageUrl" placeholder="https://... (image or video link)">
-                    <small class="hint">Supports: JPG, PNG, GIF, MP4, WebM, MOV, and GitHub video links</small>
+                    <input type="url" id="postImageUrl" placeholder="https://github.com/user/repo/blob/main/image.jpg or video.mp4">
+                    <small class="hint">✅ Supports: GitHub raw links, images (JPG, PNG, GIF), videos (MP4, WebM, MOV)</small>
                 </div>
                 <div style="display:flex;gap:8px;"><button class="btn btn-outline" style="flex:1;" onclick="closePostModal()">Cancel</button><button class="btn btn-primary" style="flex:1;background:var(--info);" onclick="publishPost()"><i class="fas fa-paper-plane"></i> Publish</button></div>
             `;
@@ -628,8 +684,8 @@
                 <div class="form-group"><label>Content *</label><textarea id="postContent" rows="4">${esc(post.content || post.text || '')}</textarea></div>
                 <div class="form-group">
                     <label>Media URL (optional)</label>
-                    <input type="url" id="postImageUrl" value="${esc(post.imageUrl || '')}" placeholder="https://...">
-                    <small class="hint">Supports: JPG, PNG, GIF, MP4, WebM, MOV, and GitHub video links</small>
+                    <input type="url" id="postImageUrl" value="${esc(post.imageUrl || '')}" placeholder="https://github.com/user/repo/blob/main/image.jpg">
+                    <small class="hint">✅ Supports: GitHub raw links, images (JPG, PNG, GIF), videos (MP4, WebM, MOV)</small>
                 </div>
                 <div style="display:flex;gap:8px;"><button class="btn btn-outline" style="flex:1;" onclick="closePostModal()">Cancel</button><button class="btn btn-primary" style="flex:1;background:var(--info);" onclick="publishPost()"><i class="fas fa-save"></i> Update</button></div>
             `;
@@ -653,8 +709,13 @@
         window.publishPost = async function() {
             const content = document.getElementById('postContent').value.trim();
             if (!content) return toast('Please write something.', 'error');
-            const imageUrl = document.getElementById('postImageUrl').value.trim();
+            let imageUrl = document.getElementById('postImageUrl').value.trim();
             const editId = document.getElementById('editPostId').value;
+            
+            // Fix GitHub URL before saving
+            if (imageUrl) {
+                imageUrl = fixGitHubUrl(imageUrl);
+            }
             
             const btn = document.querySelector('#postModalContent .btn-primary');
             btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
