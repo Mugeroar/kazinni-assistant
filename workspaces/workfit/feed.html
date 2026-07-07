@@ -22,7 +22,7 @@
             --orange: #f97316; --orange-dark: #c2410c; --orange-light: #fb923c;
             --bg: #f8fafc; --surface: #ffffff; --text: #0f172a; --text-secondary: #64748b; --text-muted: #94a3b8;
             --border: #e2e8f0; --border-light: #f1f5f9;
-            --success: #10b981; --warning: #f59e0b; --danger: #ef4444; --info: #3b82f6;
+            --success: #10b981; --warning: #f59e0b; --danger: #ef4444; --info: #3b82f6; --purple: #8b5cf6;
             --shadow-sm: 0 1px 2px rgba(0,0,0,0.05); --shadow: 0 1px 3px rgba(0,0,0,0.1);
             --shadow-md: 0 4px 6px rgba(0,0,0,0.07); --shadow-lg: 0 10px 25px rgba(0,0,0,0.1);
             --radius-sm: 8px; --radius: 12px; --radius-lg: 16px; --radius-xl: 20px;
@@ -110,6 +110,29 @@
             position: relative;
         }
         .post-card.my-post { border-left: 3px solid var(--info); }
+        .post-card.advert {
+            border-color: rgba(249,115,22,0.2);
+            background: rgba(249,115,22,0.03);
+        }
+        .post-card.advert-new {
+            border-color: rgba(249,115,22,0.4);
+            background: linear-gradient(135deg, rgba(249,115,22,0.08), rgba(234,88,12,0.03));
+        }
+        .post-card.advert-new::before {
+            content: '✨ NEW';
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: var(--orange);
+            color: white;
+            font-size: 0.5rem;
+            font-weight: 700;
+            padding: 0.15rem 0.6rem;
+            border-radius: 0 var(--radius-lg) 0 var(--radius-sm);
+            letter-spacing: 0.3px;
+            z-index: 1;
+        }
+
         .post-header {
             padding: 0.8rem 1rem; display: flex; align-items: center; gap: 10px;
             border-bottom: 1px solid var(--border-light);
@@ -119,12 +142,18 @@
             display: flex; align-items: center; justify-content: center;
             font-weight: 700; font-size: 0.7rem; color: white; flex-shrink: 0;
         }
+        .post-avatar.advert { background: linear-gradient(135deg, #8b5cf6, #6d28d9); }
         .post-user-info { flex: 1; min-width: 0; }
-        .post-username { font-weight: 600; font-size: 0.78rem; display: flex; align-items: center; gap: 6px; }
+        .post-username { font-weight: 600; font-size: 0.78rem; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
         .post-time { font-size: 0.6rem; color: var(--text-muted); }
         .post-club-badge {
             padding: 0.15rem 0.5rem; border-radius: 6px; font-size: 0.55rem;
             font-weight: 600; background: rgba(249,115,22,0.1); color: var(--orange-dark);
+        }
+        .advert-tag {
+            font-size: 0.55rem; font-weight: 600; color: var(--orange-light);
+            background: rgba(249,115,22,0.15); padding: 0.05rem 0.4rem; border-radius: 4px;
+            margin-left: 2px;
         }
         .post-menu {
             position: relative; flex-shrink: 0;
@@ -154,6 +183,11 @@
         .post-menu-item.delete:hover { background: #fef2f2; }
         .post-body { padding: 0.8rem 1rem; }
         .post-text { font-size: 0.78rem; line-height: 1.5; }
+        .post-product-price-tag {
+            display: inline-block; padding: 0.25rem 0.7rem; border-radius: 20px;
+            background: var(--orange); color: white; font-weight: 700; font-size: 0.8rem;
+            margin-top: 0.3rem;
+        }
         
         /* Media - Image */
         .post-image {
@@ -186,7 +220,7 @@
         .youtube-wrapper {
             position: relative;
             width: 100%;
-            padding-bottom: 56.25%; /* 16:9 aspect ratio */
+            padding-bottom: 56.25%;
             height: 0;
             margin-top: 0.5rem;
             border-radius: var(--radius-sm);
@@ -215,6 +249,11 @@
         .post-action-btn:hover { background: #f8fafc; color: var(--text-secondary); }
         .post-action-btn.liked { color: #3b82f6; }
         .post-action-btn i { font-size: 0.8rem; }
+        .post-action-btn.shop-btn {
+            background: var(--orange); color: white; border-radius: 20px;
+            font-weight: 600; flex: 1.2;
+        }
+        .post-action-btn.shop-btn:hover { background: var(--orange-dark); }
 
         /* Comments */
         .comments-wrapper {
@@ -287,12 +326,24 @@
         .modal-close:hover { background: #fef2f2; color: #ef4444; }
         .form-group { margin-bottom: 0.8rem; }
         .form-group label { display: block; font-weight: 600; font-size: 0.7rem; color: var(--text-secondary); margin-bottom: 0.3rem; }
-        .form-group input, .form-group textarea {
+        .form-group input, .form-group textarea, .form-group select {
             width: 100%; padding: 0.55rem 0.8rem; border: 1px solid var(--border); border-radius: var(--radius-sm);
             font-family: 'Inter', sans-serif; font-size: 0.8rem; background: #f8fafc; color: var(--text); outline: none;
         }
-        .form-group input:focus, .form-group textarea:focus { border-color: var(--orange); }
+        .form-group input:focus, .form-group textarea:focus, .form-group select:focus { border-color: var(--orange); }
         .form-group .hint { font-size: 0.6rem; color: var(--text-muted); margin-top: 0.2rem; display: block; }
+        .product-select-item {
+            display: flex; align-items: center; gap: 10px; padding: 0.5rem 0.7rem;
+            border: 1px solid var(--border); border-radius: var(--radius-sm); margin-bottom: 6px;
+            cursor: pointer; transition: all 0.2s; background: #fafbfc;
+        }
+        .product-select-item:hover { background: #f1f5f9; border-color: var(--orange); }
+        .product-select-item.selected { border-color: var(--orange); background: #fff7ed; }
+        .product-select-item img { width: 40px; height: 40px; border-radius: 6px; object-fit: cover; background: #f1f5f9; }
+        .product-select-item .info { flex: 1; }
+        .product-select-item .info .name { font-weight: 600; font-size: 0.78rem; }
+        .product-select-item .info .meta { font-size: 0.62rem; color: var(--text-secondary); }
+        .product-select-item .price { font-weight: 700; color: var(--orange); font-size: 0.8rem; }
         .btn {
             padding: 0.55rem 1.1rem; border-radius: var(--radius-sm); font-weight: 600; font-size: 0.75rem;
             cursor: pointer; border: none; transition: all 0.2s; display: inline-flex; align-items: center;
@@ -304,6 +355,8 @@
         .btn-outline:hover { background: #f8fafc; }
         .btn-danger { background: #ef4444; color: white; }
         .btn-danger:hover { background: #dc2626; }
+        .btn-success { background: var(--success); color: white; }
+        .btn-success:hover { background: #059669; }
 
         .empty-state { text-align: center; padding: 2rem 1rem; color: var(--text-muted); }
         .empty-state i { font-size: 2.5rem; display: block; margin-bottom: 0.8rem; opacity: 0.4; }
@@ -323,6 +376,7 @@
             .post-text { font-size: 0.75rem; }
             .topbar-right .nav-btn span { display: none; }
             .topbar-right .nav-btn { padding: 0.3rem 0.55rem; }
+            .product-select-item { flex-wrap: wrap; }
         }
     </style>
 </head>
@@ -382,6 +436,7 @@
         let allPosts = {};
         let allLikes = {};
         let allComments = {};
+        let allProducts = {};
         let todayAttendance = [];
         let todaySessions = [];
         let openComments = {};
@@ -410,22 +465,19 @@
             const now = new Date(); const sow = new Date(now);
             sow.setDate(now.getDate() - now.getDay() + 1); return sow.toISOString().split('T')[0];
         }
+        function formatCurrency(n) { return Number(n || 0).toLocaleString(); }
 
         // Helper: Convert GitHub blob URLs to raw URLs
         function fixGitHubImageUrl(url) {
             if (!url) return url;
-            
-            // Convert github.com/blob/ to raw.githubusercontent.com
             const blobMatch = url.match(/github\.com\/([^\/]+)\/([^\/]+)\/blob\/([^\/]+)\/(.+)/);
             if (blobMatch) {
                 const [, user, repo, branch, path] = blobMatch;
                 return `https://raw.githubusercontent.com/${user}/${repo}/${branch}/${path}`;
             }
-            
             return url;
         }
 
-        // Helper: Check if URL is a YouTube link
         function isYouTubeUrl(url) {
             if (!url) return false;
             return url.includes('youtube.com/watch') || 
@@ -434,7 +486,6 @@
                    url.includes('youtube.com/shorts/');
         }
 
-        // Helper: Extract YouTube video ID
         function getYouTubeId(url) {
             const patterns = [
                 /youtube\.com\/watch\?v=([^&]+)/,
@@ -449,11 +500,9 @@
             return null;
         }
 
-        // Helper: Check if URL is a GitHub image
         function isGitHubImageUrl(url) {
             if (!url) return false;
             const imageExtensions = /\.(png|jpg|jpeg|gif|webp|svg|bmp|ico)$/i;
-            // Check if it's a GitHub raw or blob URL with image extension
             if (url.includes('github.com') || url.includes('raw.githubusercontent.com')) {
                 return imageExtensions.test(url);
             }
@@ -485,6 +534,118 @@
             if (changed) renderFeed();
         });
 
+        // ============ PRODUCT ANNOUNCEMENT MESSAGES ============
+        function getProductAnnouncement(product) {
+            const name = product.name || 'New product';
+            const category = (product.category || '').toLowerCase();
+            const brand = product.brand || '';
+            
+            const messages = {
+                supplements: [
+                    `💪 New arrival: ${name}! Fuel your gains with the latest addition to our supplement lineup.`,
+                    `⚡ ${name} is here! Get ready to crush your fitness goals with this premium supplement.`,
+                    `🔥 Level up your nutrition with ${name}. Now available at WorkFit Shop!`,
+                    `🏋️ ${name} - because your gains deserve the best. Shop now!`
+                ],
+                apparel: [
+                    `👕 Fresh drop: ${name}! Look good, feel great, train harder.`,
+                    `✨ New gear alert! ${name} is now in stock. Style meets performance.`,
+                    `🏃 ${name} - designed for those who push limits. Get yours today!`,
+                    `💯 Level up your fit game with ${name}. Premium quality, unbeatable style.`
+                ],
+                equipment: [
+                    `🏋️ New equipment alert: ${name}! Build your home gym with the best.`,
+                    `💪 ${name} is here! Train like a pro with our latest equipment.`,
+                    `🔥 Get stronger, faster, better with ${name}. Now available!`,
+                    `🏆 Elevate your training with ${name}. Shop now and level up!`
+                ],
+                accessories: [
+                    `🎒 New accessories: ${name}! Complete your workout kit with style.`,
+                    `✨ ${name} - the perfect addition to your fitness journey.`,
+                    `💯 Upgrade your gear with ${name}. Quality you can trust.`,
+                    `🔥 New arrival: ${name}! Small details, big impact.`
+                ],
+                nutrition: [
+                    `🍎 ${name} is here! Fuel your body with the best nutrition.`,
+                    `🥗 New nutrition product: ${name}! Eat clean, train mean.`,
+                    `🌿 ${name} - because what you put in matters. Shop now!`,
+                    `💪 Power your performance with ${name}. Premium nutrition, premium results.`
+                ]
+            };
+
+            const fallback = [
+                `🛍️ New product: ${name}! Check out the latest addition to our shop.`,
+                `🎉 ${name} just landed! Don't miss out on this new arrival.`,
+                `✨ Something new! ${name} is now available at WorkFit Shop.`,
+                `🔥 Fresh off the rack: ${name}! Shop now before it's gone.`
+            ];
+
+            let categoryMessages = messages[category] || messages.supplements || fallback;
+            
+            if (brand) {
+                categoryMessages = categoryMessages.map(msg => 
+                    msg.replace('New', `New from ${brand}`).replace('new', `new from ${brand}`)
+                );
+            }
+
+            const selected = categoryMessages[Math.floor(Math.random() * categoryMessages.length)];
+            
+            if (product.price) {
+                return selected + ` 💰 KES ${formatCurrency(product.price)}`;
+            }
+            return selected;
+        }
+
+        function getCategoryIcon(category) {
+            const c = (category || '').toLowerCase();
+            if (c.includes('supplement')) return '💪';
+            if (c.includes('apparel')) return '👕';
+            if (c.includes('equipment')) return '🏋️';
+            if (c.includes('accessor')) return '🎒';
+            if (c.includes('nutrition')) return '🍎';
+            return '🛍️';
+        }
+
+        // ============ LOAD PRODUCTS ============
+        function loadProducts() {
+            return new Promise((resolve) => {
+                db.ref('workfit_shop_products').once('value', snap => {
+                    allProducts = snap.val() || {};
+                    resolve();
+                });
+            });
+        }
+
+        // ============ CREATE PRODUCT ANNOUNCEMENT POST ============
+        function createProductAnnouncement(productId, product, customMessage) {
+            const message = customMessage || getProductAnnouncement(product);
+            const category = product.category || 'General';
+            const icon = getCategoryIcon(category);
+            const price = product.price || 0;
+            const image = product.image || '';
+
+            const postData = {
+                clubId: clubId,
+                clubName: clubName,
+                productId: productId,
+                productName: product.name,
+                productPrice: price,
+                productCategory: category,
+                productImage: image,
+                isAdvert: true,
+                isNewProduct: true,
+                content: message,
+                authorName: currentUser?.displayName || 'Trainer',
+                authorEmail: currentUser?.email || '',
+                authorAvatar: icon,
+                createdAt: firebase.database.ServerValue.TIMESTAMP,
+                type: 'product_announcement'
+            };
+
+            return db.ref('workfit_posts').push(postData);
+        }
+
+        // ============ INIT FEED ============
         async function initFeed(user) {
             currentUser = user;
 
@@ -506,6 +667,10 @@
                 return;
             }
 
+            // Load products
+            await loadProducts();
+
+            // Load posts
             db.ref('workfit_posts').orderByChild('clubId').equalTo(clubId).on('value', snap => {
                 allPosts = snap.val() || {};
                 renderFeed();
@@ -565,13 +730,18 @@
                     const isOpen = openComments[post.id];
                     const menuOpen = openMenus[post.id];
                     const mine = isMyPost(post);
+                    const isAdvert = post.isAdvert || post.type === 'product_announcement';
+                    const isNew = post.isNewProduct === true;
+                    const productImage = post.productImage || '';
+                    const productPrice = post.productPrice || 0;
+                    const productName = post.productName || '';
+                    const productId = post.productId || '';
                     
                     // Process media
                     let mediaHtml = '';
-                    if (post.imageUrl && post.imageUrl.startsWith('http')) {
+                    if (!isAdvert && post.imageUrl && post.imageUrl.startsWith('http')) {
                         const url = post.imageUrl;
                         
-                        // Check for YouTube
                         if (isYouTubeUrl(url)) {
                             const videoId = getYouTubeId(url);
                             if (videoId) {
@@ -585,17 +755,13 @@
                                     </iframe>
                                 </div>`;
                             }
-                        }
-                        // Check for GitHub image
-                        else if (isGitHubImageUrl(url)) {
+                        } else if (isGitHubImageUrl(url)) {
                             const rawUrl = fixGitHubImageUrl(url);
                             mediaHtml = `
                             <img src="${esc(rawUrl)}" class="post-image" alt="Post image" loading="lazy" 
                                  onclick="event.stopPropagation(); openImageViewer('${esc(rawUrl)}')"
                                  onerror="this.style.display='none'; this.parentElement.innerHTML += '<div class=\\'post-image image-error\\'><i class=\\'fas fa-image\\'></i>Image failed to load<br><small style=\\'font-size:0.6rem;\\'>${esc(url)}</small></div>'">`;
-                        }
-                        // Fallback: try to show as image if it has image extension
-                        else if (/\.(png|jpg|jpeg|gif|webp|svg|bmp|ico)$/i.test(url)) {
+                        } else if (/\.(png|jpg|jpeg|gif|webp|svg|bmp|ico)$/i.test(url)) {
                             mediaHtml = `
                             <img src="${esc(url)}" class="post-image" alt="Post image" loading="lazy" 
                                  onclick="event.stopPropagation(); openImageViewer('${esc(url)}')"
@@ -603,14 +769,30 @@
                         }
                     }
 
+                    // Avatar icon
+                    let avatarIcon = '👤';
+                    if (isAdvert) {
+                        avatarIcon = '🛍️';
+                    }
+
+                    let cardClass = 'post-card';
+                    if (mine) cardClass += ' my-post';
+                    if (isAdvert) {
+                        cardClass += ' advert';
+                        if (isNew) cardClass += ' advert-new';
+                    }
+
+                    const showShopButton = isAdvert && productId;
+
                     return `
-                    <div class="post-card ${mine ? 'my-post' : ''}">
+                    <div class="${cardClass}">
                         <div class="post-header">
-                            <div class="post-avatar">${getInitials(post.authorName || 'Club')}</div>
+                            <div class="post-avatar ${isAdvert ? 'advert' : ''}">${avatarIcon}</div>
                             <div class="post-user-info">
                                 <div class="post-username">
                                     ${esc(post.authorName || 'WorkFit Club')}
                                     ${mine ? '<span style="font-size:0.55rem;color:var(--info);">(You)</span>' : ''}
+                                    ${isAdvert ? `<span class="advert-tag"><i class="fas fa-bullhorn"></i> Advert</span>` : ''}
                                 </div>
                                 <div class="post-time">${timeAgo(post.createdAt)}</div>
                             </div>
@@ -626,7 +808,13 @@
                         </div>
                         <div class="post-body">
                             <div class="post-text">${esc(post.content || post.text || '')}</div>
-                            ${mediaHtml}
+                            ${isAdvert && productImage ? `
+                                <img src="${esc(productImage)}" class="post-image" alt="${esc(productName)}" loading="lazy" 
+                                     onclick="event.stopPropagation(); openImageViewer('${esc(productImage)}')"
+                                     onerror="this.style.display='none'">
+                            ` : ''}
+                            ${isAdvert && productPrice ? `<div class="post-product-price-tag">KES ${formatCurrency(productPrice)}</div>` : ''}
+                            ${!isAdvert ? mediaHtml : ''}
                         </div>
                         <div class="post-actions">
                             <button class="post-action-btn ${Object.values(allLikes).some(l => l.postId === post.id && l.uid === currentUser?.uid) ? 'liked' : ''}" onclick="toggleLike('${post.id}')">
@@ -635,6 +823,11 @@
                             <button class="post-action-btn" onclick="toggleComments('${post.id}')">
                                 <i class="fas fa-comment"></i> ${comments.length}
                             </button>
+                            ${showShopButton ? `
+                                <button class="post-action-btn shop-btn" onclick="window.location.href='/shop.html?product=${productId}'">
+                                    <i class="fas fa-cart-shopping"></i> Shop Now
+                                </button>
+                            ` : ''}
                         </div>
                         <div class="comments-wrapper ${isOpen ? 'open' : ''}" id="commentsWrapper_${post.id}">
                             ${comments.length > 0 ? `<div class="comments-section">${comments.map(c => `
@@ -651,43 +844,126 @@
             container.innerHTML = html;
         }
 
-        // Create Post
+        // ============ CREATE POST ============
         window.openCreatePost = function() {
+            const productOptions = Object.entries(allProducts)
+                .filter(([id, p]) => p && p.name)
+                .map(([id, p]) => `
+                    <div class="product-select-item" data-product-id="${id}" onclick="selectProduct('${id}')">
+                        ${p.image ? `<img src="${esc(p.image)}" onerror="this.style.display='none'">` : `<div style="width:40px;height:40px;background:#f1f5f9;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;">${getCategoryIcon(p.category)}</div>`}
+                        <div class="info">
+                            <div class="name">${esc(p.name)}</div>
+                            <div class="meta">${esc(p.category || 'General')} ${p.brand ? '· ' + esc(p.brand) : ''}</div>
+                        </div>
+                        <div class="price">KES ${formatCurrency(p.price)}</div>
+                    </div>
+                `).join('');
+
             document.getElementById('postModalContent').innerHTML = `
                 <div class="modal-handle"></div>
                 <div class="modal-header"><h3><i class="fas fa-plus-circle" style="color:#3b82f6;"></i> New Post</h3><button class="modal-close" onclick="closePostModal()"><i class="fas fa-times"></i></button></div>
                 <input type="hidden" id="editPostId" value="">
-                <div class="form-group"><label>Content *</label><textarea id="postContent" rows="4" placeholder="Share an update with your members..."></textarea></div>
                 <div class="form-group">
-                    <label>Media URL (optional)</label>
-                    <input type="url" id="postImageUrl" placeholder="https://github.com/user/repo/blob/main/image.jpg or https://youtube.com/watch?v=...">
-                    <small class="hint">📷 Images: GitHub links (JPG, PNG, GIF) &nbsp;|&nbsp; 🎬 Videos: YouTube links</small>
+                    <label>Post Type</label>
+                    <select id="postType" onchange="togglePostType()">
+                        <option value="general">General Post</option>
+                        <option value="product">Product Announcement</option>
+                    </select>
                 </div>
-                <div style="display:flex;gap:8px;"><button class="btn btn-outline" style="flex:1;" onclick="closePostModal()">Cancel</button><button class="btn btn-primary" style="flex:1;background:var(--info);" onclick="publishPost()"><i class="fas fa-paper-plane"></i> Publish</button></div>
+                <div id="generalPostFields">
+                    <div class="form-group"><label>Content *</label><textarea id="postContent" rows="4" placeholder="Share an update with your members..."></textarea></div>
+                    <div class="form-group">
+                        <label>Media URL (optional)</label>
+                        <input type="url" id="postImageUrl" placeholder="https://github.com/... or https://youtube.com/...">
+                        <small class="hint">📷 Images: GitHub links (JPG, PNG, GIF) &nbsp;|&nbsp; 🎬 Videos: YouTube links</small>
+                    </div>
+                </div>
+                <div id="productPostFields" style="display:none;">
+                    <div class="form-group">
+                        <label>Select a Product to Announce</label>
+                        <div style="max-height:250px;overflow-y:auto;border:1px solid var(--border);border-radius:var(--radius-sm);padding:0.3rem;">
+                            ${productOptions || '<div style="padding:1rem;color:var(--text-muted);text-align:center;">No products available. Add products in the shop first.</div>'}
+                        </div>
+                        <input type="hidden" id="selectedProductId" value="">
+                        <small class="hint">Click on a product to select it. The post will automatically include the product image, price, and a catchy announcement.</small>
+                    </div>
+                    <div class="form-group">
+                        <label>Custom Message (optional)</label>
+                        <textarea id="productCustomMessage" rows="3" placeholder="Write a custom announcement message... Or leave blank for auto-generated message"></textarea>
+                    </div>
+                </div>
+                <div style="display:flex;gap:8px;">
+                    <button class="btn btn-outline" style="flex:1;" onclick="closePostModal()">Cancel</button>
+                    <button class="btn btn-primary" style="flex:1;background:var(--info);" onclick="publishPost()"><i class="fas fa-paper-plane"></i> Publish</button>
+                </div>
             `;
             document.getElementById('postModal').classList.add('active');
         };
 
-        // Edit Post
+        window.selectProduct = function(productId) {
+            // Deselect all
+            document.querySelectorAll('.product-select-item').forEach(el => el.classList.remove('selected'));
+            // Select clicked
+            const el = document.querySelector(`.product-select-item[data-product-id="${productId}"]`);
+            if (el) el.classList.add('selected');
+            document.getElementById('selectedProductId').value = productId;
+        };
+
+        window.togglePostType = function() {
+            const type = document.getElementById('postType').value;
+            document.getElementById('generalPostFields').style.display = type === 'general' ? 'block' : 'none';
+            document.getElementById('productPostFields').style.display = type === 'product' ? 'block' : 'none';
+        };
+
+        // ============ EDIT POST ============
         window.openEditPost = function(postId) {
             const post = allPosts[postId];
             if (!post) return;
+            const isProductPost = post.isAdvert || post.type === 'product_announcement';
+            
             document.getElementById('postModalContent').innerHTML = `
                 <div class="modal-handle"></div>
                 <div class="modal-header"><h3><i class="fas fa-pen" style="color:#3b82f6;"></i> Edit Post</h3><button class="modal-close" onclick="closePostModal()"><i class="fas fa-times"></i></button></div>
                 <input type="hidden" id="editPostId" value="${postId}">
-                <div class="form-group"><label>Content *</label><textarea id="postContent" rows="4">${esc(post.content || post.text || '')}</textarea></div>
                 <div class="form-group">
-                    <label>Media URL (optional)</label>
-                    <input type="url" id="postImageUrl" value="${esc(post.imageUrl || '')}" placeholder="https://github.com/... or https://youtube.com/...">
-                    <small class="hint">📷 Images: GitHub links (JPG, PNG, GIF) &nbsp;|&nbsp; 🎬 Videos: YouTube links</small>
+                    <label>Post Type</label>
+                    <select id="postType" onchange="togglePostType()">
+                        <option value="general" ${!isProductPost ? 'selected' : ''}>General Post</option>
+                        <option value="product" ${isProductPost ? 'selected' : ''}>Product Announcement</option>
+                    </select>
                 </div>
-                <div style="display:flex;gap:8px;"><button class="btn btn-outline" style="flex:1;" onclick="closePostModal()">Cancel</button><button class="btn btn-primary" style="flex:1;background:var(--info);" onclick="publishPost()"><i class="fas fa-save"></i> Update</button></div>
+                <div id="generalPostFields" style="${!isProductPost ? 'display:block' : 'display:none'}">
+                    <div class="form-group"><label>Content *</label><textarea id="postContent" rows="4">${esc(post.content || post.text || '')}</textarea></div>
+                    <div class="form-group">
+                        <label>Media URL (optional)</label>
+                        <input type="url" id="postImageUrl" value="${esc(post.imageUrl || '')}" placeholder="https://github.com/... or https://youtube.com/...">
+                        <small class="hint">📷 Images: GitHub links (JPG, PNG, GIF) &nbsp;|&nbsp; 🎬 Videos: YouTube links</small>
+                    </div>
+                </div>
+                <div id="productPostFields" style="${isProductPost ? 'display:block' : 'display:none'}">
+                    <div class="form-group">
+                        <label>Selected Product</label>
+                        <div style="padding:0.5rem;background:#f8fafc;border-radius:var(--radius-sm);border:1px solid var(--border);">
+                            <strong>${esc(post.productName || 'Product')}</strong>
+                            ${post.productPrice ? ` · KES ${formatCurrency(post.productPrice)}` : ''}
+                        </div>
+                        <input type="hidden" id="selectedProductId" value="${post.productId || ''}">
+                        <small class="hint">Product is already selected. Edit the content below if needed.</small>
+                    </div>
+                    <div class="form-group">
+                        <label>Custom Message</label>
+                        <textarea id="productCustomMessage" rows="3">${esc(post.content || '')}</textarea>
+                    </div>
+                </div>
+                <div style="display:flex;gap:8px;">
+                    <button class="btn btn-outline" style="flex:1;" onclick="closePostModal()">Cancel</button>
+                    <button class="btn btn-primary" style="flex:1;background:var(--info);" onclick="publishPost()"><i class="fas fa-save"></i> Update</button>
+                </div>
             `;
             document.getElementById('postModal').classList.add('active');
         };
 
-        // Delete Post
+        // ============ DELETE POST ============
         window.deletePost = async function(postId) {
             if (!confirm('Delete this post? This cannot be undone.')) return;
             try {
@@ -700,41 +976,99 @@
             } catch(e) { toast('Failed to delete', 'error'); }
         };
 
-        // Publish/Update Post
+        // ============ PUBLISH POST ============
         window.publishPost = async function() {
-            const content = document.getElementById('postContent').value.trim();
-            if (!content) return toast('Please write something.', 'error');
-            const imageUrl = document.getElementById('postImageUrl').value.trim();
+            const postType = document.getElementById('postType').value;
             const editId = document.getElementById('editPostId').value;
-            
             const btn = document.querySelector('#postModalContent .btn-primary');
             btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
 
             try {
-                const postData = {
-                    clubId, clubName,
-                    authorName: currentUser?.displayName || 'Trainer',
-                    authorEmail: currentUser?.email || '',
-                    content, imageUrl: imageUrl || '',
-                    updatedAt: firebase.database.ServerValue.TIMESTAMP
-                };
+                if (postType === 'product') {
+                    // Product Announcement
+                    const productId = document.getElementById('selectedProductId').value;
+                    const customMessage = document.getElementById('productCustomMessage').value.trim();
+                    
+                    if (!productId) {
+                        toast('Please select a product', 'error');
+                        btn.disabled = false; btn.innerHTML = '<i class="fas fa-paper-plane"></i> Publish';
+                        return;
+                    }
 
-                if (editId) {
-                    await db.ref('workfit_posts/' + editId).update(postData);
+                    const product = allProducts[productId];
+                    if (!product) {
+                        toast('Product not found', 'error');
+                        btn.disabled = false; btn.innerHTML = '<i class="fas fa-paper-plane"></i> Publish';
+                        return;
+                    }
+
+                    const message = customMessage || getProductAnnouncement(product);
+                    const image = product.image || '';
+
+                    const postData = {
+                        clubId: clubId,
+                        clubName: clubName,
+                        productId: productId,
+                        productName: product.name,
+                        productPrice: product.price || 0,
+                        productCategory: product.category || 'General',
+                        productImage: image,
+                        isAdvert: true,
+                        isNewProduct: true,
+                        content: message,
+                        authorName: currentUser?.displayName || 'Trainer',
+                        authorEmail: currentUser?.email || '',
+                        updatedAt: firebase.database.ServerValue.TIMESTAMP
+                    };
+
+                    if (editId) {
+                        await db.ref('workfit_posts/' + editId).update(postData);
+                    } else {
+                        postData.createdAt = firebase.database.ServerValue.TIMESTAMP;
+                        await db.ref('workfit_posts').push(postData);
+                    }
+                    toast(editId ? 'Product post updated!' : 'Product announcement published!', 'success');
                 } else {
-                    postData.createdAt = firebase.database.ServerValue.TIMESTAMP;
-                    postData.timestamp = Date.now();
-                    await db.ref('workfit_posts').push(postData);
+                    // General Post
+                    const content = document.getElementById('postContent').value.trim();
+                    if (!content) {
+                        toast('Please write something.', 'error');
+                        btn.disabled = false; btn.innerHTML = '<i class="fas fa-paper-plane"></i> Publish';
+                        return;
+                    }
+                    const imageUrl = document.getElementById('postImageUrl').value.trim();
+
+                    const postData = {
+                        clubId: clubId,
+                        clubName: clubName,
+                        authorName: currentUser?.displayName || 'Trainer',
+                        authorEmail: currentUser?.email || '',
+                        content: content,
+                        imageUrl: imageUrl || '',
+                        updatedAt: firebase.database.ServerValue.TIMESTAMP
+                    };
+
+                    if (editId) {
+                        await db.ref('workfit_posts/' + editId).update(postData);
+                    } else {
+                        postData.createdAt = firebase.database.ServerValue.TIMESTAMP;
+                        await db.ref('workfit_posts').push(postData);
+                    }
+                    toast(editId ? 'Post updated!' : 'Post published!', 'success');
                 }
-                closePostModal(); toast(editId ? 'Post updated!' : 'Post published!');
-            } catch(e) { toast('Failed to save.', 'error'); }
-            finally { btn.disabled = false; btn.innerHTML = editId ? '<i class="fas fa-save"></i> Update' : '<i class="fas fa-paper-plane"></i> Publish'; }
+                closePostModal();
+            } catch(e) { 
+                toast('Failed to save.', 'error'); 
+                console.error(e);
+            } finally {
+                btn.disabled = false; btn.innerHTML = editId ? '<i class="fas fa-save"></i> Update' : '<i class="fas fa-paper-plane"></i> Publish';
+            }
         };
 
         function closePostModal() { document.getElementById('postModal').classList.remove('active'); }
         document.getElementById('postModal').addEventListener('click', function(e) { if (e.target === this) closePostModal(); });
 
-        // Comments
+        // ============ COMMENTS ============
         window.toggleComments = function(postId) {
             const wrapper = document.getElementById('commentsWrapper_' + postId);
             if (!wrapper) return;
