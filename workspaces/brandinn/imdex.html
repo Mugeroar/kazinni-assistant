@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>BrandInn Field Ops | Staff Hub</title>
+  <meta name="theme-color" content="#ca8a04">
+  <link rel="icon" type="image/png" href="https://i.postimg.cc/rFfXDj3L/kazinni-removebg-preview(1).png">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --gold: #ca8a04; --gold-dark: #a16207; --gold-light: #fbbf24; --gold-soft: #fef3c7;
+      --bg: #f8fafc; --surface: #ffffff; --text: #0f172a; --text-secondary: #64748b;
+      --border: #e2e8f0; --border-light: #f1f5f9;
+      --success: #10b981; --warning: #f59e0b; --danger: #ef4444; --info: #3b82f6; --purple: #8b5cf6;
+      --shadow-sm: 0 1px 2px rgba(0,0,0,0.05); --shadow: 0 1px 3px rgba(0,0,0,0.1);
+      --shadow-md: 0 4px 6px rgba(0,0,0,0.07); --shadow-lg: 0 10px 25px rgba(0,0,0,0.1);
+      --radius-sm: 8px; --radius: 12px; --radius-lg: 16px; --radius-xl: 20px;
+    }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg); color: var(--text); min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .topbar {
+      background: rgba(255,255,255,0.95); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border-light); padding: 0 1.5rem; height: 56px;
+      display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100;
+    }
+    .topbar-left { display: flex; align-items: center; gap: 10px; }
+    .brand { display: flex; align-items: center; gap: 8px; text-decoration: none; }
+    .brand img { width: 30px; height: 30px; border-radius: 8px; }
+    .brand span { font-weight: 700; font-size: 0.9rem; color: var(--text); }
+    .workspace-tag { background: var(--gold-soft); color: var(--gold-dark); padding: 0.2rem 0.7rem; border-radius: 20px; font-size: 0.65rem; font-weight: 600; max-width: 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+    .topbar-right { display: flex; align-items: center; gap: 10px; }
+    .user-menu { position: relative; }
+    .user-avatar-btn {
+      width: 36px; height: 36px; border-radius: 50%; border: 2px solid var(--border);
+      background: linear-gradient(135deg, var(--gold), var(--gold-dark)); color: white;
+      display: flex; align-items: center; justify-content: center; font-size: 0.8rem;
+      font-weight: 700; cursor: pointer; transition: all 0.2s; overflow: hidden;
+    }
+    .user-avatar-btn img { width: 100%; height: 100%; object-fit: cover; }
+    .user-avatar-btn:hover { border-color: var(--gold); box-shadow: 0 0 16px rgba(202,138,4,0.2); transform: scale(1.05); }
+    
+    .user-dropdown {
+      position: absolute; top: 46px; right: 0; background: var(--surface);
+      border: 1px solid var(--border); border-radius: 16px; padding: 0.5rem 0;
+      min-width: 220px; box-shadow: var(--shadow-lg);
+      opacity: 0; visibility: hidden; transform: translateY(-8px);
+      transition: all 0.25s; z-index: 200;
+    }
+    .user-dropdown.open { opacity: 1; visibility: visible; transform: translateY(0); }
+    .dropdown-header { padding: 0.6rem 1rem; border-bottom: 1px solid var(--border-light); display: flex; align-items: center; gap: 10px; }
+    .dropdown-avatar { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, var(--gold), var(--gold-dark)); display: flex; align-items: center; justify-content: center; font-weight: 700; color: white; font-size: 0.75rem; flex-shrink: 0; }
+    .dropdown-user-info { min-width: 0; }
+    .dropdown-user-name { font-weight: 600; font-size: 0.78rem; color: var(--text); }
+    .dropdown-user-email { font-size: 0.62rem; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .dropdown-user-role { font-size: 0.58rem; color: var(--gold-dark); font-weight: 600; margin-top: 2px; }
+    .user-dropdown-item { display: flex; align-items: center; gap: 10px; padding: 0.6rem 1rem; font-size: 0.75rem; color: var(--text-secondary); cursor: pointer; transition: all 0.15s; text-decoration: none; border: none; background: none; width: 100%; font-family: 'Inter', sans-serif; text-align: left; }
+    .user-dropdown-item:hover { background: #f8fafc; color: var(--text); }
+    .user-dropdown-item i { width: 18px; text-align: center; font-size: 0.85rem; }
+    .dropdown-divider { height: 1px; background: var(--border-light); margin: 0.3rem 0; }
+    .user-dropdown-item.signout { color: var(--danger); }
+    .user-dropdown-item.signout:hover { background: #fef2f2; }
+
+    .main { padding: 1.5rem; max-width: 1000px; margin: 0 auto; }
+    .page-title { font-size: 1.3rem; font-weight: 800; }
+    .page-subtitle { font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 1.2rem; }
+
+    .tab-nav {
+      display: flex; gap: 4px; background: var(--surface); border-radius: var(--radius);
+      padding: 4px; margin-bottom: 1.5rem; border: 1px solid var(--border-light);
+      box-shadow: var(--shadow-sm); overflow-x: auto;
+    }
+    .tab-btn {
+      flex: 1; min-width: fit-content; padding: 0.5rem 0.8rem; border-radius: 10px;
+      border: none; cursor: pointer; font-family: 'Inter', sans-serif; font-size: 0.72rem;
+      font-weight: 600; background: transparent; color: var(--text-secondary);
+      transition: all 0.2s; white-space: nowrap; display: flex; align-items: center;
+      justify-content: center; gap: 6px;
+    }
+    .tab-btn:hover { background: #f8fafc; color: var(--text); }
+    .tab-btn.active { background: var(--gold); color: white; box-shadow: 0 2px 8px rgba(202,138,4,0.2); }
+    .tab-btn .badge-count { background: rgba(255,255,255,0.2); padding: 1px 6px; border-radius: 8px; font-size: 0.6rem; }
+    .tab-btn.active .badge-count { background: rgba(255,255,255,0.3); }
+
+    .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 1.5rem; }
+    .stat-card {
+      background: var(--surface); border-radius: var(--radius-lg); padding: 1rem;
+      border: 1px solid var(--border-light); box-shadow: var(--shadow-sm);
+    }
+    .stat-card .stat-icon { width: 36px; height: 36px; border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; margin-bottom: 0.6rem; font-size: 0.9rem; }
+    .stat-card .stat-icon.requests { background: #fef3c7; color: #d97706; }
+    .stat-card .stat-icon.projects { background: #eff6ff; color: #3b82f6; }
+    .stat-card .stat-icon.bookings { background: #faf5ff; color: #7c3aed; }
+    .stat-card .stat-icon.print { background: #ecfdf5; color: #059669; }
+    .stat-card .stat-value { font-size: 1.6rem; font-weight: 800; color: var(--text); }
+    .stat-card .stat-label { font-size: 0.6rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; margin-top: 0.2rem; }
+
+    .section { background: var(--surface); border-radius: var(--radius-xl); border: 1px solid var(--border-light); box-shadow: var(--shadow-sm); margin-bottom: 1.5rem; overflow: hidden; }
+    .section-header { padding: 1rem 1.2rem; border-bottom: 1px solid var(--border-light); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
+    .section-header h3 { font-size: 0.85rem; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+    .section-body { padding: 1rem 1.2rem; }
+    .section-body.no-padding { padding: 0; }
+
+    .btn { padding: 0.45rem 0.9rem; border-radius: var(--radius-sm); font-weight: 600; font-size: 0.72rem; cursor: pointer; border: 1px solid transparent; transition: all 0.2s; display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; font-family: 'Inter', sans-serif; }
+    .btn-primary { background: var(--gold); color: white; border-color: var(--gold); }
+    .btn-primary:hover { background: var(--gold-dark); }
+    .btn-outline { background: white; border-color: var(--border); color: var(--text-secondary); }
+    .btn-outline:hover { background: #f8fafc; }
+    .btn-info { background: var(--info); color: white; border-color: var(--info); }
+    .btn-info:hover { background: #2563eb; }
+    .btn-success { background: var(--success); color: white; }
+    .btn-success:hover { background: #059669; }
+    .btn-danger { background: var(--danger); color: white; }
+    .btn-danger:hover { background: #dc2626; }
+    .btn-sm { padding: 0.35rem 0.7rem; font-size: 0.68rem; }
+    .btn-xs { padding: 0.25rem 0.5rem; font-size: 0.62rem; border-radius: 6px; }
+
+    .list-item { display: flex; align-items: center; justify-content: space-between; padding: 0.75rem 1.2rem; border-bottom: 1px solid var(--border-light); transition: background 0.15s; gap: 8px; flex-wrap: wrap; }
+    .list-item:last-child { border-bottom: none; }
+    .list-item:hover { background: #fafbfc; }
+    .list-item-left { display: flex; align-items: center; gap: 10px; min-width: 0; flex: 1; }
+    .list-item-icon { width: 36px; height: 36px; border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; font-size: 0.9rem; flex-shrink: 0; background: #f8fafc; }
+    .list-item-info { min-width: 0; }
+    .list-item-title { font-weight: 600; font-size: 0.8rem; color: var(--text); }
+    .list-item-subtitle { font-size: 0.65rem; color: var(--text-secondary); margin-top: 1px; }
+    .list-item-right { display: flex; align-items: center; gap: 6px; flex-shrink: 0; flex-wrap: wrap; }
+
+    .badge { padding: 0.18rem 0.5rem; border-radius: 6px; font-size: 0.6rem; font-weight: 600; text-transform: capitalize; }
+    .badge-success { background: #ecfdf5; color: #065f46; }
+    .badge-warning { background: #fffbeb; color: #92400e; }
+    .badge-danger { background: #fef2f2; color: #991b1b; }
+    .badge-info { background: #eff6ff; color: #1e40af; }
+    .badge-neutral { background: #f1f5f9; color: #475569; }
+    .badge-gold { background: var(--gold-soft); color: var(--gold-dark); }
+
+    .empty-state { text-align: center; padding: 2.5rem 1rem; }
+    .empty-state i { font-size: 2.5rem; color: #cbd5e1; display: block; margin-bottom: 0.8rem; }
+    .empty-state p { font-size: 0.78rem; color: var(--text-secondary); }
+
+    .modal-overlay { position: fixed; inset: 0; background: rgba(15,23,42,0.4); backdrop-filter: blur(4px); display: flex; align-items: flex-end; justify-content: center; z-index: 300; opacity: 0; visibility: hidden; transition: all 0.25s; }
+    .modal-overlay.active { opacity: 1; visibility: visible; }
+    .modal { background: white; border-radius: 20px 20px 0 0; padding: 1.5rem; width: 100%; max-width: 500px; max-height: 85vh; overflow-y: auto; box-shadow: 0 -4px 30px rgba(0,0,0,0.1); }
+    .modal-handle { width: 36px; height: 4px; background: #e2e8f0; border-radius: 2px; margin: 0 auto 1rem; }
+    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.2rem; }
+    .modal-header h3 { font-size: 1rem; font-weight: 700; }
+    .modal-close { width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--border); background: white; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; transition: all 0.2s; }
+    .modal-close:hover { background: #fef2f2; color: var(--danger); }
+    .form-group { margin-bottom: 0.8rem; }
+    .form-group label { display: block; font-weight: 600; font-size: 0.7rem; color: var(--text-secondary); margin-bottom: 0.3rem; }
+    .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 0.55rem 0.8rem; border: 1px solid var(--border); border-radius: var(--radius-sm); font-family: 'Inter', sans-serif; font-size: 0.8rem; background: #f8fafc; outline: none; transition: all 0.2s; }
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(202,138,4,0.06); background: white; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; }
+    .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); z-index: 400; padding: 0.6rem 1.2rem; border-radius: 10px; font-size: 0.75rem; font-weight: 600; box-shadow: var(--shadow-lg); animation: toastIn 0.3s ease; background: #0f172a; color: white; display: none; max-width: 90%; }
+    .toast.error { background: #991b1b; }
+    .toast.success { background: #065f46; }
+    @keyframes toastIn { from { opacity: 0; transform: translateX(-50%) translateY(15px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }
+
+    @media (max-width: 640px) { 
+      .main { padding: 1rem; } 
+      .stats-row { grid-template-columns: 1fr 1fr; }
+      .form-row { grid-template-columns: 1fr; }
+      .topbar { padding: 0 1rem; }
+      .tab-btn { font-size: 0.65rem; padding: 0.35rem 0.5rem; }
+      .list-item { flex-direction: column; align-items: stretch; }
+      .list-item-right { justify-content: flex-start; margin-top: 4px; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Top Bar -->
+  <div class="topbar">
+    <div class="topbar-left">
+      <div class="brand">
+        <img src="https://i.postimg.cc/rFfXDj3L/kazinni-removebg-preview(1).png" alt="Logo">
+        <span>BrandInn</span>
+      </div>
+      <span class="workspace-tag" id="workspaceTag">Field Ops</span>
+    </div>
+    <div class="topbar-right">
+      <div class="user-menu" id="userMenu">
+        <button class="user-avatar-btn" id="userAvatarBtn" onclick="toggleUserMenu()">
+          <img id="userAvatarImg" src="" alt="" style="display:none;">
+          <span id="userAvatarText">BR</span>
+        </button>
+        <div class="user-dropdown" id="userDropdown">
+          <div class="dropdown-header">
+            <div class="dropdown-avatar" id="dropdownAvatar">BR</div>
+            <div class="dropdown-user-info">
+              <div class="dropdown-user-name" id="dropdownName">Staff</div>
+              <div class="dropdown-user-email" id="dropdownEmail">...</div>
+              <div class="dropdown-user-role"><i class="fas fa-briefcase"></i> BrandInn Staff</div>
+            </div>
+          </div>
+          <div class="dropdown-divider"></div>
+          <button class="user-dropdown-item" onclick="switchTab('requests')"><i class="fas fa-clipboard-list"></i> Service Requests</button>
+          <button class="user-dropdown-item" onclick="switchTab('projects')"><i class="fas fa-project-diagram"></i> Projects</button>
+          <button class="user-dropdown-item" onclick="switchTab('bookings')"><i class="fas fa-calendar-check"></i> Bookings</button>
+          <button class="user-dropdown-item" onclick="switchTab('print')"><i class="fas fa-print"></i> Print Orders</button>
+          <div class="dropdown-divider"></div>
+          <button class="user-dropdown-item signout" onclick="handleLogout()"><i class="fas fa-sign-out-alt"></i> Sign Out</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="main">
+    <div id="mainContent">
+      <!-- Tab Navigation -->
+      <div class="tab-nav">
+        <button class="tab-btn active" onclick="switchTab('requests')"><i class="fas fa-clipboard-list"></i> Requests</button>
+        <button class="tab-btn" onclick="switchTab('projects')"><i class="fas fa-project-diagram"></i> Projects</button>
+        <button class="tab-btn" onclick="switchTab('bookings')"><i class="fas fa-calendar-check"></i> Bookings</button>
+        <button class="tab-btn" onclick="switchTab('print')"><i class="fas fa-print"></i> Print Orders</button>
+      </div>
+      <div id="tabContent"></div>
+    </div>
+  </div>
+  
+  <!-- Modal -->
+  <div class="modal-overlay" id="modalOverlay"><div class="modal" id="modalContent"><div class="modal-handle"></div></div></div>
+  <div id="toast" class="toast"></div>
+
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+
+  <script>
+    firebase.initializeApp({
+      apiKey: "AIzaSyC7kppUyHUaPzeLBV62NEZWuHiuz1Kz0mA",
+      authDomain: "mugera-e51cc.firebaseapp.com",
+      databaseURL: "https://mugera-e51cc-default-rtdb.europe-west1.firebasedatabase.app",
+      projectId: "mugera-e51cc"
+    });
+    const auth = firebase.auth();
+    const db = firebase.database();
+
+    let currentTab = 'requests';
+    let allRequests = {};
+    let allProjects = {};
+    let allBookings = {};
+    let allPrintOrders = {};
+    let currentUser = null;
+
+    function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+    function toast(msg, type='') {
+      const t = document.getElementById('toast');
+      t.textContent = msg; t.className = 'toast' + (type ? ' ' + type : '');
+      t.style.display = 'block'; clearTimeout(t._t); t._t = setTimeout(() => t.style.display = 'none', 3000);
+    }
+    function openModal(html) { document.getElementById('modalContent').innerHTML = '<div class="modal-handle"></div>' + html; document.getElementById('modalOverlay').classList.add('active'); }
+    function closeModal() { document.getElementById('modalOverlay').classList.remove('active'); }
+    document.getElementById('modalOverlay').addEventListener('click', function(e) { if (e.target === this) closeModal(); });
+
+    // User Menu
+    window.toggleUserMenu = function() { document.getElementById('userDropdown').classList.toggle('open'); };
+    document.addEventListener('click', function(e) {
+      if (!document.getElementById('userMenu')?.contains(e.target)) {
+        document.getElementById('userDropdown')?.classList.remove('open');
+      }
+    });
+
+    // Tab Switching
+    window.switchTab = function(tab) {
+      currentTab = tab;
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(b => {
+        const icon = b.querySelector('i');
+        if (icon) {
+          const btnTab = b.textContent.toLowerCase().trim();
+          if (btnTab.includes(tab) || (tab === 'requests' && btnTab.includes('request')) ||
+              (tab === 'projects' && btnTab.includes('project')) ||
+              (tab === 'bookings' && btnTab.includes('booking')) ||
+              (tab === 'print' && btnTab.includes('print'))) {
+            b.classList.add('active');
+          }
+        }
+      });
+      // Fallback: find by data attribute
+      document.querySelectorAll('.tab-btn').forEach(b => {
+        const match = b.getAttribute('onclick')?.includes(tab);
+        if (match) b.classList.add('active');
+      });
+      document.getElementById('userDropdown')?.classList.remove('open');
+      renderTab();
+    };
+
+    function loadData() {
+      // Service Requests
+      db.ref('brandinn_service_requests').on('value', snap => {
+        allRequests = snap.val() || {};
+        updateStats(); if (currentTab === 'requests') renderTab();
+      });
+      // Projects
+      db.ref('brandinn_projects').on('value', snap => {
+        allProjects = snap.val() || {};
+        updateStats(); if (currentTab === 'projects') renderTab();
+      });
+      // Bookings
+      db.ref('brandinn_bookings').on('value', snap => {
+        allBookings = snap.val() || {};
+        updateStats(); if (currentTab === 'bookings') renderTab();
+      });
+      // Print Orders
+      db.ref('brandinn_print_orders').on('value', snap => {
+        allPrintOrders = snap.val() || {};
+        updateStats(); if (currentTab === 'print') renderTab();
+      });
+    }
+
+    function updateStats() {
+      document.getElementById('statRequests') && (document.getElementById('statRequests').textContent = Object.keys(allRequests).length);
+      document.getElementById('statProjects') && (document.getElementById('statProjects').textContent = Object.keys(allProjects).length);
+      document.getElementById('statBookings') && (document.getElementById('statBookings').textContent = Object.keys(allBookings).length);
+      document.getElementById('statPrint') && (document.getElementById('statPrint').textContent = Object.keys(allPrintOrders).length);
+    }
+
+    function renderTab() {
+      const c = document.getElementById('tabContent');
+      if (!c) return;
+      switch(currentTab) {
+        case 'requests': renderRequests(c); break;
+        case 'projects': renderProjects(c); break;
+        case 'bookings': renderBookings(c); break;
+        case 'print': renderPrintOrders(c); break;
+      }
+    }
+
+    function renderStatsBar() {
+      return `<div class="stats-row">
+        <div class="stat-card"><div class="stat-icon requests"><i class="fas fa-clipboard-list"></i></div><div class="stat-value" id="statRequests">${Object.keys(allRequests).length}</div><div class="stat-label">Requests</div></div>
+        <div class="stat-card"><div class="stat-icon projects"><i class="fas fa-project-diagram"></i></div><div class="stat-value" id="statProjects">${Object.keys(allProjects).length}</div><div class="stat-label">Projects</div></div>
+        <div class="stat-card"><div class="stat-icon bookings"><i class="fas fa-calendar-check"></i></div><div class="stat-value" id="statBookings">${Object.keys(allBookings).length}</div><div class="stat-label">Bookings</div></div>
+        <div class="stat-card"><div class="stat-icon print"><i class="fas fa-print"></i></div><div class="stat-value" id="statPrint">${Object.keys(allPrintOrders).length}</div><div class="stat-label">Print Orders</div></div>
+      </div>`;
+    }
+
+    // ===== SERVICE REQUESTS =====
+    function renderRequests(c) {
+      const items = Object.entries(allRequests).map(([id, r]) => ({ id, ...r }));
+      items.sort((a,b) => (b.createdAt||0) - (a.createdAt||0));
+      let html = `<h1 class="page-title">📋 Service Requests</h1><p class="page-subtitle">Track and manage client service requests</p>${renderStatsBar()}<div class="section"><div class="section-header"><h3><i class="fas fa-clipboard-list"></i> All Requests (${items.length})</h3><button class="btn btn-primary btn-sm" onclick="showRequestForm()"><i class="fas fa-plus"></i> New Request</button></div><div class="section-body no-padding">`;
+      if (!items.length) { html += `<div class="empty-state"><i class="fas fa-inbox"></i><p>No service requests yet</p></div>`; }
+      else { items.forEach(r => { 
+        const status = r.status || 'pending';
+        const statusBadge = status === 'completed' ? 'badge-success' : status === 'in-progress' ? 'badge-warning' : status === 'quoted' ? 'badge-info' : 'badge-neutral';
+        html += `<div class="list-item"><div class="list-item-left"><div class="list-item-icon" style="background:${status === 'completed' ? '#ecfdf5' : '#fef3c7'};">${status === 'completed' ? '✅' : '🔄'}</div><div class="list-item-info"><div class="list-item-title">${esc(r.clientName||r.businessName||'Client')}</div><div class="list-item-subtitle">${esc(r.services?.map(s=>s.name).join(', ')||'Service')} · ${esc(r.phone||'')}</div></div></div><div class="list-item-right"><span class="badge ${statusBadge}">${status}</span><button class="btn btn-outline btn-xs" onclick="showRequestForm('${r.id}')"><i class="fas fa-pen"></i></button><button class="btn btn-outline btn-xs" onclick="if(confirm('Delete?')) deleteItem('brandinn_service_requests','${r.id}')"><i class="fas fa-trash"></i></button></div></div>`; 
+      }); }
+      html += `</div></div>`; c.innerHTML = html;
+    }
+
+    window.showRequestForm = function(id) {
+      const r = id ? allRequests[id] : null;
+      const services = r?.services || [{ name: '', price: 0, quantity: 1 }];
+      openModal(`
+        <div class="modal-header"><h3>${id?'Edit':'New'} Service Request</h3><button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button></div>
+        <input type="hidden" id="reqId" value="${id||''}">
+        <div class="form-row"><div class="form-group"><label>Client/Business Name *</label><input id="reqClient" value="${esc(r?.clientName||r?.businessName||'')}"></div><div class="form-group"><label>Phone *</label><input id="reqPhone" value="${esc(r?.phone||'')}"></div></div>
+        <div class="form-row"><div class="form-group"><label>Email</label><input id="reqEmail" value="${esc(r?.email||'')}"></div><div class="form-group"><label>Urgency</label><select id="reqUrgency"><option value="normal" ${r?.urgency==='normal'?'selected':''}>Normal</option><option value="high" ${r?.urgency==='high'?'selected':''}>High</option><option value="urgent" ${r?.urgency==='urgent'?'selected':''}>Urgent</option></select></div></div>
+        <div class="form-group"><label>Instructions / Notes</label><textarea id="reqNotes" rows="2">${esc(r?.instructions||r?.adminNotes||'')}</textarea></div>
+        <div class="form-group"><label>Services (comma separated)</label><input id="reqServices" value="${esc(r?.services?.map(s=>s.name).join(', ')||'')}" placeholder="e.g., Logo Design, Social Media Setup"></div>
+        <div class="form-group"><label>Status</label><select id="reqStatus"><option value="pending" ${r?.status==='pending'?'selected':''}>Pending</option><option value="quoted" ${r?.status==='quoted'?'selected':''}>Quoted</option><option value="in-progress" ${r?.status==='in-progress'?'selected':''}>In Progress</option><option value="completed" ${r?.status==='completed'?'selected':''}>Completed</option></select></div>
+        <button class="btn btn-primary" style="width:100%;" onclick="saveRequest()">${id?'Update':'Create'}</button>
+      `);
+    };
+
+    window.saveRequest = async function() {
+      const clientName = document.getElementById('reqClient').value.trim();
+      if (!clientName) return toast('Client name required', 'error');
+      const servicesList = document.getElementById('reqServices').value.split(',').filter(s=>s.trim());
+      const data = {
+        clientName: clientName,
+        businessName: clientName,
+        phone: document.getElementById('reqPhone').value.trim(),
+        email: document.getElementById('reqEmail').value.trim(),
+        urgency: document.getElementById('reqUrgency').value,
+        instructions: document.getElementById('reqNotes').value.trim(),
+        adminNotes: document.getElementById('reqNotes').value.trim(),
+        status: document.getElementById('reqStatus').value,
+        services: servicesList.map(name => ({ name: name.trim(), price: 0, quantity: 1 })),
+        updatedAt: firebase.database.ServerValue.TIMESTAMP,
+        updatedBy: currentUser?.email || 'staff'
+      };
+      const id = document.getElementById('reqId').value;
+      try {
+        if (id) { await db.ref('brandinn_service_requests/' + id).update(data); }
+        else { data.createdAt = firebase.database.ServerValue.TIMESTAMP; await db.ref('brandinn_service_requests').push(data); }
+        closeModal(); toast(id ? '✅ Updated!' : '✅ Request created!', 'success');
+      } catch(e) { toast('Error: ' + e.message, 'error'); }
+    };
+
+    // ===== PROJECTS =====
+    function renderProjects(c) {
+      const items = Object.entries(allProjects).map(([id, p]) => ({ id, ...p }));
+      items.sort((a,b) => (b.createdAt||0) - (a.createdAt||0));
+      let html = `<h1 class="page-title">📐 Projects</h1><p class="page-subtitle">Manage branding and design projects</p>${renderStatsBar()}<div class="section"><div class="section-header"><h3><i class="fas fa-project-diagram"></i> All Projects (${items.length})</h3><button class="btn btn-primary btn-sm" onclick="showProjectForm()"><i class="fas fa-plus"></i> New Project</button></div><div class="section-body no-padding">`;
+      if (!items.length) { html += `<div class="empty-state"><i class="fas fa-project-diagram"></i><p>No projects yet</p></div>`; }
+      else { items.forEach(p => {
+        const status = p.status || 'planning';
+        const badgeMap = { 'planning': 'badge-neutral', 'active': 'badge-info', 'completed': 'badge-success', 'on-hold': 'badge-warning' };
+        html += `<div class="list-item"><div class="list-item-left"><div class="list-item-icon">📐</div><div class="list-item-info"><div class="list-item-title">${esc(p.projectName||p.businessName||'Project')}</div><div class="list-item-subtitle">${esc(p.businessName||'')} · ${esc(p.serviceType||'')} · ${esc(p.priority||'medium')}</div></div></div><div class="list-item-right"><span class="badge ${badgeMap[status]||'badge-neutral'}">${status}</span><button class="btn btn-outline btn-xs" onclick="showProjectForm('${p.id}')"><i class="fas fa-pen"></i></button><button class="btn btn-outline btn-xs" onclick="if(confirm('Delete?')) deleteItem('brandinn_projects','${p.id}')"><i class="fas fa-trash"></i></button></div></div>`;
+      }); }
+      html += `</div></div>`; c.innerHTML = html;
+    }
+
+    window.showProjectForm = function(id) {
+      const p = id ? allProjects[id] : null;
+      openModal(`
+        <div class="modal-header"><h3>${id?'Edit':'New'} Project</h3><button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button></div>
+        <input type="hidden" id="projId" value="${id||''}">
+        <div class="form-row"><div class="form-group"><label>Project Name *</label><input id="projName" value="${esc(p?.projectName||'')}"></div><div class="form-group"><label>Business/Client</label><input id="projBusiness" value="${esc(p?.businessName||'')}"></div></div>
+        <div class="form-row"><div class="form-group"><label>Service Type</label><input id="projService" value="${esc(p?.serviceType||'')}" placeholder="e.g., Print Design, Brand Identity"></div><div class="form-group"><label>Priority</label><select id="projPriority"><option value="low" ${p?.priority==='low'?'selected':''}>Low</option><option value="medium" ${p?.priority==='medium'?'selected':''}>Medium</option><option value="high" ${p?.priority==='high'?'selected':''}>High</option></select></div></div>
+        <div class="form-group"><label>Description</label><textarea id="projDesc" rows="2">${esc(p?.description||'')}</textarea></div>
+        <div class="form-group"><label>Internal Notes</label><textarea id="projNotes" rows="2">${esc(p?.internalNotes||'')}</textarea></div>
+        <div class="form-row"><div class="form-group"><label>Status</label><select id="projStatus"><option value="planning" ${p?.status==='planning'?'selected':''}>Planning</option><option value="active" ${p?.status==='active'?'selected':''}>Active</option><option value="on-hold" ${p?.status==='on-hold'?'selected':''}>On Hold</option><option value="completed" ${p?.status==='completed'?'selected':''}>Completed</option></select></div><div class="form-group"><label>Budget (KES)</label><input id="projBudget" type="number" value="${p?.budget||0}"></div></div>
+        <button class="btn btn-primary" style="width:100%;" onclick="saveProject()">${id?'Update':'Create'}</button>
+      `);
+    };
+
+    window.saveProject = async function() {
+      const name = document.getElementById('projName').value.trim();
+      if (!name) return toast('Project name required', 'error');
+      const data = {
+        projectName: name,
+        businessName: document.getElementById('projBusiness').value.trim(),
+        serviceType: document.getElementById('projService').value.trim(),
+        priority: document.getElementById('projPriority').value,
+        description: document.getElementById('projDesc').value.trim(),
+        internalNotes: document.getElementById('projNotes').value.trim(),
+        status: document.getElementById('projStatus').value,
+        budget: Number(document.getElementById('projBudget').value) || 0,
+        updatedAt: firebase.database.ServerValue.TIMESTAMP,
+        updatedBy: currentUser?.email || 'staff'
+      };
+      const id = document.getElementById('projId').value;
+      try {
+        if (id) { await db.ref('brandinn_projects/' + id).update(data); }
+        else { data.createdAt = firebase.database.ServerValue.TIMESTAMP; data.createdBy = currentUser?.email || 'staff'; await db.ref('brandinn_projects').push(data); }
+        closeModal(); toast(id ? '✅ Updated!' : '✅ Project created!', 'success');
+      } catch(e) { toast('Error: ' + e.message, 'error'); }
+    };
+
+    // ===== BOOKINGS =====
+    function renderBookings(c) {
+      const items = Object.entries(allBookings).map(([id, b]) => ({ id, ...b }));
+      items.sort((a,b) => (b.createdAt||0) - (a.createdAt||0));
+      let html = `<h1 class="page-title">📅 Bookings</h1><p class="page-subtitle">Manage client consultations and appointments</p>${renderStatsBar()}<div class="section"><div class="section-header"><h3><i class="fas fa-calendar-check"></i> All Bookings (${items.length})</h3><button class="btn btn-primary btn-sm" onclick="showBookingForm()"><i class="fas fa-plus"></i> New Booking</button></div><div class="section-body no-padding">`;
+      if (!items.length) { html += `<div class="empty-state"><i class="fas fa-calendar-plus"></i><p>No bookings yet</p></div>`; }
+      else { items.forEach(b => {
+        const status = b.status || 'scheduled';
+        const badgeMap = { 'scheduled': 'badge-info', 'confirmed': 'badge-success', 'completed': 'badge-success', 'cancelled': 'badge-danger' };
+        html += `<div class="list-item"><div class="list-item-left"><div class="list-item-icon">📅</div><div class="list-item-info"><div class="list-item-title">${esc(b.clientName||'Client')}</div><div class="list-item-subtitle">${esc(b.bookingType||'Consultation')} · ${esc(b.date||'')} ${esc(b.time||'')} · ${esc(b.location||'')}</div></div></div><div class="list-item-right"><span class="badge ${badgeMap[status]||'badge-neutral'}">${status}</span><button class="btn btn-outline btn-xs" onclick="showBookingForm('${b.id}')"><i class="fas fa-pen"></i></button><button class="btn btn-outline btn-xs" onclick="if(confirm('Delete?')) deleteItem('brandinn_bookings','${b.id}')"><i class="fas fa-trash"></i></button></div></div>`;
+      }); }
+      html += `</div></div>`; c.innerHTML = html;
+    }
+
+    window.showBookingForm = function(id) {
+      const b = id ? allBookings[id] : null;
+      openModal(`
+        <div class="modal-header"><h3>${id?'Edit':'New'} Booking</h3><button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button></div>
+        <input type="hidden" id="bookId" value="${id||''}">
+        <div class="form-row"><div class="form-group"><label>Client Name *</label><input id="bookClient" value="${esc(b?.clientName||'')}"></div><div class="form-group"><label>Phone *</label><input id="bookPhone" value="${esc(b?.phone||'')}"></div></div>
+        <div class="form-row"><div class="form-group"><label>Email</label><input id="bookEmail" value="${esc(b?.email||'')}"></div><div class="form-group"><label>Booking Type</label><select id="bookType"><option value="Consultation" ${b?.bookingType==='Consultation'?'selected':''}>Consultation</option><option value="Design Review" ${b?.bookingType==='Design Review'?'selected':''}>Design Review</option><option value="Project Kickoff" ${b?.bookingType==='Project Kickoff'?'selected':''}>Project Kickoff</option><option value="Other" ${b?.bookingType==='Other'?'selected':''}>Other</option></select></div></div>
+        <div class="form-row"><div class="form-group"><label>Date *</label><input id="bookDate" type="date" value="${b?.date||''}"></div><div class="form-group"><label>Time *</label><input id="bookTime" type="time" value="${b?.time||''}"></div></div>
+        <div class="form-group"><label>Location / Notes</label><textarea id="bookNotes" rows="2">${esc(b?.notes||b?.location||'')}</textarea></div>
+        <div class="form-group"><label>Status</label><select id="bookStatus"><option value="scheduled" ${b?.status==='scheduled'?'selected':''}>Scheduled</option><option value="confirmed" ${b?.status==='confirmed'?'selected':''}>Confirmed</option><option value="completed" ${b?.status==='completed'?'selected':''}>Completed</option><option value="cancelled" ${b?.status==='cancelled'?'selected':''}>Cancelled</option></select></div>
+        <button class="btn btn-primary" style="width:100%;" onclick="saveBooking()">${id?'Update':'Create'}</button>
+      `);
+    };
+
+    window.saveBooking = async function() {
+      const clientName = document.getElementById('bookClient').value.trim();
+      if (!clientName) return toast('Client name required', 'error');
+      const data = {
+        clientName: clientName,
+        phone: document.getElementById('bookPhone').value.trim(),
+        email: document.getElementById('bookEmail').value.trim(),
+        bookingType: document.getElementById('bookType').value,
+        date: document.getElementById('bookDate').value,
+        time: document.getElementById('bookTime').value,
+        notes: document.getElementById('bookNotes').value.trim(),
+        location: document.getElementById('bookNotes').value.trim(),
+        status: document.getElementById('bookStatus').value,
+        updatedAt: firebase.database.ServerValue.TIMESTAMP,
+        updatedBy: currentUser?.email || 'staff'
+      };
+      const id = document.getElementById('bookId').value;
+      try {
+        if (id) { await db.ref('brandinn_bookings/' + id).update(data); }
+        else { data.createdAt = firebase.database.ServerValue.TIMESTAMP; data.createdBy = currentUser?.email || 'staff'; await db.ref('brandinn_bookings').push(data); }
+        closeModal(); toast(id ? '✅ Updated!' : '✅ Booking created!', 'success');
+      } catch(e) { toast('Error: ' + e.message, 'error'); }
+    };
+
+    // ===== PRINT ORDERS =====
+    function renderPrintOrders(c) {
+      const items = Object.entries(allPrintOrders).map(([id, p]) => ({ id, ...p }));
+      items.sort((a,b) => (b.createdAt||0) - (a.createdAt||0));
+      let html = `<h1 class="page-title">🖨️ Print Orders</h1><p class="page-subtitle">Manage t-shirt and banner printing orders</p>${renderStatsBar()}<div class="section"><div class="section-header"><h3><i class="fas fa-print"></i> All Print Orders (${items.length})</h3><button class="btn btn-primary btn-sm" onclick="showPrintForm()"><i class="fas fa-plus"></i> New Order</button></div><div class="section-body no-padding">`;
+      if (!items.length) { html += `<div class="empty-state"><i class="fas fa-print"></i><p>No print orders yet</p></div>`; }
+      else { items.forEach(p => {
+        const status = p.status || 'pending';
+        const badgeMap = { 'pending': 'badge-warning', 'printing': 'badge-info', 'completed': 'badge-success', 'delivered': 'badge-success', 'cancelled': 'badge-danger' };
+        const typeLabel = p.type === 'tshirt' ? '👕 T-Shirt' : p.type === 'banner' ? '📋 Banner' : '🖨️ Print';
+        html += `<div class="list-item"><div class="list-item-left"><div class="list-item-icon">${typeLabel === '👕 T-Shirt' ? '👕' : typeLabel === '📋 Banner' ? '📋' : '🖨️'}</div><div class="list-item-info"><div class="list-item-title">${esc(p.customerName||'Customer')}</div><div class="list-item-subtitle">${esc(p.product||'Print')} · Qty: ${p.quantity||1} · KES ${p.total||0}</div></div></div><div class="list-item-right"><span class="badge ${badgeMap[status]||'badge-neutral'}">${status}</span><button class="btn btn-outline btn-xs" onclick="showPrintForm('${p.id}')"><i class="fas fa-pen"></i></button><button class="btn btn-outline btn-xs" onclick="if(confirm('Delete?')) deleteItem('brandinn_print_orders','${p.id}')"><i class="fas fa-trash"></i></button></div></div>`;
+      }); }
+      html += `</div></div>`; c.innerHTML = html;
+    }
+
+    window.showPrintForm = function(id) {
+      const p = id ? allPrintOrders[id] : null;
+      openModal(`
+        <div class="modal-header"><h3>${id?'Edit':'New'} Print Order</h3><button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button></div>
+        <input type="hidden" id="printId" value="${id||''}">
+        <div class="form-row"><div class="form-group"><label>Customer Name *</label><input id="printCustomer" value="${esc(p?.customerName||'')}"></div><div class="form-group"><label>Phone *</label><input id="printPhone" value="${esc(p?.customerPhone||'')}"></div></div>
+        <div class="form-row"><div class="form-group"><label>Product Type</label><select id="printType"><option value="tshirt" ${p?.type==='tshirt'?'selected':''}>T-Shirt</option><option value="banner" ${p?.type==='banner'?'selected':''}>Banner</option></select></div><div class="form-group"><label>Quantity</label><input id="printQty" type="number" value="${p?.quantity||1}" min="1"></div></div>
+        <div class="form-row"><div class="form-group"><label>Unit Price (KES)</label><input id="printPrice" type="number" value="${p?.unitPrice||1300}"></div><div class="form-group"><label>Status</label><select id="printStatus"><option value="pending" ${p?.status==='pending'?'selected':''}>Pending</option><option value="printing" ${p?.status==='printing'?'selected':''}>Printing</option><option value="completed" ${p?.status==='completed'?'selected':''}>Completed</option><option value="delivered" ${p?.status==='delivered'?'selected':''}>Delivered</option><option value="cancelled" ${p?.status==='cancelled'?'selected':''}>Cancelled</option></select></div></div>
+        <div class="form-group"><label>Product Description</label><input id="printProduct" value="${esc(p?.product||'Print Order')}" placeholder="e.g., T-Shirt, Banner"></div>
+        <div class="form-group"><label>Notes / Design Details</label><textarea id="printNotes" rows="2">${esc(p?.notes||p?.designText||'')}</textarea></div>
+        <button class="btn btn-primary" style="width:100%;" onclick="savePrintOrder()">${id?'Update':'Create'}</button>
+      `);
+    };
+
+    window.savePrintOrder = async function() {
+      const customer = document.getElementById('printCustomer').value.trim();
+      if (!customer) return toast('Customer name required', 'error');
+      const qty = Number(document.getElementById('printQty').value) || 1;
+      const price = Number(document.getElementById('printPrice').value) || 1300;
+      const data = {
+        customerName: customer,
+        customerPhone: document.getElementById('printPhone').value.trim(),
+        type: document.getElementById('printType').value,
+        quantity: qty,
+        unitPrice: price,
+        total: qty * price,
+        product: document.getElementById('printProduct').value.trim() || 'Print Order',
+        notes: document.getElementById('printNotes').value.trim(),
+        designText: document.getElementById('printNotes').value.trim(),
+        status: document.getElementById('printStatus').value,
+        updatedAt: firebase.database.ServerValue.TIMESTAMP,
+        updatedBy: currentUser?.email || 'staff'
+      };
+      const id = document.getElementById('printId').value;
+      try {
+        if (id) { await db.ref('brandinn_print_orders/' + id).update(data); }
+        else { data.createdAt = firebase.database.ServerValue.TIMESTAMP; data.createdBy = currentUser?.email || 'staff'; await db.ref('brandinn_print_orders').push(data); }
+        closeModal(); toast(id ? '✅ Updated!' : '✅ Print order created!', 'success');
+      } catch(e) { toast('Error: ' + e.message, 'error'); }
+    };
+
+    // ===== DELETE HELPER =====
+    window.deleteItem = async function(path, id) {
+      try { await db.ref(path + '/' + id).remove(); toast('Deleted', 'success'); } 
+      catch(e) { toast('Error: ' + e.message, 'error'); }
+    };
+
+    // ===== LOGOUT =====
+    window.handleLogout = async function() {
+      try { await auth.signOut(); window.location.href = '/'; } 
+      catch(e) { toast('Error signing out', 'error'); }
+    };
+
+    // ===== AUTH =====
+    auth.onAuthStateChanged(async user => {
+      if (!user) { window.location.href = '/'; return; }
+      currentUser = user;
+      
+      // Update UI
+      document.getElementById('dropdownName').textContent = user.displayName || user.email?.split('@')[0] || 'Staff';
+      document.getElementById('dropdownEmail').textContent = user.email;
+      document.getElementById('dropdownAvatar').textContent = (user.displayName || user.email?.[0] || 'S').substring(0,2).toUpperCase();
+      if (user.photoURL) {
+        document.getElementById('userAvatarText').style.display = 'none';
+        document.getElementById('userAvatarImg').style.display = 'block';
+        document.getElementById('userAvatarImg').src = user.photoURL;
+      }
+      document.getElementById('userAvatarText').textContent = (user.displayName || 'S')[0].toUpperCase();
+
+      // Check workspace permissions for BrandInn
+      try {
+        const permSnap = await db.ref(`workspacePermissions/${user.uid}`).once('value');
+        const perms = permSnap.val() || {};
+        const hasBrandInn = perms.brandinn === true || perms['brandinn-print'] === true;
+        
+        if (!hasBrandInn) {
+          // Check if admin
+          const adminSnap = await db.ref(`admins/${user.uid}`).once('value');
+          if (adminSnap.val() !== true) {
+            document.getElementById('tabContent').innerHTML = `
+              <div class="section"><div class="section-body"><div class="empty-state">
+                <i class="fas fa-lock" style="color:#ef4444;"></i>
+                <p><strong>Access Denied</strong></p>
+                <p>You don't have BrandInn workspace permissions.</p>
+                <p style="font-size:0.65rem;color:var(--text-secondary);margin-top:8px;">Contact your administrator.</p>
+              </div></div></div>`;
+            return;
+          }
+        }
+        
+        document.getElementById('workspaceTag').textContent = 'BrandInn Field Ops';
+        loadData();
+        renderTab();
+      } catch(e) {
+        toast('Error checking permissions', 'error');
+        console.error(e);
+      }
+    });
+  </script>
+</body>
+</html>
