@@ -5,15 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>KazInni Assistant</title>
     
+    <!-- PWA Meta Tags -->
     <meta name="theme-color" content="#f97316">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="KazInni">
     
+    <!-- PWA Manifest -->
     <link rel="manifest" href="/manifest.json">
     <link rel="icon" type="image/png" href="https://i.postimg.cc/rFfXDj3L/kazinni-removebg-preview(1).png">
     <link rel="apple-touch-icon" href="https://i.postimg.cc/rFfXDj3L/kazinni-removebg-preview(1).png">
     
+    <!-- Styles -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     
@@ -496,6 +499,50 @@
         /* Hidden */
         .hidden { display: none !important; }
         
+        /* Install Button */
+        .install-btn {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #f97316, #ea580c);
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            z-index: 10000;
+            box-shadow: 0 10px 30px rgba(249, 115, 22, 0.4);
+            cursor: pointer;
+            display: none;
+            font-family: 'Inter', sans-serif;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+            animation: slideUp 0.5s ease;
+        }
+        
+        .install-btn:hover {
+            transform: translateX(-50%) scale(1.05);
+            box-shadow: 0 15px 40px rgba(249, 115, 22, 0.5);
+        }
+        
+        .install-btn i {
+            font-size: 1.1rem;
+        }
+        
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateX(-50%) translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
+        }
+        
         /* Responsive */
         @media (max-width: 480px) {
             .auth-container {
@@ -506,6 +553,12 @@
             .logo-section h1 { font-size: 1.3rem; }
             .logo-img { width: 55px; height: 55px; }
             .options-row { flex-wrap: wrap; gap: 0.5rem; }
+            .install-btn { 
+                padding: 12px 20px;
+                font-size: 0.8rem;
+                bottom: 15px;
+                width: 90%;
+            }
         }
         
         @media (max-width: 380px) {
@@ -540,7 +593,7 @@
                 <span style="color:#334155;margin:0 6px;">·</span>
                 <i class="fas fa-rocket"></i> Reliable
             </p>
-            <div class="status-badge">
+            <div class="status-badge" id="statusBadge">
                 <i class="fas fa-check-circle"></i> Secure · v2.0
             </div>
         </div>
@@ -624,15 +677,22 @@
         </div>
     </div>
 
-    <!-- Toast Container -->
-    <div class="toast-container" id="toastContainer" style="position:fixed;bottom:30px;right:30px;z-index:9999;display:flex;flex-direction:column;gap:8px;pointer-events:none;"></div>
+    <!-- Install Button (hidden by default) -->
+    <button class="install-btn" id="installBtn">
+        <i class="fas fa-download"></i> Install App
+    </button>
 
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer" style="position:fixed;bottom:90px;right:20px;z-index:9999;display:flex;flex-direction:column;gap:8px;pointer-events:none;max-width:350px;width:100%;">
+    </div>
+
+    <!-- Firebase -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 
     <script>
-        // Firebase Configuration
+        // ===== FIREBASE CONFIG =====
         const firebaseConfig = {
             apiKey: "AIzaSyC7kppUyHUaPzeLBV62NEZWuHiuz1Kz0mA",
             authDomain: "mugera-e51cc.firebaseapp.com",
@@ -645,8 +705,83 @@
         
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
-        
-        // DOM Elements
+
+        // ===== PWA SETUP =====
+        // Register Service Worker
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/sw.js')
+                .then(registration => {
+                    console.log('✅ Service Worker registered successfully:', registration);
+                    // Update status badge
+                    document.getElementById('statusBadge').innerHTML = 
+                        '<i class="fas fa-check-circle"></i> PWA Ready · v2.0';
+                })
+                .catch(error => {
+                    console.log('❌ Service Worker registration failed:', error);
+                    document.getElementById('statusBadge').innerHTML = 
+                        '<i class="fas fa-exclamation-triangle"></i> Offline Mode';
+                });
+        }
+
+        // Handle PWA Installation Prompt
+        let deferredPrompt;
+        const installBtn = document.getElementById('installBtn');
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            // Prevent Chrome 67+ from automatically showing the prompt
+            e.preventDefault();
+            // Stash the event so it can be triggered later
+            deferredPrompt = e;
+            console.log('✅ PWA installation prompt available');
+            
+            // Show the install button
+            installBtn.style.display = 'flex';
+            
+            // Update status badge
+            document.getElementById('statusBadge').innerHTML = 
+                '<i class="fas fa-download"></i> Install Available';
+        });
+
+        // Install button click handler
+        installBtn.addEventListener('click', async () => {
+            if (deferredPrompt) {
+                // Show the install prompt
+                deferredPrompt.prompt();
+                // Wait for the user to respond to the prompt
+                const result = await deferredPrompt.userChoice;
+                console.log(`User ${result.outcome} the installation`);
+                
+                if (result.outcome === 'accepted') {
+                    showToast('🎉 Installing KazInni Assistant...', 'success');
+                } else {
+                    showToast('You can install the app later from the browser menu', 'info');
+                }
+                
+                deferredPrompt = null;
+                installBtn.style.display = 'none';
+            }
+        });
+
+        // Handle successful installation
+        window.addEventListener('appinstalled', () => {
+            console.log('✅ PWA installed successfully');
+            installBtn.style.display = 'none';
+            showToast('✅ KazInni Assistant installed successfully!', 'success');
+            
+            // Update status badge
+            document.getElementById('statusBadge').innerHTML = 
+                '<i class="fas fa-check-circle"></i> Installed · v2.0';
+        });
+
+        // Check if app is running in standalone mode (already installed)
+        if (window.matchMedia('(display-mode: standalone)').matches) {
+            console.log('📱 Running as installed PWA');
+            document.getElementById('statusBadge').innerHTML = 
+                '<i class="fas fa-mobile-screen-button"></i> App Installed';
+            installBtn.style.display = 'none';
+        }
+
+        // ===== DOM ELEMENTS =====
         const authContainer = document.getElementById('authContainer');
         const loadingContainer = document.getElementById('loadingContainer');
         const emailInput = document.getElementById('email');
@@ -655,8 +790,8 @@
         const errorMsg = document.getElementById('errorMsg');
         const errorText = document.getElementById('errorText');
         const rememberMe = document.getElementById('rememberMe');
-        
-        // Toast
+
+        // ===== TOAST SYSTEM =====
         function showToast(message, type = 'info') {
             const container = document.getElementById('toastContainer');
             const toast = document.createElement('div');
@@ -678,10 +813,13 @@
                 display: flex;
                 align-items: center;
                 gap: 10px;
-                min-width: 250px;
+                width: 100%;
+                backdrop-filter: blur(10px);
+                border: 1px solid rgba(255,255,255,0.05);
             `;
-            toast.innerHTML = `<i class="fas fa-${icon}" style="color:${color};"></i> ${message}`;
+            toast.innerHTML = `<i class="fas fa-${icon}" style="color:${color};font-size:1rem;"></i> ${message}`;
             container.appendChild(toast);
+            
             setTimeout(() => {
                 toast.style.opacity = '0';
                 toast.style.transform = 'translateX(20px)';
@@ -689,8 +827,8 @@
                 setTimeout(() => toast.remove(), 300);
             }, 4000);
         }
-        
-        // Toggle Password
+
+        // ===== PASSWORD TOGGLE =====
         function togglePassword() {
             const input = passwordInput;
             const icon = document.getElementById('passwordToggleIcon');
@@ -702,15 +840,17 @@
                 icon.className = 'fas fa-eye';
             }
         }
-        
+
+        // ===== ERROR HANDLING =====
         function showError(message) {
             errorText.textContent = message;
             errorMsg.classList.add('show');
+            showToast(message, 'error');
             setTimeout(() => {
                 errorMsg.classList.remove('show');
             }, 5000);
         }
-        
+
         function showLoading(show) {
             if (show) {
                 authContainer.classList.add('hidden');
@@ -720,8 +860,8 @@
                 loadingContainer.classList.add('hidden');
             }
         }
-        
-        // Handle Login
+
+        // ===== LOGIN HANDLER =====
         window.handleLogin = async function(e) {
             e.preventDefault();
             
@@ -748,7 +888,14 @@
                 console.log('✅ Login successful:', user.email);
                 showToast(`Welcome back, ${user.displayName || user.email?.split('@')[0] || 'User'}!`, 'success');
                 
-                // Redirect to workspace launcher
+                // Save remember me
+                if (rememberMe.checked) {
+                    localStorage.setItem('kazinni_remember_email', email);
+                } else {
+                    localStorage.removeItem('kazinni_remember_email');
+                }
+                
+                // Redirect to dashboard
                 setTimeout(() => {
                     window.location.href = '/dashboard.html';
                 }, 600);
@@ -783,44 +930,54 @@
                 showLoading(false);
             }
         };
-        
-        // Enter key support
+
+        // ===== KEYBOARD SHORTCUTS =====
         emailInput.addEventListener('keypress', function(e) {
             if (e.key === 'Enter') document.getElementById('loginForm').dispatchEvent(new Event('submit'));
         });
         passwordInput.addEventListener('keypress', function(e) {
             if (e.key === 'Enter') document.getElementById('loginForm').dispatchEvent(new Event('submit'));
         });
-        
-        // Check for existing session
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                errorMsg.classList.remove('show');
+            }
+        });
+
+        // ===== SESSION CHECK =====
         auth.onAuthStateChanged((user) => {
             if (user) {
                 console.log('👤 Existing session found:', user.email);
                 window.location.href = '/dashboard.html';
             }
         });
-        
-        // Remember Me - load saved email
+
+        // ===== REMEMBER ME =====
         const savedEmail = localStorage.getItem('kazinni_remember_email');
         if (savedEmail) {
             emailInput.value = savedEmail;
             rememberMe.checked = true;
         }
-        
-        // Save email on login success
-        document.getElementById('loginForm').addEventListener('submit', function() {
-            if (rememberMe.checked) {
-                localStorage.setItem('kazinni_remember_email', emailInput.value);
-            } else {
-                localStorage.removeItem('kazinni_remember_email');
-            }
+
+        // ===== ONLINE/OFFLINE INDICATOR =====
+        window.addEventListener('online', () => {
+            showToast('🔄 Back online!', 'success');
+            document.getElementById('statusBadge').innerHTML = 
+                '<i class="fas fa-check-circle"></i> Online · v2.0';
         });
-        
-        // Keyboard shortcut: Escape to clear error
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                errorMsg.classList.remove('show');
-            }
+
+        window.addEventListener('offline', () => {
+            showToast('📡 You are offline. Some features may be limited.', 'info');
+            document.getElementById('statusBadge').innerHTML = 
+                '<i class="fas fa-wifi-slash"></i> Offline Mode';
+        });
+
+        console.log('🚀 KazInni Assistant loaded successfully!');
+        console.log('📱 PWA features:', {
+            serviceWorker: 'serviceWorker' in navigator ? '✅' : '❌',
+            manifest: document.querySelector('link[rel="manifest"]') ? '✅' : '❌',
+            standalone: window.matchMedia('(display-mode: standalone)').matches ? '✅' : '❌'
         });
     </script>
 </body>
