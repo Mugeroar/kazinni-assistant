@@ -203,37 +203,61 @@ body {
 }
 .filter-select:focus { outline: none; border-color: var(--pink); box-shadow: 0 0 0 4px var(--pink-soft); }
 
-/* ═══ PRODUCT GRID ═══ */
+/* ═══════════════════════════════════════════════════════
+   PRODUCT GRID — ALWAYS 2 COLUMNS, EVERY SCREEN SIZE
+   ═══════════════════════════════════════════════════════ */
 .product-grid {
-  display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 1rem;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
 }
+
 .product-card {
-  background: white; border-radius: var(--radius-lg);
-  border: 1.5px solid var(--border-soft); overflow: hidden;
-  transition: all 0.25s; display: flex; flex-direction: column; cursor: pointer;
+  background: white;
+  border-radius: var(--radius-lg);
+  border: 1.5px solid var(--border-soft);
+  overflow: hidden;
+  transition: all 0.25s;
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+  min-width: 0;
 }
 .product-card:hover {
-  transform: translateY(-4px); box-shadow: var(--shadow-lg); border-color: var(--pink);
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--pink);
 }
+
 .product-image {
-  width: 100%; aspect-ratio: 1 / 1; background: var(--bg);
-  position: relative; overflow: hidden;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  background: var(--bg);
+  position: relative;
+  overflow: hidden;
 }
 .product-image img {
-  width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s;
 }
 .product-card:hover .product-image img { transform: scale(1.06); }
 .product-image .placeholder {
-  width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;
+  width: 100%; height: 100%;
+  display: flex; align-items: center; justify-content: center;
   color: var(--text-light); font-size: 2.5rem;
 }
+
 .product-badges {
-  position: absolute; top: 10px; left: 10px; right: 10px;
-  display: flex; justify-content: space-between; gap: 6px; pointer-events: none;
+  position: absolute; top: 8px; left: 8px; right: 8px;
+  display: flex; justify-content: space-between; gap: 6px;
+  pointer-events: none;
 }
 .product-badge {
-  padding: 0.25rem 0.6rem; border-radius: var(--radius-full);
-  font-size: 0.6rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.3px;
+  padding: 0.22rem 0.55rem;
+  border-radius: var(--radius-full);
+  font-size: 0.58rem; font-weight: 800;
+  text-transform: uppercase; letter-spacing: 0.3px;
   backdrop-filter: blur(8px);
 }
 .product-badge.new { background: rgba(16,185,129,0.9); color: white; }
@@ -242,23 +266,66 @@ body {
 .product-badge.low { background: rgba(245,158,11,0.9); color: white; }
 .product-badge.images { background: rgba(0,0,0,0.6); color: white; }
 
-.product-body { padding: 1rem; flex: 1; display: flex; flex-direction: column; }
-.product-name {
-  font-weight: 700; font-size: 0.92rem; letter-spacing: -0.01em;
-  margin-bottom: 0.3rem; line-height: 1.35;
-  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+.product-body {
+  padding: 0.85rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
 }
-.product-sku { font-size: 0.68rem; color: var(--text-light); font-family: ui-monospace, monospace; margin-bottom: 0.5rem; }
-.product-price { display: flex; align-items: baseline; gap: 8px; margin-bottom: 0.35rem; }
-.price-current { font-size: 1.1rem; font-weight: 800; letter-spacing: -0.02em; }
-.price-old { font-size: 0.72rem; color: var(--text-light); text-decoration: line-through; }
+
+.product-name {
+  font-weight: 700;
+  font-size: 0.85rem;
+  letter-spacing: -0.01em;
+  margin-bottom: 0.3rem;
+  line-height: 1.35;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  min-height: 2.3em;
+}
+.product-sku {
+  font-size: 0.62rem;
+  color: var(--text-light);
+  font-family: ui-monospace, monospace;
+  margin-bottom: 0.4rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.product-price {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  margin-bottom: 0.3rem;
+  flex-wrap: wrap;
+}
+.price-current {
+  font-size: 0.98rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+.price-old {
+  font-size: 0.68rem;
+  color: var(--text-light);
+  text-decoration: line-through;
+}
+
 .product-stock {
-  font-size: 0.7rem; font-weight: 700; display: inline-flex; align-items: center;
-  gap: 5px; margin-bottom: 0.8rem;
+  font-size: 0.65rem;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 0.7rem;
 }
 .product-stock.in { color: var(--success); }
 .product-stock.low { color: var(--warning); }
 .product-stock.out { color: var(--text-light); }
+
 .product-action { margin-top: auto; }
 
 /* ═══ BUTTONS ═══ */
@@ -305,9 +372,9 @@ body {
   padding: 0.2rem 0.65rem; border-radius: var(--radius-full);
   font-size: 0.7rem; font-weight: 700;
 }
-.section-body { padding: 0.5rem; }
+.section-body { padding: 1rem; }
 
-/* ═══ ITEM CARDS ═══ */
+/* ═══ ITEM CARDS (orders) ═══ */
 .item-card {
   padding: 1rem 1.1rem; border-radius: var(--radius);
   display: flex; align-items: flex-start; gap: 14px;
@@ -344,6 +411,7 @@ body {
 }
 .pill::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
 .pill.pending { background: var(--warning-bg); color: #92400e; }
+.pill.new { background: var(--warning-bg); color: #92400e; }
 .pill.confirmed { background: var(--info-bg); color: #1e40af; }
 .pill.processing { background: #ede9fe; color: #6d28d9; }
 .pill.ready { background: var(--warning-bg); color: #92400e; }
@@ -539,27 +607,49 @@ body {
 
 /* ═══ RESPONSIVE ═══ */
 @media (max-width: 900px) { .stats-row { grid-template-columns: repeat(2, 1fr); } }
+
 @media (max-width: 640px) {
   .topbar { padding: 0 1rem; height: 58px; }
   .brand-name { display: none; }
   .franchise-tag { max-width: 120px; font-size: 0.62rem; }
-  .container { padding: 1rem 1rem 3rem; }
+  .container { padding: 1rem 0.85rem 3rem; }
   .hero h1 { font-size: 1.35rem; }
   .hero p { font-size: 0.82rem; }
   .tab-btn { padding: 0.5rem 0.85rem; font-size: 0.75rem; }
   .stats-row { gap: 0.7rem; }
   .stat-card { padding: 0.9rem; }
   .stat-value { font-size: 1.35rem; }
-  .product-grid { grid-template-columns: repeat(auto-fill, minmax(155px, 1fr)); gap: 0.75rem; }
-  .product-body { padding: 0.75rem; }
-  .product-name { font-size: 0.82rem; }
-  .price-current { font-size: 1rem; }
+  .section-body { padding: 0.7rem; }
   .form-row { grid-template-columns: 1fr; }
   .modal { padding: 1.25rem; }
   .item-card { flex-wrap: wrap; }
   .item-actions { margin-left: 0; width: 100%; justify-content: flex-end; margin-top: 0.4rem; }
 }
-@media (max-width: 380px) { .stats-row { grid-template-columns: 1fr; } }
+
+/* ═══ EXTRA SMALL SCREENS — keep 2 columns, tune sizes ═══ */
+@media (max-width: 480px) {
+  .container { padding: 1rem 0.6rem 3rem; }
+  .product-grid { gap: 0.55rem; }
+  .product-body { padding: 0.6rem; }
+  .product-name { font-size: 0.76rem; min-height: 2.4em; }
+  .product-sku { font-size: 0.56rem; margin-bottom: 0.3rem; }
+  .price-current { font-size: 0.86rem; }
+  .price-old { font-size: 0.6rem; }
+  .product-stock { font-size: 0.58rem; margin-bottom: 0.5rem; }
+  .product-badge { font-size: 0.5rem; padding: 0.16rem 0.4rem; }
+  .product-badges { top: 5px; left: 5px; right: 5px; }
+  .btn-sm { padding: 0.4rem 0.55rem; font-size: 0.66rem; }
+  .product-body .btn-full { padding: 0.5rem 0.55rem; font-size: 0.68rem; }
+  .product-body .btn-full i { font-size: 0.72rem; }
+}
+
+@media (max-width: 380px) {
+  .stats-row { grid-template-columns: repeat(2, 1fr); }
+  .product-grid { gap: 0.45rem; }
+  .product-body { padding: 0.5rem; }
+  .product-name { font-size: 0.72rem; }
+  .price-current { font-size: 0.8rem; }
+}
 </style>
 </head>
 <body>
@@ -1012,7 +1102,9 @@ function renderCatalog() {
       <div class="section-header">
         <h3><i class="fas fa-shopping-bag"></i> Collection <span class="item-count">${items.length}</span></h3>
       </div>
-      <div class="product-grid">${grid}</div>
+      <div class="section-body">
+        <div class="product-grid">${grid}</div>
+      </div>
     </div>
   `;
 }
@@ -1281,7 +1373,6 @@ window.placeOrder = async function() {
   const packageType = document.getElementById('packageType').value;
   const notes = document.getElementById('orderNotes').value.trim();
 
-  // ── 1. Validate stock against live DB ──
   const errors = [];
   const stockSnapshot = {};
 
@@ -1291,7 +1382,6 @@ window.placeOrder = async function() {
     const invLive = invSnap.val() || {};
     const prodLive = prodSnap.val() || {};
 
-    // Build SKU map from live inventory
     const skuMap = {};
     for (const [k, inv] of Object.entries(invLive)) {
       if (inv.sku) skuMap[inv.sku] = k;
@@ -1322,7 +1412,6 @@ window.placeOrder = async function() {
       return toast('Stock issue: ' + errors.join(' · '), 'error');
     }
 
-    // ── 2. Build order data ──
     const subtotal = cartTotal();
     const deliveryFee = 0;
     const total = subtotal + deliveryFee;
@@ -1361,7 +1450,6 @@ window.placeOrder = async function() {
       updatedAt: firebase.database.ServerValue.TIMESTAMP
     };
 
-    // ── 3. Atomic multi-path write (order + stock decrement) ──
     const updates = {};
     updates['dsog_fashion_orders/' + orderId] = orderData;
 
@@ -1462,7 +1550,6 @@ auth.onAuthStateChanged(async user => {
   }
 
   try {
-    // Permission check: dsog or dsog-fashion or admin
     const permSnap = await db.ref(`workspacePermissions/${user.uid}`).once('value');
     const perms = permSnap.val() || {};
     const hasDsog = perms.dsog === true || perms['dsog-fashion'] === true;
@@ -1514,10 +1601,10 @@ document.getElementById('mainContent').innerHTML = `
     `).join('')}
   </div>
   <div class="product-grid">
-    ${Array(6).fill(0).map(() => `
+    ${Array(4).fill(0).map(() => `
       <div style="background:white;border-radius:14px;overflow:hidden;border:1px solid var(--border-soft);">
         <div class="skeleton" style="width:100%;aspect-ratio:1/1;"></div>
-        <div style="padding:1rem;">
+        <div style="padding:0.85rem;">
           <div class="skeleton" style="width:80%;height:14px;margin-bottom:0.5rem;"></div>
           <div class="skeleton" style="width:50%;height:18px;margin-bottom:0.5rem;"></div>
           <div class="skeleton" style="width:100%;height:34px;border-radius:9999px;"></div>
