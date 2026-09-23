@@ -12,14 +12,12 @@
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
 :root {
-  /* Brand colors */
   --gold: #ca8a04;
   --gold-dark: #a16207;
   --gold-light: #fbbf24;
   --gold-soft: #fef3c7;
   --gold-tint: rgba(202, 138, 4, 0.08);
 
-  /* Neutrals */
   --bg: #f6f8fb;
   --surface: #ffffff;
   --surface-alt: #f8fafc;
@@ -30,7 +28,6 @@
   --border: #e2e8f0;
   --border-soft: #f1f5f9;
 
-  /* Semantic */
   --success: #10b981;
   --success-bg: #ecfdf5;
   --warning: #f59e0b;
@@ -42,7 +39,6 @@
   --purple: #8b5cf6;
   --purple-bg: #faf5ff;
 
-  /* Shadows */
   --shadow-xs: 0 1px 2px rgba(15, 23, 42, 0.04);
   --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.06), 0 1px 2px rgba(15, 23, 42, 0.04);
   --shadow-md: 0 4px 12px -2px rgba(15, 23, 42, 0.08), 0 2px 6px -2px rgba(15, 23, 42, 0.04);
@@ -50,16 +46,13 @@
   --shadow-xl: 0 24px 48px -12px rgba(15, 23, 42, 0.18);
   --shadow-gold: 0 12px 32px -8px rgba(202, 138, 4, 0.35);
 
-  /* Radii */
   --radius-sm: 10px;
   --radius: 14px;
   --radius-lg: 18px;
   --radius-xl: 24px;
   --radius-full: 9999px;
 
-  /* Fonts */
   --font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  --font-display: 'Inter', sans-serif;
 }
 
 body {
@@ -295,11 +288,9 @@ body {
   margin: 0 auto;
 }
 
-.page-hero {
-  margin-bottom: 1.75rem;
-}
+/* ═══════════════════ PAGE HERO ═══════════════════ */
+.page-hero { margin-bottom: 1.75rem; }
 .page-hero h1 {
-  font-family: var(--font-display);
   font-size: 1.85rem;
   font-weight: 800;
   letter-spacing: -0.03em;
@@ -321,9 +312,7 @@ body {
 }
 
 /* ═══════════════════ TABS ═══════════════════ */
-.tabs-wrap {
-  margin-bottom: 1.5rem;
-}
+.tabs-wrap { margin-bottom: 1.5rem; }
 .tabs {
   display: flex;
   gap: 6px;
@@ -354,7 +343,6 @@ body {
   display: flex;
   align-items: center;
   gap: 8px;
-  position: relative;
 }
 .tab-btn i { font-size: 0.88rem; }
 .tab-btn:hover { color: var(--gold); }
@@ -449,7 +437,7 @@ body {
 .stat-card.bookings { --accent: var(--purple); --accent-bg: var(--purple-bg); }
 .stat-card.print { --accent: var(--success); --accent-bg: var(--success-bg); }
 
-/* ═══════════════════ SEARCH / FILTER BAR ═══════════════════ */
+/* ═══════════════════ TOOLBAR ═══════════════════ */
 .toolbar {
   display: flex;
   gap: 10px;
@@ -512,7 +500,7 @@ body {
   box-shadow: 0 0 0 4px var(--gold-tint);
 }
 
-/* ═══════════════════ SECTION / LIST ═══════════════════ */
+/* ═══════════════════ SECTION ═══════════════════ */
 .section {
   background: white;
   border-radius: var(--radius-xl);
@@ -554,9 +542,8 @@ body {
 }
 
 .section-body { padding: 0.5rem; }
-.section-body.no-padding { padding: 0; }
 
-/* ═══════════════════ LIST CARDS ═══════════════════ */
+/* ═══════════════════ ITEM CARDS ═══════════════════ */
 .item-card {
   padding: 1rem 1.1rem;
   border-radius: var(--radius);
@@ -779,6 +766,225 @@ body {
   line-height: 1.55;
 }
 
+/* ═══════════════════ SKELETON LOADING ═══════════════════ */
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--border-soft) 0%,
+    #e9eef5 50%,
+    var(--border-soft) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.6s ease-in-out infinite;
+  border-radius: var(--radius-sm);
+  display: block;
+}
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+.skeleton-hero { margin-bottom: 1.75rem; }
+.skeleton-hero-title {
+  width: 260px;
+  height: 32px;
+  border-radius: 10px;
+  margin-bottom: 0.6rem;
+}
+.skeleton-hero-sub {
+  width: 420px;
+  max-width: 100%;
+  height: 16px;
+  border-radius: 8px;
+}
+
+.skeleton-tabs {
+  display: flex;
+  gap: 6px;
+  background: white;
+  padding: 6px;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--border-soft);
+  width: fit-content;
+  max-width: 100%;
+  margin-bottom: 1.5rem;
+  box-shadow: var(--shadow-xs);
+  overflow: hidden;
+}
+.skeleton-tab {
+  width: 110px;
+  height: 40px;
+  border-radius: var(--radius-full);
+  flex-shrink: 0;
+  background: linear-gradient(
+    90deg,
+    var(--border-soft) 0%,
+    #e9eef5 50%,
+    var(--border-soft) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.6s ease-in-out infinite;
+}
+.skeleton-tab:nth-child(2) { animation-delay: 0.1s; }
+.skeleton-tab:nth-child(3) { animation-delay: 0.2s; }
+.skeleton-tab:nth-child(4) { animation-delay: 0.3s; }
+
+.skeleton-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  margin-bottom: 1.75rem;
+}
+.skeleton-stat {
+  background: white;
+  border-radius: var(--radius-lg);
+  padding: 1.25rem;
+  border: 1px solid var(--border-soft);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.skeleton-stat-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+}
+.skeleton-stat-value {
+  width: 60px;
+  height: 26px;
+  border-radius: 8px;
+}
+.skeleton-stat-label {
+  width: 90px;
+  height: 12px;
+  border-radius: 6px;
+}
+
+.skeleton-section {
+  background: white;
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--border-soft);
+  box-shadow: var(--shadow-xs);
+  overflow: hidden;
+}
+.skeleton-section-header {
+  padding: 1.2rem 1.4rem;
+  border-bottom: 1px solid var(--border-soft);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.skeleton-section-title {
+  width: 180px;
+  height: 18px;
+  border-radius: 6px;
+}
+.skeleton-section-count {
+  width: 50px;
+  height: 20px;
+  border-radius: var(--radius-full);
+}
+.skeleton-section-body { padding: 0.5rem; }
+
+.skeleton-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 1rem 1.1rem;
+  border-radius: var(--radius);
+  margin-bottom: 0.4rem;
+}
+.skeleton-item-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  flex-shrink: 0;
+}
+.skeleton-item-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  min-width: 0;
+}
+.skeleton-item-title {
+  width: 40%;
+  max-width: 180px;
+  height: 14px;
+  border-radius: 6px;
+}
+.skeleton-item-meta {
+  width: 70%;
+  max-width: 340px;
+  height: 11px;
+  border-radius: 6px;
+}
+.skeleton-item-actions {
+  display: flex;
+  gap: 6px;
+  flex-shrink: 0;
+}
+.skeleton-pill {
+  width: 72px;
+  height: 26px;
+  border-radius: var(--radius-full);
+}
+.skeleton-btn-sm {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-sm);
+}
+
+/* Stagger skeleton animations */
+.skeleton-item:nth-child(1) .skeleton-item-icon { animation-delay: 0s; }
+.skeleton-item:nth-child(2) .skeleton-item-icon { animation-delay: 0.08s; }
+.skeleton-item:nth-child(3) .skeleton-item-icon { animation-delay: 0.16s; }
+.skeleton-item:nth-child(4) .skeleton-item-icon { animation-delay: 0.24s; }
+.skeleton-item:nth-child(5) .skeleton-item-icon { animation-delay: 0.32s; }
+
+.skeleton-item:nth-child(1) .skeleton-item-title { animation-delay: 0.05s; }
+.skeleton-item:nth-child(2) .skeleton-item-title { animation-delay: 0.13s; }
+.skeleton-item:nth-child(3) .skeleton-item-title { animation-delay: 0.21s; }
+.skeleton-item:nth-child(4) .skeleton-item-title { animation-delay: 0.29s; }
+.skeleton-item:nth-child(5) .skeleton-item-title { animation-delay: 0.37s; }
+
+/* ═══════════════════ CONTENT FADE-IN ═══════════════════ */
+.fade-in {
+  animation: fadeInContent 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+}
+@keyframes fadeInContent {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in .stats-row .stat-card {
+  animation: staggerUp 0.5s cubic-bezier(0.4, 0, 0.2, 1) backwards;
+}
+.fade-in .stats-row .stat-card:nth-child(1) { animation-delay: 0.05s; }
+.fade-in .stats-row .stat-card:nth-child(2) { animation-delay: 0.1s; }
+.fade-in .stats-row .stat-card:nth-child(3) { animation-delay: 0.15s; }
+.fade-in .stats-row .stat-card:nth-child(4) { animation-delay: 0.2s; }
+
+@keyframes staggerUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in .section .item-card {
+  animation: staggerItem 0.4s cubic-bezier(0.4, 0, 0.2, 1) backwards;
+}
+.fade-in .section .item-card:nth-child(1) { animation-delay: 0.25s; }
+.fade-in .section .item-card:nth-child(2) { animation-delay: 0.3s; }
+.fade-in .section .item-card:nth-child(3) { animation-delay: 0.35s; }
+.fade-in .section .item-card:nth-child(4) { animation-delay: 0.4s; }
+.fade-in .section .item-card:nth-child(5) { animation-delay: 0.45s; }
+.fade-in .section .item-card:nth-child(n+6) { animation-delay: 0.5s; }
+
+@keyframes staggerItem {
+  from { opacity: 0; transform: translateX(-8px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
 /* ═══════════════════ MODAL ═══════════════════ */
 .modal-overlay {
   position: fixed;
@@ -961,23 +1167,6 @@ body {
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* ═══════════════════ LOADING ═══════════════════ */
-.loading-state {
-  text-align: center;
-  padding: 4rem 1rem;
-  color: var(--text-muted);
-}
-.spinner {
-  width: 40px;
-  height: 40px;
-  border: 4px solid var(--border-soft);
-  border-top-color: var(--gold);
-  border-radius: 50%;
-  animation: spin 0.8s linear infinite;
-  margin: 0 auto 1rem;
-}
-@keyframes spin { to { transform: rotate(360deg); } }
-
 /* ═══════════════════ ACCESS DENIED ═══════════════════ */
 .access-denied {
   max-width: 480px;
@@ -988,6 +1177,7 @@ body {
   border-radius: var(--radius-xl);
   border: 1.5px solid #fecaca;
   box-shadow: var(--shadow-md);
+  animation: fadeInContent 0.5s ease;
 }
 .access-denied-icon {
   width: 80px;
@@ -1015,9 +1205,25 @@ body {
   margin-bottom: 0.5rem;
 }
 
+/* ═══════════════════ REDUCED MOTION ═══════════════════ */
+@media (prefers-reduced-motion: reduce) {
+  .skeleton,
+  .skeleton-tab {
+    animation: none;
+  }
+  .fade-in,
+  .fade-in .stat-card,
+  .fade-in .item-card,
+  .modal {
+    animation: none;
+    transition: none;
+  }
+}
+
 /* ═══════════════════ RESPONSIVE ═══════════════════ */
 @media (max-width: 900px) {
-  .stats-row { grid-template-columns: repeat(2, 1fr); }
+  .stats-row,
+  .skeleton-stats { grid-template-columns: repeat(2, 1fr); }
 }
 
 @media (max-width: 640px) {
@@ -1029,6 +1235,16 @@ body {
   .page-hero h1 { font-size: 1.5rem; }
   .page-hero h1 .hero-emoji { font-size: 1.3rem; }
   .page-hero p { font-size: 0.85rem; }
+
+  .skeleton-hero-title { width: 180px; height: 26px; }
+  .skeleton-hero-sub { width: 100%; }
+  .skeleton-tab { width: 90px; height: 36px; }
+  .skeleton-stat { padding: 1rem; }
+  .skeleton-item-actions {
+    width: 100%;
+    justify-content: flex-end;
+    margin-top: 0.4rem;
+  }
 
   .tabs { padding: 5px; }
   .tab-btn { padding: 0.5rem 0.85rem; font-size: 0.75rem; gap: 6px; }
@@ -1064,7 +1280,8 @@ body {
 }
 
 @media (max-width: 380px) {
-  .stats-row { grid-template-columns: 1fr; }
+  .stats-row,
+  .skeleton-stats { grid-template-columns: 1fr; }
   .filter-select { width: 100%; }
 }
 </style>
@@ -1119,10 +1336,7 @@ body {
 <!-- ═══════════════════ MAIN ═══════════════════ -->
 <div class="main">
   <div id="mainContent">
-    <div class="loading-state">
-      <div class="spinner"></div>
-      <p>Loading your workspace...</p>
-    </div>
+    <!-- Initial skeleton is injected by JS on first load -->
   </div>
 </div>
 
@@ -1161,7 +1375,7 @@ let allPrintOrders = {};
 let currentUser = null;
 let searchQuery = '';
 let statusFilter = 'all';
-let isRendering = false;
+let isReady = false;
 
 /* ═══════════════════ UTILS ═══════════════════ */
 function esc(s) {
@@ -1248,20 +1462,85 @@ window.switchTab = function(tab) {
 function loadData() {
   db.ref('brandinn_service_requests').on('value', snap => {
     allRequests = snap.val() || {};
-    if (currentTab === 'requests') renderTab();
+    if (isReady && currentTab === 'requests') renderTab();
   });
   db.ref('brandinn_projects').on('value', snap => {
     allProjects = snap.val() || {};
-    if (currentTab === 'projects') renderTab();
+    if (isReady && currentTab === 'projects') renderTab();
   });
   db.ref('brandinn_bookings').on('value', snap => {
     allBookings = snap.val() || {};
-    if (currentTab === 'bookings') renderTab();
+    if (isReady && currentTab === 'bookings') renderTab();
   });
   db.ref('brandinn_print_orders').on('value', snap => {
     allPrintOrders = snap.val() || {};
-    if (currentTab === 'print') renderTab();
+    if (isReady && currentTab === 'print') renderTab();
   });
+}
+
+/* ═══════════════════ SKELETON GENERATOR ═══════════════════ */
+function skeletonHtml(tab) {
+  const itemSkeletons = Array(5).fill(0).map(() => `
+    <div class="skeleton-item">
+      <div class="skeleton skeleton-item-icon"></div>
+      <div class="skeleton-item-body">
+        <div class="skeleton skeleton-item-title"></div>
+        <div class="skeleton skeleton-item-meta"></div>
+      </div>
+      <div class="skeleton-item-actions">
+        <div class="skeleton skeleton-pill"></div>
+        <div class="skeleton skeleton-btn-sm"></div>
+        <div class="skeleton skeleton-btn-sm"></div>
+      </div>
+    </div>
+  `).join('');
+
+  return `
+    <div class="skeleton-hero">
+      <div class="skeleton skeleton-hero-title"></div>
+      <div class="skeleton skeleton-hero-sub"></div>
+    </div>
+
+    <div class="skeleton-tabs">
+      <div class="skeleton-tab"></div>
+      <div class="skeleton-tab"></div>
+      <div class="skeleton-tab"></div>
+      <div class="skeleton-tab"></div>
+    </div>
+
+    <div class="skeleton-stats">
+      <div class="skeleton-stat">
+        <div class="skeleton skeleton-stat-icon"></div>
+        <div class="skeleton skeleton-stat-value"></div>
+        <div class="skeleton skeleton-stat-label"></div>
+      </div>
+      <div class="skeleton-stat">
+        <div class="skeleton skeleton-stat-icon"></div>
+        <div class="skeleton skeleton-stat-value"></div>
+        <div class="skeleton skeleton-stat-label"></div>
+      </div>
+      <div class="skeleton-stat">
+        <div class="skeleton skeleton-stat-icon"></div>
+        <div class="skeleton skeleton-stat-value"></div>
+        <div class="skeleton skeleton-stat-label"></div>
+      </div>
+      <div class="skeleton-stat">
+        <div class="skeleton skeleton-stat-icon"></div>
+        <div class="skeleton skeleton-stat-value"></div>
+        <div class="skeleton skeleton-stat-label"></div>
+      </div>
+    </div>
+
+    <div class="skeleton-section">
+      <div class="skeleton-section-header">
+        <div class="skeleton skeleton-section-title"></div>
+        <div class="skeleton skeleton-section-count"></div>
+      </div>
+      <div class="skeleton-section-body">
+        ${itemSkeletons}
+      </div>
+    </div>
+  `;
 }
 
 /* ═══════════════════ MAIN RENDER ═══════════════════ */
@@ -1269,51 +1548,56 @@ function renderTab() {
   const c = document.getElementById('mainContent');
   if (!c) return;
 
-  const tabMeta = {
-    requests: { emoji: '📋', title: 'Service Requests', subtitle: 'Track and manage client service requests', icon: 'fa-clipboard-list' },
-    projects: { emoji: '📐', title: 'Projects', subtitle: 'Manage branding and design projects', icon: 'fa-project-diagram' },
-    bookings: { emoji: '📅', title: 'Bookings', subtitle: 'Manage client consultations and appointments', icon: 'fa-calendar-check' },
-    print: { emoji: '🖨️', title: 'Print Orders', subtitle: 'Manage t-shirt and banner printing orders', icon: 'fa-print' }
-  };
+  // Step 1: Show skeleton first
+  c.innerHTML = skeletonHtml(currentTab);
 
-  const meta = tabMeta[currentTab];
+  // Step 2: After a short beat, swap in real content with fade
+  requestAnimationFrame(() => {
+    setTimeout(() => {
+      const tabMeta = {
+        requests: { emoji: '📋', title: 'Service Requests', subtitle: 'Track and manage client service requests' },
+        projects: { emoji: '📐', title: 'Projects', subtitle: 'Manage branding and design projects' },
+        bookings: { emoji: '📅', title: 'Bookings', subtitle: 'Manage client consultations and appointments' },
+        print: { emoji: '🖨️', title: 'Print Orders', subtitle: 'Manage t-shirt and banner printing orders' }
+      };
 
-  // Build tabs nav
-  const tabsHtml = `
-    <div class="tabs-wrap">
-      <div class="tabs">
-        ${renderTabBtn('requests', 'fa-clipboard-list', 'Requests', Object.keys(allRequests).length)}
-        ${renderTabBtn('projects', 'fa-project-diagram', 'Projects', Object.keys(allProjects).length)}
-        ${renderTabBtn('bookings', 'fa-calendar-check', 'Bookings', Object.keys(allBookings).length)}
-        ${renderTabBtn('print', 'fa-print', 'Print Orders', Object.keys(allPrintOrders).length)}
-      </div>
-    </div>
-  `;
+      const meta = tabMeta[currentTab];
 
-  // Build stats
-  const statsHtml = `
-    <div class="stats-row">
-      ${renderStatCard('requests', 'fa-clipboard-list', Object.keys(allRequests).length, 'Requests')}
-      ${renderStatCard('projects', 'fa-project-diagram', Object.keys(allProjects).length, 'Projects')}
-      ${renderStatCard('bookings', 'fa-calendar-check', Object.keys(allBookings).length, 'Bookings')}
-      ${renderStatCard('print', 'fa-print', Object.keys(allPrintOrders).length, 'Print Orders')}
-    </div>
-  `;
+      const tabsHtml = `
+        <div class="tabs-wrap">
+          <div class="tabs">
+            ${renderTabBtn('requests', 'fa-clipboard-list', 'Requests', Object.keys(allRequests).length)}
+            ${renderTabBtn('projects', 'fa-project-diagram', 'Projects', Object.keys(allProjects).length)}
+            ${renderTabBtn('bookings', 'fa-calendar-check', 'Bookings', Object.keys(allBookings).length)}
+            ${renderTabBtn('print', 'fa-print', 'Print Orders', Object.keys(allPrintOrders).length)}
+          </div>
+        </div>
+      `;
 
-  // Content by tab
-  const contentHtml = renderContentByTab();
+      const statsHtml = `
+        <div class="stats-row">
+          ${renderStatCard('requests', 'fa-clipboard-list', Object.keys(allRequests).length, 'Requests')}
+          ${renderStatCard('projects', 'fa-project-diagram', Object.keys(allProjects).length, 'Projects')}
+          ${renderStatCard('bookings', 'fa-calendar-check', Object.keys(allBookings).length, 'Bookings')}
+          ${renderStatCard('print', 'fa-print', Object.keys(allPrintOrders).length, 'Print Orders')}
+        </div>
+      `;
 
-  c.innerHTML = `
-    <div class="page-hero">
-      <h1><span class="hero-emoji">${meta.emoji}</span> ${meta.title}</h1>
-      <p>${meta.subtitle}</p>
-    </div>
-    ${tabsHtml}
-    ${statsHtml}
-    ${contentHtml}
-  `;
+      const contentHtml = renderContentByTab();
 
-  bindContentEvents();
+      c.innerHTML = `
+        <div class="fade-in">
+          <div class="page-hero">
+            <h1><span class="hero-emoji">${meta.emoji}</span> ${meta.title}</h1>
+            <p>${meta.subtitle}</p>
+          </div>
+          ${tabsHtml}
+          ${statsHtml}
+          ${contentHtml}
+        </div>
+      `;
+    }, 220);
+  });
 }
 
 function renderTabBtn(tab, icon, label, count) {
@@ -1384,15 +1668,9 @@ window.handleSearch = function(val) {
 window.handleFilter = function(val) {
   statusFilter = val;
   renderTab();
-  // Preserve focus on search input
-  const input = document.getElementById('searchInput');
-  if (input && searchQuery) {
-    input.focus();
-    input.setSelectionRange(searchQuery.length, searchQuery.length);
-  }
 };
 
-/* ═══════════════════ FILTER + SEARCH HELPERS ═══════════════════ */
+/* ═══════════════════ HELPERS ═══════════════════ */
 function matchesSearch(item, fields) {
   if (!searchQuery) return true;
   return fields.some(f => String(item[f] || '').toLowerCase().includes(searchQuery));
@@ -1418,7 +1696,12 @@ function renderRequestsSection() {
 
   let listHtml = '';
   if (!items.length) {
-    listHtml = renderEmptyState('clipboard-list', total === 0 ? 'No requests yet' : 'No matching requests', total === 0 ? 'Service requests from clients will appear here.' : 'Try changing your search or filter.', total === 0);
+    listHtml = renderEmptyState(
+      'clipboard-list',
+      total === 0 ? 'No requests yet' : 'No matching requests',
+      total === 0 ? 'Service requests from clients will appear here.' : 'Try changing your search or filter.',
+      total === 0
+    );
   } else {
     listHtml = items.map(r => {
       const status = r.status || 'pending';
@@ -1452,9 +1735,7 @@ function renderRequestsSection() {
       <div class="section-header">
         <h3><i class="fas fa-clipboard-list"></i> Service Requests <span class="item-count">${items.length}${items.length !== total ? ' of ' + total : ''}</span></h3>
       </div>
-      <div class="section-body">
-        ${listHtml}
-      </div>
+      <div class="section-body">${listHtml}</div>
     </div>
   `;
 }
@@ -1474,7 +1755,12 @@ function renderProjectsSection() {
 
   let listHtml = '';
   if (!items.length) {
-    listHtml = renderEmptyState('project-diagram', total === 0 ? 'No projects yet' : 'No matching projects', total === 0 ? 'Branding and design projects will appear here.' : 'Try changing your search or filter.', total === 0);
+    listHtml = renderEmptyState(
+      'project-diagram',
+      total === 0 ? 'No projects yet' : 'No matching projects',
+      total === 0 ? 'Branding and design projects will appear here.' : 'Try changing your search or filter.',
+      total === 0
+    );
   } else {
     listHtml = items.map(p => {
       const status = p.status || 'planning';
@@ -1527,7 +1813,12 @@ function renderBookingsSection() {
 
   let listHtml = '';
   if (!items.length) {
-    listHtml = renderEmptyState('calendar-check', total === 0 ? 'No bookings yet' : 'No matching bookings', total === 0 ? 'Client appointments will appear here.' : 'Try changing your search or filter.', total === 0);
+    listHtml = renderEmptyState(
+      'calendar-check',
+      total === 0 ? 'No bookings yet' : 'No matching bookings',
+      total === 0 ? 'Client appointments will appear here.' : 'Try changing your search or filter.',
+      total === 0
+    );
   } else {
     listHtml = items.map(b => {
       const status = b.status || 'scheduled';
@@ -1580,7 +1871,12 @@ function renderPrintSection() {
 
   let listHtml = '';
   if (!items.length) {
-    listHtml = renderEmptyState('print', total === 0 ? 'No print orders yet' : 'No matching print orders', total === 0 ? 'T-shirt and banner orders will appear here.' : 'Try changing your search or filter.', total === 0);
+    listHtml = renderEmptyState(
+      'print',
+      total === 0 ? 'No print orders yet' : 'No matching print orders',
+      total === 0 ? 'T-shirt and banner orders will appear here.' : 'Try changing your search or filter.',
+      total === 0
+    );
   } else {
     listHtml = items.map(p => {
       const status = p.status || 'pending';
@@ -1904,6 +2200,19 @@ window.saveRequest = async function() {
   const servicesList = document.getElementById('reqServices').value
     .split(',').map(s => s.trim()).filter(Boolean);
 
+  const id = document.getElementById('reqId').value;
+  const existing = id ? allRequests[id] : null;
+
+  // Preserve existing service prices/qty when the name matches
+  const services = servicesList.map(name => {
+    const prev = existing?.services?.find(s => s.name === name);
+    return {
+      name,
+      price: prev?.price || 0,
+      quantity: prev?.quantity || 1
+    };
+  });
+
   const data = {
     clientName,
     businessName: clientName,
@@ -1913,12 +2222,11 @@ window.saveRequest = async function() {
     instructions: document.getElementById('reqNotes').value.trim(),
     adminNotes: document.getElementById('reqNotes').value.trim(),
     status: document.getElementById('reqStatus').value,
-    services: servicesList.map(name => ({ name, price: 0, quantity: 1 })),
+    services,
     updatedAt: firebase.database.ServerValue.TIMESTAMP,
     updatedBy: currentUser?.email || 'staff'
   };
 
-  const id = document.getElementById('reqId').value;
   try {
     if (id) await db.ref('brandinn_service_requests/' + id).update(data);
     else {
@@ -2044,10 +2352,8 @@ window.handleLogout = async function() {
   }
 };
 
-/* ═══════════════════ BIND CONTENT EVENTS ═══════════════════ */
-function bindContentEvents() {
-  // Any extra binding if needed — currently all handlers are inline
-}
+/* ═══════════════════ INITIAL SKELETON ═══════════════════ */
+document.getElementById('mainContent').innerHTML = skeletonHtml('requests');
 
 /* ═══════════════════ AUTH ═══════════════════ */
 auth.onAuthStateChanged(async user => {
@@ -2058,7 +2364,6 @@ auth.onAuthStateChanged(async user => {
 
   currentUser = user;
 
-  // Update user chip in dropdown
   const name = user.displayName || user.email?.split('@')[0] || 'Staff';
   const initials = name.substring(0, 2).toUpperCase();
 
@@ -2072,13 +2377,9 @@ auth.onAuthStateChanged(async user => {
     const img = document.getElementById('userAvatarImg');
     img.style.display = 'block';
     img.src = user.photoURL;
-
-    // Also update dropdown avatar
-    const da = document.getElementById('dropdownAvatar');
-    da.innerHTML = `<img src="${user.photoURL}" alt="">`;
+    document.getElementById('dropdownAvatar').innerHTML = `<img src="${user.photoURL}" alt="">`;
   }
 
-  // Check permissions
   try {
     const permSnap = await db.ref(`workspacePermissions/${user.uid}`).once('value');
     const perms = permSnap.val() || {};
@@ -2093,8 +2394,15 @@ auth.onAuthStateChanged(async user => {
     }
 
     document.getElementById('workspaceTag').textContent = 'BrandInn Field Ops';
-    loadData();
-    renderTab();
+
+    // Set ready flag so data listeners trigger renders
+    isReady = true;
+
+    // Small delay for the initial skeleton so it feels intentional
+    setTimeout(() => {
+      loadData();
+      renderTab();
+    }, 400);
   } catch (e) {
     console.error(e);
     toast('Error checking permissions', 'error');
