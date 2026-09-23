@@ -1,616 +1,2119 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>BrandInn Field Ops | Staff Hub</title>
-  <meta name="theme-color" content="#ca8a04">
-  <link rel="icon" type="image/png" href="https://i.postimg.cc/rFfXDj3L/kazinni-removebg-preview(1).png">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    :root {
-      --gold: #ca8a04; --gold-dark: #a16207; --gold-light: #fbbf24; --gold-soft: #fef3c7;
-      --bg: #f8fafc; --surface: #ffffff; --text: #0f172a; --text-secondary: #64748b;
-      --border: #e2e8f0; --border-light: #f1f5f9;
-      --success: #10b981; --warning: #f59e0b; --danger: #ef4444; --info: #3b82f6; --purple: #8b5cf6;
-      --shadow-sm: 0 1px 2px rgba(0,0,0,0.05); --shadow: 0 1px 3px rgba(0,0,0,0.1);
-      --shadow-md: 0 4px 6px rgba(0,0,0,0.07); --shadow-lg: 0 10px 25px rgba(0,0,0,0.1);
-      --radius-sm: 8px; --radius: 12px; --radius-lg: 16px; --radius-xl: 20px;
-    }
-    body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-      background: var(--bg); color: var(--text); min-height: 100vh;
-      -webkit-font-smoothing: antialiased;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>BrandInn Field Ops | Staff Hub</title>
+<meta name="theme-color" content="#ca8a04">
+<link rel="icon" type="image/png" href="https://i.postimg.cc/rFfXDj3L/kazinni-removebg-preview(1).png">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
 
-    .topbar {
-      background: rgba(255,255,255,0.95); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-      border-bottom: 1px solid var(--border-light); padding: 0 1.5rem; height: 56px;
-      display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100;
-    }
-    .topbar-left { display: flex; align-items: center; gap: 10px; }
-    .brand { display: flex; align-items: center; gap: 8px; text-decoration: none; }
-    .brand img { width: 30px; height: 30px; border-radius: 8px; }
-    .brand span { font-weight: 700; font-size: 0.9rem; color: var(--text); }
-    .workspace-tag { background: var(--gold-soft); color: var(--gold-dark); padding: 0.2rem 0.7rem; border-radius: 20px; font-size: 0.65rem; font-weight: 600; max-width: 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+:root {
+  /* Brand colors */
+  --gold: #ca8a04;
+  --gold-dark: #a16207;
+  --gold-light: #fbbf24;
+  --gold-soft: #fef3c7;
+  --gold-tint: rgba(202, 138, 4, 0.08);
 
-    .topbar-right { display: flex; align-items: center; gap: 10px; }
-    .user-menu { position: relative; }
-    .user-avatar-btn {
-      width: 36px; height: 36px; border-radius: 50%; border: 2px solid var(--border);
-      background: linear-gradient(135deg, var(--gold), var(--gold-dark)); color: white;
-      display: flex; align-items: center; justify-content: center; font-size: 0.8rem;
-      font-weight: 700; cursor: pointer; transition: all 0.2s; overflow: hidden;
-    }
-    .user-avatar-btn img { width: 100%; height: 100%; object-fit: cover; }
-    .user-avatar-btn:hover { border-color: var(--gold); box-shadow: 0 0 16px rgba(202,138,4,0.2); transform: scale(1.05); }
-    
-    .user-dropdown {
-      position: absolute; top: 46px; right: 0; background: var(--surface);
-      border: 1px solid var(--border); border-radius: 16px; padding: 0.5rem 0;
-      min-width: 220px; box-shadow: var(--shadow-lg);
-      opacity: 0; visibility: hidden; transform: translateY(-8px);
-      transition: all 0.25s; z-index: 200;
-    }
-    .user-dropdown.open { opacity: 1; visibility: visible; transform: translateY(0); }
-    .dropdown-header { padding: 0.6rem 1rem; border-bottom: 1px solid var(--border-light); display: flex; align-items: center; gap: 10px; }
-    .dropdown-avatar { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, var(--gold), var(--gold-dark)); display: flex; align-items: center; justify-content: center; font-weight: 700; color: white; font-size: 0.75rem; flex-shrink: 0; }
-    .dropdown-user-info { min-width: 0; }
-    .dropdown-user-name { font-weight: 600; font-size: 0.78rem; color: var(--text); }
-    .dropdown-user-email { font-size: 0.62rem; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .dropdown-user-role { font-size: 0.58rem; color: var(--gold-dark); font-weight: 600; margin-top: 2px; }
-    .user-dropdown-item { display: flex; align-items: center; gap: 10px; padding: 0.6rem 1rem; font-size: 0.75rem; color: var(--text-secondary); cursor: pointer; transition: all 0.15s; text-decoration: none; border: none; background: none; width: 100%; font-family: 'Inter', sans-serif; text-align: left; }
-    .user-dropdown-item:hover { background: #f8fafc; color: var(--text); }
-    .user-dropdown-item i { width: 18px; text-align: center; font-size: 0.85rem; }
-    .dropdown-divider { height: 1px; background: var(--border-light); margin: 0.3rem 0; }
-    .user-dropdown-item.signout { color: var(--danger); }
-    .user-dropdown-item.signout:hover { background: #fef2f2; }
+  /* Neutrals */
+  --bg: #f6f8fb;
+  --surface: #ffffff;
+  --surface-alt: #f8fafc;
+  --text: #0f172a;
+  --text-soft: #334155;
+  --text-muted: #64748b;
+  --text-light: #94a3b8;
+  --border: #e2e8f0;
+  --border-soft: #f1f5f9;
 
-    .main { padding: 1.5rem; max-width: 1000px; margin: 0 auto; }
-    .page-title { font-size: 1.3rem; font-weight: 800; }
-    .page-subtitle { font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 1.2rem; }
+  /* Semantic */
+  --success: #10b981;
+  --success-bg: #ecfdf5;
+  --warning: #f59e0b;
+  --warning-bg: #fffbeb;
+  --danger: #ef4444;
+  --danger-bg: #fef2f2;
+  --info: #3b82f6;
+  --info-bg: #eff6ff;
+  --purple: #8b5cf6;
+  --purple-bg: #faf5ff;
 
-    .tab-nav {
-      display: flex; gap: 4px; background: var(--surface); border-radius: var(--radius);
-      padding: 4px; margin-bottom: 1.5rem; border: 1px solid var(--border-light);
-      box-shadow: var(--shadow-sm); overflow-x: auto;
-    }
-    .tab-btn {
-      flex: 1; min-width: fit-content; padding: 0.5rem 0.8rem; border-radius: 10px;
-      border: none; cursor: pointer; font-family: 'Inter', sans-serif; font-size: 0.72rem;
-      font-weight: 600; background: transparent; color: var(--text-secondary);
-      transition: all 0.2s; white-space: nowrap; display: flex; align-items: center;
-      justify-content: center; gap: 6px;
-    }
-    .tab-btn:hover { background: #f8fafc; color: var(--text); }
-    .tab-btn.active { background: var(--gold); color: white; box-shadow: 0 2px 8px rgba(202,138,4,0.2); }
-    .tab-btn .badge-count { background: rgba(255,255,255,0.2); padding: 1px 6px; border-radius: 8px; font-size: 0.6rem; }
-    .tab-btn.active .badge-count { background: rgba(255,255,255,0.3); }
+  /* Shadows */
+  --shadow-xs: 0 1px 2px rgba(15, 23, 42, 0.04);
+  --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.06), 0 1px 2px rgba(15, 23, 42, 0.04);
+  --shadow-md: 0 4px 12px -2px rgba(15, 23, 42, 0.08), 0 2px 6px -2px rgba(15, 23, 42, 0.04);
+  --shadow-lg: 0 12px 32px -8px rgba(15, 23, 42, 0.12), 0 4px 12px -4px rgba(15, 23, 42, 0.06);
+  --shadow-xl: 0 24px 48px -12px rgba(15, 23, 42, 0.18);
+  --shadow-gold: 0 12px 32px -8px rgba(202, 138, 4, 0.35);
 
-    .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 1.5rem; }
-    .stat-card {
-      background: var(--surface); border-radius: var(--radius-lg); padding: 1rem;
-      border: 1px solid var(--border-light); box-shadow: var(--shadow-sm);
-    }
-    .stat-card .stat-icon { width: 36px; height: 36px; border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; margin-bottom: 0.6rem; font-size: 0.9rem; }
-    .stat-card .stat-icon.requests { background: #fef3c7; color: #d97706; }
-    .stat-card .stat-icon.projects { background: #eff6ff; color: #3b82f6; }
-    .stat-card .stat-icon.bookings { background: #faf5ff; color: #7c3aed; }
-    .stat-card .stat-icon.print { background: #ecfdf5; color: #059669; }
-    .stat-card .stat-value { font-size: 1.6rem; font-weight: 800; color: var(--text); }
-    .stat-card .stat-label { font-size: 0.6rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; margin-top: 0.2rem; }
+  /* Radii */
+  --radius-sm: 10px;
+  --radius: 14px;
+  --radius-lg: 18px;
+  --radius-xl: 24px;
+  --radius-full: 9999px;
 
-    .section { background: var(--surface); border-radius: var(--radius-xl); border: 1px solid var(--border-light); box-shadow: var(--shadow-sm); margin-bottom: 1.5rem; overflow: hidden; }
-    .section-header { padding: 1rem 1.2rem; border-bottom: 1px solid var(--border-light); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
-    .section-header h3 { font-size: 0.85rem; font-weight: 700; display: flex; align-items: center; gap: 8px; }
-    .section-body { padding: 1rem 1.2rem; }
-    .section-body.no-padding { padding: 0; }
+  /* Fonts */
+  --font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-display: 'Inter', sans-serif;
+}
 
-    .btn { padding: 0.45rem 0.9rem; border-radius: var(--radius-sm); font-weight: 600; font-size: 0.72rem; cursor: pointer; border: 1px solid transparent; transition: all 0.2s; display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; font-family: 'Inter', sans-serif; }
-    .btn-primary { background: var(--gold); color: white; border-color: var(--gold); }
-    .btn-primary:hover { background: var(--gold-dark); }
-    .btn-outline { background: white; border-color: var(--border); color: var(--text-secondary); }
-    .btn-outline:hover { background: #f8fafc; }
-    .btn-info { background: var(--info); color: white; border-color: var(--info); }
-    .btn-info:hover { background: #2563eb; }
-    .btn-success { background: var(--success); color: white; }
-    .btn-success:hover { background: #059669; }
-    .btn-danger { background: var(--danger); color: white; }
-    .btn-danger:hover { background: #dc2626; }
-    .btn-sm { padding: 0.35rem 0.7rem; font-size: 0.68rem; }
-    .btn-xs { padding: 0.25rem 0.5rem; font-size: 0.62rem; border-radius: 6px; }
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.5;
+}
 
-    .list-item { display: flex; align-items: center; justify-content: space-between; padding: 0.75rem 1.2rem; border-bottom: 1px solid var(--border-light); transition: background 0.15s; gap: 8px; flex-wrap: wrap; }
-    .list-item:last-child { border-bottom: none; }
-    .list-item:hover { background: #fafbfc; }
-    .list-item-left { display: flex; align-items: center; gap: 10px; min-width: 0; flex: 1; }
-    .list-item-icon { width: 36px; height: 36px; border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; font-size: 0.9rem; flex-shrink: 0; background: #f8fafc; }
-    .list-item-info { min-width: 0; }
-    .list-item-title { font-weight: 600; font-size: 0.8rem; color: var(--text); }
-    .list-item-subtitle { font-size: 0.65rem; color: var(--text-secondary); margin-top: 1px; }
-    .list-item-right { display: flex; align-items: center; gap: 6px; flex-shrink: 0; flex-wrap: wrap; }
+::selection { background: var(--gold); color: white; }
 
-    .badge { padding: 0.18rem 0.5rem; border-radius: 6px; font-size: 0.6rem; font-weight: 600; text-transform: capitalize; }
-    .badge-success { background: #ecfdf5; color: #065f46; }
-    .badge-warning { background: #fffbeb; color: #92400e; }
-    .badge-danger { background: #fef2f2; color: #991b1b; }
-    .badge-info { background: #eff6ff; color: #1e40af; }
-    .badge-neutral { background: #f1f5f9; color: #475569; }
-    .badge-gold { background: var(--gold-soft); color: var(--gold-dark); }
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
 
-    .empty-state { text-align: center; padding: 2.5rem 1rem; }
-    .empty-state i { font-size: 2.5rem; color: #cbd5e1; display: block; margin-bottom: 0.8rem; }
-    .empty-state p { font-size: 0.78rem; color: var(--text-secondary); }
+/* ═══════════════════ TOPBAR ═══════════════════ */
+.topbar {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  border-bottom: 1px solid var(--border-soft);
+  padding: 0 1.5rem;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  gap: 12px;
+}
 
-    .modal-overlay { position: fixed; inset: 0; background: rgba(15,23,42,0.4); backdrop-filter: blur(4px); display: flex; align-items: flex-end; justify-content: center; z-index: 300; opacity: 0; visibility: hidden; transition: all 0.25s; }
-    .modal-overlay.active { opacity: 1; visibility: visible; }
-    .modal { background: white; border-radius: 20px 20px 0 0; padding: 1.5rem; width: 100%; max-width: 500px; max-height: 85vh; overflow-y: auto; box-shadow: 0 -4px 30px rgba(0,0,0,0.1); }
-    .modal-handle { width: 36px; height: 4px; background: #e2e8f0; border-radius: 2px; margin: 0 auto 1rem; }
-    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.2rem; }
-    .modal-header h3 { font-size: 1rem; font-weight: 700; }
-    .modal-close { width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--border); background: white; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; transition: all 0.2s; }
-    .modal-close:hover { background: #fef2f2; color: var(--danger); }
-    .form-group { margin-bottom: 0.8rem; }
-    .form-group label { display: block; font-weight: 600; font-size: 0.7rem; color: var(--text-secondary); margin-bottom: 0.3rem; }
-    .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 0.55rem 0.8rem; border: 1px solid var(--border); border-radius: var(--radius-sm); font-family: 'Inter', sans-serif; font-size: 0.8rem; background: #f8fafc; outline: none; transition: all 0.2s; }
-    .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(202,138,4,0.06); background: white; }
-    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; }
-    .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); z-index: 400; padding: 0.6rem 1.2rem; border-radius: 10px; font-size: 0.75rem; font-weight: 600; box-shadow: var(--shadow-lg); animation: toastIn 0.3s ease; background: #0f172a; color: white; display: none; max-width: 90%; }
-    .toast.error { background: #991b1b; }
-    .toast.success { background: #065f46; }
-    @keyframes toastIn { from { opacity: 0; transform: translateX(-50%) translateY(15px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }
+.topbar-left { display: flex; align-items: center; gap: 14px; min-width: 0; }
 
-    @media (max-width: 640px) { 
-      .main { padding: 1rem; } 
-      .stats-row { grid-template-columns: 1fr 1fr; }
-      .form-row { grid-template-columns: 1fr; }
-      .topbar { padding: 0 1rem; }
-      .tab-btn { font-size: 0.65rem; padding: 0.35rem 0.5rem; }
-      .list-item { flex-direction: column; align-items: stretch; }
-      .list-item-right { justify-content: flex-start; margin-top: 4px; }
-    }
-  </style>
+.brand { display: flex; align-items: center; gap: 10px; text-decoration: none; flex-shrink: 0; }
+.brand img {
+  width: 36px; height: 36px;
+  border-radius: 10px;
+  object-fit: contain;
+  background: white;
+  box-shadow: var(--shadow-xs);
+}
+.brand-name {
+  font-weight: 800;
+  font-size: 0.95rem;
+  color: var(--text);
+  letter-spacing: -0.02em;
+}
+
+.workspace-tag {
+  background: var(--gold-soft);
+  color: var(--gold-dark);
+  padding: 0.3rem 0.85rem;
+  border-radius: var(--radius-full);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  max-width: 180px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.workspace-tag::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  background: var(--gold);
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.topbar-right { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+
+.user-menu { position: relative; }
+
+.user-avatar-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.82rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.2s;
+  overflow: hidden;
+  padding: 0;
+}
+.user-avatar-btn:hover {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 4px var(--gold-tint);
+  transform: scale(1.05);
+}
+.user-avatar-btn img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.user-dropdown {
+  position: absolute;
+  top: 52px;
+  right: 0;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 0.5rem;
+  min-width: 260px;
+  box-shadow: var(--shadow-lg);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-8px) scale(0.98);
+  transform-origin: top right;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 200;
+}
+.user-dropdown.open {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0) scale(1);
+}
+
+.dropdown-header {
+  padding: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-radius: var(--radius);
+  background: linear-gradient(135deg, var(--gold-soft), white);
+  border: 1px solid #fde68a;
+  margin-bottom: 0.4rem;
+}
+.dropdown-avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  color: white;
+  font-size: 0.9rem;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+.dropdown-avatar img { width: 100%; height: 100%; object-fit: cover; }
+
+.dropdown-user-info { min-width: 0; flex: 1; }
+.dropdown-user-name {
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.dropdown-user-email {
+  font-size: 0.68rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-top: 1px;
+}
+.dropdown-user-role {
+  font-size: 0.62rem;
+  color: var(--gold-dark);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  margin-top: 4px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.user-dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0.65rem 0.85rem;
+  font-size: 0.82rem;
+  color: var(--text-soft);
+  cursor: pointer;
+  transition: all 0.15s;
+  text-decoration: none;
+  border: none;
+  background: none;
+  width: 100%;
+  font-family: var(--font);
+  text-align: left;
+  font-weight: 600;
+  border-radius: var(--radius);
+}
+.user-dropdown-item:hover {
+  background: var(--surface-alt);
+  color: var(--text);
+}
+.user-dropdown-item i {
+  width: 18px;
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+.user-dropdown-item:hover i { color: var(--gold); }
+
+.dropdown-divider {
+  height: 1px;
+  background: var(--border-soft);
+  margin: 0.4rem 0.6rem;
+}
+
+.user-dropdown-item.signout { color: var(--danger); }
+.user-dropdown-item.signout i { color: var(--danger); }
+.user-dropdown-item.signout:hover { background: var(--danger-bg); }
+
+/* ═══════════════════ MAIN ═══════════════════ */
+.main {
+  padding: 1.75rem 1.5rem 3rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.page-hero {
+  margin-bottom: 1.75rem;
+}
+.page-hero h1 {
+  font-family: var(--font-display);
+  font-size: 1.85rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 0.4rem;
+}
+.page-hero h1 .hero-emoji {
+  font-size: 1.6rem;
+  line-height: 1;
+}
+.page-hero p {
+  font-size: 0.92rem;
+  color: var(--text-muted);
+  line-height: 1.55;
+  max-width: 640px;
+}
+
+/* ═══════════════════ TABS ═══════════════════ */
+.tabs-wrap {
+  margin-bottom: 1.5rem;
+}
+.tabs {
+  display: flex;
+  gap: 6px;
+  background: white;
+  padding: 6px;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--border-soft);
+  box-shadow: var(--shadow-sm);
+  overflow-x: auto;
+  scrollbar-width: none;
+  width: fit-content;
+  max-width: 100%;
+}
+.tabs::-webkit-scrollbar { display: none; }
+
+.tab-btn {
+  padding: 0.65rem 1.15rem;
+  border-radius: var(--radius-full);
+  border: none;
+  cursor: pointer;
+  font-family: var(--font);
+  font-size: 0.82rem;
+  font-weight: 700;
+  background: transparent;
+  color: var(--text-muted);
+  transition: all 0.2s;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  position: relative;
+}
+.tab-btn i { font-size: 0.88rem; }
+.tab-btn:hover { color: var(--gold); }
+.tab-btn.active {
+  background: var(--text);
+  color: white;
+  box-shadow: 0 6px 16px -6px rgba(15, 23, 42, 0.4);
+}
+.tab-btn.active i { color: var(--gold-light); }
+
+.tab-count {
+  background: rgba(0, 0, 0, 0.08);
+  padding: 1px 7px;
+  border-radius: var(--radius-full);
+  font-size: 0.68rem;
+  font-weight: 800;
+  min-width: 22px;
+  text-align: center;
+}
+.tab-btn.active .tab-count {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+}
+
+/* ═══════════════════ STATS ═══════════════════ */
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  margin-bottom: 1.75rem;
+}
+
+.stat-card {
+  background: white;
+  border-radius: var(--radius-lg);
+  padding: 1.25rem;
+  border: 1px solid var(--border-soft);
+  box-shadow: var(--shadow-xs);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+}
+.stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  height: 3px;
+  background: var(--accent, var(--gold));
+  opacity: 0;
+  transition: opacity 0.25s;
+}
+.stat-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--border);
+}
+.stat-card:hover::before { opacity: 1; }
+
+.stat-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  margin-bottom: 0.9rem;
+  background: var(--accent-bg, var(--gold-soft));
+  color: var(--accent, var(--gold-dark));
+}
+.stat-value {
+  font-size: 1.7rem;
+  font-weight: 800;
+  color: var(--text);
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+}
+.stat-label {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  font-weight: 600;
+  margin-top: 0.35rem;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.stat-card.requests { --accent: var(--warning); --accent-bg: var(--warning-bg); }
+.stat-card.projects { --accent: var(--info); --accent-bg: var(--info-bg); }
+.stat-card.bookings { --accent: var(--purple); --accent-bg: var(--purple-bg); }
+.stat-card.print { --accent: var(--success); --accent-bg: var(--success-bg); }
+
+/* ═══════════════════ SEARCH / FILTER BAR ═══════════════════ */
+.toolbar {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 1.25rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.search-box {
+  flex: 1;
+  min-width: 220px;
+  position: relative;
+}
+.search-box i {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-light);
+  font-size: 0.82rem;
+}
+.search-box input {
+  width: 100%;
+  padding: 0.75rem 1rem 0.75rem 2.75rem;
+  border: 1.5px solid var(--border-soft);
+  border-radius: var(--radius-full);
+  font-size: 0.85rem;
+  font-family: var(--font);
+  background: white;
+  transition: all 0.2s;
+  color: var(--text);
+}
+.search-box input:focus {
+  outline: none;
+  border-color: var(--gold);
+  box-shadow: 0 0 0 4px var(--gold-tint);
+}
+.search-box input::placeholder { color: var(--text-light); }
+
+.filter-select {
+  padding: 0.75rem 2.5rem 0.75rem 1rem;
+  border: 1.5px solid var(--border-soft);
+  border-radius: var(--radius-full);
+  font-size: 0.82rem;
+  font-family: var(--font);
+  font-weight: 600;
+  background: white;
+  color: var(--text);
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3e%3cpath fill='%2364748b' d='M6 8L2 4h8z'/%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  transition: all 0.2s;
+}
+.filter-select:focus {
+  outline: none;
+  border-color: var(--gold);
+  box-shadow: 0 0 0 4px var(--gold-tint);
+}
+
+/* ═══════════════════ SECTION / LIST ═══════════════════ */
+.section {
+  background: white;
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--border-soft);
+  box-shadow: var(--shadow-xs);
+  margin-bottom: 1.5rem;
+  overflow: hidden;
+}
+
+.section-header {
+  padding: 1.2rem 1.4rem;
+  border-bottom: 1px solid var(--border-soft);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.section-header h3 {
+  font-size: 0.95rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--text);
+}
+.section-header h3 i {
+  color: var(--gold);
+  font-size: 1rem;
+}
+.section-header .item-count {
+  background: var(--surface-alt);
+  color: var(--text-muted);
+  padding: 0.2rem 0.65rem;
+  border-radius: var(--radius-full);
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+
+.section-body { padding: 0.5rem; }
+.section-body.no-padding { padding: 0; }
+
+/* ═══════════════════ LIST CARDS ═══════════════════ */
+.item-card {
+  padding: 1rem 1.1rem;
+  border-radius: var(--radius);
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  border: 1.5px solid transparent;
+  margin-bottom: 0.4rem;
+  position: relative;
+}
+.item-card:last-child { margin-bottom: 0; }
+.item-card:hover {
+  background: var(--surface-alt);
+  border-color: var(--border);
+  transform: translateX(4px);
+  box-shadow: var(--shadow-xs);
+}
+
+.item-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.05rem;
+  flex-shrink: 0;
+  background: var(--surface-alt);
+  border: 1px solid var(--border-soft);
+}
+
+.item-body { flex: 1; min-width: 0; }
+
+.item-title {
+  font-weight: 700;
+  font-size: 0.92rem;
+  color: var(--text);
+  letter-spacing: -0.01em;
+  margin-bottom: 0.35rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.item-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  align-items: center;
+}
+.item-meta span {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.item-meta i {
+  font-size: 0.68rem;
+  color: var(--text-light);
+}
+
+.item-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+  margin-left: auto;
+}
+
+/* ═══════════════════ STATUS PILLS ═══════════════════ */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0.3rem 0.7rem;
+  border-radius: var(--radius-full);
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: capitalize;
+  white-space: nowrap;
+  letter-spacing: 0.2px;
+}
+.pill::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+  flex-shrink: 0;
+}
+.pill.pending { background: var(--warning-bg); color: #92400e; }
+.pill.quoted { background: var(--info-bg); color: #1e40af; }
+.pill.in-progress { background: var(--purple-bg); color: #6d28d9; }
+.pill.completed { background: var(--success-bg); color: #065f46; }
+.pill.printing { background: var(--info-bg); color: #1e40af; }
+.pill.delivered { background: var(--success-bg); color: #065f46; }
+.pill.cancelled { background: var(--danger-bg); color: #991b1b; }
+.pill.planning { background: var(--surface-alt); color: var(--text-muted); }
+.pill.active { background: var(--info-bg); color: #1e40af; }
+.pill.on-hold { background: var(--warning-bg); color: #92400e; }
+.pill.scheduled { background: var(--info-bg); color: #1e40af; }
+.pill.confirmed { background: var(--success-bg); color: #065f46; }
+
+/* ═══════════════════ BUTTONS ═══════════════════ */
+.btn {
+  padding: 0.55rem 1rem;
+  border-radius: var(--radius-full);
+  font-weight: 700;
+  font-size: 0.78rem;
+  cursor: pointer;
+  border: 1.5px solid transparent;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  white-space: nowrap;
+  font-family: var(--font);
+  text-decoration: none;
+}
+.btn i { font-size: 0.82rem; }
+
+.btn-primary {
+  background: var(--text);
+  color: white;
+  border-color: var(--text);
+  box-shadow: 0 4px 12px -3px rgba(15, 23, 42, 0.3);
+}
+.btn-primary:hover {
+  background: var(--gold-dark);
+  border-color: var(--gold-dark);
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px -4px rgba(202, 138, 4, 0.4);
+}
+
+.btn-gold {
+  background: linear-gradient(135deg, var(--gold), var(--gold-light));
+  color: white;
+  border-color: var(--gold);
+  box-shadow: var(--shadow-gold);
+}
+.btn-gold:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 16px 36px -8px rgba(202, 138, 4, 0.5);
+}
+
+.btn-outline {
+  background: white;
+  border-color: var(--border);
+  color: var(--text-soft);
+}
+.btn-outline:hover {
+  background: var(--surface-alt);
+  border-color: var(--text-light);
+  color: var(--text);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--text-muted);
+  padding: 0.5rem;
+  min-width: 36px;
+}
+.btn-ghost:hover {
+  background: var(--surface-alt);
+  color: var(--text);
+}
+
+.btn-danger {
+  background: transparent;
+  color: var(--danger);
+  padding: 0.5rem;
+  min-width: 36px;
+}
+.btn-danger:hover {
+  background: var(--danger-bg);
+}
+
+.btn-sm { padding: 0.45rem 0.85rem; font-size: 0.72rem; }
+.btn-icon {
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border-radius: var(--radius-sm);
+}
+
+/* ═══════════════════ EMPTY STATE ═══════════════════ */
+.empty-state {
+  text-align: center;
+  padding: 3.5rem 2rem;
+}
+.empty-state-icon {
+  width: 80px;
+  height: 80px;
+  border-radius: 24px;
+  background: linear-gradient(135deg, var(--gold-soft), white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.2rem;
+  font-size: 2rem;
+  color: var(--gold-dark);
+  box-shadow: var(--shadow-sm);
+}
+.empty-state h4 {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--text);
+  letter-spacing: -0.01em;
+  margin-bottom: 0.35rem;
+}
+.empty-state p {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  max-width: 320px;
+  margin: 0 auto 1.4rem;
+  line-height: 1.55;
+}
+
+/* ═══════════════════ MODAL ═══════════════════ */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.5);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  z-index: 300;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.25s;
+  padding: 0;
+}
+.modal-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.modal {
+  background: white;
+  border-radius: 24px 24px 0 0;
+  padding: 1.5rem;
+  width: 100%;
+  max-width: 560px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 -8px 40px -8px rgba(0, 0, 0, 0.2);
+  transform: translateY(100%);
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.modal-overlay.active .modal {
+  transform: translateY(0);
+}
+
+.modal-handle {
+  width: 40px;
+  height: 4px;
+  background: var(--border);
+  border-radius: 2px;
+  margin: 0 auto 1.2rem;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  gap: 1rem;
+}
+.modal-header h3 {
+  font-size: 1.15rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.modal-header h3 i {
+  color: var(--gold);
+  font-size: 1rem;
+}
+.modal-close {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9rem;
+  transition: all 0.2s;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+.modal-close:hover {
+  background: var(--danger-bg);
+  color: var(--danger);
+  border-color: #fecaca;
+  transform: rotate(90deg);
+}
+
+/* ═══════════════════ FORMS ═══════════════════ */
+.form-group { margin-bottom: 1rem; }
+.form-group label {
+  display: block;
+  font-weight: 700;
+  font-size: 0.75rem;
+  color: var(--text-soft);
+  margin-bottom: 0.4rem;
+  letter-spacing: 0.2px;
+}
+.form-group label .req {
+  color: var(--danger);
+  margin-left: 2px;
+}
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1.5px solid var(--border-soft);
+  border-radius: var(--radius);
+  font-family: var(--font);
+  font-size: 0.88rem;
+  background: var(--surface-alt);
+  outline: none;
+  transition: all 0.2s;
+  color: var(--text);
+}
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  border-color: var(--gold);
+  background: white;
+  box-shadow: 0 0 0 4px var(--gold-tint);
+}
+.form-group textarea {
+  resize: vertical;
+  min-height: 70px;
+  line-height: 1.5;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.85rem;
+}
+
+.form-actions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+.form-actions .btn {
+  flex: 1;
+  padding: 0.9rem;
+  font-size: 0.85rem;
+}
+
+/* ═══════════════════ TOAST ═══════════════════ */
+.toast-container {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 400;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  pointer-events: none;
+  width: 90%;
+  max-width: 380px;
+}
+.toast {
+  padding: 0.85rem 1.1rem;
+  border-radius: var(--radius);
+  font-size: 0.82rem;
+  font-weight: 600;
+  box-shadow: var(--shadow-lg);
+  background: var(--text);
+  color: white;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  animation: toastIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: auto;
+  line-height: 1.4;
+}
+.toast i { font-size: 1rem; flex-shrink: 0; }
+.toast.success { background: var(--success); }
+.toast.error { background: var(--danger); }
+.toast.info { background: var(--info); }
+@keyframes toastIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ═══════════════════ LOADING ═══════════════════ */
+.loading-state {
+  text-align: center;
+  padding: 4rem 1rem;
+  color: var(--text-muted);
+}
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid var(--border-soft);
+  border-top-color: var(--gold);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin: 0 auto 1rem;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ═══════════════════ ACCESS DENIED ═══════════════════ */
+.access-denied {
+  max-width: 480px;
+  margin: 3rem auto;
+  text-align: center;
+  padding: 3rem 2rem;
+  background: white;
+  border-radius: var(--radius-xl);
+  border: 1.5px solid #fecaca;
+  box-shadow: var(--shadow-md);
+}
+.access-denied-icon {
+  width: 80px;
+  height: 80px;
+  border-radius: 24px;
+  background: linear-gradient(135deg, #fee2e2, #fecaca);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.4rem;
+  color: var(--danger);
+  font-size: 2rem;
+}
+.access-denied h2 {
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: #991b1b;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.5rem;
+}
+.access-denied p {
+  font-size: 0.88rem;
+  color: #7f1d1d;
+  line-height: 1.6;
+  margin-bottom: 0.5rem;
+}
+
+/* ═══════════════════ RESPONSIVE ═══════════════════ */
+@media (max-width: 900px) {
+  .stats-row { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 640px) {
+  .topbar { padding: 0 1rem; height: 60px; }
+  .brand-name { display: none; }
+  .workspace-tag { max-width: 130px; font-size: 0.62rem; }
+
+  .main { padding: 1.25rem 1rem 3rem; }
+  .page-hero h1 { font-size: 1.5rem; }
+  .page-hero h1 .hero-emoji { font-size: 1.3rem; }
+  .page-hero p { font-size: 0.85rem; }
+
+  .tabs { padding: 5px; }
+  .tab-btn { padding: 0.5rem 0.85rem; font-size: 0.75rem; gap: 6px; }
+  .tab-btn i { font-size: 0.8rem; }
+  .tab-count { font-size: 0.62rem; padding: 0 6px; min-width: 20px; }
+
+  .stats-row { gap: 0.7rem; margin-bottom: 1.25rem; }
+  .stat-card { padding: 1rem; border-radius: var(--radius); }
+  .stat-icon { width: 36px; height: 36px; font-size: 0.9rem; margin-bottom: 0.7rem; }
+  .stat-value { font-size: 1.35rem; }
+  .stat-label { font-size: 0.65rem; }
+
+  .toolbar { gap: 8px; }
+  .search-box input { padding: 0.65rem 1rem 0.65rem 2.5rem; font-size: 0.82rem; }
+  .filter-select { padding: 0.65rem 2.3rem 0.65rem 0.9rem; font-size: 0.78rem; }
+
+  .section-header { padding: 1rem; }
+  .section-header h3 { font-size: 0.88rem; }
+
+  .item-card {
+    padding: 0.9rem;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .item-icon { width: 40px; height: 40px; font-size: 0.95rem; border-radius: 10px; }
+  .item-title { font-size: 0.88rem; }
+  .item-meta { font-size: 0.68rem; gap: 0.6rem; }
+  .item-actions { margin-left: 0; width: 100%; justify-content: flex-end; margin-top: 0.4rem; }
+
+  .form-row { grid-template-columns: 1fr; gap: 0.7rem; }
+  .modal { padding: 1.25rem; border-radius: 20px 20px 0 0; }
+  .modal-header h3 { font-size: 1.05rem; }
+}
+
+@media (max-width: 380px) {
+  .stats-row { grid-template-columns: 1fr; }
+  .filter-select { width: 100%; }
+}
+</style>
 </head>
 <body>
-  <!-- Top Bar -->
-  <div class="topbar">
-    <div class="topbar-left">
-      <div class="brand">
-        <img src="https://i.postimg.cc/rFfXDj3L/kazinni-removebg-preview(1).png" alt="Logo">
-        <span>BrandInn</span>
-      </div>
-      <span class="workspace-tag" id="workspaceTag">Field Ops</span>
-    </div>
-    <div class="topbar-right">
-      <div class="user-menu" id="userMenu">
-        <button class="user-avatar-btn" id="userAvatarBtn" onclick="toggleUserMenu()">
-          <img id="userAvatarImg" src="" alt="" style="display:none;">
-          <span id="userAvatarText">BR</span>
+
+<!-- ═══════════════════ TOPBAR ═══════════════════ -->
+<div class="topbar">
+  <div class="topbar-left">
+    <a href="/" class="brand">
+      <img src="https://i.postimg.cc/rFfXDj3L/kazinni-removebg-preview(1).png" alt="KazInni">
+      <span class="brand-name">BrandInn</span>
+    </a>
+    <span class="workspace-tag" id="workspaceTag">Field Ops</span>
+  </div>
+  <div class="topbar-right">
+    <div class="user-menu" id="userMenu">
+      <button class="user-avatar-btn" id="userAvatarBtn" onclick="toggleUserMenu()">
+        <img id="userAvatarImg" src="" alt="" style="display:none;">
+        <span id="userAvatarText">BR</span>
+      </button>
+      <div class="user-dropdown" id="userDropdown">
+        <div class="dropdown-header">
+          <div class="dropdown-avatar" id="dropdownAvatar">BR</div>
+          <div class="dropdown-user-info">
+            <div class="dropdown-user-name" id="dropdownName">Staff</div>
+            <div class="dropdown-user-email" id="dropdownEmail">...</div>
+            <div class="dropdown-user-role"><i class="fas fa-briefcase"></i> BrandInn Staff</div>
+          </div>
+        </div>
+        <button class="user-dropdown-item" onclick="switchTab('requests')">
+          <i class="fas fa-clipboard-list"></i> Service Requests
         </button>
-        <div class="user-dropdown" id="userDropdown">
-          <div class="dropdown-header">
-            <div class="dropdown-avatar" id="dropdownAvatar">BR</div>
-            <div class="dropdown-user-info">
-              <div class="dropdown-user-name" id="dropdownName">Staff</div>
-              <div class="dropdown-user-email" id="dropdownEmail">...</div>
-              <div class="dropdown-user-role"><i class="fas fa-briefcase"></i> BrandInn Staff</div>
+        <button class="user-dropdown-item" onclick="switchTab('projects')">
+          <i class="fas fa-project-diagram"></i> Projects
+        </button>
+        <button class="user-dropdown-item" onclick="switchTab('bookings')">
+          <i class="fas fa-calendar-check"></i> Bookings
+        </button>
+        <button class="user-dropdown-item" onclick="switchTab('print')">
+          <i class="fas fa-print"></i> Print Orders
+        </button>
+        <div class="dropdown-divider"></div>
+        <button class="user-dropdown-item signout" onclick="handleLogout()">
+          <i class="fas fa-sign-out-alt"></i> Sign Out
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════ MAIN ═══════════════════ -->
+<div class="main">
+  <div id="mainContent">
+    <div class="loading-state">
+      <div class="spinner"></div>
+      <p>Loading your workspace...</p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════ MODAL ═══════════════════ -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal" id="modalContent">
+    <div class="modal-handle"></div>
+  </div>
+</div>
+
+<!-- ═══════════════════ TOASTS ═══════════════════ -->
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- ═══════════════════ FIREBASE ═══════════════════ -->
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+
+<script>
+firebase.initializeApp({
+  apiKey: "AIzaSyC7kppUyHUaPzeLBV62NEZWuHiuz1Kz0mA",
+  authDomain: "mugera-e51cc.firebaseapp.com",
+  databaseURL: "https://mugera-e51cc-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "mugera-e51cc"
+});
+
+const auth = firebase.auth();
+const db = firebase.database();
+
+/* ═══════════════════ STATE ═══════════════════ */
+let currentTab = 'requests';
+let allRequests = {};
+let allProjects = {};
+let allBookings = {};
+let allPrintOrders = {};
+let currentUser = null;
+let searchQuery = '';
+let statusFilter = 'all';
+let isRendering = false;
+
+/* ═══════════════════ UTILS ═══════════════════ */
+function esc(s) {
+  return String(s || '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+function timeAgo(ts) {
+  if (!ts) return '';
+  const diff = Date.now() - Number(ts);
+  const s = Math.floor(diff / 1000);
+  if (s < 60) return 'Just now';
+  const m = Math.floor(s / 60);
+  if (m < 60) return m + 'm ago';
+  const h = Math.floor(m / 60);
+  if (h < 24) return h + 'h ago';
+  const d = Math.floor(h / 24);
+  if (d < 7) return d + 'd ago';
+  return new Date(Number(ts)).toLocaleDateString('en-GB', { day: '2-digit', month: 'short' });
+}
+
+function toast(msg, type = '') {
+  const container = document.getElementById('toastContainer');
+  const el = document.createElement('div');
+  el.className = 'toast' + (type ? ' ' + type : '');
+  const icons = { success: 'check-circle', error: 'exclamation-circle', info: 'info-circle' };
+  el.innerHTML = `<i class="fas fa-${icons[type] || 'bell'}"></i><span>${esc(msg)}</span>`;
+  container.appendChild(el);
+  setTimeout(() => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(20px)';
+    setTimeout(() => el.remove(), 300);
+  }, 3200);
+}
+
+function openModal(html) {
+  const modal = document.getElementById('modalContent');
+  modal.innerHTML = '<div class="modal-handle"></div>' + html;
+  document.getElementById('modalOverlay').classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+  document.getElementById('modalOverlay').classList.remove('active');
+  document.body.style.overflow = '';
+}
+
+document.getElementById('modalOverlay').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
+});
+
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    closeModal();
+    document.getElementById('userDropdown')?.classList.remove('open');
+  }
+});
+
+/* ═══════════════════ USER MENU ═══════════════════ */
+window.toggleUserMenu = function() {
+  document.getElementById('userDropdown').classList.toggle('open');
+};
+
+document.addEventListener('click', function(e) {
+  if (!document.getElementById('userMenu')?.contains(e.target)) {
+    document.getElementById('userDropdown')?.classList.remove('open');
+  }
+});
+
+/* ═══════════════════ TABS ═══════════════════ */
+window.switchTab = function(tab) {
+  currentTab = tab;
+  searchQuery = '';
+  statusFilter = 'all';
+  document.getElementById('userDropdown')?.classList.remove('open');
+  renderTab();
+};
+
+/* ═══════════════════ DATA LOADING ═══════════════════ */
+function loadData() {
+  db.ref('brandinn_service_requests').on('value', snap => {
+    allRequests = snap.val() || {};
+    if (currentTab === 'requests') renderTab();
+  });
+  db.ref('brandinn_projects').on('value', snap => {
+    allProjects = snap.val() || {};
+    if (currentTab === 'projects') renderTab();
+  });
+  db.ref('brandinn_bookings').on('value', snap => {
+    allBookings = snap.val() || {};
+    if (currentTab === 'bookings') renderTab();
+  });
+  db.ref('brandinn_print_orders').on('value', snap => {
+    allPrintOrders = snap.val() || {};
+    if (currentTab === 'print') renderTab();
+  });
+}
+
+/* ═══════════════════ MAIN RENDER ═══════════════════ */
+function renderTab() {
+  const c = document.getElementById('mainContent');
+  if (!c) return;
+
+  const tabMeta = {
+    requests: { emoji: '📋', title: 'Service Requests', subtitle: 'Track and manage client service requests', icon: 'fa-clipboard-list' },
+    projects: { emoji: '📐', title: 'Projects', subtitle: 'Manage branding and design projects', icon: 'fa-project-diagram' },
+    bookings: { emoji: '📅', title: 'Bookings', subtitle: 'Manage client consultations and appointments', icon: 'fa-calendar-check' },
+    print: { emoji: '🖨️', title: 'Print Orders', subtitle: 'Manage t-shirt and banner printing orders', icon: 'fa-print' }
+  };
+
+  const meta = tabMeta[currentTab];
+
+  // Build tabs nav
+  const tabsHtml = `
+    <div class="tabs-wrap">
+      <div class="tabs">
+        ${renderTabBtn('requests', 'fa-clipboard-list', 'Requests', Object.keys(allRequests).length)}
+        ${renderTabBtn('projects', 'fa-project-diagram', 'Projects', Object.keys(allProjects).length)}
+        ${renderTabBtn('bookings', 'fa-calendar-check', 'Bookings', Object.keys(allBookings).length)}
+        ${renderTabBtn('print', 'fa-print', 'Print Orders', Object.keys(allPrintOrders).length)}
+      </div>
+    </div>
+  `;
+
+  // Build stats
+  const statsHtml = `
+    <div class="stats-row">
+      ${renderStatCard('requests', 'fa-clipboard-list', Object.keys(allRequests).length, 'Requests')}
+      ${renderStatCard('projects', 'fa-project-diagram', Object.keys(allProjects).length, 'Projects')}
+      ${renderStatCard('bookings', 'fa-calendar-check', Object.keys(allBookings).length, 'Bookings')}
+      ${renderStatCard('print', 'fa-print', Object.keys(allPrintOrders).length, 'Print Orders')}
+    </div>
+  `;
+
+  // Content by tab
+  const contentHtml = renderContentByTab();
+
+  c.innerHTML = `
+    <div class="page-hero">
+      <h1><span class="hero-emoji">${meta.emoji}</span> ${meta.title}</h1>
+      <p>${meta.subtitle}</p>
+    </div>
+    ${tabsHtml}
+    ${statsHtml}
+    ${contentHtml}
+  `;
+
+  bindContentEvents();
+}
+
+function renderTabBtn(tab, icon, label, count) {
+  const active = currentTab === tab ? 'active' : '';
+  return `
+    <button class="tab-btn ${active}" onclick="switchTab('${tab}')">
+      <i class="fas ${icon}"></i>
+      <span>${label}</span>
+      <span class="tab-count">${count}</span>
+    </button>
+  `;
+}
+
+function renderStatCard(type, icon, value, label) {
+  return `
+    <div class="stat-card ${type}" onclick="switchTab('${type}')">
+      <div class="stat-icon"><i class="fas ${icon}"></i></div>
+      <div class="stat-value">${value}</div>
+      <div class="stat-label">${label}</div>
+    </div>
+  `;
+}
+
+/* ═══════════════════ CONTENT ROUTING ═══════════════════ */
+function renderContentByTab() {
+  const toolbarHtml = `
+    <div class="toolbar">
+      <div class="search-box">
+        <i class="fas fa-search"></i>
+        <input type="text" id="searchInput" placeholder="Search by name, phone, or type..." value="${esc(searchQuery)}" oninput="handleSearch(this.value)">
+      </div>
+      <select class="filter-select" id="statusFilter" onchange="handleFilter(this.value)">
+        <option value="all">All statuses</option>
+        ${getStatusOptions()}
+      </select>
+      <button class="btn btn-primary" onclick="showNewForm()">
+        <i class="fas fa-plus"></i> New
+      </button>
+    </div>
+  `;
+
+  switch (currentTab) {
+    case 'requests': return toolbarHtml + renderRequestsSection();
+    case 'projects': return toolbarHtml + renderProjectsSection();
+    case 'bookings': return toolbarHtml + renderBookingsSection();
+    case 'print': return toolbarHtml + renderPrintSection();
+    default: return '';
+  }
+}
+
+function getStatusOptions() {
+  const optionsByTab = {
+    requests: ['pending', 'quoted', 'in-progress', 'completed'],
+    projects: ['planning', 'active', 'on-hold', 'completed'],
+    bookings: ['scheduled', 'confirmed', 'completed', 'cancelled'],
+    print: ['pending', 'printing', 'completed', 'delivered', 'cancelled']
+  };
+  return (optionsByTab[currentTab] || [])
+    .map(s => `<option value="${s}" ${statusFilter === s ? 'selected' : ''}>${s}</option>`)
+    .join('');
+}
+
+window.handleSearch = function(val) {
+  searchQuery = val.trim().toLowerCase();
+  renderTab();
+};
+
+window.handleFilter = function(val) {
+  statusFilter = val;
+  renderTab();
+  // Preserve focus on search input
+  const input = document.getElementById('searchInput');
+  if (input && searchQuery) {
+    input.focus();
+    input.setSelectionRange(searchQuery.length, searchQuery.length);
+  }
+};
+
+/* ═══════════════════ FILTER + SEARCH HELPERS ═══════════════════ */
+function matchesSearch(item, fields) {
+  if (!searchQuery) return true;
+  return fields.some(f => String(item[f] || '').toLowerCase().includes(searchQuery));
+}
+
+function matchesStatus(item, defaultStatus) {
+  if (statusFilter === 'all') return true;
+  return (item.status || defaultStatus) === statusFilter;
+}
+
+/* ═══════════════════ SERVICE REQUESTS ═══════════════════ */
+function renderRequestsSection() {
+  let items = Object.entries(allRequests)
+    .map(([id, r]) => ({ id, ...r }))
+    .sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+
+  items = items.filter(r =>
+    matchesSearch(r, ['clientName', 'businessName', 'phone', 'email']) &&
+    matchesStatus(r, 'pending')
+  );
+
+  const total = Object.keys(allRequests).length;
+
+  let listHtml = '';
+  if (!items.length) {
+    listHtml = renderEmptyState('clipboard-list', total === 0 ? 'No requests yet' : 'No matching requests', total === 0 ? 'Service requests from clients will appear here.' : 'Try changing your search or filter.', total === 0);
+  } else {
+    listHtml = items.map(r => {
+      const status = r.status || 'pending';
+      const services = r.services?.map(s => s.name).filter(Boolean).join(', ') || 'General service';
+      return `
+        <div class="item-card" onclick="showRequestForm('${r.id}')">
+          <div class="item-icon" style="background:${status === 'completed' ? 'var(--success-bg)' : 'var(--warning-bg)'}; color:${status === 'completed' ? 'var(--success)' : 'var(--warning)'};">
+            <i class="fas fa-${status === 'completed' ? 'check' : 'clipboard-list'}"></i>
+          </div>
+          <div class="item-body">
+            <div class="item-title">${esc(r.clientName || r.businessName || 'Unnamed Client')}</div>
+            <div class="item-meta">
+              <span><i class="fas fa-tag"></i> ${esc(services)}</span>
+              ${r.phone ? `<span><i class="fas fa-phone"></i> ${esc(r.phone)}</span>` : ''}
+              ${r.urgency && r.urgency !== 'normal' ? `<span style="color:var(--danger);font-weight:700;"><i class="fas fa-bolt"></i> ${esc(r.urgency)}</span>` : ''}
+              ${r.createdAt ? `<span><i class="fas fa-clock"></i> ${timeAgo(r.createdAt)}</span>` : ''}
             </div>
           </div>
-          <div class="dropdown-divider"></div>
-          <button class="user-dropdown-item" onclick="switchTab('requests')"><i class="fas fa-clipboard-list"></i> Service Requests</button>
-          <button class="user-dropdown-item" onclick="switchTab('projects')"><i class="fas fa-project-diagram"></i> Projects</button>
-          <button class="user-dropdown-item" onclick="switchTab('bookings')"><i class="fas fa-calendar-check"></i> Bookings</button>
-          <button class="user-dropdown-item" onclick="switchTab('print')"><i class="fas fa-print"></i> Print Orders</button>
-          <div class="dropdown-divider"></div>
-          <button class="user-dropdown-item signout" onclick="handleLogout()"><i class="fas fa-sign-out-alt"></i> Sign Out</button>
+          <div class="item-actions" onclick="event.stopPropagation()">
+            <span class="pill ${status}">${status}</span>
+            <button class="btn btn-ghost btn-icon" onclick="showRequestForm('${r.id}')" title="Edit"><i class="fas fa-pen"></i></button>
+            <button class="btn btn-danger btn-icon" onclick="confirmDelete('brandinn_service_requests','${r.id}','this request')" title="Delete"><i class="fas fa-trash"></i></button>
+          </div>
         </div>
+      `;
+    }).join('');
+  }
+
+  return `
+    <div class="section">
+      <div class="section-header">
+        <h3><i class="fas fa-clipboard-list"></i> Service Requests <span class="item-count">${items.length}${items.length !== total ? ' of ' + total : ''}</span></h3>
+      </div>
+      <div class="section-body">
+        ${listHtml}
       </div>
     </div>
-  </div>
+  `;
+}
 
-  <div class="main">
-    <div id="mainContent">
-      <!-- Tab Navigation -->
-      <div class="tab-nav">
-        <button class="tab-btn active" onclick="switchTab('requests')"><i class="fas fa-clipboard-list"></i> Requests</button>
-        <button class="tab-btn" onclick="switchTab('projects')"><i class="fas fa-project-diagram"></i> Projects</button>
-        <button class="tab-btn" onclick="switchTab('bookings')"><i class="fas fa-calendar-check"></i> Bookings</button>
-        <button class="tab-btn" onclick="switchTab('print')"><i class="fas fa-print"></i> Print Orders</button>
+/* ═══════════════════ PROJECTS ═══════════════════ */
+function renderProjectsSection() {
+  let items = Object.entries(allProjects)
+    .map(([id, p]) => ({ id, ...p }))
+    .sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+
+  items = items.filter(p =>
+    matchesSearch(p, ['projectName', 'businessName', 'serviceType']) &&
+    matchesStatus(p, 'planning')
+  );
+
+  const total = Object.keys(allProjects).length;
+
+  let listHtml = '';
+  if (!items.length) {
+    listHtml = renderEmptyState('project-diagram', total === 0 ? 'No projects yet' : 'No matching projects', total === 0 ? 'Branding and design projects will appear here.' : 'Try changing your search or filter.', total === 0);
+  } else {
+    listHtml = items.map(p => {
+      const status = p.status || 'planning';
+      return `
+        <div class="item-card" onclick="showProjectForm('${p.id}')">
+          <div class="item-icon" style="background:var(--info-bg); color:var(--info);">
+            <i class="fas fa-project-diagram"></i>
+          </div>
+          <div class="item-body">
+            <div class="item-title">${esc(p.projectName || p.businessName || 'Untitled Project')}</div>
+            <div class="item-meta">
+              ${p.businessName ? `<span><i class="fas fa-building"></i> ${esc(p.businessName)}</span>` : ''}
+              ${p.serviceType ? `<span><i class="fas fa-briefcase"></i> ${esc(p.serviceType)}</span>` : ''}
+              ${p.priority ? `<span><i class="fas fa-flag"></i> ${esc(p.priority)}</span>` : ''}
+              ${p.createdAt ? `<span><i class="fas fa-clock"></i> ${timeAgo(p.createdAt)}</span>` : ''}
+            </div>
+          </div>
+          <div class="item-actions" onclick="event.stopPropagation()">
+            <span class="pill ${status}">${status}</span>
+            <button class="btn btn-ghost btn-icon" onclick="showProjectForm('${p.id}')" title="Edit"><i class="fas fa-pen"></i></button>
+            <button class="btn btn-danger btn-icon" onclick="confirmDelete('brandinn_projects','${p.id}','this project')" title="Delete"><i class="fas fa-trash"></i></button>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  return `
+    <div class="section">
+      <div class="section-header">
+        <h3><i class="fas fa-project-diagram"></i> Projects <span class="item-count">${items.length}${items.length !== total ? ' of ' + total : ''}</span></h3>
       </div>
-      <div id="tabContent"></div>
+      <div class="section-body">${listHtml}</div>
     </div>
-  </div>
-  
-  <!-- Modal -->
-  <div class="modal-overlay" id="modalOverlay"><div class="modal" id="modalContent"><div class="modal-handle"></div></div></div>
-  <div id="toast" class="toast"></div>
+  `;
+}
 
-  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+/* ═══════════════════ BOOKINGS ═══════════════════ */
+function renderBookingsSection() {
+  let items = Object.entries(allBookings)
+    .map(([id, b]) => ({ id, ...b }))
+    .sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
 
-  <script>
-    firebase.initializeApp({
-      apiKey: "AIzaSyC7kppUyHUaPzeLBV62NEZWuHiuz1Kz0mA",
-      authDomain: "mugera-e51cc.firebaseapp.com",
-      databaseURL: "https://mugera-e51cc-default-rtdb.europe-west1.firebasedatabase.app",
-      projectId: "mugera-e51cc"
-    });
-    const auth = firebase.auth();
-    const db = firebase.database();
+  items = items.filter(b =>
+    matchesSearch(b, ['clientName', 'phone', 'email', 'bookingType']) &&
+    matchesStatus(b, 'scheduled')
+  );
 
-    let currentTab = 'requests';
-    let allRequests = {};
-    let allProjects = {};
-    let allBookings = {};
-    let allPrintOrders = {};
-    let currentUser = null;
+  const total = Object.keys(allBookings).length;
 
-    function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
-    function toast(msg, type='') {
-      const t = document.getElementById('toast');
-      t.textContent = msg; t.className = 'toast' + (type ? ' ' + type : '');
-      t.style.display = 'block'; clearTimeout(t._t); t._t = setTimeout(() => t.style.display = 'none', 3000);
+  let listHtml = '';
+  if (!items.length) {
+    listHtml = renderEmptyState('calendar-check', total === 0 ? 'No bookings yet' : 'No matching bookings', total === 0 ? 'Client appointments will appear here.' : 'Try changing your search or filter.', total === 0);
+  } else {
+    listHtml = items.map(b => {
+      const status = b.status || 'scheduled';
+      const dateTime = [b.date, b.time].filter(Boolean).join(' · ');
+      return `
+        <div class="item-card" onclick="showBookingForm('${b.id}')">
+          <div class="item-icon" style="background:var(--purple-bg); color:var(--purple);">
+            <i class="fas fa-calendar-check"></i>
+          </div>
+          <div class="item-body">
+            <div class="item-title">${esc(b.clientName || 'Unnamed Client')}</div>
+            <div class="item-meta">
+              ${b.bookingType ? `<span><i class="fas fa-tag"></i> ${esc(b.bookingType)}</span>` : ''}
+              ${dateTime ? `<span><i class="fas fa-clock"></i> ${esc(dateTime)}</span>` : ''}
+              ${b.phone ? `<span><i class="fas fa-phone"></i> ${esc(b.phone)}</span>` : ''}
+            </div>
+          </div>
+          <div class="item-actions" onclick="event.stopPropagation()">
+            <span class="pill ${status}">${status}</span>
+            <button class="btn btn-ghost btn-icon" onclick="showBookingForm('${b.id}')" title="Edit"><i class="fas fa-pen"></i></button>
+            <button class="btn btn-danger btn-icon" onclick="confirmDelete('brandinn_bookings','${b.id}','this booking')" title="Delete"><i class="fas fa-trash"></i></button>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  return `
+    <div class="section">
+      <div class="section-header">
+        <h3><i class="fas fa-calendar-check"></i> Bookings <span class="item-count">${items.length}${items.length !== total ? ' of ' + total : ''}</span></h3>
+      </div>
+      <div class="section-body">${listHtml}</div>
+    </div>
+  `;
+}
+
+/* ═══════════════════ PRINT ORDERS ═══════════════════ */
+function renderPrintSection() {
+  let items = Object.entries(allPrintOrders)
+    .map(([id, p]) => ({ id, ...p }))
+    .sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+
+  items = items.filter(p =>
+    matchesSearch(p, ['customerName', 'customerPhone', 'product']) &&
+    matchesStatus(p, 'pending')
+  );
+
+  const total = Object.keys(allPrintOrders).length;
+
+  let listHtml = '';
+  if (!items.length) {
+    listHtml = renderEmptyState('print', total === 0 ? 'No print orders yet' : 'No matching print orders', total === 0 ? 'T-shirt and banner orders will appear here.' : 'Try changing your search or filter.', total === 0);
+  } else {
+    listHtml = items.map(p => {
+      const status = p.status || 'pending';
+      const typeIcon = p.type === 'tshirt' ? 'fa-tshirt' : p.type === 'banner' ? 'fa-flag' : 'fa-print';
+      const typeColor = p.type === 'tshirt' ? 'var(--info)' : p.type === 'banner' ? 'var(--purple)' : 'var(--gold-dark)';
+      return `
+        <div class="item-card" onclick="showPrintForm('${p.id}')">
+          <div class="item-icon" style="background:var(--success-bg); color:${typeColor};">
+            <i class="fas ${typeIcon}"></i>
+          </div>
+          <div class="item-body">
+            <div class="item-title">${esc(p.customerName || 'Unnamed Customer')}</div>
+            <div class="item-meta">
+              ${p.product ? `<span><i class="fas fa-box"></i> ${esc(p.product)}</span>` : ''}
+              ${p.quantity ? `<span><i class="fas fa-hashtag"></i> ${p.quantity}</span>` : ''}
+              ${p.total ? `<span><i class="fas fa-coins"></i> KES ${Number(p.total).toLocaleString()}</span>` : ''}
+              ${p.createdAt ? `<span><i class="fas fa-clock"></i> ${timeAgo(p.createdAt)}</span>` : ''}
+            </div>
+          </div>
+          <div class="item-actions" onclick="event.stopPropagation()">
+            <span class="pill ${status}">${status}</span>
+            <button class="btn btn-ghost btn-icon" onclick="showPrintForm('${p.id}')" title="Edit"><i class="fas fa-pen"></i></button>
+            <button class="btn btn-danger btn-icon" onclick="confirmDelete('brandinn_print_orders','${p.id}','this print order')" title="Delete"><i class="fas fa-trash"></i></button>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  return `
+    <div class="section">
+      <div class="section-header">
+        <h3><i class="fas fa-print"></i> Print Orders <span class="item-count">${items.length}${items.length !== total ? ' of ' + total : ''}</span></h3>
+      </div>
+      <div class="section-body">${listHtml}</div>
+    </div>
+  `;
+}
+
+/* ═══════════════════ EMPTY STATE ═══════════════════ */
+function renderEmptyState(icon, title, subtitle, showCreate = false) {
+  return `
+    <div class="empty-state">
+      <div class="empty-state-icon"><i class="fas fa-${icon}"></i></div>
+      <h4>${esc(title)}</h4>
+      <p>${esc(subtitle)}</p>
+      ${showCreate ? `<button class="btn btn-gold" onclick="showNewForm()"><i class="fas fa-plus"></i> Create the first one</button>` : ''}
+    </div>
+  `;
+}
+
+function showNewForm() {
+  switch (currentTab) {
+    case 'requests': showRequestForm(); break;
+    case 'projects': showProjectForm(); break;
+    case 'bookings': showBookingForm(); break;
+    case 'print': showPrintForm(); break;
+  }
+}
+
+/* ═══════════════════ CONFIRM DELETE ═══════════════════ */
+window.confirmDelete = async function(path, id, label) {
+  if (!confirm(`Delete ${label}? This cannot be undone.`)) return;
+  try {
+    await db.ref(path + '/' + id).remove();
+    toast('Deleted successfully', 'success');
+  } catch (e) {
+    toast('Error: ' + e.message, 'error');
+  }
+};
+
+/* ═══════════════════ FORM RENDERERS ═══════════════════ */
+window.showRequestForm = function(id) {
+  const r = id ? allRequests[id] : null;
+  openModal(`
+    <div class="modal-header">
+      <h3><i class="fas fa-clipboard-list"></i> ${id ? 'Edit Request' : 'New Service Request'}</h3>
+      <button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button>
+    </div>
+    <input type="hidden" id="reqId" value="${id || ''}">
+    <div class="form-row">
+      <div class="form-group">
+        <label>Client / Business Name <span class="req">*</span></label>
+        <input id="reqClient" value="${esc(r?.clientName || r?.businessName || '')}" placeholder="Acme Ltd">
+      </div>
+      <div class="form-group">
+        <label>Phone <span class="req">*</span></label>
+        <input id="reqPhone" value="${esc(r?.phone || '')}" placeholder="+254 700 000000">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Email</label>
+        <input id="reqEmail" type="email" value="${esc(r?.email || '')}" placeholder="client@example.com">
+      </div>
+      <div class="form-group">
+        <label>Urgency</label>
+        <select id="reqUrgency">
+          <option value="normal" ${r?.urgency === 'normal' ? 'selected' : ''}>Normal</option>
+          <option value="high" ${r?.urgency === 'high' ? 'selected' : ''}>High</option>
+          <option value="urgent" ${r?.urgency === 'urgent' ? 'selected' : ''}>Urgent</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Services Requested</label>
+      <input id="reqServices" value="${esc(r?.services?.map(s => s.name).filter(Boolean).join(', ') || '')}" placeholder="e.g., Logo Design, Social Media Setup">
+    </div>
+    <div class="form-group">
+      <label>Instructions / Notes</label>
+      <textarea id="reqNotes" rows="3" placeholder="Any specific requirements...">${esc(r?.instructions || r?.adminNotes || '')}</textarea>
+    </div>
+    <div class="form-group">
+      <label>Status</label>
+      <select id="reqStatus">
+        <option value="pending" ${r?.status === 'pending' ? 'selected' : ''}>Pending</option>
+        <option value="quoted" ${r?.status === 'quoted' ? 'selected' : ''}>Quoted</option>
+        <option value="in-progress" ${r?.status === 'in-progress' ? 'selected' : ''}>In Progress</option>
+        <option value="completed" ${r?.status === 'completed' ? 'selected' : ''}>Completed</option>
+      </select>
+    </div>
+    <div class="form-actions">
+      <button class="btn btn-outline" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="saveRequest()">${id ? 'Save Changes' : 'Create Request'}</button>
+    </div>
+  `);
+};
+
+window.showProjectForm = function(id) {
+  const p = id ? allProjects[id] : null;
+  openModal(`
+    <div class="modal-header">
+      <h3><i class="fas fa-project-diagram"></i> ${id ? 'Edit Project' : 'New Project'}</h3>
+      <button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button>
+    </div>
+    <input type="hidden" id="projId" value="${id || ''}">
+    <div class="form-row">
+      <div class="form-group">
+        <label>Project Name <span class="req">*</span></label>
+        <input id="projName" value="${esc(p?.projectName || '')}" placeholder="Brand Identity Refresh">
+      </div>
+      <div class="form-group">
+        <label>Business / Client</label>
+        <input id="projBusiness" value="${esc(p?.businessName || '')}" placeholder="Acme Ltd">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Service Type</label>
+        <input id="projService" value="${esc(p?.serviceType || '')}" placeholder="e.g., Print Design">
+      </div>
+      <div class="form-group">
+        <label>Priority</label>
+        <select id="projPriority">
+          <option value="low" ${p?.priority === 'low' ? 'selected' : ''}>Low</option>
+          <option value="medium" ${p?.priority === 'medium' ? 'selected' : ''}>Medium</option>
+          <option value="high" ${p?.priority === 'high' ? 'selected' : ''}>High</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Description</label>
+      <textarea id="projDesc" rows="2" placeholder="Brief overview...">${esc(p?.description || '')}</textarea>
+    </div>
+    <div class="form-group">
+      <label>Internal Notes</label>
+      <textarea id="projNotes" rows="2" placeholder="Staff-only notes...">${esc(p?.internalNotes || '')}</textarea>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Status</label>
+        <select id="projStatus">
+          <option value="planning" ${p?.status === 'planning' ? 'selected' : ''}>Planning</option>
+          <option value="active" ${p?.status === 'active' ? 'selected' : ''}>Active</option>
+          <option value="on-hold" ${p?.status === 'on-hold' ? 'selected' : ''}>On Hold</option>
+          <option value="completed" ${p?.status === 'completed' ? 'selected' : ''}>Completed</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Budget (KES)</label>
+        <input id="projBudget" type="number" value="${p?.budget || 0}" placeholder="0">
+      </div>
+    </div>
+    <div class="form-actions">
+      <button class="btn btn-outline" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="saveProject()">${id ? 'Save Changes' : 'Create Project'}</button>
+    </div>
+  `);
+};
+
+window.showBookingForm = function(id) {
+  const b = id ? allBookings[id] : null;
+  openModal(`
+    <div class="modal-header">
+      <h3><i class="fas fa-calendar-check"></i> ${id ? 'Edit Booking' : 'New Booking'}</h3>
+      <button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button>
+    </div>
+    <input type="hidden" id="bookId" value="${id || ''}">
+    <div class="form-row">
+      <div class="form-group">
+        <label>Client Name <span class="req">*</span></label>
+        <input id="bookClient" value="${esc(b?.clientName || '')}" placeholder="Client name">
+      </div>
+      <div class="form-group">
+        <label>Phone <span class="req">*</span></label>
+        <input id="bookPhone" value="${esc(b?.phone || '')}" placeholder="+254 700 000000">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Email</label>
+        <input id="bookEmail" type="email" value="${esc(b?.email || '')}" placeholder="client@example.com">
+      </div>
+      <div class="form-group">
+        <label>Booking Type</label>
+        <select id="bookType">
+          <option value="Consultation" ${b?.bookingType === 'Consultation' ? 'selected' : ''}>Consultation</option>
+          <option value="Design Review" ${b?.bookingType === 'Design Review' ? 'selected' : ''}>Design Review</option>
+          <option value="Project Kickoff" ${b?.bookingType === 'Project Kickoff' ? 'selected' : ''}>Project Kickoff</option>
+          <option value="Other" ${b?.bookingType === 'Other' ? 'selected' : ''}>Other</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Date <span class="req">*</span></label>
+        <input id="bookDate" type="date" value="${esc(b?.date || '')}">
+      </div>
+      <div class="form-group">
+        <label>Time <span class="req">*</span></label>
+        <input id="bookTime" type="time" value="${esc(b?.time || '')}">
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Location / Notes</label>
+      <textarea id="bookNotes" rows="2" placeholder="Where and any notes...">${esc(b?.notes || b?.location || '')}</textarea>
+    </div>
+    <div class="form-group">
+      <label>Status</label>
+      <select id="bookStatus">
+        <option value="scheduled" ${b?.status === 'scheduled' ? 'selected' : ''}>Scheduled</option>
+        <option value="confirmed" ${b?.status === 'confirmed' ? 'selected' : ''}>Confirmed</option>
+        <option value="completed" ${b?.status === 'completed' ? 'selected' : ''}>Completed</option>
+        <option value="cancelled" ${b?.status === 'cancelled' ? 'selected' : ''}>Cancelled</option>
+      </select>
+    </div>
+    <div class="form-actions">
+      <button class="btn btn-outline" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="saveBooking()">${id ? 'Save Changes' : 'Create Booking'}</button>
+    </div>
+  `);
+};
+
+window.showPrintForm = function(id) {
+  const p = id ? allPrintOrders[id] : null;
+  openModal(`
+    <div class="modal-header">
+      <h3><i class="fas fa-print"></i> ${id ? 'Edit Print Order' : 'New Print Order'}</h3>
+      <button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button>
+    </div>
+    <input type="hidden" id="printId" value="${id || ''}">
+    <div class="form-row">
+      <div class="form-group">
+        <label>Customer Name <span class="req">*</span></label>
+        <input id="printCustomer" value="${esc(p?.customerName || '')}" placeholder="Customer name">
+      </div>
+      <div class="form-group">
+        <label>Phone <span class="req">*</span></label>
+        <input id="printPhone" value="${esc(p?.customerPhone || '')}" placeholder="+254 700 000000">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Product Type</label>
+        <select id="printType">
+          <option value="tshirt" ${p?.type === 'tshirt' ? 'selected' : ''}>T-Shirt</option>
+          <option value="banner" ${p?.type === 'banner' ? 'selected' : ''}>Banner</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Quantity</label>
+        <input id="printQty" type="number" value="${p?.quantity || 1}" min="1">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Unit Price (KES)</label>
+        <input id="printPrice" type="number" value="${p?.unitPrice || 1300}">
+      </div>
+      <div class="form-group">
+        <label>Status</label>
+        <select id="printStatus">
+          <option value="pending" ${p?.status === 'pending' ? 'selected' : ''}>Pending</option>
+          <option value="printing" ${p?.status === 'printing' ? 'selected' : ''}>Printing</option>
+          <option value="completed" ${p?.status === 'completed' ? 'selected' : ''}>Completed</option>
+          <option value="delivered" ${p?.status === 'delivered' ? 'selected' : ''}>Delivered</option>
+          <option value="cancelled" ${p?.status === 'cancelled' ? 'selected' : ''}>Cancelled</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Product Description</label>
+      <input id="printProduct" value="${esc(p?.product || '')}" placeholder="e.g., Custom T-Shirt XL">
+    </div>
+    <div class="form-group">
+      <label>Notes / Design Details</label>
+      <textarea id="printNotes" rows="2" placeholder="Design text, colors, size specs...">${esc(p?.notes || p?.designText || '')}</textarea>
+    </div>
+    <div class="form-actions">
+      <button class="btn btn-outline" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="savePrintOrder()">${id ? 'Save Changes' : 'Create Print Order'}</button>
+    </div>
+  `);
+};
+
+/* ═══════════════════ SAVE HANDLERS ═══════════════════ */
+window.saveRequest = async function() {
+  const clientName = document.getElementById('reqClient').value.trim();
+  if (!clientName) return toast('Client name is required', 'error');
+
+  const servicesList = document.getElementById('reqServices').value
+    .split(',').map(s => s.trim()).filter(Boolean);
+
+  const data = {
+    clientName,
+    businessName: clientName,
+    phone: document.getElementById('reqPhone').value.trim(),
+    email: document.getElementById('reqEmail').value.trim(),
+    urgency: document.getElementById('reqUrgency').value,
+    instructions: document.getElementById('reqNotes').value.trim(),
+    adminNotes: document.getElementById('reqNotes').value.trim(),
+    status: document.getElementById('reqStatus').value,
+    services: servicesList.map(name => ({ name, price: 0, quantity: 1 })),
+    updatedAt: firebase.database.ServerValue.TIMESTAMP,
+    updatedBy: currentUser?.email || 'staff'
+  };
+
+  const id = document.getElementById('reqId').value;
+  try {
+    if (id) await db.ref('brandinn_service_requests/' + id).update(data);
+    else {
+      data.createdAt = firebase.database.ServerValue.TIMESTAMP;
+      await db.ref('brandinn_service_requests').push(data);
     }
-    function openModal(html) { document.getElementById('modalContent').innerHTML = '<div class="modal-handle"></div>' + html; document.getElementById('modalOverlay').classList.add('active'); }
-    function closeModal() { document.getElementById('modalOverlay').classList.remove('active'); }
-    document.getElementById('modalOverlay').addEventListener('click', function(e) { if (e.target === this) closeModal(); });
+    closeModal();
+    toast(id ? 'Request updated' : 'Request created', 'success');
+  } catch (e) {
+    toast('Error: ' + e.message, 'error');
+  }
+};
 
-    // User Menu
-    window.toggleUserMenu = function() { document.getElementById('userDropdown').classList.toggle('open'); };
-    document.addEventListener('click', function(e) {
-      if (!document.getElementById('userMenu')?.contains(e.target)) {
-        document.getElementById('userDropdown')?.classList.remove('open');
+window.saveProject = async function() {
+  const projectName = document.getElementById('projName').value.trim();
+  if (!projectName) return toast('Project name is required', 'error');
+
+  const data = {
+    projectName,
+    businessName: document.getElementById('projBusiness').value.trim(),
+    serviceType: document.getElementById('projService').value.trim(),
+    priority: document.getElementById('projPriority').value,
+    description: document.getElementById('projDesc').value.trim(),
+    internalNotes: document.getElementById('projNotes').value.trim(),
+    status: document.getElementById('projStatus').value,
+    budget: Number(document.getElementById('projBudget').value) || 0,
+    updatedAt: firebase.database.ServerValue.TIMESTAMP,
+    updatedBy: currentUser?.email || 'staff'
+  };
+
+  const id = document.getElementById('projId').value;
+  try {
+    if (id) await db.ref('brandinn_projects/' + id).update(data);
+    else {
+      data.createdAt = firebase.database.ServerValue.TIMESTAMP;
+      data.createdBy = currentUser?.email || 'staff';
+      await db.ref('brandinn_projects').push(data);
+    }
+    closeModal();
+    toast(id ? 'Project updated' : 'Project created', 'success');
+  } catch (e) {
+    toast('Error: ' + e.message, 'error');
+  }
+};
+
+window.saveBooking = async function() {
+  const clientName = document.getElementById('bookClient').value.trim();
+  if (!clientName) return toast('Client name is required', 'error');
+
+  const data = {
+    clientName,
+    phone: document.getElementById('bookPhone').value.trim(),
+    email: document.getElementById('bookEmail').value.trim(),
+    bookingType: document.getElementById('bookType').value,
+    date: document.getElementById('bookDate').value,
+    time: document.getElementById('bookTime').value,
+    notes: document.getElementById('bookNotes').value.trim(),
+    location: document.getElementById('bookNotes').value.trim(),
+    status: document.getElementById('bookStatus').value,
+    updatedAt: firebase.database.ServerValue.TIMESTAMP,
+    updatedBy: currentUser?.email || 'staff'
+  };
+
+  const id = document.getElementById('bookId').value;
+  try {
+    if (id) await db.ref('brandinn_bookings/' + id).update(data);
+    else {
+      data.createdAt = firebase.database.ServerValue.TIMESTAMP;
+      data.createdBy = currentUser?.email || 'staff';
+      await db.ref('brandinn_bookings').push(data);
+    }
+    closeModal();
+    toast(id ? 'Booking updated' : 'Booking created', 'success');
+  } catch (e) {
+    toast('Error: ' + e.message, 'error');
+  }
+};
+
+window.savePrintOrder = async function() {
+  const customerName = document.getElementById('printCustomer').value.trim();
+  if (!customerName) return toast('Customer name is required', 'error');
+
+  const qty = Number(document.getElementById('printQty').value) || 1;
+  const price = Number(document.getElementById('printPrice').value) || 1300;
+
+  const data = {
+    customerName,
+    customerPhone: document.getElementById('printPhone').value.trim(),
+    type: document.getElementById('printType').value,
+    quantity: qty,
+    unitPrice: price,
+    total: qty * price,
+    product: document.getElementById('printProduct').value.trim() || 'Print Order',
+    notes: document.getElementById('printNotes').value.trim(),
+    designText: document.getElementById('printNotes').value.trim(),
+    status: document.getElementById('printStatus').value,
+    updatedAt: firebase.database.ServerValue.TIMESTAMP,
+    updatedBy: currentUser?.email || 'staff'
+  };
+
+  const id = document.getElementById('printId').value;
+  try {
+    if (id) await db.ref('brandinn_print_orders/' + id).update(data);
+    else {
+      data.createdAt = firebase.database.ServerValue.TIMESTAMP;
+      data.createdBy = currentUser?.email || 'staff';
+      await db.ref('brandinn_print_orders').push(data);
+    }
+    closeModal();
+    toast(id ? 'Print order updated' : 'Print order created', 'success');
+  } catch (e) {
+    toast('Error: ' + e.message, 'error');
+  }
+};
+
+/* ═══════════════════ LOGOUT ═══════════════════ */
+window.handleLogout = async function() {
+  try {
+    await auth.signOut();
+    window.location.href = '/';
+  } catch (e) {
+    toast('Error signing out', 'error');
+  }
+};
+
+/* ═══════════════════ BIND CONTENT EVENTS ═══════════════════ */
+function bindContentEvents() {
+  // Any extra binding if needed — currently all handlers are inline
+}
+
+/* ═══════════════════ AUTH ═══════════════════ */
+auth.onAuthStateChanged(async user => {
+  if (!user) {
+    window.location.href = '/';
+    return;
+  }
+
+  currentUser = user;
+
+  // Update user chip in dropdown
+  const name = user.displayName || user.email?.split('@')[0] || 'Staff';
+  const initials = name.substring(0, 2).toUpperCase();
+
+  document.getElementById('dropdownName').textContent = name;
+  document.getElementById('dropdownEmail').textContent = user.email || '';
+  document.getElementById('dropdownAvatar').textContent = initials;
+  document.getElementById('userAvatarText').textContent = initials;
+
+  if (user.photoURL) {
+    document.getElementById('userAvatarText').style.display = 'none';
+    const img = document.getElementById('userAvatarImg');
+    img.style.display = 'block';
+    img.src = user.photoURL;
+
+    // Also update dropdown avatar
+    const da = document.getElementById('dropdownAvatar');
+    da.innerHTML = `<img src="${user.photoURL}" alt="">`;
+  }
+
+  // Check permissions
+  try {
+    const permSnap = await db.ref(`workspacePermissions/${user.uid}`).once('value');
+    const perms = permSnap.val() || {};
+    const hasBrandInn = perms.brandinn === true || perms['brandinn-print'] === true;
+
+    if (!hasBrandInn) {
+      const adminSnap = await db.ref(`admins/${user.uid}`).once('value');
+      if (adminSnap.val() !== true) {
+        renderAccessDenied();
+        return;
       }
-    });
-
-    // Tab Switching
-    window.switchTab = function(tab) {
-      currentTab = tab;
-      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-      document.querySelectorAll('.tab-btn').forEach(b => {
-        const icon = b.querySelector('i');
-        if (icon) {
-          const btnTab = b.textContent.toLowerCase().trim();
-          if (btnTab.includes(tab) || (tab === 'requests' && btnTab.includes('request')) ||
-              (tab === 'projects' && btnTab.includes('project')) ||
-              (tab === 'bookings' && btnTab.includes('booking')) ||
-              (tab === 'print' && btnTab.includes('print'))) {
-            b.classList.add('active');
-          }
-        }
-      });
-      // Fallback: find by data attribute
-      document.querySelectorAll('.tab-btn').forEach(b => {
-        const match = b.getAttribute('onclick')?.includes(tab);
-        if (match) b.classList.add('active');
-      });
-      document.getElementById('userDropdown')?.classList.remove('open');
-      renderTab();
-    };
-
-    function loadData() {
-      // Service Requests
-      db.ref('brandinn_service_requests').on('value', snap => {
-        allRequests = snap.val() || {};
-        updateStats(); if (currentTab === 'requests') renderTab();
-      });
-      // Projects
-      db.ref('brandinn_projects').on('value', snap => {
-        allProjects = snap.val() || {};
-        updateStats(); if (currentTab === 'projects') renderTab();
-      });
-      // Bookings
-      db.ref('brandinn_bookings').on('value', snap => {
-        allBookings = snap.val() || {};
-        updateStats(); if (currentTab === 'bookings') renderTab();
-      });
-      // Print Orders
-      db.ref('brandinn_print_orders').on('value', snap => {
-        allPrintOrders = snap.val() || {};
-        updateStats(); if (currentTab === 'print') renderTab();
-      });
     }
 
-    function updateStats() {
-      document.getElementById('statRequests') && (document.getElementById('statRequests').textContent = Object.keys(allRequests).length);
-      document.getElementById('statProjects') && (document.getElementById('statProjects').textContent = Object.keys(allProjects).length);
-      document.getElementById('statBookings') && (document.getElementById('statBookings').textContent = Object.keys(allBookings).length);
-      document.getElementById('statPrint') && (document.getElementById('statPrint').textContent = Object.keys(allPrintOrders).length);
-    }
+    document.getElementById('workspaceTag').textContent = 'BrandInn Field Ops';
+    loadData();
+    renderTab();
+  } catch (e) {
+    console.error(e);
+    toast('Error checking permissions', 'error');
+    renderAccessDenied('Something went wrong. Please try again.');
+  }
+});
 
-    function renderTab() {
-      const c = document.getElementById('tabContent');
-      if (!c) return;
-      switch(currentTab) {
-        case 'requests': renderRequests(c); break;
-        case 'projects': renderProjects(c); break;
-        case 'bookings': renderBookings(c); break;
-        case 'print': renderPrintOrders(c); break;
-      }
-    }
-
-    function renderStatsBar() {
-      return `<div class="stats-row">
-        <div class="stat-card"><div class="stat-icon requests"><i class="fas fa-clipboard-list"></i></div><div class="stat-value" id="statRequests">${Object.keys(allRequests).length}</div><div class="stat-label">Requests</div></div>
-        <div class="stat-card"><div class="stat-icon projects"><i class="fas fa-project-diagram"></i></div><div class="stat-value" id="statProjects">${Object.keys(allProjects).length}</div><div class="stat-label">Projects</div></div>
-        <div class="stat-card"><div class="stat-icon bookings"><i class="fas fa-calendar-check"></i></div><div class="stat-value" id="statBookings">${Object.keys(allBookings).length}</div><div class="stat-label">Bookings</div></div>
-        <div class="stat-card"><div class="stat-icon print"><i class="fas fa-print"></i></div><div class="stat-value" id="statPrint">${Object.keys(allPrintOrders).length}</div><div class="stat-label">Print Orders</div></div>
-      </div>`;
-    }
-
-    // ===== SERVICE REQUESTS =====
-    function renderRequests(c) {
-      const items = Object.entries(allRequests).map(([id, r]) => ({ id, ...r }));
-      items.sort((a,b) => (b.createdAt||0) - (a.createdAt||0));
-      let html = `<h1 class="page-title">📋 Service Requests</h1><p class="page-subtitle">Track and manage client service requests</p>${renderStatsBar()}<div class="section"><div class="section-header"><h3><i class="fas fa-clipboard-list"></i> All Requests (${items.length})</h3><button class="btn btn-primary btn-sm" onclick="showRequestForm()"><i class="fas fa-plus"></i> New Request</button></div><div class="section-body no-padding">`;
-      if (!items.length) { html += `<div class="empty-state"><i class="fas fa-inbox"></i><p>No service requests yet</p></div>`; }
-      else { items.forEach(r => { 
-        const status = r.status || 'pending';
-        const statusBadge = status === 'completed' ? 'badge-success' : status === 'in-progress' ? 'badge-warning' : status === 'quoted' ? 'badge-info' : 'badge-neutral';
-        html += `<div class="list-item"><div class="list-item-left"><div class="list-item-icon" style="background:${status === 'completed' ? '#ecfdf5' : '#fef3c7'};">${status === 'completed' ? '✅' : '🔄'}</div><div class="list-item-info"><div class="list-item-title">${esc(r.clientName||r.businessName||'Client')}</div><div class="list-item-subtitle">${esc(r.services?.map(s=>s.name).join(', ')||'Service')} · ${esc(r.phone||'')}</div></div></div><div class="list-item-right"><span class="badge ${statusBadge}">${status}</span><button class="btn btn-outline btn-xs" onclick="showRequestForm('${r.id}')"><i class="fas fa-pen"></i></button><button class="btn btn-outline btn-xs" onclick="if(confirm('Delete?')) deleteItem('brandinn_service_requests','${r.id}')"><i class="fas fa-trash"></i></button></div></div>`; 
-      }); }
-      html += `</div></div>`; c.innerHTML = html;
-    }
-
-    window.showRequestForm = function(id) {
-      const r = id ? allRequests[id] : null;
-      const services = r?.services || [{ name: '', price: 0, quantity: 1 }];
-      openModal(`
-        <div class="modal-header"><h3>${id?'Edit':'New'} Service Request</h3><button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button></div>
-        <input type="hidden" id="reqId" value="${id||''}">
-        <div class="form-row"><div class="form-group"><label>Client/Business Name *</label><input id="reqClient" value="${esc(r?.clientName||r?.businessName||'')}"></div><div class="form-group"><label>Phone *</label><input id="reqPhone" value="${esc(r?.phone||'')}"></div></div>
-        <div class="form-row"><div class="form-group"><label>Email</label><input id="reqEmail" value="${esc(r?.email||'')}"></div><div class="form-group"><label>Urgency</label><select id="reqUrgency"><option value="normal" ${r?.urgency==='normal'?'selected':''}>Normal</option><option value="high" ${r?.urgency==='high'?'selected':''}>High</option><option value="urgent" ${r?.urgency==='urgent'?'selected':''}>Urgent</option></select></div></div>
-        <div class="form-group"><label>Instructions / Notes</label><textarea id="reqNotes" rows="2">${esc(r?.instructions||r?.adminNotes||'')}</textarea></div>
-        <div class="form-group"><label>Services (comma separated)</label><input id="reqServices" value="${esc(r?.services?.map(s=>s.name).join(', ')||'')}" placeholder="e.g., Logo Design, Social Media Setup"></div>
-        <div class="form-group"><label>Status</label><select id="reqStatus"><option value="pending" ${r?.status==='pending'?'selected':''}>Pending</option><option value="quoted" ${r?.status==='quoted'?'selected':''}>Quoted</option><option value="in-progress" ${r?.status==='in-progress'?'selected':''}>In Progress</option><option value="completed" ${r?.status==='completed'?'selected':''}>Completed</option></select></div>
-        <button class="btn btn-primary" style="width:100%;" onclick="saveRequest()">${id?'Update':'Create'}</button>
-      `);
-    };
-
-    window.saveRequest = async function() {
-      const clientName = document.getElementById('reqClient').value.trim();
-      if (!clientName) return toast('Client name required', 'error');
-      const servicesList = document.getElementById('reqServices').value.split(',').filter(s=>s.trim());
-      const data = {
-        clientName: clientName,
-        businessName: clientName,
-        phone: document.getElementById('reqPhone').value.trim(),
-        email: document.getElementById('reqEmail').value.trim(),
-        urgency: document.getElementById('reqUrgency').value,
-        instructions: document.getElementById('reqNotes').value.trim(),
-        adminNotes: document.getElementById('reqNotes').value.trim(),
-        status: document.getElementById('reqStatus').value,
-        services: servicesList.map(name => ({ name: name.trim(), price: 0, quantity: 1 })),
-        updatedAt: firebase.database.ServerValue.TIMESTAMP,
-        updatedBy: currentUser?.email || 'staff'
-      };
-      const id = document.getElementById('reqId').value;
-      try {
-        if (id) { await db.ref('brandinn_service_requests/' + id).update(data); }
-        else { data.createdAt = firebase.database.ServerValue.TIMESTAMP; await db.ref('brandinn_service_requests').push(data); }
-        closeModal(); toast(id ? '✅ Updated!' : '✅ Request created!', 'success');
-      } catch(e) { toast('Error: ' + e.message, 'error'); }
-    };
-
-    // ===== PROJECTS =====
-    function renderProjects(c) {
-      const items = Object.entries(allProjects).map(([id, p]) => ({ id, ...p }));
-      items.sort((a,b) => (b.createdAt||0) - (a.createdAt||0));
-      let html = `<h1 class="page-title">📐 Projects</h1><p class="page-subtitle">Manage branding and design projects</p>${renderStatsBar()}<div class="section"><div class="section-header"><h3><i class="fas fa-project-diagram"></i> All Projects (${items.length})</h3><button class="btn btn-primary btn-sm" onclick="showProjectForm()"><i class="fas fa-plus"></i> New Project</button></div><div class="section-body no-padding">`;
-      if (!items.length) { html += `<div class="empty-state"><i class="fas fa-project-diagram"></i><p>No projects yet</p></div>`; }
-      else { items.forEach(p => {
-        const status = p.status || 'planning';
-        const badgeMap = { 'planning': 'badge-neutral', 'active': 'badge-info', 'completed': 'badge-success', 'on-hold': 'badge-warning' };
-        html += `<div class="list-item"><div class="list-item-left"><div class="list-item-icon">📐</div><div class="list-item-info"><div class="list-item-title">${esc(p.projectName||p.businessName||'Project')}</div><div class="list-item-subtitle">${esc(p.businessName||'')} · ${esc(p.serviceType||'')} · ${esc(p.priority||'medium')}</div></div></div><div class="list-item-right"><span class="badge ${badgeMap[status]||'badge-neutral'}">${status}</span><button class="btn btn-outline btn-xs" onclick="showProjectForm('${p.id}')"><i class="fas fa-pen"></i></button><button class="btn btn-outline btn-xs" onclick="if(confirm('Delete?')) deleteItem('brandinn_projects','${p.id}')"><i class="fas fa-trash"></i></button></div></div>`;
-      }); }
-      html += `</div></div>`; c.innerHTML = html;
-    }
-
-    window.showProjectForm = function(id) {
-      const p = id ? allProjects[id] : null;
-      openModal(`
-        <div class="modal-header"><h3>${id?'Edit':'New'} Project</h3><button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button></div>
-        <input type="hidden" id="projId" value="${id||''}">
-        <div class="form-row"><div class="form-group"><label>Project Name *</label><input id="projName" value="${esc(p?.projectName||'')}"></div><div class="form-group"><label>Business/Client</label><input id="projBusiness" value="${esc(p?.businessName||'')}"></div></div>
-        <div class="form-row"><div class="form-group"><label>Service Type</label><input id="projService" value="${esc(p?.serviceType||'')}" placeholder="e.g., Print Design, Brand Identity"></div><div class="form-group"><label>Priority</label><select id="projPriority"><option value="low" ${p?.priority==='low'?'selected':''}>Low</option><option value="medium" ${p?.priority==='medium'?'selected':''}>Medium</option><option value="high" ${p?.priority==='high'?'selected':''}>High</option></select></div></div>
-        <div class="form-group"><label>Description</label><textarea id="projDesc" rows="2">${esc(p?.description||'')}</textarea></div>
-        <div class="form-group"><label>Internal Notes</label><textarea id="projNotes" rows="2">${esc(p?.internalNotes||'')}</textarea></div>
-        <div class="form-row"><div class="form-group"><label>Status</label><select id="projStatus"><option value="planning" ${p?.status==='planning'?'selected':''}>Planning</option><option value="active" ${p?.status==='active'?'selected':''}>Active</option><option value="on-hold" ${p?.status==='on-hold'?'selected':''}>On Hold</option><option value="completed" ${p?.status==='completed'?'selected':''}>Completed</option></select></div><div class="form-group"><label>Budget (KES)</label><input id="projBudget" type="number" value="${p?.budget||0}"></div></div>
-        <button class="btn btn-primary" style="width:100%;" onclick="saveProject()">${id?'Update':'Create'}</button>
-      `);
-    };
-
-    window.saveProject = async function() {
-      const name = document.getElementById('projName').value.trim();
-      if (!name) return toast('Project name required', 'error');
-      const data = {
-        projectName: name,
-        businessName: document.getElementById('projBusiness').value.trim(),
-        serviceType: document.getElementById('projService').value.trim(),
-        priority: document.getElementById('projPriority').value,
-        description: document.getElementById('projDesc').value.trim(),
-        internalNotes: document.getElementById('projNotes').value.trim(),
-        status: document.getElementById('projStatus').value,
-        budget: Number(document.getElementById('projBudget').value) || 0,
-        updatedAt: firebase.database.ServerValue.TIMESTAMP,
-        updatedBy: currentUser?.email || 'staff'
-      };
-      const id = document.getElementById('projId').value;
-      try {
-        if (id) { await db.ref('brandinn_projects/' + id).update(data); }
-        else { data.createdAt = firebase.database.ServerValue.TIMESTAMP; data.createdBy = currentUser?.email || 'staff'; await db.ref('brandinn_projects').push(data); }
-        closeModal(); toast(id ? '✅ Updated!' : '✅ Project created!', 'success');
-      } catch(e) { toast('Error: ' + e.message, 'error'); }
-    };
-
-    // ===== BOOKINGS =====
-    function renderBookings(c) {
-      const items = Object.entries(allBookings).map(([id, b]) => ({ id, ...b }));
-      items.sort((a,b) => (b.createdAt||0) - (a.createdAt||0));
-      let html = `<h1 class="page-title">📅 Bookings</h1><p class="page-subtitle">Manage client consultations and appointments</p>${renderStatsBar()}<div class="section"><div class="section-header"><h3><i class="fas fa-calendar-check"></i> All Bookings (${items.length})</h3><button class="btn btn-primary btn-sm" onclick="showBookingForm()"><i class="fas fa-plus"></i> New Booking</button></div><div class="section-body no-padding">`;
-      if (!items.length) { html += `<div class="empty-state"><i class="fas fa-calendar-plus"></i><p>No bookings yet</p></div>`; }
-      else { items.forEach(b => {
-        const status = b.status || 'scheduled';
-        const badgeMap = { 'scheduled': 'badge-info', 'confirmed': 'badge-success', 'completed': 'badge-success', 'cancelled': 'badge-danger' };
-        html += `<div class="list-item"><div class="list-item-left"><div class="list-item-icon">📅</div><div class="list-item-info"><div class="list-item-title">${esc(b.clientName||'Client')}</div><div class="list-item-subtitle">${esc(b.bookingType||'Consultation')} · ${esc(b.date||'')} ${esc(b.time||'')} · ${esc(b.location||'')}</div></div></div><div class="list-item-right"><span class="badge ${badgeMap[status]||'badge-neutral'}">${status}</span><button class="btn btn-outline btn-xs" onclick="showBookingForm('${b.id}')"><i class="fas fa-pen"></i></button><button class="btn btn-outline btn-xs" onclick="if(confirm('Delete?')) deleteItem('brandinn_bookings','${b.id}')"><i class="fas fa-trash"></i></button></div></div>`;
-      }); }
-      html += `</div></div>`; c.innerHTML = html;
-    }
-
-    window.showBookingForm = function(id) {
-      const b = id ? allBookings[id] : null;
-      openModal(`
-        <div class="modal-header"><h3>${id?'Edit':'New'} Booking</h3><button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button></div>
-        <input type="hidden" id="bookId" value="${id||''}">
-        <div class="form-row"><div class="form-group"><label>Client Name *</label><input id="bookClient" value="${esc(b?.clientName||'')}"></div><div class="form-group"><label>Phone *</label><input id="bookPhone" value="${esc(b?.phone||'')}"></div></div>
-        <div class="form-row"><div class="form-group"><label>Email</label><input id="bookEmail" value="${esc(b?.email||'')}"></div><div class="form-group"><label>Booking Type</label><select id="bookType"><option value="Consultation" ${b?.bookingType==='Consultation'?'selected':''}>Consultation</option><option value="Design Review" ${b?.bookingType==='Design Review'?'selected':''}>Design Review</option><option value="Project Kickoff" ${b?.bookingType==='Project Kickoff'?'selected':''}>Project Kickoff</option><option value="Other" ${b?.bookingType==='Other'?'selected':''}>Other</option></select></div></div>
-        <div class="form-row"><div class="form-group"><label>Date *</label><input id="bookDate" type="date" value="${b?.date||''}"></div><div class="form-group"><label>Time *</label><input id="bookTime" type="time" value="${b?.time||''}"></div></div>
-        <div class="form-group"><label>Location / Notes</label><textarea id="bookNotes" rows="2">${esc(b?.notes||b?.location||'')}</textarea></div>
-        <div class="form-group"><label>Status</label><select id="bookStatus"><option value="scheduled" ${b?.status==='scheduled'?'selected':''}>Scheduled</option><option value="confirmed" ${b?.status==='confirmed'?'selected':''}>Confirmed</option><option value="completed" ${b?.status==='completed'?'selected':''}>Completed</option><option value="cancelled" ${b?.status==='cancelled'?'selected':''}>Cancelled</option></select></div>
-        <button class="btn btn-primary" style="width:100%;" onclick="saveBooking()">${id?'Update':'Create'}</button>
-      `);
-    };
-
-    window.saveBooking = async function() {
-      const clientName = document.getElementById('bookClient').value.trim();
-      if (!clientName) return toast('Client name required', 'error');
-      const data = {
-        clientName: clientName,
-        phone: document.getElementById('bookPhone').value.trim(),
-        email: document.getElementById('bookEmail').value.trim(),
-        bookingType: document.getElementById('bookType').value,
-        date: document.getElementById('bookDate').value,
-        time: document.getElementById('bookTime').value,
-        notes: document.getElementById('bookNotes').value.trim(),
-        location: document.getElementById('bookNotes').value.trim(),
-        status: document.getElementById('bookStatus').value,
-        updatedAt: firebase.database.ServerValue.TIMESTAMP,
-        updatedBy: currentUser?.email || 'staff'
-      };
-      const id = document.getElementById('bookId').value;
-      try {
-        if (id) { await db.ref('brandinn_bookings/' + id).update(data); }
-        else { data.createdAt = firebase.database.ServerValue.TIMESTAMP; data.createdBy = currentUser?.email || 'staff'; await db.ref('brandinn_bookings').push(data); }
-        closeModal(); toast(id ? '✅ Updated!' : '✅ Booking created!', 'success');
-      } catch(e) { toast('Error: ' + e.message, 'error'); }
-    };
-
-    // ===== PRINT ORDERS =====
-    function renderPrintOrders(c) {
-      const items = Object.entries(allPrintOrders).map(([id, p]) => ({ id, ...p }));
-      items.sort((a,b) => (b.createdAt||0) - (a.createdAt||0));
-      let html = `<h1 class="page-title">🖨️ Print Orders</h1><p class="page-subtitle">Manage t-shirt and banner printing orders</p>${renderStatsBar()}<div class="section"><div class="section-header"><h3><i class="fas fa-print"></i> All Print Orders (${items.length})</h3><button class="btn btn-primary btn-sm" onclick="showPrintForm()"><i class="fas fa-plus"></i> New Order</button></div><div class="section-body no-padding">`;
-      if (!items.length) { html += `<div class="empty-state"><i class="fas fa-print"></i><p>No print orders yet</p></div>`; }
-      else { items.forEach(p => {
-        const status = p.status || 'pending';
-        const badgeMap = { 'pending': 'badge-warning', 'printing': 'badge-info', 'completed': 'badge-success', 'delivered': 'badge-success', 'cancelled': 'badge-danger' };
-        const typeLabel = p.type === 'tshirt' ? '👕 T-Shirt' : p.type === 'banner' ? '📋 Banner' : '🖨️ Print';
-        html += `<div class="list-item"><div class="list-item-left"><div class="list-item-icon">${typeLabel === '👕 T-Shirt' ? '👕' : typeLabel === '📋 Banner' ? '📋' : '🖨️'}</div><div class="list-item-info"><div class="list-item-title">${esc(p.customerName||'Customer')}</div><div class="list-item-subtitle">${esc(p.product||'Print')} · Qty: ${p.quantity||1} · KES ${p.total||0}</div></div></div><div class="list-item-right"><span class="badge ${badgeMap[status]||'badge-neutral'}">${status}</span><button class="btn btn-outline btn-xs" onclick="showPrintForm('${p.id}')"><i class="fas fa-pen"></i></button><button class="btn btn-outline btn-xs" onclick="if(confirm('Delete?')) deleteItem('brandinn_print_orders','${p.id}')"><i class="fas fa-trash"></i></button></div></div>`;
-      }); }
-      html += `</div></div>`; c.innerHTML = html;
-    }
-
-    window.showPrintForm = function(id) {
-      const p = id ? allPrintOrders[id] : null;
-      openModal(`
-        <div class="modal-header"><h3>${id?'Edit':'New'} Print Order</h3><button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button></div>
-        <input type="hidden" id="printId" value="${id||''}">
-        <div class="form-row"><div class="form-group"><label>Customer Name *</label><input id="printCustomer" value="${esc(p?.customerName||'')}"></div><div class="form-group"><label>Phone *</label><input id="printPhone" value="${esc(p?.customerPhone||'')}"></div></div>
-        <div class="form-row"><div class="form-group"><label>Product Type</label><select id="printType"><option value="tshirt" ${p?.type==='tshirt'?'selected':''}>T-Shirt</option><option value="banner" ${p?.type==='banner'?'selected':''}>Banner</option></select></div><div class="form-group"><label>Quantity</label><input id="printQty" type="number" value="${p?.quantity||1}" min="1"></div></div>
-        <div class="form-row"><div class="form-group"><label>Unit Price (KES)</label><input id="printPrice" type="number" value="${p?.unitPrice||1300}"></div><div class="form-group"><label>Status</label><select id="printStatus"><option value="pending" ${p?.status==='pending'?'selected':''}>Pending</option><option value="printing" ${p?.status==='printing'?'selected':''}>Printing</option><option value="completed" ${p?.status==='completed'?'selected':''}>Completed</option><option value="delivered" ${p?.status==='delivered'?'selected':''}>Delivered</option><option value="cancelled" ${p?.status==='cancelled'?'selected':''}>Cancelled</option></select></div></div>
-        <div class="form-group"><label>Product Description</label><input id="printProduct" value="${esc(p?.product||'Print Order')}" placeholder="e.g., T-Shirt, Banner"></div>
-        <div class="form-group"><label>Notes / Design Details</label><textarea id="printNotes" rows="2">${esc(p?.notes||p?.designText||'')}</textarea></div>
-        <button class="btn btn-primary" style="width:100%;" onclick="savePrintOrder()">${id?'Update':'Create'}</button>
-      `);
-    };
-
-    window.savePrintOrder = async function() {
-      const customer = document.getElementById('printCustomer').value.trim();
-      if (!customer) return toast('Customer name required', 'error');
-      const qty = Number(document.getElementById('printQty').value) || 1;
-      const price = Number(document.getElementById('printPrice').value) || 1300;
-      const data = {
-        customerName: customer,
-        customerPhone: document.getElementById('printPhone').value.trim(),
-        type: document.getElementById('printType').value,
-        quantity: qty,
-        unitPrice: price,
-        total: qty * price,
-        product: document.getElementById('printProduct').value.trim() || 'Print Order',
-        notes: document.getElementById('printNotes').value.trim(),
-        designText: document.getElementById('printNotes').value.trim(),
-        status: document.getElementById('printStatus').value,
-        updatedAt: firebase.database.ServerValue.TIMESTAMP,
-        updatedBy: currentUser?.email || 'staff'
-      };
-      const id = document.getElementById('printId').value;
-      try {
-        if (id) { await db.ref('brandinn_print_orders/' + id).update(data); }
-        else { data.createdAt = firebase.database.ServerValue.TIMESTAMP; data.createdBy = currentUser?.email || 'staff'; await db.ref('brandinn_print_orders').push(data); }
-        closeModal(); toast(id ? '✅ Updated!' : '✅ Print order created!', 'success');
-      } catch(e) { toast('Error: ' + e.message, 'error'); }
-    };
-
-    // ===== DELETE HELPER =====
-    window.deleteItem = async function(path, id) {
-      try { await db.ref(path + '/' + id).remove(); toast('Deleted', 'success'); } 
-      catch(e) { toast('Error: ' + e.message, 'error'); }
-    };
-
-    // ===== LOGOUT =====
-    window.handleLogout = async function() {
-      try { await auth.signOut(); window.location.href = '/'; } 
-      catch(e) { toast('Error signing out', 'error'); }
-    };
-
-    // ===== AUTH =====
-    auth.onAuthStateChanged(async user => {
-      if (!user) { window.location.href = '/'; return; }
-      currentUser = user;
-      
-      // Update UI
-      document.getElementById('dropdownName').textContent = user.displayName || user.email?.split('@')[0] || 'Staff';
-      document.getElementById('dropdownEmail').textContent = user.email;
-      document.getElementById('dropdownAvatar').textContent = (user.displayName || user.email?.[0] || 'S').substring(0,2).toUpperCase();
-      if (user.photoURL) {
-        document.getElementById('userAvatarText').style.display = 'none';
-        document.getElementById('userAvatarImg').style.display = 'block';
-        document.getElementById('userAvatarImg').src = user.photoURL;
-      }
-      document.getElementById('userAvatarText').textContent = (user.displayName || 'S')[0].toUpperCase();
-
-      // Check workspace permissions for BrandInn
-      try {
-        const permSnap = await db.ref(`workspacePermissions/${user.uid}`).once('value');
-        const perms = permSnap.val() || {};
-        const hasBrandInn = perms.brandinn === true || perms['brandinn-print'] === true;
-        
-        if (!hasBrandInn) {
-          // Check if admin
-          const adminSnap = await db.ref(`admins/${user.uid}`).once('value');
-          if (adminSnap.val() !== true) {
-            document.getElementById('tabContent').innerHTML = `
-              <div class="section"><div class="section-body"><div class="empty-state">
-                <i class="fas fa-lock" style="color:#ef4444;"></i>
-                <p><strong>Access Denied</strong></p>
-                <p>You don't have BrandInn workspace permissions.</p>
-                <p style="font-size:0.65rem;color:var(--text-secondary);margin-top:8px;">Contact your administrator.</p>
-              </div></div></div>`;
-            return;
-          }
-        }
-        
-        document.getElementById('workspaceTag').textContent = 'BrandInn Field Ops';
-        loadData();
-        renderTab();
-      } catch(e) {
-        toast('Error checking permissions', 'error');
-        console.error(e);
-      }
-    });
-  </script>
+function renderAccessDenied(msg) {
+  document.getElementById('mainContent').innerHTML = `
+    <div class="access-denied">
+      <div class="access-denied-icon"><i class="fas fa-lock"></i></div>
+      <h2>Access Denied</h2>
+      <p>${esc(msg || "You don't have permission to access the BrandInn workspace.")}</p>
+      <p style="font-size: 0.75rem; color: var(--text-light); margin-top: 1rem;">
+        Contact your administrator if you believe this is a mistake.
+      </p>
+    </div>
+  `;
+}
+</script>
 </body>
 </html>
