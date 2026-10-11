@@ -43,8 +43,24 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 .brand{display:flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0}
 .brand img{width:36px;height:36px;border-radius:10px;object-fit:contain;background:#fff;box-shadow:var(--shadow-xs)}
 .brand-name{font-weight:800;font-size:.95rem;color:var(--text);letter-spacing:-.02em}
-.workspace-tag{background:var(--gold-soft);color:var(--gold-dark);padding:.3rem .85rem;border-radius:var(--radius-full);font-size:.68rem;font-weight:700;letter-spacing:.3px;display:inline-flex;align-items:center;gap:6px;max-width:180px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.workspace-tag::before{content:'';width:6px;height:6px;background:var(--gold);border-radius:50%;flex-shrink:0}
+.biz-chip{display:flex;align-items:center;gap:.5rem;padding:.3rem .7rem .3rem .35rem;background:var(--gold-soft);border:1px solid #fde68a;border-radius:100px;font-size:.76rem;cursor:pointer;transition:all .15s;position:relative;max-width:220px;font-weight:700;color:var(--gold-dark)}
+.biz-chip:hover{border-color:var(--gold);background:var(--gold-tint)}
+.biz-chip .av{width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold-dark));color:#fff;display:flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:700;flex-shrink:0;overflow:hidden}
+.biz-chip .av img{width:100%;height:100%;object-fit:cover}
+.biz-chip .nm{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:120px}
+.biz-chip .chev{font-size:.55rem;color:var(--gold-dark);flex-shrink:0}
+.biz-menu{position:absolute;top:calc(100% + 8px);left:0;min-width:280px;background:#fff;border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow-lg);padding:.5rem;display:none;z-index:200}
+.biz-menu.on{display:block;animation:popIn .2s ease}
+.biz-menu .sh{padding:.5rem .8rem .35rem;font-size:.6rem;font-weight:800;color:var(--text-light);text-transform:uppercase;letter-spacing:1px}
+.biz-menu .it{display:flex;align-items:center;gap:.65rem;padding:.6rem .8rem;border-radius:9px;cursor:pointer;transition:background .15s;text-decoration:none;color:inherit}
+.biz-menu .it:hover{background:var(--surface-alt)}
+.biz-menu .it.current{background:var(--gold-soft);box-shadow:inset 0 0 0 1.5px var(--gold)}
+.biz-menu .it .av{width:32px;height:32px;border-radius:9px;background:linear-gradient(135deg,var(--gold),var(--gold-dark));color:#fff;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;flex-shrink:0;overflow:hidden}
+.biz-menu .it .av img{width:100%;height:100%;object-fit:cover}
+.biz-menu .it .inf{flex:1;min-width:0}
+.biz-menu .it .nm{font-size:.8rem;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.biz-menu .it .rl{font-size:.62rem;color:var(--text-light);font-weight:600;text-transform:uppercase;letter-spacing:.3px;margin-top:.1rem}
+.biz-menu .it .ck{color:var(--gold);font-size:.75rem;flex-shrink:0}
 .topbar-right{display:flex;align-items:center;gap:10px;flex-shrink:0}
 .cart-badge{position:relative;background:var(--text);color:#fff;border:none;padding:.5rem .85rem;border-radius:var(--radius-full);font-family:var(--font);font-weight:800;font-size:.78rem;cursor:pointer;display:inline-flex;align-items:center;gap:8px;transition:all .2s}
 .cart-badge:hover{background:var(--gold-dark);transform:translateY(-1px)}
@@ -96,31 +112,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 .step-head h3{font-size:.88rem;font-weight:800;letter-spacing:-.01em;display:flex;align-items:center;gap:10px;color:var(--text)}
 .step-head h3 .step-num{width:22px;height:22px;border-radius:50%;background:var(--gold);color:#fff;font-size:.7rem;font-weight:800;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0}
 .step-head .step-status{font-size:.7rem;font-weight:700;color:var(--text-muted);display:inline-flex;align-items:center;gap:6px}
-.step-head .step-status.done{color:var(--success)}
 .step-body{padding:1rem 1.1rem}
-
-/* OUTLET SELECTOR */
-.outlet-search{position:relative;margin-bottom:.75rem}
-.outlet-search i{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--text-light);font-size:.82rem}
-.outlet-search input{width:100%;padding:.7rem 1rem .7rem 2.6rem;border:1.5px solid var(--border-soft);border-radius:var(--radius);font-size:.85rem;font-family:var(--font);background:var(--surface-alt);transition:all .2s;color:var(--text)}
-.outlet-search input:focus{outline:none;border-color:var(--gold);background:#fff;box-shadow:0 0 0 4px var(--gold-tint)}
-.outlet-chips{display:flex;gap:.5rem;flex-wrap:wrap}
-.outlet-chip{padding:.55rem .95rem;border:1.5px solid var(--border-soft);border-radius:var(--radius-full);background:#fff;font-family:var(--font);font-size:.78rem;font-weight:700;color:var(--text-soft);cursor:pointer;transition:all .15s;display:inline-flex;align-items:center;gap:8px;white-space:nowrap}
-.outlet-chip:hover{border-color:var(--gold);color:var(--gold-dark);background:var(--gold-soft)}
-.outlet-chip.on{background:var(--text);border-color:var(--text);color:#fff}
-.outlet-chip.on i{color:var(--gold-light)}
-.outlet-chip i{font-size:.75rem;color:var(--text-light)}
-.outlet-chip .tier{font-size:.6rem;padding:1px 6px;border-radius:var(--radius-full);background:var(--surface-alt);color:var(--text-muted);font-weight:800;text-transform:uppercase;letter-spacing:.3px}
-.outlet-chip.on .tier{background:rgba(255,255,255,.2);color:#fff}
-
-.selected-outlet{display:flex;align-items:center;gap:12px;padding:.85rem 1rem;background:linear-gradient(135deg,var(--gold-soft),#fff);border:1.5px solid #fde68a;border-radius:var(--radius);margin-bottom:.5rem}
-.selected-outlet .so-icon{width:42px;height:42px;border-radius:12px;background:linear-gradient(135deg,var(--gold),var(--gold-dark));color:#fff;display:flex;align-items:center;justify-content:center;font-size:1rem;font-weight:800;flex-shrink:0}
-.selected-outlet .so-info{flex:1;min-width:0}
-.selected-outlet .so-name{font-weight:800;font-size:.92rem;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.selected-outlet .so-meta{font-size:.72rem;color:var(--text-muted);margin-top:2px;display:flex;gap:12px;flex-wrap:wrap}
-.selected-outlet .so-meta span{display:inline-flex;align-items:center;gap:4px}
-.selected-outlet .so-change{background:transparent;border:1px solid var(--gold);color:var(--gold-dark);font-family:var(--font);font-size:.72rem;font-weight:700;padding:.35rem .7rem;border-radius:var(--radius-full);cursor:pointer;transition:all .15s}
-.selected-outlet .so-change:hover{background:var(--gold);color:#fff}
 
 /* PRODUCT SEARCH + CATEGORIES */
 .prod-toolbar{display:flex;gap:10px;margin-bottom:1rem;flex-wrap:wrap;align-items:center}
@@ -153,7 +145,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 .prod-card .qty-added{position:absolute;top:.5rem;left:.5rem;background:var(--gold);color:#fff;font-size:.68rem;font-weight:800;padding:.15rem .5rem;border-radius:var(--radius-full);z-index:2;box-shadow:var(--shadow-sm);animation:popIn .2s ease}
 @keyframes popIn{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
 
-/* CART (desktop right column) */
+/* CART */
 .cart{background:#fff;border:1px solid var(--border-soft);border-radius:var(--radius-lg);box-shadow:var(--shadow-xs);display:flex;flex-direction:column;overflow:hidden;position:sticky;top:calc(var(--topbar-h) + 1.25rem);max-height:calc(100vh - var(--topbar-h) - 2.5rem)}
 .cart-head{padding:1rem 1.1rem;border-bottom:1px solid var(--border-soft);display:flex;align-items:center;justify-content:space-between;gap:.5rem;flex-shrink:0}
 .cart-head h3{font-size:.92rem;font-weight:800;color:var(--text);display:flex;align-items:center;gap:.5rem}
@@ -232,7 +224,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 .chip.on i{color:var(--gold-light)}
 .chip i{font-size:.82rem}
 
-/* SUMMARY BOX */
+/* SUMMARY */
 .summary-box{background:var(--surface-alt);border-radius:var(--radius);padding:1rem 1.1rem;margin-bottom:1rem}
 .summary-box .row{display:flex;justify-content:space-between;padding:.3rem 0;font-size:.84rem;color:var(--text-muted);font-weight:600}
 .summary-box .row.grand{padding-top:.7rem;margin-top:.5rem;border-top:1px solid var(--border-soft);font-weight:800;font-size:1.1rem;color:var(--text)}
@@ -275,20 +267,15 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 /* PILLS */
 .pill{display:inline-flex;align-items:center;gap:6px;padding:.3rem .7rem;border-radius:var(--radius-full);font-size:.68rem;font-weight:700;text-transform:capitalize;white-space:nowrap;letter-spacing:.2px}
 .pill::before{content:'';width:6px;height:6px;border-radius:50%;background:currentColor;flex-shrink:0}
-.pill.draft{background:var(--surface-alt);color:var(--text-muted)}
-.pill.placed{background:var(--warning-bg);color:#92400e}
+.pill.pending{background:var(--warning-bg);color:#92400e}
 .pill.confirmed{background:var(--info-bg);color:#1e40af}
-.pill.out_for_delivery{background:var(--purple-bg);color:#6d28d9}
-.pill.delivered{background:var(--success-bg);color:#065f46}
+.pill.shipped{background:var(--purple-bg);color:#6d28d9}
+.pill.fulfilled,.pill.delivered,.pill.completed{background:var(--success-bg);color:#065f46}
 .pill.cancelled{background:var(--danger-bg);color:#991b1b}
 
 /* SKELETON */
 .skeleton{background:linear-gradient(90deg,var(--border-soft) 0%,#e9eef5 50%,var(--border-soft) 100%);background-size:200% 100%;animation:shimmer 1.6s ease-in-out infinite;border-radius:var(--radius-sm);display:block}
 @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
-.skel-prod{background:#fff;border:1.5px solid var(--border-soft);border-radius:var(--radius);overflow:hidden}
-.skel-prod .skel-img{aspect-ratio:4/3;background:linear-gradient(90deg,var(--border-soft) 0%,#e9eef5 50%,var(--border-soft) 100%);background-size:200% 100%;animation:shimmer 1.6s ease-in-out infinite}
-.skel-prod .skel-body{padding:.7rem .8rem}
-.skel-prod .skel-line{height:12px;border-radius:6px;margin-bottom:.5rem}
 
 /* EMPTY STATE */
 .empty-state{text-align:center;padding:2.5rem 1.5rem}
@@ -307,7 +294,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 @media (max-width:640px){
   .topbar{padding:0 1rem;height:60px}
   .brand-name{display:none}
-  .workspace-tag{max-width:130px;font-size:.62rem}
+  .biz-chip .nm{max-width:100px}
   .main{padding:1rem 1rem 90px}
   .cart-badge{padding:.45rem .7rem;font-size:.72rem}
   .form-row{grid-template-columns:1fr;gap:.7rem}
@@ -318,12 +305,8 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
   .prod-card .pname{font-size:.72rem}
   .prod-card .pprice{font-size:.82rem}
 }
-@media (max-width:380px){
-  .outlet-chips{flex-direction:column}
-  .outlet-chip{width:100%;justify-content:center}
-}
 @media (prefers-reduced-motion:reduce){
-  .skeleton,.skel-prod .skel-img{animation:none}
+  .skeleton{animation:none}
   .modal,.prod-card,.ci{transition:none;animation:none}
 }
 </style>
@@ -337,7 +320,14 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
       <img src="https://i.postimg.cc/rFfXDj3L/kazinni-removebg-preview(1).png" alt="Fusion Foods">
       <span class="brand-name">Fusion Foods</span>
     </a>
-    <span class="workspace-tag" id="workspaceTag">Field Ops</span>
+    <div style="position:relative">
+      <div class="biz-chip" id="bizChip" onclick="toggleBizMenu(event)" style="display:none;">
+        <div class="av" id="bizAv">F</div>
+        <span class="nm" id="bizNm">Loading…</span>
+        <i class="fas fa-chevron-down chev" id="bizChev" style="display:none"></i>
+      </div>
+      <div class="biz-menu" id="bizMenu"></div>
+    </div>
   </div>
   <div class="topbar-right">
     <button class="cart-badge" id="cartBadge" onclick="scrollToCart()" style="display:none;">
@@ -355,12 +345,11 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
           <div class="dropdown-user-info">
             <div class="dropdown-user-name" id="dropdownName">Field Assistant</div>
             <div class="dropdown-user-email" id="dropdownEmail">...</div>
-            <div class="dropdown-user-role"><i class="fas fa-motorcycle"></i> Field Assistant</div>
+            <div class="dropdown-user-role" id="dropdownRole"><i class="fas fa-motorcycle"></i> Field Assistant</div>
           </div>
         </div>
         <button class="user-dropdown-item" onclick="switchTab('new')"><i class="fas fa-plus-circle"></i> New Order</button>
         <button class="user-dropdown-item" onclick="switchTab('orders')"><i class="fas fa-receipt"></i> My Orders</button>
-        <button class="user-dropdown-item" onclick="switchTab('outlets')"><i class="fas fa-store"></i> My Outlets</button>
         <div class="dropdown-divider"></div>
         <button class="user-dropdown-item signout" onclick="handleLogout()"><i class="fas fa-sign-out-alt"></i> Sign Out</button>
       </div>
@@ -374,7 +363,6 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
     <div class="tabs">
       <button class="tab-btn active" id="tabNew" onclick="switchTab('new')"><i class="fas fa-cash-register"></i> New Order</button>
       <button class="tab-btn" id="tabOrders" onclick="switchTab('orders')"><i class="fas fa-receipt"></i> My Orders <span class="tab-count" id="ordersCount">0</span></button>
-      <button class="tab-btn" id="tabOutlets" onclick="switchTab('outlets')"><i class="fas fa-store"></i> My Outlets <span class="tab-count" id="outletsCount">0</span></button>
     </div>
   </div>
   <div id="mainContent"></div>
@@ -413,25 +401,25 @@ firebase.initializeApp({
 });
 const auth = firebase.auth();
 const db = firebase.database();
-
-// Ensure session survives page reloads reliably
-auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL).catch(e => {
-  console.warn('Persistence set failed:', e);
-});
+auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL).catch(e => console.warn('Persistence:', e));
 
 /* STATE */
 let currentUser = null;
+let currentBusiness = null;
+let currentSlug = null;
+let currentRole = 'operator';
+let businesses = [];  // all assigned businesses the user can access
 let currentTab = 'new';
-let allOutlets = {};
 let allProducts = {};
 let allOrders = {};
-let selectedOutletId = null;
 let cart = [];
 let productSearch = '';
 let categoryFilter = '';
 let orderType = 'delivery';
-let paymentMethod = 'cod';
+let paymentMethod = 'cash';
 let isReady = false;
+let ordersRef = null, ordersListener = null;
+let productsRef = null, productsListener = null;
 
 /* UTILS */
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;')}
@@ -442,99 +430,257 @@ function toast(msg,type=''){const c=document.getElementById('toastContainer');co
 function openModal(html){document.getElementById('modalContent').innerHTML='<div class="modal-handle"></div>'+html;document.getElementById('modalOverlay').classList.add('active');document.body.style.overflow='hidden'}
 function closeModal(){document.getElementById('modalOverlay').classList.remove('active');document.body.style.overflow=''}
 document.getElementById('modalOverlay').addEventListener('click',function(e){if(e.target===this)closeModal()});
-document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeModal();document.getElementById('userDropdown')?.classList.remove('open')}});
-window.toggleUserMenu=()=>document.getElementById('userDropdown').classList.toggle('open');
-document.addEventListener('click',e=>{if(!document.getElementById('userMenu')?.contains(e.target))document.getElementById('userDropdown')?.classList.remove('open')});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeModal();document.getElementById('userDropdown')?.classList.remove('open');document.getElementById('bizMenu')?.classList.remove('on')}});
+window.toggleUserMenu=()=>{document.getElementById('userDropdown').classList.toggle('open');document.getElementById('bizMenu')?.classList.remove('on')};
+window.toggleBizMenu=e=>{e.stopPropagation();const m=document.getElementById('bizMenu');if(!m)return;m.classList.toggle('on');document.getElementById('userDropdown')?.classList.remove('open')};
+document.addEventListener('click',e=>{
+  if(!document.getElementById('userMenu')?.contains(e.target))document.getElementById('userDropdown')?.classList.remove('open');
+  const chip=document.getElementById('bizChip');
+  const menu=document.getElementById('bizMenu');
+  if(chip && menu && !chip.contains(e.target) && !menu.contains(e.target))menu.classList.remove('on');
+});
 
 /* TABS */
 window.switchTab=function(tab){
   currentTab=tab;
   document.getElementById('userDropdown')?.classList.remove('open');
   document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
-  const map={new:'tabNew',orders:'tabOrders',outlets:'tabOutlets'};
+  const map={new:'tabNew',orders:'tabOrders'};
   document.getElementById(map[tab])?.classList.add('active');
   renderTab();
 };
 
 /* DATA LOADING */
-function loadData(){
-  db.ref('fusion_outlets').on('value',snap=>{
-    allOutlets=snap.val()||{};
-    document.getElementById('outletsCount').textContent=Object.keys(allOutlets).length;
-    if(isReady && currentTab==='outlets') renderTab();
-    if(isReady && currentTab==='new' && selectedOutletId) renderTab();
-  });
-  db.ref('fusion_products').on('value',snap=>{
-    allProducts=snap.val()||{};
-    if(isReady && currentTab==='new') renderTab();
-  });
-  if(currentUser){
-    db.ref('fusion_orders').orderByChild('assistantUid').equalTo(currentUser.uid).on('value',snap=>{
-      allOrders=snap.val()||{};
-      document.getElementById('ordersCount').textContent=Object.keys(allOrders).length;
-      if(isReady && currentTab==='orders') renderTab();
+function attachProducts(){
+  detachProducts();
+  if(!currentBusiness?.uid){allProducts={};return}
+  productsRef=db.ref('brandinn_users/'+currentBusiness.uid+'/pageData/products');
+  productsListener=snap=>{
+    const raw=snap.val();
+    if(!raw)allProducts={};
+    else if(Array.isArray(raw))allProducts=Object.fromEntries(raw.filter(Boolean).map(p=>[p.id,p]));
+    else allProducts=raw;
+    // Filter inactive
+    Object.keys(allProducts).forEach(k=>{
+      if(allProducts[k].active===false)delete allProducts[k];
     });
+    if(isReady && currentTab==='new')renderTab();
+  };
+  productsRef.on('value',productsListener,err=>{
+    console.error('[Fusion] products error:',err);
+  });
+}
+function detachProducts(){
+  if(productsRef&&productsListener){try{productsRef.off('value',productsListener)}catch(e){}}
+  productsRef=null;productsListener=null;
+}
+
+function attachOrders(){
+  detachOrders();
+  if(!currentSlug){allOrders={};return}
+  ordersRef=db.ref('brandinn_orders/'+currentSlug);
+  ordersListener=snap=>{
+    const raw=snap.val();
+    if(!raw)allOrders={};
+    else allOrders=raw;
+    // Filter to this assistant's orders
+    const mine={};
+    Object.entries(allOrders).forEach(([id,o])=>{
+      if(!o)return;
+      if(o.createdBy===currentUser.uid)mine[id]=o;
+    });
+    allOrders=mine;
+    document.getElementById('ordersCount').textContent=Object.keys(allOrders).length;
+    if(isReady && currentTab==='orders')renderTab();
+  };
+  ordersRef.on('value',ordersListener,err=>{
+    console.error('[Fusion] orders error:',err);
+  });
+}
+function detachOrders(){
+  if(ordersRef&&ordersListener){try{ordersRef.off('value',ordersListener)}catch(e){}}
+  ordersRef=null;ordersListener=null;
+}
+
+/* ACCESS GATE + BUSINESS RESOLUTION */
+auth.onAuthStateChanged(async user=>{
+  // Hydration wait
+  if(!user){
+    await new Promise(r=>setTimeout(r,800));
+    if(!firebase.auth().currentUser){window.location.replace('/');return}
+    user=firebase.auth().currentUser;
   }
+  currentUser=user;
+
+  // Topbar
+  const name=user.displayName||user.email?.split('@')[0]||'Field Assistant';
+  document.getElementById('dropdownName').textContent=name;
+  document.getElementById('dropdownEmail').textContent=user.email||'';
+  document.getElementById('dropdownAvatar').textContent=initials(name);
+  document.getElementById('userAvatarText').textContent=initials(name);
+  if(user.photoURL){
+    document.getElementById('userAvatarText').style.display='none';
+    const img=document.getElementById('userAvatarImg');
+    img.style.display='block';
+    img.src=user.photoURL;
+    document.getElementById('dropdownAvatar').innerHTML=`<img src="${esc(user.photoURL)}" alt="">`;
+  }
+
+  try{
+    // 1. Check workspace permission
+    const permSnap=await db.ref('workspacePermissions/'+user.uid).once('value');
+    const perms=permSnap.val()||{};
+    const hasFusion=perms['fusion-foods']===true;
+    const isAdmin=(await db.ref('admins/'+user.uid).once('value')).val()===true;
+
+    if(!hasFusion && !isAdmin){
+      renderAccessDenied("You don't have permission to access the Fusion Foods workspace.");
+      return;
+    }
+
+    // 2. Find assigned businesses
+    const assignSnap=await db.ref('user_assignments/'+user.uid).once('value');
+    const assignments=assignSnap.val()||{};
+
+    // 3. Load business data for each active assignment
+    const slugs=Object.keys(assignments).filter(s=>assignments[s]&&assignments[s].active!==false);
+
+    if(!slugs.length){
+      // Admin fallback: pick a fusion business if they're an admin
+      if(isAdmin){
+        const subsSnap=await db.ref('brandinn_subdomains').once('value');
+        const subs=subsSnap.val()||{};
+        // Prefer fusion-related slugs
+        const fusionSlugs=Object.keys(subs).filter(s=>/fusion|daima/i.test(s) || /fusion|daima/i.test(subs[s]?.businessName||''));
+        if(fusionSlugs.length){
+          businesses=fusionSlugs.map(slug=>({
+            slug,
+            uid:subs[slug]?.uid||'',
+            name:subs[slug]?.businessName||subs[slug]?.name||slug,
+            logo:subs[slug]?.logo||'',
+            role:'owner'
+          }));
+        } else {
+          renderAccessDenied("No business assigned to your account. Contact your supervisor.");
+          return;
+        }
+      } else {
+        renderAccessDenied("You haven't been assigned to any business. Contact your supervisor.");
+        return;
+      }
+    } else {
+      // Resolve business data
+      const bizSnaps=await Promise.all(slugs.map(s=>db.ref('brandinn_subdomains/'+s).once('value')));
+      businesses=slugs.map((slug,i)=>{
+        const b=bizSnaps[i].val()||{};
+        const a=assignments[slug];
+        return {
+          slug,
+          uid:b.uid||'',
+          name:b.businessName||b.name||slug,
+          logo:b.logo||'',
+          role:a.role||'operator'
+        };
+      }).filter(b=>b.uid); // require owner uid for products
+    }
+
+    if(!businesses.length){
+      renderAccessDenied("No business is set up for you yet.");
+      return;
+    }
+
+    // 4. Pick current business
+    const urlSlug=new URLSearchParams(location.search).get('slug');
+    const savedSlug=localStorage.getItem('brandinn_current_slug');
+    const pick=businesses.find(b=>b.slug===urlSlug)
+             ||businesses.find(b=>b.slug===savedSlug)
+             ||businesses[0];
+
+    currentBusiness=pick;
+    currentSlug=pick.slug;
+    currentRole=pick.role;
+    localStorage.setItem('brandinn_current_slug',currentSlug);
+
+    renderBizSwitcher();
+    isReady=true;
+    attachProducts();
+    attachOrders();
+    renderTab();
+
+  }catch(e){
+    console.error('[Fusion] auth error:',e);
+    renderAccessDenied('Something went wrong. Please try again.');
+  }
+});
+
+function renderBizSwitcher(){
+  const chip=document.getElementById('bizChip');
+  const av=document.getElementById('bizAv');
+  const nm=document.getElementById('bizNm');
+  const chev=document.getElementById('bizChev');
+  if(!chip||!currentBusiness)return;
+
+  chip.style.display='flex';
+  if(currentBusiness.logo){
+    av.innerHTML=`<img src="${esc(currentBusiness.logo)}" onerror="this.parentNode.textContent='${esc(initials(currentBusiness.name))}'">`;
+  } else {
+    av.textContent=initials(currentBusiness.name);
+  }
+  nm.textContent=currentBusiness.name;
+
+  const canSwitch=businesses.length>1;
+  chev.style.display=canSwitch?'inline-block':'none';
+  chip.style.cursor=canSwitch?'pointer':'default';
+  chip.onclick=canSwitch?toggleBizMenu:null;
+
+  // Build menu
+  const menu=document.getElementById('bizMenu');
+  if(!canSwitch){menu.classList.remove('on');return}
+  menu.innerHTML=`
+    <div class="sh">Your businesses</div>
+    ${businesses.map(b=>`
+      <a class="it ${b.slug===currentSlug?'current':''}" href="?slug=${encodeURIComponent(b.slug)}">
+        <div class="av">${b.logo?`<img src="${esc(b.logo)}" onerror="this.parentNode.textContent='${esc(initials(b.name))}'">`:esc(initials(b.name))}</div>
+        <div class="inf">
+          <div class="nm">${esc(b.name)}</div>
+          <div class="rl">${esc(b.role)}</div>
+        </div>
+        ${b.slug===currentSlug?'<i class="fas fa-check ck"></i>':''}
+      </a>
+    `).join('')}
+  `;
+}
+
+function renderAccessDenied(msg){
+  document.getElementById('mainContent').innerHTML=`
+    <div class="access-denied">
+      <div class="access-denied-icon"><i class="fas fa-lock"></i></div>
+      <h2>Access Denied</h2>
+      <p>${esc(msg||"You don't have permission to access the Fusion Foods workspace.")}</p>
+      <p style="font-size:0.75rem;color:var(--text-light);margin-top:1rem;">
+        Contact your supervisor if you believe this is a mistake.
+      </p>
+    </div>
+  `;
 }
 
 /* RENDER ROUTER */
 function renderTab(){
   const c=document.getElementById('mainContent');
   if(!c)return;
-  if(currentTab==='new') c.innerHTML=renderNewOrder();
-  else if(currentTab==='orders') c.innerHTML=renderMyOrders();
-  else if(currentTab==='outlets') c.innerHTML=renderMyOutlets();
-  attachHandlers();
+  if(currentTab==='new')c.innerHTML=renderNewOrder();
+  else if(currentTab==='orders')c.innerHTML=renderMyOrders();
+  updateMobileCartBar();
 }
 
 /* TAB 1: NEW ORDER */
 function renderNewOrder(){
-  if(!selectedOutletId){
-    return `
-      <div class="step">
-        <div class="step-head">
-          <h3><span class="step-num">1</span> Select Outlet</h3>
-          <span class="step-status">Required to continue</span>
-        </div>
-        <div class="step-body">
-          <div class="outlet-search">
-            <i class="fas fa-search"></i>
-            <input type="text" id="outletSearchInput" placeholder="Search outlets by name or phone..." oninput="onOutletSearch(this.value)">
-          </div>
-          <div class="outlet-chips" id="outletChips">${renderOutletChips('')}</div>
-        </div>
-      </div>
-    `;
-  }
-  const outlet = allOutlets[selectedOutletId];
-  const outletName = outlet?.name || 'Selected outlet';
   return `
-    <div class="step">
-      <div class="step-head">
-        <h3><span class="step-num">1</span> Outlet</h3>
-        <span class="step-status done"><i class="fas fa-check-circle"></i> Selected</span>
-      </div>
-      <div class="step-body" style="padding-top:0;">
-        <div class="selected-outlet">
-          <div class="so-icon">${esc(initials(outletName))}</div>
-          <div class="so-info">
-            <div class="so-name">${esc(outletName)}</div>
-            <div class="so-meta">
-              ${outlet?.phone?`<span><i class="fas fa-phone"></i> ${esc(outlet.phone)}</span>`:''}
-              ${outlet?.tier?`<span><i class="fas fa-tag"></i> ${esc(outlet.tier)}</span>`:''}
-              ${outlet?.address?`<span><i class="fas fa-map-marker-alt"></i> ${esc(outlet.address)}</span>`:''}
-            </div>
-          </div>
-          <button class="so-change" onclick="changeOutlet()">Change</button>
-        </div>
-      </div>
-    </div>
-
     <div class="pos-grid">
       <div class="pos-left">
         <div class="step">
           <div class="step-head">
-            <h3><span class="step-num">2</span> Add Products</h3>
+            <h3><span class="step-num">1</span> Add Products</h3>
             <span class="step-status">${Object.keys(allProducts).length} in catalog</span>
           </div>
           <div class="step-body">
@@ -556,41 +702,6 @@ function renderNewOrder(){
   `;
 }
 
-function renderOutletChips(filter){
-  const outlets = Object.entries(allOutlets).map(([id,o])=>({id,...o}));
-  const f = (filter||'').toLowerCase().trim();
-  const filtered = f ? outlets.filter(o=>(o.name||'').toLowerCase().includes(f) || (o.phone||'').toLowerCase().includes(f)) : outlets;
-  if(!filtered.length){
-    return `<div style="width:100%;text-align:center;padding:1rem;color:var(--text-muted);font-size:.82rem;">No outlets match "<strong>${esc(filter)}</strong>"</div>`;
-  }
-  return filtered.map(o=>`
-    <button class="outlet-chip" onclick="pickOutlet('${esc(o.id)}')">
-      <i class="fas fa-store"></i>
-      ${esc(o.name||'Unnamed')}
-      ${o.tier?`<span class="tier">${esc(o.tier)}</span>`:''}
-    </button>
-  `).join('');
-}
-
-window.onOutletSearch=function(v){
-  const el=document.getElementById('outletChips');
-  if(el) el.innerHTML=renderOutletChips(v);
-};
-
-window.pickOutlet=function(id){
-  selectedOutletId=id;
-  const o=allOutlets[id];
-  toast(`Outlet selected: ${o?.name||'Outlet'}`,'success');
-  renderTab();
-};
-
-window.changeOutlet=function(){
-  selectedOutletId=null;
-  cart=[];
-  updateMobileCartBar();
-  renderTab();
-};
-
 function renderCatStrip(){
   const cats=[...new Set(Object.values(allProducts).map(p=>(p.category||'').trim()).filter(Boolean))].sort();
   let html=`<button class="cat-chip ${!categoryFilter?'on':''}" onclick="setCategory('')">All</button>`;
@@ -601,16 +712,9 @@ function renderCatStrip(){
 window.setCategory=function(c){categoryFilter=c;renderTab()};
 window.onProductSearch=function(v){productSearch=v.trim();renderTab()};
 
-function getOutletPrice(productId){
-  const outlet = allOutlets[selectedOutletId];
-  if(!outlet) return null;
-  const override = outlet.priceOverrides && outlet.priceOverrides[productId];
-  return override != null ? Number(override) : null;
-}
-
 function filteredProducts(){
-  let list = Object.entries(allProducts).map(([id,p])=>({id,...p})).filter(p=>p.active!==false);
-  if(categoryFilter) list=list.filter(p=>(p.category||'')===categoryFilter);
+  let list=Object.entries(allProducts).map(([id,p])=>({id,...p}));
+  if(categoryFilter)list=list.filter(p=>(p.category||'')===categoryFilter);
   if(productSearch){
     const f=productSearch.toLowerCase();
     list=list.filter(p=>((p.name||'')+' '+(p.category||'')+' '+(p.sku||'')).toLowerCase().includes(f));
@@ -621,20 +725,22 @@ function filteredProducts(){
 function renderProductCards(){
   const list=filteredProducts();
   if(!list.length){
-    return `<div style="grid-column:1/-1;"><div class="empty-state"><div class="empty-state-icon"><i class="fas fa-box-open"></i></div><h4>No products</h4><p>Try a different search or category.</p></div></div>`;
+    return `<div style="grid-column:1/-1;"><div class="empty-state"><div class="empty-state-icon"><i class="fas fa-box-open"></i></div><h4>${Object.keys(allProducts).length?'No matches':'No products'}</h4><p>${Object.keys(allProducts).length?'Try a different search or category.':'Add products to this shop first.'}</p></div></div>`;
   }
   return list.map(p=>{
-    const price = getOutletPrice(p.id) ?? Number(p.price) ?? 0;
-    const inCart = cart.find(c=>c.productId===p.id);
+    const price=Number(p.price)||0;
+    const inCart=cart.find(c=>c.productId===p.id);
+    const stock=p.stock;
+    const isOut=stock!=null && Number(stock)<=0;
     return `
-      <button class="prod-card" onclick="addToCart('${esc(p.id)}')">
+      <button class="prod-card ${isOut?'out':''}" onclick="addToCart('${esc(p.id)}')">
         ${inCart?`<span class="qty-added">${inCart.qty} in cart</span>`:''}
-        <div class="pimg">${p.img?`<img src="${esc(p.img)}" onerror="this.parentNode.innerHTML='<i class=\\'fas fa-box\\'></i>'">`:'<i class="fas fa-box"></i>'}</div>
+        ${isOut?`<span class="pbadge out">Out</span>`:''}
+        <div class="pimg">${p.img||p.image?`<img src="${esc(p.img||p.image)}" onerror="this.parentNode.innerHTML='<i class=\\'fas fa-box\\'></i>'">`:'<i class="fas fa-box"></i>'}</div>
         <div class="pinfo">
           ${p.category?`<div class="pcat">${esc(p.category)}</div>`:''}
           <div class="pname">${esc(p.name||'Unnamed')}</div>
           <div class="pprice">${money(price)}</div>
-          ${p.unit?`<div class="punit">per ${esc(p.unit)}</div>`:''}
         </div>
       </button>
     `;
@@ -642,43 +748,37 @@ function renderProductCards(){
 }
 
 window.addToCart=function(id){
-  const p = allProducts[id];
-  if(!p) return;
-  const price = getOutletPrice(id) ?? Number(p.price) ?? 0;
-  const existing = cart.find(c=>c.productId===id);
+  const p=allProducts[id];
+  if(!p)return;
+  const stock=p.stock;
+  if(stock!=null && Number(stock)<=0){toast('Out of stock','error');return}
+  const price=Number(p.price)||0;
+  const existing=cart.find(c=>c.productId===id);
   if(existing){
+    if(stock!=null && existing.qty>=Number(stock)){toast('Not enough stock','error');return}
     existing.qty++;
   } else {
-    cart.push({productId:id,name:p.name||'Unnamed',price,qty:1,img:p.img||'',unit:p.unit||''});
+    cart.push({productId:id,name:p.name||'Unnamed',price,qty:1,img:p.img||p.image||''});
   }
-  if(navigator.vibrate) navigator.vibrate(15);
+  if(navigator.vibrate)navigator.vibrate(15);
   toast(`${p.name||'Item'} added`,'success');
   renderTab();
-  updateMobileCartBar();
 };
 
 window.updateQty=function(id,delta){
   const item=cart.find(c=>c.productId===id);
-  if(!item) return;
+  if(!item)return;
   const nq=item.qty+delta;
-  if(nq<=0) cart=cart.filter(c=>c.productId!==id);
+  if(nq<=0)cart=cart.filter(c=>c.productId!==id);
   else item.qty=nq;
   renderTab();
-  updateMobileCartBar();
 };
-
-window.removeItem=function(id){
-  cart=cart.filter(c=>c.productId!==id);
-  renderTab();
-  updateMobileCartBar();
-};
-
+window.removeItem=function(id){cart=cart.filter(c=>c.productId!==id);renderTab()};
 window.clearCart=function(){
-  if(!cart.length) return;
-  if(!confirm('Clear all items from cart?')) return;
+  if(!cart.length)return;
+  if(!confirm('Clear all items from cart?'))return;
   cart=[];
   renderTab();
-  updateMobileCartBar();
 };
 
 function cartTotals(){
@@ -701,16 +801,14 @@ function renderCartColumn(){
             <div class="ci-img">${c.img?`<img src="${esc(c.img)}" onerror="this.parentNode.innerHTML='<i class=\\'fas fa-box\\'></i>'">`:'<i class="fas fa-box"></i>'}</div>
             <div class="ci-body">
               <div class="ci-name">${esc(c.name)}</div>
-              <div class="ci-price">${money(c.price)}${c.unit?` / ${esc(c.unit)}`:''}</div>
+              <div class="ci-price">${money(c.price)} each</div>
               <div class="ci-qty">
                 <button onclick="updateQty('${esc(c.productId)}',-1)"><i class="fas fa-minus"></i></button>
                 <span class="n">${c.qty}</span>
                 <button onclick="updateQty('${esc(c.productId)}',1)"><i class="fas fa-plus"></i></button>
               </div>
             </div>
-            <div>
-              <div class="ci-total">${money(c.price*c.qty)}</div>
-            </div>
+            <div><div class="ci-total">${money(c.price*c.qty)}</div></div>
             <button class="ci-remove" onclick="removeItem('${esc(c.productId)}')"><i class="fas fa-times"></i></button>
           </div>
         `).join(''):`
@@ -738,7 +836,7 @@ function updateMobileCartBar(){
   const t=cartTotals();
   const bar=document.getElementById('mobileCartBar');
   const badge=document.getElementById('cartBadge');
-  if(!bar||!badge) return;
+  if(!bar||!badge)return;
   if(cart.length && currentTab==='new'){
     bar.style.display='flex';
     badge.style.display='inline-flex';
@@ -747,14 +845,14 @@ function updateMobileCartBar(){
     document.getElementById('cartBadgeCount').textContent=t.items;
   } else {
     bar.style.display='none';
-    if(!cart.length) badge.style.display='none';
+    if(!cart.length)badge.style.display='none';
   }
 }
 
 window.scrollToCart=function(){
   if(currentTab!=='new'){switchTab('new');return}
   const el=document.getElementById('cartColumn');
-  if(el) el.scrollIntoView({behavior:'smooth',block:'start'});
+  if(el)el.scrollIntoView({behavior:'smooth',block:'start'});
   else openCartSheet();
 };
 
@@ -796,11 +894,9 @@ window.openCartSheet=function(){
 
 /* CHECKOUT */
 window.openCheckout=function(){
-  if(!cart.length) return toast('Cart is empty','error');
-  if(!selectedOutletId) return toast('Select an outlet first','error');
+  if(!cart.length){toast('Cart is empty','error');return}
   orderType='delivery';
-  paymentMethod='cod';
-  const outlet=allOutlets[selectedOutletId];
+  paymentMethod='cash';
   const t=cartTotals();
   openModal(`
     <div class="modal-header">
@@ -808,43 +904,38 @@ window.openCheckout=function(){
       <button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button>
     </div>
 
-    <div class="selected-outlet" style="margin-bottom:1rem;">
-      <div class="so-icon">${esc(initials(outlet?.name||'Outlet'))}</div>
-      <div class="so-info">
-        <div class="so-name">${esc(outlet?.name||'Outlet')}</div>
-        <div class="so-meta">
-          ${outlet?.phone?`<span><i class="fas fa-phone"></i> ${esc(outlet.phone)}</span>`:''}
-          ${outlet?.address?`<span><i class="fas fa-map-marker-alt"></i> ${esc(outlet.address)}</span>`:''}
-        </div>
-      </div>
-    </div>
-
     <div class="form-group">
       <label>Order type</label>
       <div class="chips" id="orderTypeChips">
         <button class="chip on" data-t="delivery" onclick="pickOrderType('delivery')"><i class="fas fa-motorcycle"></i> Delivery</button>
-        <button class="chip" data-t="pickup" onclick="pickOrderType('pickup')"><i class="fas fa-store"></i> Pickup</button>
-        <button class="chip" data-t="scheduled" onclick="pickOrderType('scheduled')"><i class="fas fa-calendar"></i> Scheduled</button>
+        <button class="chip" data-t="takeaway" onclick="pickOrderType('takeaway')"><i class="fas fa-bag-shopping"></i> Takeaway</button>
+        <button class="chip" data-t="dine_in" onclick="pickOrderType('dine_in')"><i class="fas fa-utensils"></i> Dine in</button>
       </div>
     </div>
 
-    <div class="form-group" id="scheduledWrap" style="display:none;">
-      <label>Preferred date & time</label>
-      <input type="datetime-local" id="coScheduledFor">
-    </div>
-
-    <div class="form-group">
-      <label>Payment method</label>
-      <div class="chips" id="payChips">
-        <button class="chip on" data-m="cod" onclick="pickPay('cod')"><i class="fas fa-money-bill-wave"></i> Cash on delivery</button>
-        <button class="chip" data-m="mpesa" onclick="pickPay('mpesa')"><i class="fas fa-mobile-alt"></i> M-Pesa</button>
-        <button class="chip" data-m="credit" onclick="pickPay('credit')"><i class="fas fa-clock"></i> Credit</button>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Customer name</label>
+        <input type="text" id="coName" placeholder="Walk-in">
+      </div>
+      <div class="form-group">
+        <label>Customer phone</label>
+        <input type="tel" id="coPhone" placeholder="Optional">
       </div>
     </div>
 
     <div class="form-group">
       <label>Delivery address</label>
-      <input type="text" id="coAddress" placeholder="Where should this be delivered?" value="${esc(outlet?.address||'')}">
+      <input type="text" id="coAddress" placeholder="Where should this be delivered?">
+    </div>
+
+    <div class="form-group">
+      <label>Payment method</label>
+      <div class="chips" id="payChips">
+        <button class="chip on" data-m="cash" onclick="pickPay('cash')"><i class="fas fa-money-bill-wave"></i> Cash</button>
+        <button class="chip" data-m="mpesa" onclick="pickPay('mpesa')"><i class="fas fa-mobile-alt"></i> M-Pesa</button>
+        <button class="chip" data-m="card" onclick="pickPay('card')"><i class="fas fa-credit-card"></i> Card</button>
+      </div>
     </div>
 
     <div class="form-group">
@@ -868,59 +959,59 @@ window.openCheckout=function(){
 window.pickOrderType=function(t){
   orderType=t;
   document.querySelectorAll('#orderTypeChips .chip').forEach(c=>c.classList.toggle('on',c.dataset.t===t));
-  document.getElementById('scheduledWrap').style.display = t==='scheduled' ? '' : 'none';
 };
-
 window.pickPay=function(m){
   paymentMethod=m;
   document.querySelectorAll('#payChips .chip').forEach(c=>c.classList.toggle('on',c.dataset.m===m));
 };
 
 window.placeOrder=async function(){
-  if(!cart.length) return toast('Cart is empty','error');
-  if(!selectedOutletId) return toast('Select an outlet first','error');
+  if(!cart.length)return toast('Cart is empty','error');
+  if(!currentSlug)return toast('No business selected','error');
 
   const btn=document.getElementById('placeOrderBtn');
   btn.disabled=true;
   btn.innerHTML='<i class="fas fa-spinner fa-spin"></i> Placing...';
 
-  const outlet=allOutlets[selectedOutletId];
   const t=cartTotals();
+  const name=(document.getElementById('coName')?.value||'').trim();
+  const phone=(document.getElementById('coPhone')?.value||'').trim();
   const address=(document.getElementById('coAddress')?.value||'').trim();
   const notes=(document.getElementById('coNotes')?.value||'').trim();
-  const scheduledFor=orderType==='scheduled' ? (document.getElementById('coScheduledFor')?.value||'') : '';
 
-  const orderId='FF-'+Date.now().toString(36).toUpperCase().slice(-6)+Math.random().toString(36).slice(2,4).toUpperCase();
+  const orderId='ord_'+Date.now().toString(36)+Math.random().toString(36).slice(2,5);
+  const now=Date.now();
 
   const order={
     orderId,
-    outletId: selectedOutletId,
-    outletName: outlet?.name||'Outlet',
-    outletPhone: outlet?.phone||'',
-    assistantUid: currentUser.uid,
-    assistantName: currentUser.displayName || currentUser.email || 'Field Assistant',
-    assistantEmail: currentUser.email || '',
-    items: cart.map(c=>({productId:c.productId,name:c.name,price:c.price,qty:c.qty,unit:c.unit||''})),
+    createdAt: now,
+    updatedAt: now,
+    currency: 'KSh',
+    customerName: name || 'Walk-in',
+    customerPhone: phone || '',
+    customerEmail: '',
+    customerAddress: address || '',
+    items: cart.map(c=>({productId:c.productId,name:c.name,price:c.price,qty:c.qty,img:c.img||''})),
     subtotal: t.subtotal,
+    shipping: 0,
     total: t.total,
-    orderType,
-    paymentMethod,
-    paymentStatus: 'unpaid',
-    deliveryAddress: address,
-    notes,
-    scheduledFor: scheduledFor || null,
-    status: 'placed',
-    createdAt: firebase.database.ServerValue.TIMESTAMP,
-    updatedAt: firebase.database.ServerValue.TIMESTAMP
+    paymentMethod: paymentMethod,
+    paymentStatus: paymentMethod==='cash' ? 'paid' : 'unpaid',
+    orderType: orderType,
+    notes: notes,
+    status: 'confirmed',
+    source: 'pos',
+    createdBy: currentUser.uid,
+    createdByName: currentUser.displayName || currentUser.email || 'Field Assistant'
   };
 
   try {
-    await db.ref('fusion_orders').push(order);
+    await db.ref('brandinn_orders/'+currentSlug+'/'+orderId).set(order);
     cart=[];
     updateMobileCartBar();
     showConfirmation(order);
   } catch(e) {
-    console.error(e);
+    console.error('[Fusion] place order error:',e);
     toast('Failed to place order: '+e.message,'error');
     btn.disabled=false;
     btn.innerHTML='<i class="fas fa-paper-plane"></i> Place order';
@@ -929,14 +1020,13 @@ window.placeOrder=async function(){
 
 function showConfirmation(order){
   const waText = encodeURIComponent(
-    `*Fusion Foods Order ${order.orderId}*\n\n` +
-    `Outlet: ${order.outletName}\n` +
+    `*Order ${order.orderId.slice(-6).toUpperCase()}*\n\n` +
+    `Customer: ${order.customerName}\n` +
     `Items:\n` +
     order.items.map(i=>`• ${i.qty}× ${i.name} — ${money(i.price*i.qty)}`).join('\n') +
     `\n\n*Total: ${money(order.total)}*\n` +
     `Payment: ${order.paymentMethod.toUpperCase()}\n` +
-    `Type: ${order.orderType}\n` +
-    `Placed by: ${order.assistantName}`
+    `Placed by: ${order.createdByName}`
   );
   const waLink = `https://wa.me/?text=${waText}`;
 
@@ -945,11 +1035,11 @@ function showConfirmation(order){
       <div class="check"><i class="fas fa-check"></i></div>
       <h2>Order placed</h2>
       <p>The team has been notified.</p>
-      <div class="order-ref">${esc(order.orderId)}</div>
+      <div class="order-ref">${esc(order.orderId.slice(-6).toUpperCase())}</div>
     </div>
 
     <div class="summary-box">
-      <div class="row"><span class="k">Outlet</span><span>${esc(order.outletName)}</span></div>
+      <div class="row"><span class="k">Customer</span><span>${esc(order.customerName)}</span></div>
       <div class="row"><span class="k">Items</span><span>${order.items.reduce((s,i)=>s+i.qty,0)}</span></div>
       <div class="row"><span class="k">Payment</span><span>${esc(order.paymentMethod.toUpperCase())}</span></div>
       <div class="row grand"><span class="k">Total</span><span>${money(order.total)}</span></div>
@@ -965,33 +1055,34 @@ function showConfirmation(order){
 }
 
 window.copyOrderSummary=async function(orderId){
-  const o = Object.values(allOrders).find(x=>x.orderId===orderId) || null;
-  const text = o ? `Fusion Foods Order ${o.orderId}\nOutlet: ${o.outletName}\nTotal: ${money(o.total)}` : orderId;
-  try { await navigator.clipboard.writeText(text); toast('Copied to clipboard','success'); }
-  catch(e){ toast('Copy failed','error'); }
+  const o=allOrders[orderId];
+  const text=o?`Order ${o.orderId.slice(-6).toUpperCase()}\nCustomer: ${o.customerName}\nTotal: ${money(o.total)}`:`Order ${orderId}`;
+  try{await navigator.clipboard.writeText(text);toast('Copied to clipboard','success')}
+  catch(e){toast('Copy failed','error')}
 };
 
 /* TAB 2: MY ORDERS */
 function renderMyOrders(){
-  const orders = Object.entries(allOrders).map(([id,o])=>({id,...o})).sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
+  const orders=Object.entries(allOrders).map(([id,o])=>({id,...o})).sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
   if(!orders.length){
     return `<div class="empty-state"><div class="empty-state-icon"><i class="fas fa-receipt"></i></div><h4>No orders yet</h4><p>Place your first order from the New Order tab.</p></div>`;
   }
   return orders.map(o=>{
-    const itemCount=(o.items||[]).reduce((s,i)=>s+i.qty,0);
+    const itemCount=(o.items||[]).reduce((s,i)=>s+(Number(i.qty)||1),0);
+    const status=(o.status||'pending').toLowerCase();
     return `
       <div class="order-card" onclick="showOrderDetail('${esc(o.id)}')">
         <div class="oc-icon"><i class="fas fa-receipt"></i></div>
         <div class="oc-body">
-          <div class="oc-title">${esc(o.outletName||'Outlet')} <span style="color:var(--text-muted);font-weight:600;font-size:.78rem;">· ${esc(o.orderId||'')}</span></div>
+          <div class="oc-title">${esc(o.customerName||'Customer')} <span style="color:var(--text-muted);font-weight:600;font-size:.78rem;">· #${esc((o.orderId||'').slice(-6).toUpperCase())}</span></div>
           <div class="oc-meta">
             <span><i class="fas fa-box"></i> ${itemCount} item${itemCount!==1?'s':''}</span>
-            <span><i class="fas fa-credit-card"></i> ${esc((o.paymentMethod||'cod').toUpperCase())}</span>
+            <span><i class="fas fa-credit-card"></i> ${esc((o.paymentMethod||'cash').toUpperCase())}</span>
             ${o.createdAt?`<span><i class="fas fa-clock"></i> ${timeAgo(o.createdAt)}</span>`:''}
           </div>
         </div>
         <div style="display:flex;flex-direction:column;align-items:flex-end;gap:.4rem;">
-          <span class="pill ${o.status||'placed'}">${esc((o.status||'placed').replace(/_/g,' '))}</span>
+          <span class="pill ${status}">${esc(status)}</span>
           <div class="oc-total">${money(o.total)}</div>
         </div>
       </div>
@@ -1000,17 +1091,17 @@ function renderMyOrders(){
 }
 
 window.showOrderDetail=function(id){
-  const o = allOrders[id];
-  if(!o) return;
+  const o=allOrders[id];
+  if(!o)return;
   openModal(`
     <div class="modal-header">
-      <h3><i class="fas fa-receipt"></i> ${esc(o.orderId||'Order')}</h3>
+      <h3><i class="fas fa-receipt"></i> #${esc((o.orderId||'').slice(-6).toUpperCase())}</h3>
       <button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button>
     </div>
     <div class="summary-box" style="margin-bottom:1rem;">
-      <div class="row"><span class="k">Outlet</span><span>${esc(o.outletName||'—')}</span></div>
-      <div class="row"><span class="k">Status</span><span class="pill ${o.status||'placed'}">${esc((o.status||'placed').replace(/_/g,' '))}</span></div>
-      <div class="row"><span class="k">Order type</span><span>${esc(o.orderType||'—')}</span></div>
+      <div class="row"><span class="k">Customer</span><span>${esc(o.customerName||'—')}</span></div>
+      <div class="row"><span class="k">Status</span><span class="pill ${(o.status||'pending').toLowerCase()}">${esc((o.status||'pending').toLowerCase())}</span></div>
+      <div class="row"><span class="k">Order type</span><span>${esc((o.orderType||'—').replace(/_/g,' '))}</span></div>
       <div class="row"><span class="k">Payment</span><span>${esc((o.paymentMethod||'—').toUpperCase())}</span></div>
       <div class="row"><span class="k">Placed</span><span>${o.createdAt?timeAgo(o.createdAt):'—'}</span></div>
     </div>
@@ -1035,121 +1126,17 @@ window.showOrderDetail=function(id){
 
 window.reorder=function(id){
   const o=allOrders[id];
-  if(!o) return;
-  cart=(o.items||[]).map(i=>({productId:i.productId,name:i.name,price:i.price,qty:i.qty,img:'',unit:i.unit||''}));
-  selectedOutletId=o.outletId||selectedOutletId;
+  if(!o)return;
+  cart=(o.items||[]).map(i=>({productId:i.productId,name:i.name,price:i.price,qty:i.qty,img:i.img||''}));
   closeModal();
   switchTab('new');
-  updateMobileCartBar();
   toast('Items added to cart','success');
-};
-
-/* TAB 3: MY OUTLETS */
-function renderMyOutlets(){
-  const outlets=Object.entries(allOutlets).map(([id,o])=>({id,...o}));
-  if(!outlets.length){
-    return `<div class="empty-state"><div class="empty-state-icon"><i class="fas fa-store"></i></div><h4>No outlets assigned</h4><p>Contact your supervisor to get outlets assigned.</p></div>`;
-  }
-  return outlets.map(o=>`
-    <div class="order-card">
-      <div class="oc-icon">${esc(initials(o.name||'?'))}</div>
-      <div class="oc-body">
-        <div class="oc-title">${esc(o.name||'Unnamed outlet')}</div>
-        <div class="oc-meta">
-          ${o.phone?`<span><i class="fas fa-phone"></i> ${esc(o.phone)}</span>`:''}
-          ${o.address?`<span><i class="fas fa-map-marker-alt"></i> ${esc(o.address)}</span>`:''}
-          ${o.tier?`<span><i class="fas fa-tag"></i> ${esc(o.tier)}</span>`:''}
-        </div>
-      </div>
-      <button class="btn btn-primary btn-sm" onclick="startOrderFor('${esc(o.id)}')"><i class="fas fa-plus"></i> Order</button>
-    </div>
-  `).join('');
-}
-
-window.startOrderFor=function(id){
-  selectedOutletId=id;
-  cart=[];
-  switchTab('new');
-  toast('Outlet selected','success');
 };
 
 /* LOGOUT */
 window.handleLogout=async function(){
-  try{ await auth.signOut(); window.location.href='/'; }
-  catch(e){ toast('Error signing out','error'); }
-};
-
-/* ATTACH HANDLERS */
-function attachHandlers(){
-  updateMobileCartBar();
-}
-
-/* ═══════════════════ AUTH + ACCESS GATE ═══════════════════ */
-auth.onAuthStateChanged(async user => {
-  // Hydration-safe: wait for the persisted session to load
-  if (!user) {
-    await new Promise(r => setTimeout(r, 800));
-    if (!firebase.auth().currentUser) {
-      window.location.replace('/');
-      return;
-    }
-    user = firebase.auth().currentUser;
-  }
-
-  currentUser = user;
-
-  // Topbar UI
-  const name = user.displayName || user.email?.split('@')[0] || 'Field Assistant';
-  document.getElementById('dropdownName').textContent = name;
-  document.getElementById('dropdownEmail').textContent = user.email || '';
-  document.getElementById('dropdownAvatar').textContent = initials(name);
-  document.getElementById('userAvatarText').textContent = initials(name);
-
-  if (user.photoURL) {
-    document.getElementById('userAvatarText').style.display = 'none';
-    const img = document.getElementById('userAvatarImg');
-    img.style.display = 'block';
-    img.src = user.photoURL;
-    document.getElementById('dropdownAvatar').innerHTML = `<img src="${esc(user.photoURL)}" alt="">`;
-  }
-
-  // THE GATE — same pattern as BrandInn Field Ops
-  try {
-    const permSnap = await db.ref(`workspacePermissions/${user.uid}`).once('value');
-    const perms = permSnap.val() || {};
-    const hasFusion = perms['fusion-foods'] === true;
-
-    if (!hasFusion) {
-      const adminSnap = await db.ref(`admins/${user.uid}`).once('value');
-      if (adminSnap.val() !== true) {
-        renderAccessDenied();
-        return;
-      }
-    }
-
-    // Access confirmed — load the workspace
-    document.getElementById('workspaceTag').textContent = 'Fusion Foods Field Ops';
-    isReady = true;
-    loadData();
-    renderTab();
-
-  } catch (e) {
-    console.error(e);
-    renderAccessDenied('Something went wrong. Please try again.');
-  }
-});
-
-function renderAccessDenied(msg) {
-  document.getElementById('mainContent').innerHTML = `
-    <div class="access-denied">
-      <div class="access-denied-icon"><i class="fas fa-lock"></i></div>
-      <h2>Access Denied</h2>
-      <p>${esc(msg || "You don't have permission to access the Fusion Foods workspace.")}</p>
-      <p style="font-size: 0.75rem; color: var(--text-light); margin-top: 1rem;">
-        Contact your administrator if you believe this is a mistake.
-      </p>
-    </div>
-  `;
+  try{detachProducts();detachOrders();await auth.signOut();window.location.href='/'}
+  catch(e){toast('Error signing out','error')}
 }
 </script>
 </body>
