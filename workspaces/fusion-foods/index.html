@@ -204,6 +204,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 .ci-remove:hover{color:var(--danger)}
 .cart-foot{padding:1rem 1.1rem 1.1rem;border-top:1px solid var(--border-soft);flex-shrink:0;background:linear-gradient(180deg,#fff,var(--surface-alt))}
 .totals .row{display:flex;justify-content:space-between;align-items:center;font-size:.82rem;color:var(--text-muted);padding:.25rem 0;font-weight:600}
+.totals .row.ship{color:var(--gold-dark)}
 .totals .row.grand{border-top:1px solid var(--border-soft);margin-top:.4rem;padding-top:.7rem;font-size:1.3rem;font-weight:800;color:var(--text);letter-spacing:-.03em}
 .totals .row.grand .k{font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:.4px;color:var(--text-muted);align-self:center}
 .btn-checkout{width:100%;padding:.95rem;background:var(--text);color:#fff;border:none;border-radius:var(--radius);font-family:var(--font);font-weight:800;font-size:.88rem;cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:.5rem;letter-spacing:.2px;margin-top:.85rem}
@@ -259,6 +260,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 /* SUMMARY */
 .summary-box{background:var(--surface-alt);border-radius:var(--radius);padding:1rem 1.1rem;margin-bottom:1rem}
 .summary-box .row{display:flex;justify-content:space-between;padding:.3rem 0;font-size:.84rem;color:var(--text-muted);font-weight:600}
+.summary-box .row.ship{color:var(--gold-dark)}
 .summary-box .row.grand{padding-top:.7rem;margin-top:.5rem;border-top:1px solid var(--border-soft);font-weight:800;font-size:1.1rem;color:var(--text)}
 .summary-box .row .k{color:var(--text-muted)}
 .summary-box .row.grand .k{color:var(--text);text-transform:uppercase;font-size:.72rem;letter-spacing:.4px;align-self:center}
@@ -433,6 +435,9 @@ const auth = firebase.auth();
 const db = firebase.database();
 auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL).catch(e => console.warn('Persistence:', e));
 
+/* CONFIG */
+const DELIVERY_FEE = 100;   // fixed delivery fee in KES, applied to every order
+
 /* STATE */
 let currentUser = null;
 let currentBusiness = null;
@@ -450,8 +455,8 @@ let paymentMethod = 'cash';
 let isReady = false;
 let ordersRef = null, ordersListener = null;
 let productsRef = null, productsListener = null;
-let pdCurrentId = null;   // product-detail current product id
-let pdQty = 1;            // product-detail quantity selector
+let pdCurrentId = null;
+let pdQty = 1;
 
 /* UTILS */
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;')}
@@ -472,17 +477,13 @@ document.addEventListener('click',e=>{
   if(chip && menu && !chip.contains(e.target) && !menu.contains(e.target))menu.classList.remove('on');
 });
 
-/* Minimal markdown-ish renderer for product descriptions */
+/* Minimal markdown-ish renderer */
 function renderDescription(text){
   if(!text)return '';
   let t=String(text);
-  // escape first
   t=t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-  // bold **x**
   t=t.replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>');
-  // italic *x*  (avoid the bold pattern that has already been converted)
   t=t.replace(/(^|[^*])\*([^*\n]+?)\*(?!\*)/g,'$1<em>$2</em>');
-  // split into lines, wrap groups
   const lines=t.split(/\r?\n/);
   let html='';
   let buffer=[];
@@ -899,7 +900,7 @@ window.pdAddToCart=function(){
   renderTab();
 };
 
-/* QUICK-ADD FROM CARD */
+/* QUICK-ADD */
 window.addToCart=function(id){
   const p=allProducts[id];
   if(!p)return;
@@ -934,10 +935,12 @@ window.clearCart=function(){
   renderTab();
 };
 
+/* TOTALS — includes fixed delivery fee */
 function cartTotals(){
   const items=cart.reduce((s,c)=>s+c.qty,0);
   const subtotal=cart.reduce((s,c)=>s+c.price*c.qty,0);
-  return {items,subtotal,total:subtotal};
+  const shipping=cart.length?DELIVERY_FEE:0;
+  return {items,subtotal,shipping,total:subtotal+shipping};
 }
 
 function renderCartColumn(){
@@ -975,6 +978,7 @@ function renderCartColumn(){
         <div class="totals">
           <div class="row"><span>Items</span><span>${t.items}</span></div>
           <div class="row"><span>Subtotal</span><span>${money(t.subtotal)}</span></div>
+          <div class="row ship"><span>Delivery</span><span>${money(t.shipping)}</span></div>
           <div class="row grand"><span class="k">Total</span><span>${money(t.total)}</span></div>
         </div>
         <button class="btn-checkout" ${cart.length?'':'disabled'} onclick="openCheckout()">
@@ -1036,6 +1040,8 @@ window.openCartSheet=function(){
     </div>
     <div class="summary-box">
       <div class="row"><span class="k">Items</span><span>${t.items}</span></div>
+      <div class="row"><span class="k">Subtotal</span><span>${money(t.subtotal)}</span></div>
+      <div class="row ship"><span class="k">Delivery</span><span>${money(t.shipping)}</span></div>
       <div class="row grand"><span class="k">Total</span><span>${money(t.total)}</span></div>
     </div>
     <div class="form-actions">
@@ -1099,6 +1105,7 @@ window.openCheckout=function(){
     <div class="summary-box">
       <div class="row"><span class="k">Items</span><span>${t.items}</span></div>
       <div class="row"><span class="k">Subtotal</span><span>${money(t.subtotal)}</span></div>
+      <div class="row ship"><span class="k">Delivery</span><span>${money(t.shipping)}</span></div>
       <div class="row grand"><span class="k">Total</span><span>${money(t.total)}</span></div>
     </div>
 
@@ -1146,7 +1153,7 @@ window.placeOrder=async function(){
     customerAddress: address || '',
     items: cart.map(c=>({productId:c.productId,name:c.name,price:c.price,qty:c.qty,img:c.img||''})),
     subtotal: t.subtotal,
-    shipping: 0,
+    shipping: t.shipping,
     total: t.total,
     paymentMethod: paymentMethod,
     paymentStatus: paymentMethod==='cash' ? 'paid' : 'unpaid',
@@ -1177,7 +1184,9 @@ function showConfirmation(order){
     `Customer: ${order.customerName}\n` +
     `Items:\n` +
     order.items.map(i=>`• ${i.qty}× ${i.name} — ${money(i.price*i.qty)}`).join('\n') +
-    `\n\n*Total: ${money(order.total)}*\n` +
+    `\n\nSubtotal: ${money(order.subtotal)}` +
+    `\nDelivery: ${money(order.shipping)}` +
+    `\n*Total: ${money(order.total)}*\n` +
     `Payment: ${order.paymentMethod.toUpperCase()}\n` +
     `Placed by: ${order.createdByName}`
   );
@@ -1195,6 +1204,8 @@ function showConfirmation(order){
       <div class="row"><span class="k">Customer</span><span>${esc(order.customerName)}</span></div>
       <div class="row"><span class="k">Items</span><span>${order.items.reduce((s,i)=>s+i.qty,0)}</span></div>
       <div class="row"><span class="k">Payment</span><span>${esc(order.paymentMethod.toUpperCase())}</span></div>
+      <div class="row"><span class="k">Subtotal</span><span>${money(order.subtotal)}</span></div>
+      <div class="row ship"><span class="k">Delivery</span><span>${money(order.shipping)}</span></div>
       <div class="row grand"><span class="k">Total</span><span>${money(order.total)}</span></div>
     </div>
 
@@ -1209,7 +1220,7 @@ function showConfirmation(order){
 
 window.copyOrderSummary=async function(orderId){
   const o=allOrders[orderId];
-  const text=o?`Order ${o.orderId.slice(-6).toUpperCase()}\nCustomer: ${o.customerName}\nTotal: ${money(o.total)}`:`Order ${orderId}`;
+  const text=o?`Order ${o.orderId.slice(-6).toUpperCase()}\nCustomer: ${o.customerName}\nSubtotal: ${money(o.subtotal)}\nDelivery: ${money(o.shipping||0)}\nTotal: ${money(o.total)}`:`Order ${orderId}`;
   try{await navigator.clipboard.writeText(text);toast('Copied to clipboard','success')}
   catch(e){toast('Copy failed','error')}
 };
@@ -1246,6 +1257,8 @@ function renderMyOrders(){
 window.showOrderDetail=function(id){
   const o=allOrders[id];
   if(!o)return;
+  const subtotal=Number(o.subtotal)||0;
+  const shipping=Number(o.shipping)||0;
   openModal(`
     <div class="modal-header">
       <h3><i class="fas fa-receipt"></i> #${esc((o.orderId||'').slice(-6).toUpperCase())}</h3>
@@ -1265,6 +1278,12 @@ window.showOrderDetail=function(id){
           <span style="font-weight:700;">${money(i.price*i.qty)}</span>
         </div>
       `).join('')}
+      <div style="display:flex;justify-content:space-between;padding:.35rem 0;font-size:.85rem;color:var(--text-muted);">
+        <span>Subtotal</span><span>${money(subtotal)}</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;padding:.35rem 0;font-size:.85rem;color:var(--gold-dark);font-weight:700;">
+        <span>Delivery</span><span>${money(shipping)}</span>
+      </div>
       <div style="display:flex;justify-content:space-between;padding-top:.6rem;margin-top:.4rem;border-top:1px solid var(--border-soft);font-weight:800;font-size:1rem;">
         <span>Total</span><span style="color:var(--gold-dark);">${money(o.total)}</span>
       </div>
