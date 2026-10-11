@@ -224,7 +224,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 .btn-outline{background:#fff;border-color:var(--border);color:var(--text-soft)}
 .btn-outline:hover{background:var(--surface-alt);border-color:var(--text-light);color:var(--text)}
 
-/* CHIPS (order type / payment) */
+/* CHIPS */
 .chips{display:flex;gap:.5rem;flex-wrap:wrap}
 .chip{padding:.6rem 1rem;border:1.5px solid var(--border-soft);border-radius:var(--radius);background:#fff;font-family:var(--font);font-size:.78rem;font-weight:700;color:var(--text-soft);cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:6px;flex:1;justify-content:center;min-width:100px}
 .chip:hover{border-color:var(--gold);color:var(--gold-dark);background:var(--gold-soft)}
@@ -255,20 +255,6 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 .toast.info{background:var(--info)}
 @keyframes toastIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
 
-/* SKELETON */
-.skeleton{background:linear-gradient(90deg,var(--border-soft) 0%,#e9eef5 50%,var(--border-soft) 100%);background-size:200% 100%;animation:shimmer 1.6s ease-in-out infinite;border-radius:var(--radius-sm);display:block}
-@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
-.skel-prod{background:#fff;border:1.5px solid var(--border-soft);border-radius:var(--radius);overflow:hidden}
-.skel-prod .skel-img{aspect-ratio:4/3;background:linear-gradient(90deg,var(--border-soft) 0%,#e9eef5 50%,var(--border-soft) 100%);background-size:200% 100%;animation:shimmer 1.6s ease-in-out infinite}
-.skel-prod .skel-body{padding:.7rem .8rem}
-.skel-prod .skel-line{height:12px;border-radius:6px;margin-bottom:.5rem}
-
-/* EMPTY STATE */
-.empty-state{text-align:center;padding:2.5rem 1.5rem}
-.empty-state-icon{width:72px;height:72px;border-radius:22px;background:linear-gradient(135deg,var(--gold-soft),#fff);display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;font-size:1.8rem;color:var(--gold-dark);box-shadow:var(--shadow-sm)}
-.empty-state h4{font-size:1rem;font-weight:800;color:var(--text);letter-spacing:-.01em;margin-bottom:.3rem}
-.empty-state p{font-size:.85rem;color:var(--text-muted);max-width:320px;margin:0 auto;line-height:1.55}
-
 /* ACCESS DENIED */
 .access-denied{max-width:480px;margin:3rem auto;text-align:center;padding:3rem 2rem;background:#fff;border-radius:var(--radius-xl);border:1.5px solid #fecaca;box-shadow:var(--shadow-md)}
 .access-denied-icon{width:80px;height:80px;border-radius:24px;background:linear-gradient(135deg,#fee2e2,#fecaca);display:flex;align-items:center;justify-content:center;margin:0 auto 1.4rem;color:var(--danger);font-size:2rem}
@@ -295,6 +281,20 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 .pill.out_for_delivery{background:var(--purple-bg);color:#6d28d9}
 .pill.delivered{background:var(--success-bg);color:#065f46}
 .pill.cancelled{background:var(--danger-bg);color:#991b1b}
+
+/* SKELETON */
+.skeleton{background:linear-gradient(90deg,var(--border-soft) 0%,#e9eef5 50%,var(--border-soft) 100%);background-size:200% 100%;animation:shimmer 1.6s ease-in-out infinite;border-radius:var(--radius-sm);display:block}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+.skel-prod{background:#fff;border:1.5px solid var(--border-soft);border-radius:var(--radius);overflow:hidden}
+.skel-prod .skel-img{aspect-ratio:4/3;background:linear-gradient(90deg,var(--border-soft) 0%,#e9eef5 50%,var(--border-soft) 100%);background-size:200% 100%;animation:shimmer 1.6s ease-in-out infinite}
+.skel-prod .skel-body{padding:.7rem .8rem}
+.skel-prod .skel-line{height:12px;border-radius:6px;margin-bottom:.5rem}
+
+/* EMPTY STATE */
+.empty-state{text-align:center;padding:2.5rem 1.5rem}
+.empty-state-icon{width:72px;height:72px;border-radius:22px;background:linear-gradient(135deg,var(--gold-soft),#fff);display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;font-size:1.8rem;color:var(--gold-dark);box-shadow:var(--shadow-sm)}
+.empty-state h4{font-size:1rem;font-weight:800;color:var(--text);letter-spacing:-.01em;margin-bottom:.3rem}
+.empty-state p{font-size:.85rem;color:var(--text-muted);max-width:320px;margin:0 auto;line-height:1.55}
 
 /* RESPONSIVE */
 @media (max-width:900px){
@@ -414,9 +414,13 @@ firebase.initializeApp({
 const auth = firebase.auth();
 const db = firebase.database();
 
+// Ensure session survives page reloads reliably
+auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL).catch(e => {
+  console.warn('Persistence set failed:', e);
+});
+
 /* STATE */
 let currentUser = null;
-let currentAssistant = null;
 let currentTab = 'new';
 let allOutlets = {};
 let allProducts = {};
@@ -894,13 +898,14 @@ window.placeOrder=async function(){
     outletName: outlet?.name||'Outlet',
     outletPhone: outlet?.phone||'',
     assistantUid: currentUser.uid,
-    assistantName: currentAssistant?.name || currentUser.displayName || currentUser.email || 'Field Assistant',
+    assistantName: currentUser.displayName || currentUser.email || 'Field Assistant',
+    assistantEmail: currentUser.email || '',
     items: cart.map(c=>({productId:c.productId,name:c.name,price:c.price,qty:c.qty,unit:c.unit||''})),
     subtotal: t.subtotal,
     total: t.total,
     orderType,
     paymentMethod,
-    paymentStatus: paymentMethod==='credit' ? 'unpaid' : 'unpaid',
+    paymentStatus: 'unpaid',
     deliveryAddress: address,
     notes,
     scheduledFor: scheduledFor || null,
@@ -1074,57 +1079,78 @@ window.handleLogout=async function(){
   catch(e){ toast('Error signing out','error'); }
 };
 
-/* ATTACH HANDLERS (called after every render) */
+/* ATTACH HANDLERS */
 function attachHandlers(){
   updateMobileCartBar();
 }
 
-/* AUTH */
-auth.onAuthStateChanged(async user=>{
-  if(!user){ window.location.href='/'; return; }
-  currentUser=user;
-
-  const name=user.displayName||user.email?.split('@')[0]||'Field Assistant';
-  const ini=initials(name);
-  document.getElementById('dropdownName').textContent=name;
-  document.getElementById('dropdownEmail').textContent=user.email||'';
-  document.getElementById('dropdownAvatar').textContent=ini;
-  document.getElementById('userAvatarText').textContent=ini;
-
-  if(user.photoURL){
-    document.getElementById('userAvatarText').style.display='none';
-    const img=document.getElementById('userAvatarImg');
-    img.style.display='block';
-    img.src=user.photoURL;
-    document.getElementById('dropdownAvatar').innerHTML=`<img src="${esc(user.photoURL)}" alt="">`;
+/* ═══════════════════ AUTH + ACCESS GATE ═══════════════════ */
+auth.onAuthStateChanged(async user => {
+  // Hydration-safe: wait for the persisted session to load
+  if (!user) {
+    await new Promise(r => setTimeout(r, 800));
+    if (!firebase.auth().currentUser) {
+      window.location.replace('/');
+      return;
+    }
+    user = firebase.auth().currentUser;
   }
 
-  try{
-    const snap=await db.ref('fusion_field_assistants/'+user.uid).once('value');
-    currentAssistant=snap.val();
-    if(!currentAssistant || currentAssistant.active===false){
-      const adminSnap=await db.ref('admins/'+user.uid).once('value');
-      if(adminSnap.val()!==true){
-        document.getElementById('mainContent').innerHTML=`
-          <div class="access-denied">
-            <div class="access-denied-icon"><i class="fas fa-lock"></i></div>
-            <h2>Access Denied</h2>
-            <p>Your account isn't registered as a Fusion Foods field assistant.</p>
-            <p style="font-size:.75rem;color:var(--text-light);margin-top:1rem;">Contact your supervisor to get set up.</p>
-          </div>
-        `;
+  currentUser = user;
+
+  // Topbar UI
+  const name = user.displayName || user.email?.split('@')[0] || 'Field Assistant';
+  document.getElementById('dropdownName').textContent = name;
+  document.getElementById('dropdownEmail').textContent = user.email || '';
+  document.getElementById('dropdownAvatar').textContent = initials(name);
+  document.getElementById('userAvatarText').textContent = initials(name);
+
+  if (user.photoURL) {
+    document.getElementById('userAvatarText').style.display = 'none';
+    const img = document.getElementById('userAvatarImg');
+    img.style.display = 'block';
+    img.src = user.photoURL;
+    document.getElementById('dropdownAvatar').innerHTML = `<img src="${esc(user.photoURL)}" alt="">`;
+  }
+
+  // THE GATE — same pattern as BrandInn Field Ops
+  try {
+    const permSnap = await db.ref(`workspacePermissions/${user.uid}`).once('value');
+    const perms = permSnap.val() || {};
+    const hasFusion = perms['fusion-foods'] === true;
+
+    if (!hasFusion) {
+      const adminSnap = await db.ref(`admins/${user.uid}`).once('value');
+      if (adminSnap.val() !== true) {
+        renderAccessDenied();
         return;
       }
     }
-    document.getElementById('workspaceTag').textContent='Fusion Foods Field Ops';
-    isReady=true;
+
+    // Access confirmed — load the workspace
+    document.getElementById('workspaceTag').textContent = 'Fusion Foods Field Ops';
+    isReady = true;
     loadData();
     renderTab();
-  }catch(e){
+
+  } catch (e) {
     console.error(e);
-    toast('Error loading profile','error');
+    renderAccessDenied('Something went wrong. Please try again.');
   }
 });
+
+function renderAccessDenied(msg) {
+  document.getElementById('mainContent').innerHTML = `
+    <div class="access-denied">
+      <div class="access-denied-icon"><i class="fas fa-lock"></i></div>
+      <h2>Access Denied</h2>
+      <p>${esc(msg || "You don't have permission to access the Fusion Foods workspace.")}</p>
+      <p style="font-size: 0.75rem; color: var(--text-light); margin-top: 1rem;">
+        Contact your administrator if you believe this is a mistake.
+      </p>
+    </div>
+  `;
+}
 </script>
 </body>
 </html>
