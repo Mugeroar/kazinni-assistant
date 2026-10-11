@@ -1,692 +1,1132 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>KazInni | Workspace Launcher</title>
-    
-    <meta name="theme-color" content="#f97316">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    
-    <link rel="manifest" href="/manifest.json">
-    <link rel="icon" type="image/png" href="https://i.postimg.cc/rFfXDj3L/kazinni-removebg-preview(1).png">
-    <link rel="apple-touch-icon" href="https://i.postimg.cc/rFfXDj3L/kazinni-removebg-preview(1).png">
-    
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
-    
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        
-        body {
-            font-family: 'Inter', sans-serif;
-            background: linear-gradient(145deg, #0a0f1e 0%, #111827 100%);
-            min-height: 100vh;
-            padding: 1rem;
-        }
-        
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        
-        /* Header */
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-            flex-wrap: wrap;
-            gap: 0.8rem;
-        }
-        
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            flex-shrink: 0;
-        }
-        
-        .logo-img {
-            width: 36px;
-            height: 36px;
-            border-radius: 10px;
-            object-fit: contain;
-            background: white;
-        }
-        
-        .logo-text h1 {
-            font-size: 0.9rem;
-            font-weight: 800;
-            background: linear-gradient(135deg, #f97316, #f59e0b);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            white-space: nowrap;
-        }
-        
-        .logo-text p {
-            font-size: 0.55rem;
-            color: #94a3b8;
-            white-space: nowrap;
-        }
-        
-        /* User Menu */
-        .user-menu {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            background: #1a2235;
-            padding: 0.3rem 0.8rem 0.3rem 0.5rem;
-            border-radius: 40px;
-            border: 1px solid #334155;
-            flex-shrink: 0;
-            margin-left: auto;
-        }
-        
-        .user-avatar {
-            width: 30px;
-            height: 30px;
-            background: linear-gradient(135deg, #f97316, #f59e0b);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            font-size: 0.65rem;
-            color: white;
-            flex-shrink: 0;
-        }
-        
-        .user-info-text {
-            display: flex;
-            flex-direction: column;
-            min-width: 0;
-        }
-        
-        .user-name {
-            font-size: 0.65rem;
-            font-weight: 600;
-            color: white;
-            line-height: 1.2;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            max-width: 100px;
-        }
-        
-        .user-email {
-            font-size: 0.55rem;
-            color: #94a3b8;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            max-width: 100px;
-            line-height: 1.2;
-        }
-        
-        .logout-btn {
-            background: none;
-            border: none;
-            color: #94a3b8;
-            cursor: pointer;
-            font-size: 0.75rem;
-            padding: 0.25rem;
-            border-radius: 8px;
-            transition: all 0.2s;
-            flex-shrink: 0;
-            display: flex;
-            align-items: center;
-        }
-        
-        .logout-btn:hover {
-            color: #ef4444;
-        }
-        
-        /* Welcome Section */
-        .welcome-section {
-            background: linear-gradient(135deg, #1e293b, #0f172a);
-            border-radius: 20px;
-            padding: 1.2rem;
-            margin-bottom: 1.5rem;
-            border: 1px solid #334155;
-        }
-        
-        .welcome-title {
-            font-size: 1rem;
-            font-weight: 700;
-            color: white;
-            margin-bottom: 0.25rem;
-        }
-        
-        .welcome-text {
-            font-size: 0.7rem;
-            color: #94a3b8;
-        }
-        
-        .no-access {
-            text-align: center;
-            padding: 2rem;
-            color: #94a3b8;
-        }
-        .no-access i {
-            font-size: 3rem;
-            opacity: 0.3;
-            margin-bottom: 1rem;
-        }
-        .no-access h3 {
-            color: white;
-            margin-bottom: 0.5rem;
-        }
-        
-        /* Section Title */
-        .section-title {
-            font-size: 0.75rem;
-            font-weight: 600;
-            color: #94a3b8;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        /* Workspace Grid */
-        .workspace-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 1rem;
-        }
-        
-        /* Workspace Card */
-        .workspace-card {
-            background: #1a2235;
-            border-radius: 20px;
-            padding: 1.2rem;
-            border: 1px solid #334155;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        
-        .workspace-card:hover {
-            transform: translateY(-3px);
-            border-color: #f97316;
-            box-shadow: 0 15px 30px -10px rgba(249, 115, 22, 0.2);
-        }
-        
-        .card-icon {
-            width: 48px;
-            height: 48px;
-            border-radius: 14px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.4rem;
-            margin-bottom: 0.8rem;
-        }
-        
-        .card-icon.mugs {
-            background: linear-gradient(135deg, rgba(249, 115, 22, 0.2), rgba(245, 158, 11, 0.1));
-            color: #f97316;
-        }
-        
-        .card-icon.delivery {
-            background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(139, 92, 246, 0.1));
-            color: #a78bfa;
-        }
-        
-        .card-icon.workfit {
-            background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(16, 185, 129, 0.1));
-            color: #10b981;
-        }
-        
-        .card-icon.brandinn {
-            background: linear-gradient(135deg, rgba(79, 70, 229, 0.2), rgba(79, 70, 229, 0.1));
-            color: #818cf8;
-        }
-        
-        .card-icon.print {
-            background: linear-gradient(135deg, rgba(219, 39, 119, 0.2), rgba(219, 39, 119, 0.1));
-            color: #ec4899;
-        }
-        
-        .card-icon.dsog {
-            background: linear-gradient(135deg, rgba(236, 72, 153, 0.2), rgba(236, 72, 153, 0.1));
-            color: #ec4899;
-        }
-        
-        .card-icon.fusion {
-            background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(16, 185, 129, 0.1));
-            color: #10b981;
-        }
-        
-        .card-icon.heritage {
-            background: linear-gradient(135deg, rgba(217, 70, 239, 0.2), rgba(217, 70, 239, 0.1));
-            color: #d946ef;
-        }
-        
-        .card-icon.ekazi {
-            background: linear-gradient(135deg, rgba(5, 150, 105, 0.2), rgba(5, 150, 105, 0.1));
-            color: #34d399;
-        }
-        
-        .card-icon.epitome {
-            background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(59, 130, 246, 0.1));
-            color: #60a5fa;
-        }
-        
-        .card-icon.digital {
-            background: linear-gradient(135deg, rgba(14, 165, 233, 0.2), rgba(14, 165, 233, 0.1));
-            color: #38bdf8;
-        }
-        
-        .card-icon.pickme {
-            background: linear-gradient(135deg, rgba(6, 182, 212, 0.2), rgba(6, 182, 212, 0.1));
-            color: #22d3ee;
-        }
-        
-        .card-title {
-            font-size: 0.95rem;
-            font-weight: 700;
-            color: white;
-            margin-bottom: 0.3rem;
-        }
-        
-        .card-desc {
-            font-size: 0.7rem;
-            color: #94a3b8;
-            margin-bottom: 1rem;
-            line-height: 1.4;
-        }
-        
-        .card-stats {
-            display: flex;
-            gap: 0.8rem;
-            flex-wrap: wrap;
-            padding-top: 0.8rem;
-            border-top: 1px solid #334155;
-        }
-        
-        .stat {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            font-size: 0.6rem;
-            color: #64748b;
-        }
-        
-        .stat i {
-            font-size: 0.5rem;
-            color: #10b981;
-        }
-        
-        /* Toast */
-        .toast-container {
-            position: fixed;
-            bottom: 20px;
-            left: 20px;
-            right: 20px;
-            z-index: 2000;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            pointer-events: none;
-        }
-        
-        .toast {
-            background: #1a2235;
-            border-left: 3px solid #10b981;
-            padding: 0.7rem 1rem;
-            border-radius: 12px;
-            margin-top: 0.5rem;
-            font-size: 0.75rem;
-            color: white;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-            animation: slideUp 0.3s ease;
-            max-width: 90%;
-            pointer-events: auto;
-        }
-        
-        .toast.error {
-            border-left-color: #ef4444;
-        }
-        
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        /* Mobile */
-        @media (max-width: 768px) {
-            body { padding: 0.8rem; }
-            .workspace-grid { grid-template-columns: 1fr; }
-            .workspace-card { padding: 1rem; }
-            .card-icon { width: 42px; height: 42px; font-size: 1.3rem; }
-            .header { gap: 0.6rem; }
-            .logo-img { width: 32px; height: 32px; }
-            .logo-text h1 { font-size: 0.8rem; }
-            .user-menu { padding: 0.25rem 0.6rem 0.25rem 0.4rem; gap: 6px; }
-            .user-avatar { width: 28px; height: 28px; font-size: 0.6rem; }
-            .user-name { font-size: 0.6rem; max-width: 80px; }
-            .user-email { font-size: 0.5rem; max-width: 80px; }
-            .logout-btn { font-size: 0.7rem; }
-        }
-        
-        @media (max-width: 380px) {
-            .user-email { display: none; }
-            .user-name { max-width: 60px; }
-            .logo-text p { display: none; }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>KazInni | Workspace Launcher</title>
+
+<meta name="theme-color" content="#f97316">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+<link rel="manifest" href="/manifest.json">
+<link rel="icon" type="image/png" href="https://i.postimg.cc/rFfXDj3L/kazinni-removebg-preview(1).png">
+<link rel="apple-touch-icon" href="https://i.postimg.cc/rFfXDj3L/kazinni-removebg-preview(1).png">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+/* ═══════════════════════════════════════════════════
+   THEME VARIABLES
+   ═══════════════════════════════════════════════════ */
+:root {
+  /* Dark theme (default) */
+  --bg-1: #0a0f1e;
+  --bg-2: #111827;
+  --surface: #1a2235;
+  --surface-2: #1e293b;
+  --surface-3: #0f172a;
+  --border: #334155;
+  --border-soft: #263043;
+
+  --text-1: #ffffff;
+  --text-2: #e2e8f0;
+  --text-3: #94a3b8;
+  --text-4: #64748b;
+
+  --brand-1: #f97316;
+  --brand-2: #f59e0b;
+  --brand-grad: linear-gradient(135deg, #f97316, #f59e0b);
+
+  --success: #10b981;
+  --danger: #ef4444;
+  --warning: #f59e0b;
+  --info: #38bdf8;
+
+  --shadow-sm: 0 1px 3px rgba(0,0,0,.3);
+  --shadow-md: 0 4px 12px rgba(0,0,0,.35);
+  --shadow-lg: 0 15px 30px -10px rgba(0,0,0,.5);
+  --shadow-brand: 0 15px 30px -10px rgba(249,115,22,.35);
+
+  --overlay: rgba(0,0,0,.65);
+  --input-bg: #0f172a;
+  --input-bg-focus: #131d33;
+}
+
+html[data-theme="light"] {
+  --bg-1: #f8fafc;
+  --bg-2: #eef2f7;
+  --surface: #ffffff;
+  --surface-2: #f8fafc;
+  --surface-3: #eef2f7;
+  --border: #e2e8f0;
+  --border-soft: #edf1f6;
+
+  --text-1: #0f172a;
+  --text-2: #1e293b;
+  --text-3: #64748b;
+  --text-4: #94a3b8;
+
+  --shadow-sm: 0 1px 3px rgba(15,23,42,.06);
+  --shadow-md: 0 4px 12px rgba(15,23,42,.08);
+  --shadow-lg: 0 15px 30px -10px rgba(15,23,42,.15);
+  --shadow-brand: 0 15px 30px -10px rgba(249,115,22,.28);
+
+  --overlay: rgba(15,23,42,.55);
+  --input-bg: #f8fafc;
+  --input-bg-focus: #ffffff;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: linear-gradient(145deg, var(--bg-1) 0%, var(--bg-2) 100%);
+  min-height: 100vh;
+  padding: 1rem;
+  color: var(--text-1);
+  transition: background .3s ease, color .3s ease;
+}
+
+.container { max-width: 1200px; margin: 0 auto; }
+
+/* ═══════════════════════════════════════════════════
+   HEADER
+   ═══════════════════════════════════════════════════ */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+}
+
+.logo { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+.logo-img { width: 36px; height: 36px; border-radius: 10px; object-fit: contain; background: white; }
+.logo-text h1 {
+  font-size: 0.9rem; font-weight: 800;
+  background: var(--brand-grad);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+  white-space: nowrap;
+}
+.logo-text p { font-size: 0.55rem; color: var(--text-3); white-space: nowrap; }
+
+.header-right { display: flex; align-items: center; gap: 8px; margin-left: auto; }
+
+.icon-btn {
+  width: 38px; height: 38px;
+  border-radius: 50%;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text-2);
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.85rem;
+  transition: all .2s ease;
+  flex-shrink: 0;
+}
+.icon-btn:hover {
+  border-color: var(--brand-1);
+  color: var(--brand-1);
+  transform: translateY(-1px);
+}
+.icon-btn:active { transform: scale(.95); }
+
+/* User chip */
+.user-menu {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--surface);
+  padding: 0.3rem 0.7rem 0.3rem 0.35rem;
+  border-radius: 40px;
+  border: 1px solid var(--border);
+  flex-shrink: 0;
+  cursor: pointer;
+  transition: all .2s ease;
+  font-family: inherit;
+  color: inherit;
+}
+.user-menu:hover {
+  border-color: var(--brand-1);
+  box-shadow: 0 0 0 4px rgba(249,115,22,.08);
+}
+.user-menu:active { transform: scale(.98); }
+
+.user-avatar {
+  width: 32px; height: 32px;
+  background: var(--brand-grad);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 0.7rem;
+  color: white;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+.user-avatar img { width: 100%; height: 100%; object-fit: cover; }
+
+.user-info-text { display: flex; flex-direction: column; min-width: 0; text-align: left; }
+.user-name {
+  font-size: 0.68rem; font-weight: 700;
+  color: var(--text-1); line-height: 1.2;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  max-width: 110px;
+}
+.user-email {
+  font-size: 0.56rem; color: var(--text-3);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  max-width: 110px; line-height: 1.2;
+}
+.user-chev { font-size: 0.5rem; color: var(--text-4); margin-left: 2px; }
+
+/* ═══════════════════════════════════════════════════
+   WELCOME SECTION
+   ═══════════════════════════════════════════════════ */
+.welcome-section {
+  background: linear-gradient(135deg, var(--surface-2), var(--surface-3));
+  border-radius: 20px;
+  padding: 1.4rem 1.5rem;
+  margin-bottom: 1.5rem;
+  border: 1px solid var(--border);
+  position: relative;
+  overflow: hidden;
+  animation: fadeUp .4s ease;
+}
+
+.welcome-section::before {
+  content: '';
+  position: absolute;
+  top: -40%; right: -10%;
+  width: 300px; height: 300px;
+  background: radial-gradient(circle, rgba(249,115,22,.15), transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.welcome-title {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--text-1);
+  margin-bottom: 0.35rem;
+  letter-spacing: -0.02em;
+  position: relative;
+}
+.welcome-text {
+  font-size: 0.75rem;
+  color: var(--text-3);
+  position: relative;
+}
+
+.welcome-stats {
+  display: flex;
+  gap: 1.25rem;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+  position: relative;
+}
+.w-stat { display: flex; align-items: center; gap: 8px; }
+.w-stat-icon {
+  width: 34px; height: 34px;
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.75rem;
+  flex-shrink: 0;
+}
+.w-stat-icon.brand { background: rgba(249,115,22,.15); color: var(--brand-1); }
+.w-stat-icon.success { background: rgba(16,185,129,.15); color: var(--success); }
+.w-stat-icon.info { background: rgba(56,189,248,.15); color: var(--info); }
+.w-stat-info { line-height: 1.2; }
+.w-stat-value { font-size: 0.9rem; font-weight: 800; color: var(--text-1); }
+.w-stat-label { font-size: 0.6rem; color: var(--text-3); text-transform: uppercase; letter-spacing: .3px; font-weight: 600; }
+
+/* ═══════════════════════════════════════════════════
+   SECTION TITLE
+   ═══════════════════════════════════════════════════ */
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.section-title {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--text-3);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.section-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 22px;
+  height: 20px;
+  padding: 0 7px;
+  background: rgba(249,115,22,.15);
+  color: var(--brand-1);
+  border-radius: 100px;
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0;
+}
+
+.search-box {
+  position: relative;
+  flex: 1;
+  min-width: 180px;
+  max-width: 320px;
+}
+.search-box i {
+  position: absolute;
+  left: 12px; top: 50%; transform: translateY(-50%);
+  color: var(--text-4);
+  font-size: 0.72rem;
+  pointer-events: none;
+}
+.search-box input {
+  width: 100%;
+  padding: 0.55rem 0.85rem 0.55rem 2rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  color: var(--text-1);
+  font-family: inherit;
+  font-size: 0.75rem;
+  transition: all .2s ease;
+  outline: none;
+}
+.search-box input::placeholder { color: var(--text-4); }
+.search-box input:focus {
+  border-color: var(--brand-1);
+  box-shadow: 0 0 0 4px rgba(249,115,22,.08);
+}
+
+/* ═══════════════════════════════════════════════════
+   WORKSPACE GRID
+   ═══════════════════════════════════════════════════ */
+.workspace-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1rem;
+}
+
+.workspace-card {
+  background: var(--surface);
+  border-radius: 20px;
+  padding: 1.2rem;
+  border: 1px solid var(--border);
+  cursor: pointer;
+  transition: all .25s cubic-bezier(.2,.8,.2,1);
+  position: relative;
+  overflow: hidden;
+  animation: fadeUp .35s ease backwards;
+}
+.workspace-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--brand-1);
+  box-shadow: var(--shadow-lg);
+}
+.workspace-card:active { transform: translateY(-1px) scale(.99); }
+
+.card-icon {
+  width: 48px; height: 48px;
+  border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.4rem;
+  margin-bottom: 0.8rem;
+  transition: transform .25s ease;
+}
+.workspace-card:hover .card-icon { transform: scale(1.05) rotate(-3deg); }
+
+.card-icon.mugs { background: linear-gradient(135deg, rgba(249,115,22,.2), rgba(245,158,11,.1)); color: #f97316; }
+.card-icon.delivery { background: linear-gradient(135deg, rgba(139,92,246,.2), rgba(139,92,246,.1)); color: #a78bfa; }
+.card-icon.workfit { background: linear-gradient(135deg, rgba(16,185,129,.2), rgba(16,185,129,.1)); color: #10b981; }
+.card-icon.brandinn { background: linear-gradient(135deg, rgba(79,70,229,.2), rgba(79,70,229,.1)); color: #818cf8; }
+.card-icon.print { background: linear-gradient(135deg, rgba(219,39,119,.2), rgba(219,39,119,.1)); color: #ec4899; }
+.card-icon.dsog { background: linear-gradient(135deg, rgba(236,72,153,.2), rgba(236,72,153,.1)); color: #ec4899; }
+.card-icon.fusion { background: linear-gradient(135deg, rgba(16,185,129,.2), rgba(16,185,129,.1)); color: #10b981; }
+.card-icon.heritage { background: linear-gradient(135deg, rgba(217,70,239,.2), rgba(217,70,239,.1)); color: #d946ef; }
+.card-icon.ekazi { background: linear-gradient(135deg, rgba(5,150,105,.2), rgba(5,150,105,.1)); color: #34d399; }
+.card-icon.epitome { background: linear-gradient(135deg, rgba(59,130,246,.2), rgba(59,130,246,.1)); color: #60a5fa; }
+.card-icon.digital { background: linear-gradient(135deg, rgba(14,165,233,.2), rgba(14,165,233,.1)); color: #38bdf8; }
+.card-icon.pickme { background: linear-gradient(135deg, rgba(6,182,212,.2), rgba(6,182,212,.1)); color: #22d3ee; }
+
+.card-title {
+  font-size: 0.95rem; font-weight: 700;
+  color: var(--text-1);
+  margin-bottom: 0.3rem;
+}
+.card-desc {
+  font-size: 0.7rem;
+  color: var(--text-3);
+  margin-bottom: 1rem;
+  line-height: 1.5;
+}
+.card-stats {
+  display: flex;
+  gap: 0.8rem;
+  flex-wrap: wrap;
+  padding-top: 0.8rem;
+  border-top: 1px solid var(--border-soft);
+}
+.stat {
+  display: flex; align-items: center; gap: 5px;
+  font-size: 0.6rem;
+  color: var(--text-4);
+}
+.stat i { font-size: 0.5rem; color: var(--success); }
+
+/* ═══════════════════════════════════════════════════
+   EMPTY / LOADING
+   ═══════════════════════════════════════════════════ */
+.no-access {
+  text-align: center;
+  padding: 2.5rem 1.5rem;
+  color: var(--text-3);
+  grid-column: 1 / -1;
+}
+.no-access i { font-size: 3rem; opacity: 0.25; margin-bottom: 1rem; display: block; color: var(--brand-1); }
+.no-access h3 { color: var(--text-1); margin-bottom: 0.5rem; font-size: 1.05rem; }
+.no-access p { font-size: 0.78rem; max-width: 420px; margin: 0 auto; line-height: 1.6; }
+
+.skel-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 1.2rem;
+  overflow: hidden;
+}
+.skel-block {
+  background: linear-gradient(90deg, var(--border-soft) 0%, var(--border) 50%, var(--border-soft) 100%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s linear infinite;
+  border-radius: 8px;
+}
+.skel-icon { width: 48px; height: 48px; border-radius: 14px; margin-bottom: 0.9rem; }
+.skel-line { height: 12px; margin-bottom: 0.5rem; }
+.skel-line.short { width: 60%; }
+@keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ═══════════════════════════════════════════════════
+   MODAL
+   ═══════════════════════════════════════════════════ */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--overlay);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  z-index: 300;
+  display: none;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 1rem;
+  overflow-y: auto;
+}
+.modal-overlay.on { display: flex; }
+
+.modal {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  width: 100%;
+  max-width: 480px;
+  margin: auto;
+  box-shadow: var(--shadow-lg);
+  animation: fadeUp .25s ease;
+  overflow: hidden;
+}
+
+.modal-head {
+  padding: 1.1rem 1.25rem;
+  border-bottom: 1px solid var(--border-soft);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.modal-head h3 {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: var(--text-1);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.modal-head h3 i { color: var(--brand-1); }
+.modal-close {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-3);
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: all .2s;
+}
+.modal-close:hover { color: var(--danger); border-color: var(--danger); }
+
+.modal-body { padding: 1.25rem; }
+
+.form-group { margin-bottom: 1rem; }
+.form-group:last-child { margin-bottom: 0; }
+.form-group label {
+  display: block;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--text-3);
+  text-transform: uppercase;
+  letter-spacing: .4px;
+  margin-bottom: 0.4rem;
+}
+.form-group input {
+  width: 100%;
+  padding: 0.7rem 0.9rem;
+  background: var(--input-bg);
+  border: 1.5px solid var(--border);
+  border-radius: 12px;
+  color: var(--text-1);
+  font-family: inherit;
+  font-size: 0.85rem;
+  transition: all .2s ease;
+  outline: none;
+}
+.form-group input:focus {
+  background: var(--input-bg-focus);
+  border-color: var(--brand-1);
+  box-shadow: 0 0 0 4px rgba(249,115,22,.08);
+}
+.form-group input::placeholder { color: var(--text-4); }
+
+.avatar-preview {
+  width: 72px; height: 72px;
+  border-radius: 50%;
+  background: var(--brand-grad);
+  color: white;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 800;
+  font-size: 1.5rem;
+  margin: 0 auto 1rem;
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+}
+.avatar-preview img { width: 100%; height: 100%; object-fit: cover; }
+
+.modal-foot {
+  padding: 1rem 1.25rem;
+  border-top: 1px solid var(--border-soft);
+  display: flex;
+  gap: 0.6rem;
+  justify-content: flex-end;
+}
+
+.btn {
+  padding: 0.65rem 1.15rem;
+  border-radius: 12px;
+  font-family: inherit;
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+  border: 1.5px solid transparent;
+  transition: all .2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+.btn-primary {
+  background: var(--brand-grad);
+  color: white;
+  border-color: var(--brand-1);
+  box-shadow: 0 4px 12px -3px rgba(249,115,22,.35);
+}
+.btn-primary:hover { transform: translateY(-1px); box-shadow: 0 8px 20px -4px rgba(249,115,22,.45); }
+.btn-primary:disabled { opacity: .6; cursor: not-allowed; transform: none; }
+.btn-ghost {
+  background: transparent;
+  border-color: var(--border);
+  color: var(--text-2);
+}
+.btn-ghost:hover { background: var(--surface-2); border-color: var(--text-4); }
+
+/* ═══════════════════════════════════════════════════
+   TOASTS
+   ═══════════════════════════════════════════════════ */
+.toast-container {
+  position: fixed;
+  bottom: 20px; left: 20px; right: 20px;
+  z-index: 2000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  pointer-events: none;
+}
+.toast {
+  background: var(--surface);
+  border-left: 3px solid var(--success);
+  padding: 0.75rem 1rem;
+  border-radius: 12px;
+  margin-top: 0.5rem;
+  font-size: 0.78rem;
+  color: var(--text-1);
+  box-shadow: var(--shadow-lg);
+  animation: fadeUp .3s ease;
+  max-width: 90%;
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.toast i { color: var(--success); font-size: 0.85rem; }
+.toast.error { border-left-color: var(--danger); }
+.toast.error i { color: var(--danger); }
+.toast.info { border-left-color: var(--info); }
+.toast.info i { color: var(--info); }
+
+/* ═══════════════════════════════════════════════════
+   RESPONSIVE
+   ═══════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+  body { padding: 0.8rem; }
+  .workspace-grid { grid-template-columns: 1fr; }
+  .workspace-card { padding: 1rem; }
+  .card-icon { width: 42px; height: 42px; font-size: 1.3rem; }
+  .header { gap: 0.6rem; }
+  .logo-img { width: 32px; height: 32px; }
+  .logo-text h1 { font-size: 0.8rem; }
+  .user-menu { padding: 0.25rem 0.6rem 0.25rem 0.3rem; gap: 6px; }
+  .user-avatar { width: 28px; height: 28px; font-size: 0.62rem; }
+  .user-name { font-size: 0.62rem; max-width: 90px; }
+  .user-email { font-size: 0.52rem; max-width: 90px; }
+  .icon-btn { width: 34px; height: 34px; font-size: 0.78rem; }
+  .welcome-section { padding: 1.1rem; }
+  .welcome-title { font-size: 1rem; }
+  .section-header { gap: 8px; }
+  .search-box { max-width: 100%; }
+}
+@media (max-width: 420px) {
+  .user-email { display: none; }
+  .user-name { max-width: 70px; }
+  .logo-text p { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .workspace-card, .welcome-section { animation: none; transition: none; }
+  .card-icon { transition: none; }
+}
+</style>
 </head>
 <body>
-    <div class="container">
-        <!-- Header -->
-        <div class="header">
-            <div class="logo">
-                <img src="https://i.postimg.cc/rFfXDj3L/kazinni-removebg-preview(1).png" alt="KazInni" class="logo-img">
-                <div class="logo-text">
-                    <h1>KazInni Assistant</h1>
-                    <p>Workspace Launcher</p>
-                </div>
-            </div>
-            
-            <div class="user-menu" id="userMenu">
-                <div class="user-avatar" id="userAvatar">KA</div>
-                <div class="user-info-text">
-                    <div class="user-name" id="userName">Loading...</div>
-                    <div class="user-email" id="userEmail">...</div>
-                </div>
-                <button class="logout-btn" onclick="logout()" title="Sign Out">
-                    <i class="fas fa-sign-out-alt"></i>
-                </button>
-            </div>
-        </div>
-        
-        <!-- Welcome Section -->
-        <div class="welcome-section">
-            <div class="welcome-title" id="welcomeTitle">Welcome back!</div>
-            <div class="welcome-text">Select a workspace below to access your dashboard.</div>
-        </div>
-        
-        <!-- Workspaces Section -->
-        <div class="section-title">
-            <i class="fas fa-th-large"></i> Your Workspaces
-        </div>
-        
-        <div class="workspace-grid" id="workspaceGrid">
-            <!-- Will be populated by JavaScript -->
-        </div>
+<div class="container">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="logo">
+      <img src="https://i.postimg.cc/rFfXDj3L/kazinni-removebg-preview(1).png" alt="KazInni" class="logo-img">
+      <div class="logo-text">
+        <h1>KazInni Assistant</h1>
+        <p>Workspace Launcher</p>
+      </div>
     </div>
-    
-    <div class="toast-container" id="toastContainer"></div>
 
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+    <div class="header-right">
+      <button class="icon-btn" id="themeToggle" onclick="toggleTheme()" title="Toggle theme">
+        <i class="fas fa-moon" id="themeIcon"></i>
+      </button>
+      <button class="user-menu" onclick="openProfileModal()" title="Edit profile">
+        <div class="user-avatar" id="userAvatar">KA</div>
+        <div class="user-info-text">
+          <div class="user-name" id="userName">Loading...</div>
+          <div class="user-email" id="userEmail">...</div>
+        </div>
+        <i class="fas fa-chevron-down user-chev"></i>
+      </button>
+    </div>
+  </div>
 
-    <script>
-        const firebaseConfig = {
-            apiKey: "AIzaSyC7kppUyHUaPzeLBV62NEZWuHiuz1Kz0mA",
-            authDomain: "mugera-e51cc.firebaseapp.com",
-            databaseURL: "https://mugera-e51cc-default-rtdb.europe-west1.firebasedatabase.app",
-            projectId: "mugera-e51cc"
-        };
-        
-        firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
-        const db = firebase.database();
-        
-        // ===== COMPLETE WORKSPACE DEFINITIONS =====
-        const ALL_WORKSPACES = [
-            {
-                id: 'workfit',
-                name: 'WorkFit Club',
-                description: 'Fitness Franchise Management - Manage clubs, trainers, equipment inventory, shop products, and member sessions.',
-                icon: 'fa-dumbbell',
-                iconClass: 'workfit',
-                path: '/workspaces/workfit/index.html',
-                features: ['Club Management', 'Trainers & Members', 'Equipment & Shop']
-            },
-            {
-                id: 'mugs-n-dines',
-                name: 'Mugs n Dines',
-                description: 'Restaurant & Kitchen Management - Manage orders, menu, recipes, and catering events.',
-                icon: 'fa-utensils',
-                iconClass: 'mugs',
-                path: '/workspaces/mugs-n-dines/index.html',
-                features: ['Order Management', 'Menu & Recipes', 'Catering Events']
-            },
-            {
-                id: 'pick-up',
-                name: 'Pick-Up Deliveries',
-                description: 'Delivery Management - Accept deliveries, track shipments, and manage routes.',
-                icon: 'fa-truck-fast',
-                iconClass: 'delivery',
-                path: '/workspaces/pick-up/index.html',
-                features: ['Accept Deliveries', 'Track Shipments', 'Navigation']
-            },
-            {
-                id: 'pick-me',
-                name: 'Pick-Me Rides',
-                description: 'Ride-hailing Management - Manage drivers, rides, and customer requests.',
-                icon: 'fa-taxi',
-                iconClass: 'pickme',
-                path: '/workspaces/pick-me/index.html',
-                features: ['Driver Management', 'Ride Tracking', 'Customer Support']
-            },
-            {
-                id: 'brandinn',
-                name: 'BrandInn Business',
-                description: 'Business Branding & Management - Manage businesses, branding, and website presence.',
-                icon: 'fa-building',
-                iconClass: 'brandinn',
-                path: '/workspaces/brandinn/index.html',
-                features: ['Business Listings', 'Branding', 'Subdomains']
-            },
-            {
-                id: 'brandinn-print',
-                name: 'BrandInn Print',
-                description: 'Print & Merchandise Management - Manage print orders, designs, and merchandise.',
-                icon: 'fa-print',
-                iconClass: 'print',
-                path: '/workspaces/brandinn-print/index.html',
-                features: ['Print Orders', 'Design Management', 'Merchandise']
-            },
-            {
-                id: 'dsog',
-                name: 'DSOG Fashion',
-                description: 'Fashion & Apparel Management - Manage fashion orders, inventory, and franchisees.',
-                icon: 'fa-tshirt',
-                iconClass: 'dsog',
-                path: '/workspaces/dsog/index.html',
-                features: ['Fashion Orders', 'Inventory', 'Franchisees']
-            },
-            {
-                id: 'fusion-foods',
-                name: 'Fusion Foods',
-                description: 'Food & Grocery Supply Management - Manage food orders, inventory, and suppliers.',
-                icon: 'fa-utensil-spoon',
-                iconClass: 'fusion',
-                path: '/workspaces/fusion-foods/index.html',
-                features: ['Food Orders', 'Inventory', 'Suppliers']
-            },
-            {
-                id: 'heritage',
-                name: 'Heritage Ads',
-                description: 'Outdoor Advertising Management - Manage ad listings, campaigns, and partners.',
-                icon: 'fa-bullhorn',
-                iconClass: 'heritage',
-                path: '/workspaces/heritage/index.html',
-                features: ['Ad Listings', 'Campaigns', 'Partners']
-            },
-            {
-                id: 'heritage-marketplace',
-                name: 'Heritage Marketplace',
-                description: 'WhatsApp Marketplace Management - Manage orders, products, and partners.',
-                icon: 'fa-store',
-                iconClass: 'heritage',
-                path: '/workspaces/heritage-marketplace/index.html',
-                features: ['Orders', 'Products', 'Partners']
-            },
-            {
-                id: 'epitome',
-                name: 'Epitome Reviews',
-                description: 'Real Estate & Car Sales Management - Manage property and vehicle listings.',
-                icon: 'fa-home',
-                iconClass: 'epitome',
-                path: '/workspaces/epitome/index.html',
-                features: ['Property Listings', 'Car Sales', 'Inquiries']
-            },
-            {
-                id: 'digital-services',
-                name: 'Digital Services',
-                description: 'Digital Services & Solutions - Manage applications, clients, and payments.',
-                icon: 'fa-globe',
-                iconClass: 'digital',
-                path: '/workspaces/digital-services/index.html',
-                features: ['Applications', 'Clients', 'Payments']
-            }
-        ];
+  <!-- WELCOME SECTION -->
+  <div class="welcome-section">
+    <div class="welcome-title" id="welcomeTitle">Welcome back!</div>
+    <div class="welcome-text" id="welcomeSub">Select a workspace below to get started.</div>
+    <div class="welcome-stats">
+      <div class="w-stat">
+        <div class="w-stat-icon brand"><i class="fas fa-th-large"></i></div>
+        <div class="w-stat-info">
+          <div class="w-stat-value" id="statWorkspaces">0</div>
+          <div class="w-stat-label">Workspaces</div>
+        </div>
+      </div>
+      <div class="w-stat">
+        <div class="w-stat-icon success"><i class="fas fa-check-circle"></i></div>
+        <div class="w-stat-info">
+          <div class="w-stat-value" id="statStatus">Active</div>
+          <div class="w-stat-label">Account</div>
+        </div>
+      </div>
+      <div class="w-stat">
+        <div class="w-stat-icon info"><i class="fas fa-clock"></i></div>
+        <div class="w-stat-info">
+          <div class="w-stat-value" id="statLastLogin">—</div>
+          <div class="w-stat-label">Last visit</div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-        function showToast(message, isError = false) {
-            const container = document.getElementById('toastContainer');
-            const toast = document.createElement('div');
-            toast.className = `toast ${isError ? 'error' : ''}`;
-            toast.innerHTML = `<i class="fas fa-${isError ? 'exclamation-circle' : 'check-circle'}"></i> ${message}`;
-            container.appendChild(toast);
-            setTimeout(() => toast.remove(), 3500);
-        }
-        
-        function getInitials(name) {
-            if (!name) return 'KA';
-            return name.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
-        }
-        
-        function updateUserUI(user) {
-            const displayName = user.displayName || user.email?.split('@')[0] || 'Assistant';
-            const initials = getInitials(displayName);
-            const email = user.email;
-            
-            document.getElementById('userName').textContent = displayName;
-            document.getElementById('userEmail').textContent = email;
-            document.getElementById('userAvatar').textContent = initials;
-            document.getElementById('welcomeTitle').textContent = `Welcome back, ${displayName.split(' ')[0]}!`;
-        }
+  <!-- WORKSPACE SECTION -->
+  <div class="section-header">
+    <div class="section-title">
+      <i class="fas fa-layer-group"></i> Your Workspaces
+      <span class="section-count" id="workspaceCount">0</span>
+    </div>
+    <div class="search-box" id="searchBox" style="display:none;">
+      <i class="fas fa-search"></i>
+      <input type="text" id="searchInput" placeholder="Filter workspaces..." oninput="filterWorkspaces(this.value)">
+    </div>
+  </div>
 
-        // ===== MAIN: Load workspaces based on user permissions =====
-        async function loadUserWorkspaces() {
-            const user = auth.currentUser;
-            if (!user) {
-                window.location.href = '/index.html';
-                return;
-            }
-            
-            updateUserUI(user);
-            
-            try {
-                // Get user permissions from Firebase
-                const permSnap = await db.ref(`workspacePermissions/${user.uid}`).once('value');
-                const permissions = permSnap.exists() ? permSnap.val() : {};
-                
-                console.log('📋 User permissions:', permissions);
-                
-                // Filter workspaces based on permissions
-                let accessibleWorkspaces = [];
-                
-                // If user has no permissions but is admin, show all
-                if (Object.keys(permissions).length === 0) {
-                    // Check if user is admin
-                    const adminSnap = await db.ref(`admins/${user.uid}`).once('value');
-                    if (adminSnap.val() === true) {
-                        accessibleWorkspaces = ALL_WORKSPACES;
-                        console.log('👑 Admin - showing all workspaces');
-                    } else {
-                        // No permissions - show empty state
-                        document.getElementById('workspaceGrid').innerHTML = `
-                            <div class="no-access" style="grid-column: 1 / -1;">
-                                <i class="fas fa-lock"></i>
-                                <h3>No Workspace Access</h3>
-                                <p>You don't have permission to access any workspaces. Please contact your administrator.</p>
-                            </div>
-                        `;
-                        return;
-                    }
-                } else {
-                    // Filter workspaces by permissions
-                    accessibleWorkspaces = ALL_WORKSPACES.filter(ws => {
-                        // Check if user has permission for this workspace ID
-                        return permissions[ws.id] === true;
-                    });
-                    
-                    console.log('🔓 Accessible workspaces:', accessibleWorkspaces.map(w => w.name));
-                }
-                
-                // Render workspaces
-                renderWorkspaces(accessibleWorkspaces);
-                
-                // Show message if no workspaces
-                if (accessibleWorkspaces.length === 0) {
-                    document.getElementById('workspaceGrid').innerHTML = `
-                        <div class="no-access" style="grid-column: 1 / -1;">
-                            <i class="fas fa-lock"></i>
-                            <h3>No Access</h3>
-                            <p>You don't have permission to access any workspaces. Contact your administrator to request access.</p>
-                        </div>
-                    `;
-                }
-                
-            } catch (error) {
-                console.error('Error loading permissions:', error);
-                showToast('Error loading workspace permissions', true);
-            }
-        }
-        
-        function renderWorkspaces(workspaces) {
-            const grid = document.getElementById('workspaceGrid');
-            
-            grid.innerHTML = workspaces.map(ws => `
-                <div class="workspace-card" onclick="navigateToWorkspace('${ws.path}')">
-                    <div class="card-icon ${ws.iconClass}">
-                        <i class="fas ${ws.icon}"></i>
-                    </div>
-                    <div class="card-title">${ws.name}</div>
-                    <div class="card-desc">${ws.description}</div>
-                    <div class="card-stats">
-                        ${ws.features.map(f => `<div class="stat"><i class="fas fa-check-circle"></i> ${f}</div>`).join('')}
-                    </div>
-                </div>
-            `).join('');
-        }
-        
-        window.navigateToWorkspace = function(path) {
-            showToast(`Opening workspace...`, false);
-            setTimeout(() => {
-                window.location.href = path;
-            }, 300);
-        };
-        
-        window.logout = async function() {
-            try {
-                await auth.signOut();
-                showToast('Signed out successfully', false);
-                setTimeout(() => {
-                    window.location.href = '/index.html';
-                }, 500);
-            } catch (error) {
-                showToast('Error signing out', true);
-            }
-        };
-        
-        // Auth state listener
-        auth.onAuthStateChanged((user) => {
-            if (user) {
-                loadUserWorkspaces();
-            } else {
-                window.location.href = '/index.html';
-            }
-        });
-    </script>
+  <div class="workspace-grid" id="workspaceGrid">
+    <!-- Skeleton loading -->
+    <div class="skel-card"><div class="skel-block skel-icon"></div><div class="skel-block skel-line"></div><div class="skel-block skel-line short"></div></div>
+    <div class="skel-card"><div class="skel-block skel-icon"></div><div class="skel-block skel-line"></div><div class="skel-block skel-line short"></div></div>
+    <div class="skel-card"><div class="skel-block skel-icon"></div><div class="skel-block skel-line"></div><div class="skel-block skel-line short"></div></div>
+  </div>
+</div>
+
+<!-- PROFILE MODAL -->
+<div class="modal-overlay" id="profileModal">
+  <div class="modal">
+    <div class="modal-head">
+      <h3><i class="fas fa-user-circle"></i> Edit profile</h3>
+      <button class="modal-close" onclick="closeProfileModal()"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="avatar-preview" id="avatarPreview">KA</div>
+
+      <div class="form-group">
+        <label>Full name</label>
+        <input type="text" id="pName" placeholder="Your name" maxlength="60">
+      </div>
+      <div class="form-group">
+        <label>Phone number</label>
+        <input type="tel" id="pPhone" placeholder="+254 700 000 000" maxlength="20">
+      </div>
+      <div class="form-group">
+        <label>Avatar URL (optional)</label>
+        <input type="url" id="pAvatar" placeholder="https://..." oninput="previewAvatar(this.value)">
+        <div style="font-size:0.65rem;color:var(--text-4);margin-top:0.4rem;line-height:1.5;">
+          Paste a direct image link. Leave blank to use your initials.
+        </div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeProfileModal()">Cancel</button>
+      <button class="btn btn-primary" id="saveProfileBtn" onclick="saveProfile()">
+        <i class="fas fa-check"></i> Save changes
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+
+<script>
+firebase.initializeApp({
+  apiKey: "AIzaSyC7kppUyHUaPzeLBV62NEZWuHiuz1Kz0mA",
+  authDomain: "mugera-e51cc.firebaseapp.com",
+  databaseURL: "https://mugera-e51cc-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "mugera-e51cc"
+});
+const auth = firebase.auth();
+const db = firebase.database();
+auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL).catch(e => console.warn('Persistence:', e));
+
+/* ============================================================
+   WORKSPACE DEFINITIONS
+   ============================================================ */
+const ALL_WORKSPACES = [
+  { id:'workfit', name:'WorkFit Club', description:'Fitness Franchise Management - Manage clubs, trainers, equipment inventory, shop products, and member sessions.', icon:'fa-dumbbell', iconClass:'workfit', path:'/workspaces/workfit/index.html', features:['Club Management','Trainers & Members','Equipment & Shop'] },
+  { id:'mugs-n-dines', name:'Mugs n Dines', description:'Restaurant & Kitchen Management - Manage orders, menu, recipes, and catering events.', icon:'fa-utensils', iconClass:'mugs', path:'/workspaces/mugs-n-dines/index.html', features:['Order Management','Menu & Recipes','Catering Events'] },
+  { id:'pick-up', name:'Pick-Up Deliveries', description:'Delivery Management - Accept deliveries, track shipments, and manage routes.', icon:'fa-truck-fast', iconClass:'delivery', path:'/workspaces/pick-up/index.html', features:['Accept Deliveries','Track Shipments','Navigation'] },
+  { id:'pick-me', name:'Pick-Me Rides', description:'Ride-hailing Management - Manage drivers, rides, and customer requests.', icon:'fa-taxi', iconClass:'pickme', path:'/workspaces/pick-me/index.html', features:['Driver Management','Ride Tracking','Customer Support'] },
+  { id:'brandinn', name:'BrandInn Business', description:'Business Branding & Management - Manage businesses, branding, and website presence.', icon:'fa-building', iconClass:'brandinn', path:'/workspaces/brandinn/index.html', features:['Business Listings','Branding','Subdomains'] },
+  { id:'brandinn-print', name:'BrandInn Print', description:'Print & Merchandise Management - Manage print orders, designs, and merchandise.', icon:'fa-print', iconClass:'print', path:'/workspaces/brandinn-print/index.html', features:['Print Orders','Design Management','Merchandise'] },
+  { id:'dsog', name:'DSOG Fashion', description:'Fashion & Apparel Management - Manage fashion orders, inventory, and franchisees.', icon:'fa-tshirt', iconClass:'dsog', path:'/workspaces/dsog/index.html', features:['Fashion Orders','Inventory','Franchisees'] },
+  { id:'fusion-foods', name:'Fusion Foods', description:'Food & Grocery Supply Management - Manage food orders, inventory, and suppliers.', icon:'fa-utensil-spoon', iconClass:'fusion', path:'/workspaces/fusion-foods/index.html', features:['Food Orders','Inventory','Suppliers'] },
+  { id:'heritage', name:'Heritage Ads', description:'Outdoor Advertising Management - Manage ad listings, campaigns, and partners.', icon:'fa-bullhorn', iconClass:'heritage', path:'/workspaces/heritage/index.html', features:['Ad Listings','Campaigns','Partners'] },
+  { id:'heritage-marketplace', name:'Heritage Marketplace', description:'WhatsApp Marketplace Management - Manage orders, products, and partners.', icon:'fa-store', iconClass:'heritage', path:'/workspaces/heritage-marketplace/index.html', features:['Orders','Products','Partners'] },
+  { id:'epitome', name:'Epitome Reviews', description:'Real Estate & Car Sales Management - Manage property and vehicle listings.', icon:'fa-home', iconClass:'epitome', path:'/workspaces/epitome/index.html', features:['Property Listings','Car Sales','Inquiries'] },
+  { id:'digital-services', name:'Digital Services', description:'Digital Services & Solutions - Manage applications, clients, and payments.', icon:'fa-globe', iconClass:'digital', path:'/workspaces/digital-services/index.html', features:['Applications','Clients','Payments'] }
+];
+
+/* ============================================================
+   STATE
+   ============================================================ */
+let currentUser = null;
+let allAccessible = [];
+
+/* ============================================================
+   THEME
+   ============================================================ */
+const THEME_KEY = 'kazinni_theme';
+function initTheme() {
+  const saved = localStorage.getItem(THEME_KEY) || 'dark';
+  applyTheme(saved);
+}
+function applyTheme(theme) {
+  document.documentElement.setAttribute('data-theme', theme);
+  const icon = document.getElementById('themeIcon');
+  if (icon) icon.className = theme === 'light' ? 'fas fa-sun' : 'fas fa-moon';
+}
+function toggleTheme() {
+  const current = document.documentElement.getAttribute('data-theme') || 'dark';
+  const next = current === 'light' ? 'dark' : 'light';
+  applyTheme(next);
+  localStorage.setItem(THEME_KEY, next);
+}
+window.toggleTheme = toggleTheme;
+initTheme();
+
+/* ============================================================
+   TOASTS
+   ============================================================ */
+function showToast(message, type = 'success') {
+  const container = document.getElementById('toastContainer');
+  const toast = document.createElement('div');
+  const iconMap = { success: 'check-circle', error: 'exclamation-circle', info: 'info-circle' };
+  toast.className = `toast ${type}`;
+  toast.innerHTML = `<i class="fas fa-${iconMap[type] || 'info-circle'}"></i> ${message}`;
+  container.appendChild(toast);
+  setTimeout(() => {
+    toast.style.opacity = '0';
+    toast.style.transition = 'all .3s';
+    setTimeout(() => toast.remove(), 300);
+  }, 3200);
+}
+
+/* ============================================================
+   HELPERS
+   ============================================================ */
+function getInitials(name) {
+  if (!name) return 'KA';
+  return String(name).trim().split(/\s+/).map(n => n[0]).join('').toUpperCase().substring(0, 2);
+}
+function esc(s) {
+  return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+function greeting() {
+  const h = new Date().getHours();
+  if (h < 12) return 'Good morning';
+  if (h < 17) return 'Good afternoon';
+  return 'Good evening';
+}
+function timeAgo(ts) {
+  if (!ts) return '—';
+  const s = Math.floor((Date.now() - Number(ts)) / 1000);
+  if (s < 60) return 'Just now';
+  const m = Math.floor(s / 60); if (m < 60) return m + 'm ago';
+  const h = Math.floor(m / 60); if (h < 24) return h + 'h ago';
+  const d = Math.floor(h / 24); if (d < 7) return d + 'd ago';
+  return new Date(Number(ts)).toLocaleDateString('en-GB', { day:'2-digit', month:'short' });
+}
+
+/* ============================================================
+   USER UI
+   ============================================================ */
+function updateUserUI(user, profile) {
+  const displayName = profile?.name || user.displayName || user.email?.split('@')[0] || 'Assistant';
+  const initials = getInitials(displayName);
+  const email = user.email || '';
+
+  document.getElementById('userName').textContent = displayName;
+  document.getElementById('userEmail').textContent = email;
+
+  const avatarEl = document.getElementById('userAvatar');
+  if (profile?.avatar) {
+    avatarEl.innerHTML = `<img src="${esc(profile.avatar)}" onerror="this.parentNode.textContent='${initials}'">`;
+  } else {
+    avatarEl.textContent = initials;
+  }
+
+  document.getElementById('welcomeTitle').textContent = `${greeting()}, ${displayName.split(' ')[0]}!`;
+  document.getElementById('welcomeSub').textContent = 'Select a workspace below to get started.';
+  document.getElementById('statLastLogin').textContent = profile?.lastLogin ? timeAgo(profile.lastLogin) : 'Just now';
+}
+
+/* ============================================================
+   MAIN — LOAD WORKSPACES
+   ============================================================ */
+async function loadUserWorkspaces() {
+  const user = auth.currentUser;
+  if (!user) { window.location.href = '/index.html'; return; }
+
+  // Fetch user profile (fallback chain)
+  let profile = null;
+  try {
+    const [brandinnSnap, fieldSnap] = await Promise.all([
+      db.ref('brandinn_users/' + user.uid).once('value').catch(() => null),
+      db.ref('field_assistants/' + user.uid).once('value').catch(() => null)
+    ]);
+    profile = (brandinnSnap && brandinnSnap.val()) || (fieldSnap && fieldSnap.val()) || null;
+  } catch (e) { console.warn('profile lookup failed', e); }
+
+  // Save lastLogin (best-effort)
+  try {
+    db.ref('brandinn_users/' + user.uid + '/profile').update({ lastLogin: Date.now() }).catch(() => {});
+  } catch (e) {}
+
+  updateUserUI(user, profile);
+
+  try {
+    const permSnap = await db.ref('workspacePermissions/' + user.uid).once('value');
+    const permissions = permSnap.exists() ? permSnap.val() : {};
+    console.log('📋 User permissions:', permissions);
+
+    let accessibleWorkspaces = [];
+
+    if (Object.keys(permissions).length === 0) {
+      const adminSnap = await db.ref('admins/' + user.uid).once('value');
+      if (adminSnap.val() === true) {
+        accessibleWorkspaces = ALL_WORKSPACES.slice();
+      } else {
+        showEmptyState('No workspace access', "You don't have permission to access any workspaces yet. Please contact your administrator.");
+        return;
+      }
+    } else {
+      accessibleWorkspaces = ALL_WORKSPACES.filter(ws => permissions[ws.id] === true);
+    }
+
+    allAccessible = accessibleWorkspaces;
+    updateStats(accessibleWorkspaces);
+
+    if (accessibleWorkspaces.length === 0) {
+      showEmptyState('No access', "You don't have permission to access any workspaces. Contact your administrator to request access.");
+      return;
+    }
+
+    renderWorkspaces(accessibleWorkspaces);
+
+    // Show search box only when many workspaces
+    if (accessibleWorkspaces.length > 4) {
+      document.getElementById('searchBox').style.display = 'block';
+    }
+
+  } catch (error) {
+    console.error('Error loading permissions:', error);
+    showToast('Error loading workspaces', 'error');
+    showEmptyState('Something went wrong', 'Could not load your workspaces. Please refresh the page.');
+  }
+}
+
+function updateStats(workspaces) {
+  document.getElementById('workspaceCount').textContent = workspaces.length;
+  document.getElementById('statWorkspaces').textContent = workspaces.length;
+  document.getElementById('statStatus').textContent = 'Active';
+}
+
+function showEmptyState(title, message) {
+  document.getElementById('workspaceGrid').innerHTML = `
+    <div class="no-access">
+      <i class="fas fa-lock"></i>
+      <h3>${esc(title)}</h3>
+      <p>${esc(message)}</p>
+    </div>
+  `;
+  document.getElementById('workspaceCount').textContent = '0';
+  document.getElementById('statWorkspaces').textContent = '0';
+}
+
+function renderWorkspaces(workspaces) {
+  const grid = document.getElementById('workspaceGrid');
+  if (!workspaces.length) {
+    showEmptyState('No matching workspaces', 'Try a different search term.');
+    return;
+  }
+  grid.innerHTML = workspaces.map((ws, i) => `
+    <div class="workspace-card" style="animation-delay:${Math.min(i * 40, 400)}ms" onclick="navigateToWorkspace('${esc(ws.path)}','${esc(ws.name)}')">
+      <div class="card-icon ${esc(ws.iconClass)}"><i class="fas ${esc(ws.icon)}"></i></div>
+      <div class="card-title">${esc(ws.name)}</div>
+      <div class="card-desc">${esc(ws.description)}</div>
+      <div class="card-stats">
+        ${ws.features.map(f => `<div class="stat"><i class="fas fa-check-circle"></i> ${esc(f)}</div>`).join('')}
+      </div>
+    </div>
+  `).join('');
+}
+
+window.filterWorkspaces = function (q) {
+  const term = (q || '').toLowerCase().trim();
+  if (!term) { renderWorkspaces(allAccessible); return; }
+  const filtered = allAccessible.filter(ws =>
+    ws.name.toLowerCase().includes(term) ||
+    ws.description.toLowerCase().includes(term) ||
+    ws.features.some(f => f.toLowerCase().includes(term))
+  );
+  renderWorkspaces(filtered);
+};
+
+/* ============================================================
+   NAVIGATION
+   ============================================================ */
+window.navigateToWorkspace = function (path, name) {
+  showToast(`Opening ${name}...`, 'info');
+  setTimeout(() => { window.location.href = path; }, 250);
+};
+
+window.logout = async function () {
+  if (!confirm('Sign out?')) return;
+  try {
+    await auth.signOut();
+    showToast('Signed out', 'success');
+    setTimeout(() => { window.location.href = '/index.html'; }, 400);
+  } catch (error) {
+    showToast('Error signing out', 'error');
+  }
+};
+
+/* ============================================================
+   PROFILE MODAL
+   ============================================================ */
+window.openProfileModal = async function () {
+  const user = auth.currentUser;
+  if (!user) return;
+
+  // Load profile from Firebase
+  let profile = {};
+  try {
+    const snap = await db.ref('brandinn_users/' + user.uid).once('value');
+    profile = snap.val() || {};
+  } catch (e) {}
+
+  const name = profile.name || user.displayName || user.email?.split('@')[0] || '';
+  const phone = profile.phone || '';
+  const avatar = profile.avatar || user.photoURL || '';
+
+  document.getElementById('pName').value = name;
+  document.getElementById('pPhone').value = phone;
+  document.getElementById('pAvatar').value = avatar.startsWith('data:') ? '' : avatar;
+  previewAvatar(avatar);
+
+  document.getElementById('profileModal').classList.add('on');
+};
+
+window.closeProfileModal = function () {
+  document.getElementById('profileModal').classList.remove('on');
+};
+
+window.previewAvatar = function (url) {
+  const el = document.getElementById('avatarPreview');
+  const name = document.getElementById('pName').value || 'KA';
+  const initials = getInitials(name);
+  if (url && url.startsWith('http')) {
+    el.innerHTML = `<img src="${esc(url)}" onerror="this.parentNode.textContent='${initials}'">`;
+  } else {
+    el.textContent = initials;
+  }
+};
+
+window.saveProfile = async function () {
+  const user = auth.currentUser;
+  if (!user) return;
+
+  const btn = document.getElementById('saveProfileBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+
+  const name = document.getElementById('pName').value.trim();
+  const phone = document.getElementById('pPhone').value.trim();
+  const avatar = document.getElementById('pAvatar').value.trim();
+
+  if (!name) {
+    showToast('Please enter your name', 'error');
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fas fa-check"></i> Save changes';
+    return;
+  }
+
+  try {
+    // Save to both possible profile paths so it works for BrandInn and KazInni users
+    const updates = {
+      name: name,
+      phone: phone,
+      avatar: avatar || '',
+      displayName: name,
+      updatedAt: Date.now()
+    };
+
+    await Promise.all([
+      db.ref('brandinn_users/' + user.uid).update(updates),
+      db.ref('brandinn_users/' + user.uid + '/profile').update({ displayName: name, lastUpdated: Date.now() }).catch(() => {}),
+      db.ref('field_profiles/' + user.uid).update(updates).catch(() => {}),
+      db.ref('user_profiles/' + user.uid).update(updates).catch(() => {})
+    ]);
+
+    // Also try to update Firebase Auth displayName (optional, ignore if fails)
+    try { await user.updateProfile({ displayName: name }); } catch (e) {}
+
+    // Refresh topbar
+    updateUserUI(user, { name, phone, avatar });
+
+    closeProfileModal();
+    showToast('Profile updated', 'success');
+  } catch (e) {
+    console.error('Profile save error:', e);
+    showToast('Could not save profile: ' + (e.message || 'unknown'), 'error');
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fas fa-check"></i> Save changes';
+  }
+};
+
+// Close modal on overlay click
+document.getElementById('profileModal').addEventListener('click', (e) => {
+  if (e.target.id === 'profileModal') closeProfileModal();
+});
+// Close on Escape
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') closeProfileModal();
+});
+
+/* ============================================================
+   AUTH GUARD
+   ============================================================ */
+let authResolved = false;
+let redirectTimer = null;
+
+auth.onAuthStateChanged((user) => {
+  if (user) {
+    authResolved = true;
+    if (redirectTimer) { clearTimeout(redirectTimer); redirectTimer = null; }
+    loadUserWorkspaces();
+    return;
+  }
+
+  // Null: might be pre-hydration. Wait, then re-check.
+  if (redirectTimer) return;
+  redirectTimer = setTimeout(() => {
+    if (!firebase.auth().currentUser) {
+      window.location.href = '/index.html';
+    }
+  }, 800);
+});
+</script>
 </body>
 </html>
